@@ -66,6 +66,11 @@ void MainWindow::createMenus()
 {
 	 QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
 //	 menuBar()->
+	QAction *newLetterAct;
+	newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Letter"), this);
+	newLetterAct->setShortcuts(QKeySequence::New);
+	newLetterAct->setStatusTip(tr("Create a new form letter"));
+	fileMenu->addAction(newLetterAct);
 }
 
 void MainWindow::createToolBars()
