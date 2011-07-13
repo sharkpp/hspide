@@ -5,11 +5,11 @@
     <name>MainWindow</name>
     <message>
         <source>Ready</source>
-        <translation>a</translation>
+        <translation>準備完了</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>b</translation>
+        <translation>ファイル(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;New Letter</source>

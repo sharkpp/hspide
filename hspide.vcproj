@@ -193,7 +193,7 @@
 			UniqueIdentifier="{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}"
 			ParseFiles="false">
 			<File
-				RelativePath="hspide.ts" />
+				RelativePath="i18n\hspide_ja.ts" />
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -201,12 +201,14 @@
 			UniqueIdentifier="{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}"
 			ParseFiles="false">
 			<File
+				RelativePath="hspide.qm" />
+			<File
 				RelativePath="hspide.qrc">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;images\new.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qm;hspide.qrc;images\new.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="debug\qrc_hspide.cpp"
@@ -216,7 +218,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;images\new.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qm;hspide.qrc;images\new.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="release\qrc_hspide.cpp"

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="qmake"
+	Name="qt"
 	ProjectGUID="{D39E1373-2572-4717-BCF5-DF5C9F64256D}"
-	RootNamespace="qmake"
+	RootNamespace="qt"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -24,6 +24,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -45,6 +46,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -86,10 +88,19 @@
 			>
 			<FileConfiguration
 				Name="Debug|Win32"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="VCCustomBuildTool"
 					CommandLine=""
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
 				/>
 			</FileConfiguration>
 			<FileConfiguration
@@ -99,6 +110,38 @@
 					Name="VCCustomBuildTool"
 					CommandLine="pushd &quot;$(InputDir)&quot;&#x0D;&#x0A;qmake -project -t vcapp&#x0D;&#x0A;qmake&#x0D;&#x0A;"
 					Outputs="xxxx"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\i18n\hspide_ja.ts"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:update_trans&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
+					AdditionalDependencies=""
+					Outputs="$(InputDir)$(InputName).pm"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					CommandLine="pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:update_trans&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
+					AdditionalDependencies=""
+					Outputs="$(InputDir)$(InputName).pm"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Update|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
 				/>
 			</FileConfiguration>
 		</File>
