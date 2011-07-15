@@ -11,19 +11,19 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
-		qmake|Win32 = qmake|Win32
+		Qt|Win32 = Qt|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{17C79302-5E22-3869-875E-1FC75B88740D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{17C79302-5E22-3869-875E-1FC75B88740D}.Debug|Win32.Build.0 = Debug|Win32
-		{17C79302-5E22-3869-875E-1FC75B88740D}.qmake|Win32.ActiveCfg = Debug|Win32
+		{17C79302-5E22-3869-875E-1FC75B88740D}.Qt|Win32.ActiveCfg = Debug|Win32
 		{17C79302-5E22-3869-875E-1FC75B88740D}.Release|Win32.ActiveCfg = Release|Win32
 		{17C79302-5E22-3869-875E-1FC75B88740D}.Release|Win32.Build.0 = Release|Win32
 		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Debug|Win32.Build.0 = Debug|Win32
-		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.qmake|Win32.ActiveCfg = Update|Win32
-		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.qmake|Win32.Build.0 = Update|Win32
+		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Qt|Win32.ActiveCfg = Update|Win32
+		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Qt|Win32.Build.0 = Update|Win32
 		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Release|Win32.ActiveCfg = Release|Win32
 		{D39E1373-2572-4717-BCF5-DF5C9F64256D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

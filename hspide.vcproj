@@ -201,14 +201,44 @@
 			UniqueIdentifier="{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}"
 			ParseFiles="false">
 			<File
-				RelativePath="hspide.qm" />
+				RelativePath="images\tango\document-new.png" />
+			<File
+				RelativePath="images\tango\document-open.png" />
+			<File
+				RelativePath="images\tango\document-print-preview.png" />
+			<File
+				RelativePath="images\tango\document-print.png" />
+			<File
+				RelativePath="images\tango\document-save-as.png" />
+			<File
+				RelativePath="images\tango\document-save.png" />
+			<File
+				RelativePath="images\tango\edit-clear.png" />
+			<File
+				RelativePath="images\tango\edit-copy.png" />
+			<File
+				RelativePath="images\tango\edit-cut.png" />
+			<File
+				RelativePath="images\tango\edit-delete.png" />
+			<File
+				RelativePath="images\tango\edit-find-replace.png" />
+			<File
+				RelativePath="images\tango\edit-find.png" />
+			<File
+				RelativePath="images\tango\edit-paste.png" />
+			<File
+				RelativePath="images\tango\edit-redo.png" />
+			<File
+				RelativePath="images\tango\edit-select-all.png" />
+			<File
+				RelativePath="images\tango\edit-undo.png" />
 			<File
 				RelativePath="hspide.qrc">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qm;hspide.qrc;images\new.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\media-playback-start.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="debug\qrc_hspide.cpp"
@@ -218,7 +248,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qm;hspide.qrc;images\new.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\media-playback-start.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="release\qrc_hspide.cpp"
@@ -226,7 +256,9 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="images\new.png" />
+				RelativePath="i18n\hspide_ja.qm" />
+			<File
+				RelativePath="images\tango\media-playback-start.png" />
 		</Filter>
 	</Files>
 	<Globals>

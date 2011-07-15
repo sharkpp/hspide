@@ -1,6 +1,22 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-	<file>images/new.png</file>
 	<file>i18n/hspide_ja.qm</file>
+	<file>images/tango/edit-paste.png</file>
+	<file>images/tango/edit-redo.png</file>
+	<file>images/tango/edit-select-all.png</file>
+	<file>images/tango/edit-undo.png</file>
+	<file>images/tango/media-playback-start.png</file>
+	<file>images/tango/document-new.png</file>
+	<file>images/tango/document-open.png</file>
+	<file>images/tango/document-print.png</file>
+	<file>images/tango/document-print-preview.png</file>
+	<file>images/tango/document-save.png</file>
+	<file>images/tango/document-save-as.png</file>
+	<file>images/tango/edit-clear.png</file>
+	<file>images/tango/edit-copy.png</file>
+	<file>images/tango/edit-cut.png</file>
+	<file>images/tango/edit-delete.png</file>
+	<file>images/tango/edit-find.png</file>
+	<file>images/tango/edit-find-replace.png</file>
 </qresource>
 </RCC>

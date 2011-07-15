@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 	QTranslator trans;
 
 	// メッセージファイルのロード
-	trans.load(":/i18n/hspide_ja.qm");
+	trans.load(QString(":/i18n/hspide_ja.pm"));
 	// translatorを追加
 	app.installTranslator(&trans);
 //	QString y = QLocale::system().name();

@@ -25,10 +25,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	}
 	setCentralWidget(tabWidget);
 
-	createDockWindows();
-	createStatusBar();
-	createMenus();
-	createToolBars();
+	setupDockWindows();
+	setupStatusBar();
+	setupToolBars();
+	setupActions();
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -41,7 +41,7 @@ void MainWindow::actionTriggered(QAction *action)
 	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }
 
-void MainWindow::createDockWindows()
+void MainWindow::setupDockWindows()
 {
 	QDockWidget * dock;
 	dock = new QDockWidget("test", this);
@@ -57,31 +57,55 @@ void MainWindow::createDockWindows()
 	addDockWidget(Qt::BottomDockWidgetArea, dock);
 }
 
-void MainWindow::createStatusBar()
+void MainWindow::setupStatusBar()
 {
 	statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::createMenus()
+void MainWindow::setupToolBars()
 {
-	 QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
-//	 menuBar()->
-	QAction *newLetterAct;
-	newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Letter"), this);
-	newLetterAct->setShortcuts(QKeySequence::New);
-	newLetterAct->setStatusTip(tr("Create a new form letter"));
-	fileMenu->addAction(newLetterAct);
+	m_generalToolbar = addToolBar(tr("General"));
 }
 
-void MainWindow::createToolBars()
+void MainWindow::setupActions()
 {
-	QToolBar *fileToolBar = addToolBar(tr("File"));
+	QMenu * fileMenu = menuBar()->addMenu(tr("&File"));
+	QMenu * editMenu = menuBar()->addMenu(tr("&Edit"));
 
-	QAction *newLetterAct;
-	newLetterAct = new QAction(QIcon(":/images/new.png"), tr("&New Letter"), this);
-	newLetterAct->setShortcuts(QKeySequence::New);
-	newLetterAct->setStatusTip(tr("Create a new form letter"));
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
-//	fileMenu->addAction(newLetterAct);
-	fileToolBar->addAction(newLetterAct);
+
+	QAction *newDocumentAct = new QAction(QIcon(":/images/tango/document-new.png"), tr("&New"), this);
+	         newDocumentAct->setShortcuts(QKeySequence::New);
+	         newDocumentAct->setStatusTip(tr("Create a new file"));
+	fileMenu->addAction(newDocumentAct);
+	m_generalToolbar->addAction(newDocumentAct);
+
+	QAction *openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
+	         openDocumentAct->setShortcuts(QKeySequence::Open);
+	         openDocumentAct->setStatusTip(tr("Open the file"));
+	fileMenu->addAction(openDocumentAct);
+	m_generalToolbar->addAction(openDocumentAct);
+
+	fileMenu->addSeparator();
+
+	QAction *saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
+	         saveDocumentAct->setShortcuts(QKeySequence::Save);
+	         saveDocumentAct->setStatusTip(tr("Save the file"));
+	fileMenu->addAction(saveDocumentAct);
+	m_generalToolbar->addAction(saveDocumentAct);
+
+	QAction *saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
+	         saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
+	         saveAsDocumentAct->setStatusTip(tr("Save the file with a name"));
+	fileMenu->addAction(saveAsDocumentAct);
+//	m_generalToolbar->addAction(saveAsDocumentAct);
+
+	m_generalToolbar->addSeparator();
+
+//	QAction *saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
+//	         saveDocumentAct->setShortcuts(QKeySequence::Save);
+//	         saveDocumentAct->setStatusTip(tr("Save the file"));
+//	editMenu->addAction(saveDocumentAct);
+//	m_generalToolbar->addAction(saveDocumentAct);
+	
 }
