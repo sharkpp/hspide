@@ -44,18 +44,30 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::setupDockWindows()
 {
-	QDockWidget * dock;
-	dock = new QDockWidget("test", this);
-	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-	QListWidget *customerList = new QListWidget(dock);
-	dock->setWidget(customerList);
-	addDockWidget(Qt::RightDockWidgetArea, dock);
+	QDockWidget * projectDock = new QDockWidget(tr("Project"), this);
+	              projectDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	              projectDock->setWidget(new QListWidget(projectDock));
+	              addDockWidget(Qt::LeftDockWidgetArea, projectDock);
 
-	dock = new QDockWidget("test2", this);
-	dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	QListWidget *customerList2 = new QListWidget(dock);
-	dock->setWidget(customerList2);
-	addDockWidget(Qt::BottomDockWidgetArea, dock);
+	QDockWidget * symbolDock = new QDockWidget(tr("Symbol list"), this);
+	              symbolDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	              symbolDock->setWidget(new QListWidget(symbolDock));
+	              addDockWidget(Qt::BottomDockWidgetArea, symbolDock);
+
+	QDockWidget * outputDock = new QDockWidget(tr("Output"), this);
+	              outputDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	              outputDock->setWidget(new QListWidget(outputDock));
+	              addDockWidget(Qt::BottomDockWidgetArea, outputDock);
+
+	QDockWidget * debuggerDock = new QDockWidget(tr("Debugger"), this);
+	              debuggerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	              debuggerDock->setWidget(new QListWidget(debuggerDock));
+	              addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
+
+	QDockWidget * searchDock = new QDockWidget(tr("Search result"), this);
+	              searchDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	              searchDock->setWidget(new QListWidget(searchDock));
+	              addDockWidget(Qt::BottomDockWidgetArea, searchDock);
 }
 
 void MainWindow::setupStatusBar()
