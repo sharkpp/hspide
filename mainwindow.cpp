@@ -27,8 +27,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	setupDockWindows();
 	setupStatusBar();
-	setupToolBars();
 	setupActions();
+	setupToolBars();
+	setupMenus();
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -64,48 +65,159 @@ void MainWindow::setupStatusBar()
 
 void MainWindow::setupToolBars()
 {
-	m_generalToolbar = addToolBar(tr("General"));
+	QToolBar * generalToolbar = addToolBar(tr("General"));
+		generalToolbar->addAction(newDocumentAct);
+		generalToolbar->addAction(openDocumentAct);
+		generalToolbar->addAction(saveDocumentAct);
+		generalToolbar->addSeparator();
+		generalToolbar->addAction(editCutAct);
+		generalToolbar->addAction(editCopyAct);
+		generalToolbar->addAction(editPasteAct);
+		generalToolbar->addSeparator();
+		generalToolbar->addAction(editUndoAct);
+		generalToolbar->addAction(editRedoAct);
+		generalToolbar->addSeparator();
+		generalToolbar->addAction(findTextAct);
+		generalToolbar->addAction(findPrevTextAct);
+		generalToolbar->addAction(findNextTextAct);
+		generalToolbar->addAction(replaceTextAct);
+		generalToolbar->addSeparator();
+		generalToolbar->addAction(debugRunAct);
+}
+
+void MainWindow::setupMenus()
+{
+	QMenu * fileMenu = menuBar()->addMenu(tr("&File"));
+		fileMenu->addAction(newDocumentAct);
+		fileMenu->addAction(openDocumentAct);
+		fileMenu->addSeparator();
+		fileMenu->addAction(saveDocumentAct);
+		fileMenu->addAction(saveAsDocumentAct);
+		fileMenu->addSeparator();
+		fileMenu->addAction(quitApplicationAct);
+
+	QMenu * editMenu = menuBar()->addMenu(tr("&Edit"));
+		editMenu->addAction(editUndoAct);
+		editMenu->addAction(editRedoAct);
+		editMenu->addSeparator();
+		editMenu->addAction(editCutAct);
+		editMenu->addAction(editCopyAct);
+		editMenu->addAction(editPasteAct);
+		editMenu->addAction(editClearAct);
+		editMenu->addSeparator();
+		editMenu->addAction(selectAllAct);
+
+	QMenu * viewMenu = menuBar()->addMenu(tr("&View"));
+
+	QMenu * searchMenu = menuBar()->addMenu(tr("&Search"));
+		searchMenu->addAction(findTextAct);
+		searchMenu->addAction(findPrevTextAct);
+		searchMenu->addAction(findNextTextAct);
+		searchMenu->addAction(replaceTextAct);
+
+	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
+		buildMenu->addAction(buildProjectAct);
+		buildMenu->addAction(buildSolutionAct);
+		buildMenu->addSeparator();
+		buildMenu->addAction(compileOnlyAct);
+
+	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
+		debugMenu->addAction(debugRunAct);
+		debugMenu->addAction(noDebugRunAct);
+
+	QMenu * toolsMenu = menuBar()->addMenu(tr("&Tools"));
+
+	QMenu * helpMenu = menuBar()->addMenu(tr("&Help"));
+//		debugMenu->addAction(debugRunAct);
 }
 
 void MainWindow::setupActions()
 {
-	QMenu * fileMenu = menuBar()->addMenu(tr("&File"));
-	QMenu * editMenu = menuBar()->addMenu(tr("&Edit"));
-
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 
-	QAction *newDocumentAct = new QAction(QIcon(":/images/tango/document-new.png"), tr("&New"), this);
-	         newDocumentAct->setShortcuts(QKeySequence::New);
-	         newDocumentAct->setStatusTip(tr("Create a new file"));
-	fileMenu->addAction(newDocumentAct);
-	m_generalToolbar->addAction(newDocumentAct);
+	newDocumentAct = new QAction(QIcon(":/images/tango/document-new.png"), tr("&New"), this);
+	newDocumentAct->setShortcuts(QKeySequence::New);
+	newDocumentAct->setStatusTip(tr("Create a new file"));
 
-	QAction *openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
-	         openDocumentAct->setShortcuts(QKeySequence::Open);
-	         openDocumentAct->setStatusTip(tr("Open the file"));
-	fileMenu->addAction(openDocumentAct);
-	m_generalToolbar->addAction(openDocumentAct);
+	openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
+	openDocumentAct->setShortcuts(QKeySequence::Open);
+	openDocumentAct->setStatusTip(tr("Open the file"));
 
-	fileMenu->addSeparator();
+	saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
+	saveDocumentAct->setShortcuts(QKeySequence::Save);
+	saveDocumentAct->setStatusTip(tr("Save the file"));
 
-	QAction *saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
-	         saveDocumentAct->setShortcuts(QKeySequence::Save);
-	         saveDocumentAct->setStatusTip(tr("Save the file"));
-	fileMenu->addAction(saveDocumentAct);
-	m_generalToolbar->addAction(saveDocumentAct);
+	saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
+	saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
+	saveAsDocumentAct->setStatusTip(tr("Save the file with a name"));
 
-	QAction *saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
-	         saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
-	         saveAsDocumentAct->setStatusTip(tr("Save the file with a name"));
-	fileMenu->addAction(saveAsDocumentAct);
-//	m_generalToolbar->addAction(saveAsDocumentAct);
+	quitApplicationAct = new QAction(QIcon(":/images/tango/system-log-out.png"), tr("&Quit"), this);
+	quitApplicationAct->setShortcuts(QKeySequence::Quit);
+	quitApplicationAct->setStatusTip(tr("Quit application"));
 
-	m_generalToolbar->addSeparator();
+	editUndoAct = new QAction(QIcon(":/images/tango/edit-undo.png"), tr("&Undo"), this);
+	editUndoAct->setShortcuts(QKeySequence::Undo);
+	editUndoAct->setStatusTip(tr("Undo"));
 
-//	QAction *saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
-//	         saveDocumentAct->setShortcuts(QKeySequence::Save);
-//	         saveDocumentAct->setStatusTip(tr("Save the file"));
-//	editMenu->addAction(saveDocumentAct);
-//	m_generalToolbar->addAction(saveDocumentAct);
-	
+	editRedoAct = new QAction(QIcon(":/images/tango/edit-redo.png"), tr("&Redo"), this);
+	editRedoAct->setShortcuts(QKeySequence::Redo);
+	editRedoAct->setStatusTip(tr("Redo"));
+
+	editCutAct = new QAction(QIcon(":/images/tango/edit-cut.png"), tr("Cu&t"), this);
+	editCutAct->setShortcuts(QKeySequence::Cut);
+	editCutAct->setStatusTip(tr("Cut selected text"));
+
+	editCopyAct = new QAction(QIcon(":/images/tango/edit-copy.png"), tr("&Copy"), this);
+	editCopyAct->setShortcuts(QKeySequence::Copy);
+	editCopyAct->setStatusTip(tr("Copy selected text"));
+
+	editPasteAct = new QAction(QIcon(":/images/tango/edit-paste.png"), tr("&Paste"), this);
+	editPasteAct->setShortcuts(QKeySequence::Paste);
+	editPasteAct->setStatusTip(tr("Paste text"));
+
+	editClearAct = new QAction(QIcon(":/images/tango/edit-clear.png"), tr("&Delete"), this);
+	editClearAct->setShortcuts(QKeySequence::Delete);
+	editClearAct->setStatusTip(tr("Delete selected text"));
+
+	selectAllAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("&Select All"), this);
+	selectAllAct->setShortcuts(QKeySequence::SelectAll);
+	selectAllAct->setStatusTip(tr("Select all text"));
+
+	findTextAct = new QAction(QIcon(":/images/tango/edit-find.png"), tr("&Find"), this);
+	findTextAct->setShortcuts(QKeySequence::Find);
+	findTextAct->setStatusTip(tr("Find text"));
+
+	findPrevTextAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("Find &next"), this);
+	findPrevTextAct->setShortcuts(QKeySequence::FindNext);
+	findPrevTextAct->setStatusTip(tr("Find next text"));
+
+	findNextTextAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("Find &previous"), this);
+	findNextTextAct->setShortcuts(QKeySequence::FindPrevious);
+	findNextTextAct->setStatusTip(tr("Find previous text"));
+
+	replaceTextAct = new QAction(QIcon(":/images/tango/edit-find-replace.png"), tr("&Replace"), this);
+	replaceTextAct->setShortcuts(QKeySequence::Replace);
+	replaceTextAct->setStatusTip(tr("Replace text"));
+
+
+	buildSolutionAct = new QAction(tr("Build &solution"), this);
+//	buildSolutionAct->setShortcuts(QKeySequence::Replace);
+	buildSolutionAct->setStatusTip(tr("Build solution"));
+
+	buildProjectAct = new QAction(tr("&Build project"), this);
+//	buildProjectAct->setShortcuts(QKeySequence::Replace);
+	buildProjectAct->setStatusTip(tr("Build project"));
+
+	compileOnlyAct = new QAction(tr("&Compile only"), this);
+//	compileOnlyAct->setShortcuts(QKeySequence::Replace);
+	compileOnlyAct->setStatusTip(tr("Compile only"));
+
+	debugRunAct = new QAction(QIcon(":/images/tango/media-playback-start.png"), tr("&Debug run"), this);
+//	debugRunAct->setShortcuts(QKeySequence::Replace);
+	debugRunAct->setStatusTip(tr("Run program with debug"));
+
+	noDebugRunAct = new QAction(tr("&NO debug run"), this);
+//	noDebugRunAct->setShortcuts(QKeySequence::Replace);
+	noDebugRunAct->setStatusTip(tr("Run program without debug"));
+
 }

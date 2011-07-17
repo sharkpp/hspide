@@ -18,5 +18,6 @@
 	<file>images/tango/edit-delete.png</file>
 	<file>images/tango/edit-find.png</file>
 	<file>images/tango/edit-find-replace.png</file>
+	<file>images/tango/system-log-out.png</file>
 </qresource>
 </RCC>

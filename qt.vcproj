@@ -121,7 +121,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:update_trans&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
+					CommandLine="set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;rem for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;rem 実行ファイルとの比較&#x0D;&#x0A;call :comp $(OutDir)\hspide.exe $(InputPath)&#x0D;&#x0A;if errorlevel 1 goto :release_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:comp&#x0D;&#x0A;if &quot;%~t1&quot; NEQ &quot;%~t2&quot; ( if &quot;%~t1&quot; GTR &quot;%~t2&quot; ( exit /b 0 ) else ( exit /b 1 ))&#x0D;&#x0A;set TMPDIR=%~dp0%RANDOM%.tmp&#x0D;&#x0A;set TMPFILE=%RANDOM%.tmp&#x0D;&#x0A;mkdir &quot;%TMPDIR%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;copy &quot;%~2&quot; &quot;%TMPDIR%\%TMPFILE%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;copy &quot;%~1&quot; &quot;%~dp1\%TMPFILE%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;replace &quot;%~dp1\%TMPFILE%&quot; &quot;%TMPDIR%&quot; /U | find &quot;置き換えました&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;del &quot;%~dp1\%TMPFILE%&quot; &amp; rmdir /S /Q &quot;%TMPDIR%&quot; &amp; exit /b %ERRORLEVEL%&#x0D;&#x0A;:update_trans&#x0D;&#x0A;pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;:release_trans&#x0D;&#x0A;pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
 					AdditionalDependencies=""
 					Outputs="$(InputDir)$(InputName).pm"
 				/>
@@ -131,7 +131,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:update_trans&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
+					CommandLine="set _TM=&#x0D;&#x0A;for %%I in ($(InputPath)) do set _TM=%%~tI&#x0D;&#x0A;rem for %%I in (*.cpp;*h;*.hpp) do @if &quot;%%~tI&quot; GTR &quot;%_TM%&quot; goto :update_trans&#x0D;&#x0A;rem 実行ファイルとの比較&#x0D;&#x0A;call :comp $(OutDir)\hspide.exe $(InputPath)&#x0D;&#x0A;if errorlevel 1 goto :release_trans&#x0D;&#x0A;goto :eof&#x0D;&#x0A;:comp&#x0D;&#x0A;if &quot;%~t1&quot; NEQ &quot;%~t2&quot; ( if &quot;%~t1&quot; GTR &quot;%~t2&quot; ( exit /b 0 ) else ( exit /b 1 ))&#x0D;&#x0A;set TMPDIR=%~dp0%RANDOM%.tmp&#x0D;&#x0A;set TMPFILE=%RANDOM%.tmp&#x0D;&#x0A;mkdir &quot;%TMPDIR%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;copy &quot;%~2&quot; &quot;%TMPDIR%\%TMPFILE%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;copy &quot;%~1&quot; &quot;%~dp1\%TMPFILE%&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;replace &quot;%~dp1\%TMPFILE%&quot; &quot;%TMPDIR%&quot; /U | find &quot;置き換えました&quot; &gt;nul 2&gt;&amp;1&#x0D;&#x0A;del &quot;%~dp1\%TMPFILE%&quot; &amp; rmdir /S /Q &quot;%TMPDIR%&quot; &amp; exit /b %ERRORLEVEL%&#x0D;&#x0A;:update_trans&#x0D;&#x0A;pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;lupdate hspide.pro&#x0D;&#x0A;:release_trans&#x0D;&#x0A;pushd &quot;$(ProjectDir)&quot;&#x0D;&#x0A;lrelease hspide.pro&#x0D;&#x0A;"
 					AdditionalDependencies=""
 					Outputs="$(InputDir)$(InputName).pm"
 				/>
