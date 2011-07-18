@@ -7,6 +7,11 @@
 #include <QStatusBar>
 #include <QMenuBar>
 #include <QToolBar>
+#include <QFileDialog>
+#include <QFile>
+#include <QUrl>
+#include <QDropEvent>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -16,30 +21,23 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 //	QTextEdit * textEdit = new QTextEdit;
 //	setCentralWidget(textEdit);
-	QTabWidget * tabWidget = new QTabWidget(this);
+	//QTabWidget * tabWidget = new QTabWidget(this);
+	tabWidget = new QTabWidget(this);
 //	QTabBar * tabBar = new QTabBar(this);
 //	tabWidget->setTabBar(tabBar);
 //	tabWidget->setElideMode(Qt::ElideRight);
 	for(int i = 0; i < 5; i++) {
-	tabWidget->addTab(new QTextEdit, "test");
+//	tabWidget->addTab(new QTextEdit, "test");
 	}
 	setCentralWidget(tabWidget);
+
+	setAcceptDrops(true);
 
 	setupDockWindows();
 	setupStatusBar();
 	setupActions();
 	setupToolBars();
 	setupMenus();
-}
-
-void MainWindow::showEvent(QShowEvent *event)
-{
-	QMainWindow::showEvent(event);
-}
-
-void MainWindow::actionTriggered(QAction *action)
-{
-	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }
 
 void MainWindow::setupDockWindows()
@@ -154,18 +152,22 @@ void MainWindow::setupActions()
 	openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
 	openDocumentAct->setShortcuts(QKeySequence::Open);
 	openDocumentAct->setStatusTip(tr("Open the file"));
+	connect(openDocumentAct, SIGNAL(triggered()), this, SLOT(onOpenFile()));
 
 	saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
 	saveDocumentAct->setShortcuts(QKeySequence::Save);
 	saveDocumentAct->setStatusTip(tr("Save the file"));
+	connect(saveDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 
 	saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
 	saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
 	saveAsDocumentAct->setStatusTip(tr("Save the file with a name"));
+	connect(saveAsDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
 
 	quitApplicationAct = new QAction(QIcon(":/images/tango/system-log-out.png"), tr("&Quit"), this);
 	quitApplicationAct->setShortcuts(QKeySequence::Quit);
 	quitApplicationAct->setStatusTip(tr("Quit application"));
+	connect(quitApplicationAct, SIGNAL(triggered()), this, SLOT(onQuit()));
 
 	editUndoAct = new QAction(QIcon(":/images/tango/edit-undo.png"), tr("&Undo"), this);
 	editUndoAct->setShortcuts(QKeySequence::Undo);
@@ -233,3 +235,93 @@ void MainWindow::setupActions()
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 
 }
+
+void MainWindow::showEvent(QShowEvent *event)
+{
+	QMainWindow::showEvent(event);
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event)
+{
+	if( event->mimeData()->hasUrls() ) {
+		event->acceptProposedAction();
+	}
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+	if( event->mimeData()->hasUrls() ) {
+		event->acceptProposedAction();
+	}
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+	const QMimeData *mimeData = event->mimeData();
+
+	if( mimeData->hasUrls() &&
+		!mimeData->urls().empty() )
+	{
+		// 指定数以上の場合、警告メッセージを表示
+		// 現状は取り敢えずの実装
+		if( 5 < mimeData->urls().size() ) {
+			QMessageBox dlg(QMessageBox::Warning, windowTitle(),
+							tr(""), 0, this);
+			dlg.addButton(tr("&Continue"), QMessageBox::AcceptRole);
+			dlg.addButton(tr("C&ancel"),   QMessageBox::RejectRole);
+			if( QMessageBox::AcceptRole != dlg.exec() ) {
+				return;
+			}
+		}
+		QList<QUrl> urls = mimeData->urls();
+		for(int i = 0; i < urls.size(); i++) {
+			QString filePath = mimeData->urls().at(i).toLocalFile();
+			if( QFileInfo(filePath).exists() ) {
+				// 開いている途中に進行状況を出したい
+				// ついでに中止ボタンが押せるといいかも
+				onOpenFile(filePath);
+			}
+		}
+	}
+}
+
+void MainWindow::actionTriggered(QAction *action)
+{
+	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
+}
+
+void MainWindow::onOpenFile(const QString & filePath)
+{
+	QString fileName = filePath;
+
+	if( fileName.isEmpty() ) {
+		fileName = QFileDialog::getOpenFileName(this,
+			tr("Open File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
+	}
+
+	if( !fileName.isEmpty() ) {
+		QFile file(fileName);
+		if( file.open(QFile::ReadOnly | QFile::Text) ) {
+			QTextEdit * textEditor = new QTextEdit(tabWidget);
+			textEditor->setPlainText(file.readAll());
+			tabWidget->addTab(textEditor, QFileInfo(file.fileName()).fileName());
+		}
+	}
+}
+
+void MainWindow::onSaveFile()
+{
+}
+
+void MainWindow::onSaveAsFile()
+{
+	QString fileName
+		= QFileDialog::getSaveFileName(this,
+			tr("Save File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
+}
+
+void MainWindow::onQuit()
+{
+//	qApp->quit();
+}
+

@@ -5,6 +5,8 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
+	QTabWidget * tabWidget;
+
 	QAction *newDocumentAct;
 	QAction *openDocumentAct;
 	QAction *saveDocumentAct;
@@ -32,9 +34,16 @@ public:
 
 protected:
 	void showEvent(QShowEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dropEvent(QDropEvent *event);
 
 public slots:
 	void actionTriggered(QAction *action);
+	void onOpenFile(const QString & filePath);
+	void onSaveFile();
+	void onSaveAsFile();
+	void onQuit();
 
 private:
 
