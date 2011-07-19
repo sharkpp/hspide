@@ -11,7 +11,14 @@ int main(int argc, char **argv)
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 	QTranslator trans;
 
-	qApp->setApplicationName( "unifiler" );
+	qApp->setApplicationName("HSP script editor");
+
+	// めも
+	//QSettings では　標準で Windows はレジストリに書き込まれる
+	//HKEY_CURRENT_USER\Software\ソフトウエア名\キー
+	//で書き込まれる。
+	//QSettings settings("vzexfiler.ini", QSettings::IniFormat);
+	//とファイル名を .ini でQSettings::IniFormatを指定してやると、ファイルに書き込むようになる。
 
 	// メッセージファイルのロード
 	trans.load(QString(":/i18n/hspide_ja.pm"));

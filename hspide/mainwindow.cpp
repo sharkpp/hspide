@@ -1,17 +1,5 @@
 #include "mainwindow.h"
-#include <QAction>
-#include <QDockWidget>
-#include <QListWidget>
-#include <QTextEdit>
-#include <QTabWidget>
-#include <QStatusBar>
-#include <QMenuBar>
-#include <QToolBar>
-#include <QFileDialog>
-#include <QFile>
-#include <QUrl>
-#include <QDropEvent>
-#include <QMessageBox>
+#include <QtGui>
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -70,7 +58,16 @@ void MainWindow::setupDockWindows()
 
 void MainWindow::setupStatusBar()
 {
-	statusBar()->showMessage(tr("Ready"));
+	QStatusBar * statusBar = this->statusBar();
+		QLabel * lable = new QLabel;
+		taskProgress = new QProgressBar;
+		taskProgress->setRange(0, 100);
+		taskProgress->setValue(0);
+		taskProgress->setTextVisible(false);
+		lable->setMinimumSize( lable->sizeHint() );
+		statusBar->addWidget(lable, 1);
+		statusBar->addWidget(taskProgress);
+	statusBar->showMessage(tr("Ready"));
 }
 
 void MainWindow::setupToolBars()
@@ -229,6 +226,7 @@ void MainWindow::setupActions()
 	debugRunAct = new QAction(QIcon(":/images/tango/media-playback-start.png"), tr("&Debug run"), this);
 //	debugRunAct->setShortcuts(QKeySequence::Replace);
 	debugRunAct->setStatusTip(tr("Run program with debug"));
+	connect(debugRunAct, SIGNAL(triggered()), this, SLOT(onDebugRun()));
 
 	noDebugRunAct = new QAction(tr("&NO debug run"), this);
 //	noDebugRunAct->setShortcuts(QKeySequence::Replace);
@@ -322,6 +320,30 @@ void MainWindow::onSaveAsFile()
 
 void MainWindow::onQuit()
 {
-//	qApp->quit();
+	qApp->quit();
 }
 
+void MainWindow::onDebugRun()
+{
+#ifdef _DEBUG
+	QDir::setCurrent(QDir::currentPath() + "\\debug\\");
+#endif
+	QString program = "./hspcmp";
+	QStringList arguments;
+	arguments << "-style" << "motif";
+	QProcess *myProcess = new QProcess(this);
+	myProcess->start(program, arguments);
+	if( !myProcess->waitForStarted() ) {
+		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
+		return;
+	}
+	// プログラスバーをMarqueeスタイルに
+	taskProgress->setRange(0, 0);
+
+	connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
+}
+
+void MainWindow::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	taskProgress->setRange(0, 1);
+}

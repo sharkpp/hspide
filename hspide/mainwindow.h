@@ -1,11 +1,13 @@
 
 #include <QMainWindow>
+#include <QtGui>
 
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 	QTabWidget * tabWidget;
+	QProgressBar * taskProgress;
 
 	QAction *newDocumentAct;
 	QAction *openDocumentAct;
@@ -40,10 +42,12 @@ protected:
 
 public slots:
 	void actionTriggered(QAction *action);
+	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
 	void onOpenFile(const QString & filePath);
 	void onSaveFile();
 	void onSaveAsFile();
 	void onQuit();
+	void onDebugRun();
 
 private:
 
