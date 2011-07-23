@@ -32,7 +32,8 @@ class MainWindow : public QMainWindow
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
 
-	QSharedPointer<CSolution>	mSolution;
+	// É\ÉäÉÖÅ[ÉVÉáÉì
+	CSolution*	mSolution;
 
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
@@ -47,6 +48,8 @@ public slots:
 	void actionTriggered(QAction *action);
 	void buildStart();
 	void buildFinished(bool successed);
+	void currentTabChanged(int index);
+	void onNewFile();
 	void onOpenFile(const QString & filePath);
 	void onSaveFile();
 	void onSaveAsFile();

@@ -1,8 +1,10 @@
 #include "solution.h"
 #include "project.h"
+#include "editor.h"
 
-CSolution::CSolution(const CSolution::Config & config)
-	: mConfig(config)
+CSolution::CSolution(QObject *parent, const CSolution::Config & config)
+	: QObject(parent)
+	, mConfig(config)
 {
 }
 
@@ -49,6 +51,32 @@ bool CSolution::remove(const QString & filename)
 	mProjects.remove(filename);
 
 	return false;
+}
+
+// ソリューションへエディタを関連付け
+bool CSolution::openFile(CEditor* editor)
+{
+	for(QMap<QString, QSharedPointer<CProject> >::iterator
+			ite = mProjects.begin(),
+			last= mProjects.end();
+		ite != last; ++ite)
+	{
+		(*ite)->openFile(editor);
+	}
+	return true;
+}
+
+// ソリューションからエディタを解除
+bool CSolution::closeFile(CEditor* editor)
+{
+	for(QMap<QString, QSharedPointer<CProject> >::iterator
+			ite = mProjects.begin(),
+			last= mProjects.end();
+		ite != last; ++ite)
+	{
+		(*ite)->closeFile(editor);
+	}
+	return true;
 }
 
 // ソリューションのビルド

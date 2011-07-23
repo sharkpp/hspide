@@ -1,4 +1,5 @@
 #include "project.h"
+#include "editor.h"
 #include <QDir>
 
 CProject::CProject(const CProject::Config & config)
@@ -34,20 +35,16 @@ bool CProject::remove(const QString & filename)
 	return false;
 }
 
-// プロジェクト内のファイルをメモリに読み込み
-bool CProject::openFile(const QString & filename)
+// プロジェクトへエディタを関連付け
+bool CProject::openFile(CEditor* editor)
 {
-	return false;
-}
+//	editor->filename()
 
-// プロジェクト内のファイルを保存
-bool CProject::saveFile(const QString & filename)
-{
 	return false;
 }
 
 // プロジェクト内のファイルを閉じる
-bool CProject::closeFile(const QString & filename)
+bool CProject::closeFile(CEditor* editor)
 {
 	return false;
 }

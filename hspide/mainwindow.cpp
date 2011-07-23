@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "editorwidget.h"
+#include "editor.h"
 #include "solution.h"
 #include "project.h"
 
@@ -10,13 +10,13 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setWindowTitle("HSP script editor");
 
 	CSolution::Config config;
-	mSolution = QSharedPointer<CSolution>(new CSolution(config));
+	mSolution = new CSolution(this, config);
 	// 起動時は空ソリューション、プロジェクトを作る
 	mSolution->append();
 
 	// 処理完了時の通知を登録
-	connect(&*mSolution, SIGNAL(buildStart()),        this, SLOT(buildStart()));
-	connect(&*mSolution, SIGNAL(buildFinished(bool)), this, SLOT(buildFinished(bool)));
+	connect(mSolution, SIGNAL(buildStart()),        this, SLOT(buildStart()));
+	connect(mSolution, SIGNAL(buildFinished(bool)), this, SLOT(buildFinished(bool)));
 
 //	QTextEdit * textEdit = new QTextEdit;
 //	setCentralWidget(textEdit);
@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 //	tabWidget->addTab(new QTextEdit, "test");
 	}
 	setCentralWidget(tabWidget);
+
+	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 
 	setAcceptDrops(true);
 
@@ -157,6 +159,7 @@ void MainWindow::setupActions()
 	newDocumentAct = new QAction(QIcon(":/images/tango/document-new.png"), tr("&New"), this);
 	newDocumentAct->setShortcuts(QKeySequence::New);
 	newDocumentAct->setStatusTip(tr("Create a new file"));
+	connect(newDocumentAct, SIGNAL(triggered()), this, SLOT(onNewFile()));
 
 	openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
 	openDocumentAct->setShortcuts(QKeySequence::Open);
@@ -300,6 +303,12 @@ void MainWindow::actionTriggered(QAction *action)
 	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }
 
+void MainWindow::onNewFile()
+{
+	CEditor * textEditor = new CEditor(tabWidget);
+	tabWidget->addTab(textEditor, textEditor->fileName());
+}
+
 void MainWindow::onOpenFile(const QString & filePath)
 {
 	QString fileName = filePath;
@@ -310,17 +319,26 @@ void MainWindow::onOpenFile(const QString & filePath)
 	}
 
 	if( !fileName.isEmpty() ) {
-		QFile file(fileName);
-		if( file.open(QFile::ReadOnly | QFile::Text) ) {
-			EditorWidget * textEditor = new EditorWidget(tabWidget);
-			textEditor->setPlainText(file.readAll());
-			tabWidget->addTab(textEditor, QFileInfo(file.fileName()).fileName());
+		CEditor * textEditor = new CEditor(tabWidget);
+		if( !textEditor->load(fileName) ) {
+			delete textEditor;
+		} else {
+			tabWidget->addTab(textEditor, textEditor->fileName());
+			mSolution->openFile(textEditor);
 		}
 	}
 }
 
 void MainWindow::onSaveFile()
 {
+	CEditor* textEditor
+		= dynamic_cast<CEditor*>(tabWidget->currentWidget());
+
+	if( textEditor ) {
+		QApplication::setOverrideCursor(Qt::WaitCursor);
+		textEditor->save();
+		QApplication::restoreOverrideCursor();
+	}
 }
 
 void MainWindow::onSaveAsFile()
@@ -340,7 +358,7 @@ void MainWindow::onDebugRun()
 
 //	for(int index = 0, num = tabWidget->count(); index < num; index++)
 //	{
-//		EditorWidget * textEdit = static_cast<EditorWidget *>(tabWidget->widget(index));
+//		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
 //	}
 
 	mSolution->build();
@@ -363,5 +381,18 @@ void MainWindow::buildFinished(bool successed)
 
 	if( !successed ) {
 		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
+	}
+}
+
+void MainWindow::currentTabChanged(int index)
+{
+	CEditor* textEditor
+		= dynamic_cast<CEditor*>(tabWidget->widget(index));
+
+	if( textEditor ) {
+//		if( textEditor->isNoTitle() ) {
+//		} else {
+//		}
+//		menuBar()->
 	}
 }

@@ -5,6 +5,8 @@
 #ifndef INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7
 #define INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7
 
+class CEditor;
+
 class CProject
 	: public QObject
 {
@@ -38,14 +40,11 @@ public:
 	// プロジェクトから除外
 	bool remove(const QString & filename);
 
-	// プロジェクト内のファイルをメモリに読み込み
-	bool openFile(const QString & filename);
-
-	// プロジェクト内のファイルを保存
-	bool saveFile(const QString & filename);
+	// プロジェクトへエディタを関連付け
+	bool openFile(CEditor* editor);
 
 	// プロジェクト内のファイルを閉じる
-	bool closeFile(const QString & filename);
+	bool closeFile(CEditor* editor);
 
 	// プロジェクトをビルド
 	void build();

@@ -7,6 +7,7 @@
 #define INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079
 
 class CProject;
+class CEditor;
 
 class CSolution
 	: public QObject
@@ -26,7 +27,7 @@ private:
 
 public:
 
-	CSolution(const CSolution::Config & config);
+	CSolution(QObject *parent, const CSolution::Config & config);
 
 	~CSolution();
 
@@ -41,6 +42,12 @@ public:
 
 	// ソリューションからプロジェクトを除外
 	bool remove(const QString & filename);
+
+	// ソリューションへエディタを関連付け
+	bool openFile(CEditor* editor);
+
+	// ソリューションからエディタを解除
+	bool closeFile(CEditor* editor);
 
 	// ソリューション名を取得
 	QString title();

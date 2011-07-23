@@ -8,7 +8,7 @@ DEPENDPATH += . debug i18n
 INCLUDEPATH += .
 
 # Input
-HEADERS += editorwidget.h mainwindow.h project.h solution.h
-SOURCES += editorwidget.cpp main.cpp mainwindow.cpp project.cpp solution.cpp
+HEADERS += editor.h mainwindow.h project.h solution.h
+SOURCES += editor.cpp main.cpp mainwindow.cpp project.cpp solution.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts
