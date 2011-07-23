@@ -108,7 +108,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="pushd &quot;$(InputDir)&quot;&#x0D;&#x0A;qmake -project -t vcapp&#x0D;&#x0A;qmake&#x0D;&#x0A;"
+					CommandLine="pushd &quot;$(InputDir)&quot;&#x0D;&#x0A;rem qmake -project -t vcapp&#x0D;&#x0A;qmake&#x0D;&#x0A;"
 					Outputs="xxxx"
 				/>
 			</FileConfiguration>

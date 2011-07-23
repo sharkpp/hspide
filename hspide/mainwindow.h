@@ -1,6 +1,7 @@
 
 #include <QMainWindow>
 #include <QtGui>
+#include "solution.h"
 
 class MainWindow : public QMainWindow
 {
@@ -31,6 +32,8 @@ class MainWindow : public QMainWindow
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
 
+	QSharedPointer<CSolution>	mSolution;
+
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 
@@ -42,7 +45,8 @@ protected:
 
 public slots:
 	void actionTriggered(QAction *action);
-	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
+	void buildStart();
+	void buildFinished(bool successed);
 	void onOpenFile(const QString & filePath);
 	void onSaveFile();
 	void onSaveAsFile();

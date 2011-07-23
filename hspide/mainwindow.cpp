@@ -1,11 +1,22 @@
 #include "mainwindow.h"
-#include <QtGui>
+#include "editorwidget.h"
+#include "solution.h"
+#include "project.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 {
 	setObjectName("MainWindow");
 	setWindowTitle("HSP script editor");
+
+	CSolution::Config config;
+	mSolution = QSharedPointer<CSolution>(new CSolution(config));
+	// 起動時は空ソリューション、プロジェクトを作る
+	mSolution->append();
+
+	// 処理完了時の通知を登録
+	connect(&*mSolution, SIGNAL(buildStart()),        this, SLOT(buildStart()));
+	connect(&*mSolution, SIGNAL(buildFinished(bool)), this, SLOT(buildFinished(bool)));
 
 //	QTextEdit * textEdit = new QTextEdit;
 //	setCentralWidget(textEdit);
@@ -64,6 +75,7 @@ void MainWindow::setupStatusBar()
 		taskProgress->setRange(0, 100);
 		taskProgress->setValue(0);
 		taskProgress->setTextVisible(false);
+		taskProgress->setVisible(false);
 		lable->setMinimumSize( lable->sizeHint() );
 		statusBar->addWidget(lable, 1);
 		statusBar->addWidget(taskProgress);
@@ -300,7 +312,7 @@ void MainWindow::onOpenFile(const QString & filePath)
 	if( !fileName.isEmpty() ) {
 		QFile file(fileName);
 		if( file.open(QFile::ReadOnly | QFile::Text) ) {
-			QTextEdit * textEditor = new QTextEdit(tabWidget);
+			EditorWidget * textEditor = new EditorWidget(tabWidget);
 			textEditor->setPlainText(file.readAll());
 			tabWidget->addTab(textEditor, QFileInfo(file.fileName()).fileName());
 		}
@@ -325,25 +337,31 @@ void MainWindow::onQuit()
 
 void MainWindow::onDebugRun()
 {
-#ifdef _DEBUG
-	QDir::setCurrent(QDir::currentPath() + "\\debug\\");
-#endif
-	QString program = "./hspcmp";
-	QStringList arguments;
-	arguments << "-style" << "motif";
-	QProcess *myProcess = new QProcess(this);
-	myProcess->start(program, arguments);
-	if( !myProcess->waitForStarted() ) {
-		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
-		return;
-	}
-	// プログラスバーをMarqueeスタイルに
-	taskProgress->setRange(0, 0);
 
-	connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
+//	for(int index = 0, num = tabWidget->count(); index < num; index++)
+//	{
+//		EditorWidget * textEdit = static_cast<EditorWidget *>(tabWidget->widget(index));
+//	}
+
+	mSolution->build();
 }
 
-void MainWindow::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void MainWindow::buildStart()
 {
-	taskProgress->setRange(0, 1);
+	// ビルド処理開始
+
+	// プログラスバーをMarqueeスタイルに
+	taskProgress->setRange(0, 0);
+	taskProgress->setVisible(true);
+}
+
+void MainWindow::buildFinished(bool successed)
+{
+	// ビルド処理完了
+
+	taskProgress->setVisible(false);
+
+	if( !successed ) {
+		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
+	}
 }
