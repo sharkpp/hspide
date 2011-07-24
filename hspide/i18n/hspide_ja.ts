@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ja_JP">
 <context>
+    <name>CEditor</name>
+    <message>
+        <source>(no title)</source>
+        <translation>(無題)</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Ready</source>
@@ -206,6 +213,50 @@
     <message>
         <source>Run program without debug</source>
         <translation>デバッグなしでプログラムを実行</translation>
+    </message>
+    <message>
+        <source>Project</source>
+        <translation>プロジェクト</translation>
+    </message>
+    <message>
+        <source>Symbol list</source>
+        <translation>シンボルリスト</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation>出力</translation>
+    </message>
+    <message>
+        <source>Debugger</source>
+        <translation>デバッガ</translation>
+    </message>
+    <message>
+        <source>Search result</source>
+        <translation>検索結果</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
+        <translation>ヘルプ(&amp;H)</translation>
+    </message>
+    <message>
+        <source>&amp;Continue</source>
+        <translation>継続(&amp;C)</translation>
+    </message>
+    <message>
+        <source>C&amp;ancel</source>
+        <translation>キャンセル(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation>ファイルを開く</translation>
+    </message>
+    <message>
+        <source>Hot Soup Processor Files (*.hsp *.as)</source>
+        <translation>Hot Soup Processor ファイル (*.hsp *.as)</translation>
+    </message>
+    <message>
+        <source>Save File</source>
+        <translation>ファイルの保存</translation>
     </message>
 </context>
 </TS>

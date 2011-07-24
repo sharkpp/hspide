@@ -33,7 +33,7 @@ bool CEditor::load(const QString & filepath)
 // ファイルに保存
 bool CEditor::save(const QString & filepath)
 {
-	if( mFilePath.isEmpty() &&
+	if( isNoTitle() &&
 		filepath.isEmpty() )
 	{
 		// 保持しているファイル名も新たに指定されたファイル名も無い場合
@@ -63,8 +63,13 @@ const QString & CEditor::filePath() const
 // ファイル名を取得
 QString CEditor::fileName() const
 {
-	return mFilePath.isEmpty()
+	return isNoTitle()
 			? tr("(no title)")
 			: QFileInfo(mFilePath).fileName();
 }
 
+// 空ファイルか？
+bool CEditor::isNoTitle() const
+{
+	return mFilePath.isEmpty();
+}

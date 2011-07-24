@@ -33,6 +33,9 @@ public:
 	// ファイル名を取得
 	QString fileName() const;
 
+	// 空ファイルか？
+	bool isNoTitle() const;
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);

@@ -390,9 +390,6 @@ void MainWindow::currentTabChanged(int index)
 		= dynamic_cast<CEditor*>(tabWidget->widget(index));
 
 	if( textEditor ) {
-//		if( textEditor->isNoTitle() ) {
-//		} else {
-//		}
-//		menuBar()->
+		saveDocumentAct->setEnabled( !textEditor->isNoTitle() );
 	}
 }
