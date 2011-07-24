@@ -8,7 +8,7 @@ DEPENDPATH += . debug i18n
 INCLUDEPATH += .
 
 # Input
-HEADERS += editor.h mainwindow.h project.h solution.h
-SOURCES += editor.cpp main.cpp mainwindow.cpp project.cpp solution.cpp
+HEADERS += editor.h mainwindow.h project.h solution.h outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h
+SOURCES += editor.cpp main.cpp mainwindow.cpp project.cpp solution.cpp outputdock.cpp debuggerdock.cpp projectdock.cpp searchdock.cpp symboldock.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts

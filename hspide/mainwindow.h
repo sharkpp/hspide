@@ -32,6 +32,12 @@ class MainWindow : public QMainWindow
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
 
+	QDockWidget * projectDock;
+	QDockWidget * symbolDock;
+	QDockWidget * outputDock;
+	QDockWidget * debuggerDock;
+	QDockWidget * searchDock;
+
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CSolution*	mSolution;
 

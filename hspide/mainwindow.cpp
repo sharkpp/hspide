@@ -2,6 +2,11 @@
 #include "editor.h"
 #include "solution.h"
 #include "project.h"
+#include "outputdock.h"
+#include "debuggerdock.h"
+#include "projectdock.h"
+#include "searchdock.h"
+#include "symboldock.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -43,30 +48,34 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 void MainWindow::setupDockWindows()
 {
-	QDockWidget * projectDock = new QDockWidget(tr("Project"), this);
-	              projectDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	              projectDock->setWidget(new QListWidget(projectDock));
-	              addDockWidget(Qt::LeftDockWidgetArea, projectDock);
+	projectDock = new QDockWidget(tr("Project"), this);
+	projectDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	projectDock->setWidget(new CProjectDock(projectDock));
+	addDockWidget(Qt::LeftDockWidgetArea, projectDock);
 
-	QDockWidget * symbolDock = new QDockWidget(tr("Symbol list"), this);
-	              symbolDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	              symbolDock->setWidget(new QListWidget(symbolDock));
-	              addDockWidget(Qt::BottomDockWidgetArea, symbolDock);
+	symbolDock = new QDockWidget(tr("Symbol list"), this);
+	symbolDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	symbolDock->setWidget(new CSymbolDock(symbolDock));
+	addDockWidget(Qt::LeftDockWidgetArea, symbolDock);
 
-	QDockWidget * outputDock = new QDockWidget(tr("Output"), this);
-	              outputDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	              outputDock->setWidget(new QListWidget(outputDock));
-	              addDockWidget(Qt::BottomDockWidgetArea, outputDock);
+	outputDock = new QDockWidget(tr("Output"), this);
+	outputDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	outputDock->setWidget(new COutputDock(outputDock));
+	addDockWidget(Qt::BottomDockWidgetArea, outputDock);
 
-	QDockWidget * debuggerDock = new QDockWidget(tr("Debugger"), this);
-	              debuggerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	              debuggerDock->setWidget(new QListWidget(debuggerDock));
-	              addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
+	debuggerDock = new QDockWidget(tr("Debugger"), this);
+	debuggerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	debuggerDock->setWidget(new CDebuggerDock(debuggerDock));
+	addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
 
-	QDockWidget * searchDock = new QDockWidget(tr("Search result"), this);
-	              searchDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	              searchDock->setWidget(new QListWidget(searchDock));
-	              addDockWidget(Qt::BottomDockWidgetArea, searchDock);
+	searchDock = new QDockWidget(tr("Search result"), this);
+	searchDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	searchDock->setWidget(new CSearchDock(searchDock));
+	addDockWidget(Qt::BottomDockWidgetArea, searchDock);
+
+	tabifyDockWidget(projectDock, symbolDock);
+	tabifyDockWidget(outputDock, debuggerDock);
+	tabifyDockWidget(outputDock, searchDock);
 }
 
 void MainWindow::setupStatusBar()
@@ -368,6 +377,8 @@ void MainWindow::buildStart()
 {
 	// ビルド処理開始
 
+	dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build start"));
+
 	// プログラスバーをMarqueeスタイルに
 	taskProgress->setRange(0, 0);
 	taskProgress->setVisible(true);
@@ -379,8 +390,15 @@ void MainWindow::buildFinished(bool successed)
 
 	taskProgress->setVisible(false);
 
-	if( !successed ) {
+	if( !successed )
+	{
 		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
+
+		dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build failed"));
+	}
+	else
+	{
+		dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build complete"));
 	}
 }
 

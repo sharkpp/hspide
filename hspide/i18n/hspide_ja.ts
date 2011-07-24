@@ -259,4 +259,39 @@
         <translation>ファイルの保存</translation>
     </message>
 </context>
+<context>
+    <name>QTextControl</name>
+    <message>
+        <source>&amp;Undo</source>
+        <translation>元に戻す(&amp;U)</translation>
+    </message>
+    <message>
+        <source>&amp;Redo</source>
+        <translation>やり直す(&amp;R)</translation>
+    </message>
+    <message>
+        <source>Cu&amp;t</source>
+        <translation>切り取り(&amp;T)</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>コピー(&amp;C)</translation>
+    </message>
+    <message>
+        <source>Copy &amp;Link Location</source>
+        <translation>リンクの場所をコピー(&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>貼り付け(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Select All</source>
+        <translation>すべてを選択</translation>
+    </message>
+</context>
 </TS>
