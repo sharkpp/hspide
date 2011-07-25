@@ -13,6 +13,7 @@ public:
 
 	// o—Í‚É•¶š—ñ‚ğ’Ç‹L
 	void output(const QString & text);
+	void outputCrLf(const QString & text);
 
 protected:
 

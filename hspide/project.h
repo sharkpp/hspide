@@ -21,6 +21,7 @@ public:
 private:
 
 	Config	mConfig;
+	QProcess *mProcess;
 
 public:
 
@@ -54,10 +55,14 @@ public slots:
 	// プロジェクトのビルド完了
 	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
+	// ビルド中の出力を取得
+	void buildReadOutput();
+
 signals:
 
 	void buildStart();
 	void buildFinished(bool status);
+	void buildOutput(const QString & output);
 
 private:
 

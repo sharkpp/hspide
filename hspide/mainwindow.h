@@ -54,6 +54,7 @@ public slots:
 	void actionTriggered(QAction *action);
 	void buildStart();
 	void buildFinished(bool successed);
+	void buildOutput(const QString & output);
 	void currentTabChanged(int index);
 	void onNewFile();
 	void onOpenFile(const QString & filePath);

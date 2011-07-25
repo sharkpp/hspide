@@ -20,8 +20,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	mSolution->append();
 
 	// 処理完了時の通知を登録
-	connect(mSolution, SIGNAL(buildStart()),        this, SLOT(buildStart()));
-	connect(mSolution, SIGNAL(buildFinished(bool)), this, SLOT(buildFinished(bool)));
+	connect(mSolution, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
+	connect(mSolution, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
+	connect(mSolution, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
 
 //	QTextEdit * textEdit = new QTextEdit;
 //	setCentralWidget(textEdit);
@@ -377,7 +378,7 @@ void MainWindow::buildStart()
 {
 	// ビルド処理開始
 
-	dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build start"));
+	dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build start"));
 
 	// プログラスバーをMarqueeスタイルに
 	taskProgress->setRange(0, 0);
@@ -394,12 +395,18 @@ void MainWindow::buildFinished(bool successed)
 	{
 		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
 
-		dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build failed"));
+		dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build failed"));
 	}
 	else
 	{
-		dynamic_cast<COutputDock*>(outputDock->widget())->output(tr("Build complete"));
+		dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build complete"));
 	}
+}
+
+// ビルド中の出力を取得
+void MainWindow::buildOutput(const QString & output)
+{
+	dynamic_cast<COutputDock*>(outputDock->widget())->output(output);
 }
 
 void MainWindow::currentTabChanged(int index)

@@ -19,5 +19,10 @@ void COutputDock::output(const QString & text)
 {
 	QTextCursor cursor(mEditor->document());
 	cursor.movePosition(QTextCursor::End);
-	cursor.insertText(text + "\n");
+	cursor.insertText(text);
+}
+
+void COutputDock::outputCrLf(const QString & text)
+{
+	output(text + "\n");
 }

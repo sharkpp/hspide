@@ -34,8 +34,9 @@ bool CSolution::append(const QString & filename)
 	mProjects[filename] = newProject;
 
 	// シグナルの通知先を登録
-	connect(&*newProject, SIGNAL(buildStart()),        this, SLOT(buildStartProject()));
-	connect(&*newProject, SIGNAL(buildFinished(bool)), this, SLOT(buildFinishedProject(bool)));
+	connect(&*newProject, SIGNAL(buildStart()),                this, SLOT(buildStartProject()));
+	connect(&*newProject, SIGNAL(buildFinished(bool)),         this, SLOT(buildFinishedProject(bool)));
+	connect(&*newProject, SIGNAL(buildOutput(const QString&)), this, SLOT(buildOutputProject(const QString&)));
 
 	return false;
 }
@@ -102,6 +103,12 @@ void CSolution::buildStartProject()
 void CSolution::buildFinishedProject(bool successed)
 {
 	emit buildFinished(successed);
+}
+
+// ビルド中の出力を取得
+void CSolution::buildOutputProject(const QString & output)
+{
+	emit buildOutput(output);
 }
 
 // ソリューションの実行

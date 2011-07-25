@@ -75,10 +75,14 @@ public slots:
 	// プロジェクトのビルド完了
 	void buildFinishedProject(bool successed);
 
+	// ビルド中の出力を取得
+	void buildOutputProject(const QString & output);
+
 signals:
 
 	void buildStart();
 	void buildFinished(bool successed);
+	void buildOutput(const QString & output);
 
 };
 
