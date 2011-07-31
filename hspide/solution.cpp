@@ -21,6 +21,14 @@ bool CSolution::load()
 // ソリューションを保存
 bool CSolution::save(const QString & filename)
 {
+	for(QMap<QString, QSharedPointer<CProject> >::iterator
+			ite = mProjects.begin(),
+			last= mProjects.end();
+		ite != last; ++ite)
+	{
+		// 上書き保存
+		(*ite)->save();
+	}
 	return false;
 }
 
@@ -88,6 +96,9 @@ void CSolution::build()
 			last= mProjects.end();
 		ite != last; ++ite)
 	{
+		// 上書き保存
+		(*ite)->save();
+		// ビルド
 		(*ite)->build();
 	}
 

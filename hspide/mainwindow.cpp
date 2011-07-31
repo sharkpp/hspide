@@ -100,6 +100,7 @@ void MainWindow::setupToolBars()
 		generalToolbar->addAction(newDocumentAct);
 		generalToolbar->addAction(openDocumentAct);
 		generalToolbar->addAction(saveDocumentAct);
+		generalToolbar->addAction(saveAllDocumentAct);
 		generalToolbar->addSeparator();
 		generalToolbar->addAction(editCutAct);
 		generalToolbar->addAction(editCopyAct);
@@ -124,6 +125,7 @@ void MainWindow::setupMenus()
 		fileMenu->addSeparator();
 		fileMenu->addAction(saveDocumentAct);
 		fileMenu->addAction(saveAsDocumentAct);
+		fileMenu->addAction(saveAllDocumentAct);
 		fileMenu->addSeparator();
 		fileMenu->addAction(quitApplicationAct);
 
@@ -173,18 +175,23 @@ void MainWindow::setupActions()
 
 	openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
 	openDocumentAct->setShortcuts(QKeySequence::Open);
-	openDocumentAct->setStatusTip(tr("Open the file"));
+	openDocumentAct->setStatusTip(tr("Open file"));
 	connect(openDocumentAct, SIGNAL(triggered()), this, SLOT(onOpenFile()));
 
 	saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
 	saveDocumentAct->setShortcuts(QKeySequence::Save);
-	saveDocumentAct->setStatusTip(tr("Save the file"));
+	saveDocumentAct->setStatusTip(tr("Save file"));
 	connect(saveDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 
 	saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
 	saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
-	saveAsDocumentAct->setStatusTip(tr("Save the file with a name"));
+	saveAsDocumentAct->setStatusTip(tr("Save file with a name"));
 	connect(saveAsDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
+
+	saveAllDocumentAct = new QAction(QIcon(":/images/document-save-all.png"), tr("Save all"), this);
+	saveAllDocumentAct->setShortcuts(QKeySequence::SaveAs);
+	saveAllDocumentAct->setStatusTip(tr("Save all file"));
+	connect(saveAllDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAllFile()));
 
 	quitApplicationAct = new QAction(QIcon(":/images/tango/system-log-out.png"), tr("&Quit"), this);
 	quitApplicationAct->setShortcuts(QKeySequence::Quit);
@@ -257,6 +264,11 @@ void MainWindow::setupActions()
 //	noDebugRunAct->setShortcuts(QKeySequence::Replace);
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 
+	buildSolutionAct->setEnabled(false);
+	buildProjectAct->setEnabled(false);
+	compileOnlyAct->setEnabled(false);
+	debugRunAct->setEnabled(false);
+	noDebugRunAct->setEnabled(false);
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -317,6 +329,7 @@ void MainWindow::onNewFile()
 {
 	CEditor * textEditor = new CEditor(tabWidget);
 	tabWidget->addTab(textEditor, textEditor->fileName());
+	mSolution->openFile(textEditor);
 }
 
 void MainWindow::onOpenFile(const QString & filePath)
@@ -358,6 +371,11 @@ void MainWindow::onSaveAsFile()
 			tr("Save File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
 }
 
+void MainWindow::onSaveAllFile()
+{
+//	mSolution->save();
+}
+
 void MainWindow::onQuit()
 {
 	qApp->quit();
@@ -393,7 +411,7 @@ void MainWindow::buildFinished(bool successed)
 
 	if( !successed )
 	{
-		QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
+	//	QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
 
 		dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build failed"));
 	}
@@ -416,5 +434,10 @@ void MainWindow::currentTabChanged(int index)
 
 	if( textEditor ) {
 		saveDocumentAct->setEnabled( !textEditor->isNoTitle() );
+		buildSolutionAct->setEnabled(true);
+		buildProjectAct->setEnabled(true);
+		compileOnlyAct->setEnabled(true);
+		debugRunAct->setEnabled(true);
+		noDebugRunAct->setEnabled(true);
 	}
 }

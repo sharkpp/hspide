@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 	QAction *openDocumentAct;
 	QAction *saveDocumentAct;
 	QAction *saveAsDocumentAct;
+	QAction *saveAllDocumentAct;
 	QAction *quitApplicationAct;
 	QAction *editUndoAct;
 	QAction *editRedoAct;
@@ -60,6 +61,7 @@ public slots:
 	void onOpenFile(const QString & filePath);
 	void onSaveFile();
 	void onSaveAsFile();
+	void onSaveAllFile();
 	void onQuit();
 	void onDebugRun();
 

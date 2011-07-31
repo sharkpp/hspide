@@ -19,5 +19,6 @@
 	<file>images/tango/edit-find.png</file>
 	<file>images/tango/edit-find-replace.png</file>
 	<file>images/tango/system-log-out.png</file>
+	<file>images/document-save-all.png</file>
 </qresource>
 </RCC>
