@@ -39,7 +39,7 @@ private:
 
 public:
 
-	packfile_manager(const char * packfile = NULL);
+	packfile_manager(const char * dirname = NULL);
 
 	// パックファイル名の取得
 	const char* filename() const;
@@ -48,10 +48,10 @@ public:
 	bool modified() const;
 
 	// パックリストを読み込み
-	bool load(const char * packfile = NULL, bool merge = false);
+	bool load(const char * dirname = NULL, bool merge = false);
 
 	// パックリストを書き込み
-	bool save(const char * packfile = NULL);
+	bool save(const char * dirname = NULL);
 
 	// パックリストに追加
 	bool append(const char * filename, PACK_OPTION option);
@@ -62,10 +62,10 @@ public:
 };
 
 inline
-packfile_manager::packfile_manager(const char * packfile)
+packfile_manager::packfile_manager(const char * dirname)
 	: m_modify(false)
 {
-	load(packfile);
+	load(dirname);
 }
 
 // パックファイル名の取得
@@ -83,16 +83,17 @@ bool packfile_manager::modified() const
 
 // パックリストを読み込み
 inline
-bool packfile_manager::load(const char * packfile, bool merge)
+bool packfile_manager::load(const char * dirname, bool merge)
 {
-	if( !packfile ) {
-		packfile = m_filename.c_str();
-	} else {
-		m_filename = packfile;
+	if( dirname ) {
+		m_filename = dirname;
+		m_filename += "\\packfile";
 	}
 	if( m_filename.empty() ) {
 		return false;
 	}
+
+	m_filename += "\\packfile";
 
 	std::ifstream ifs(m_filename.c_str());
 
@@ -122,20 +123,17 @@ bool packfile_manager::load(const char * packfile, bool merge)
 
 // パックリストを書き込み
 inline
-bool packfile_manager::save(const char * packfile)
+bool packfile_manager::save(const char * dirname)
 {
-	if( !packfile ) {
-		packfile = m_filename.c_str();
+	std::string filename = m_filename;
+	if( dirname ) {
+		filename = dirname;
+		filename += "\\packfile";
 	}
 	
 	if( !m_modify ) {
 		return true;
 	}
-
-	std::string filename = packfile;
-	dirname(packfile, filename);
-	filename += "\\packfile";
-printf("%s\n",filename.c_str());
 
 	std::ofstream ofs(filename.c_str());
 	for(PACK_LIST_TYPE::const_iterator

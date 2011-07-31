@@ -34,13 +34,14 @@ struct option {
 	const char * objname;
 	const char * common_path;
 	const char * hsp_path;
+	const char * work_path;
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
 		, wx(0), wy(0), hidden_window(false)
 		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
-		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL)
+		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 	{}
 #ifdef _DEBUG
 	void dump() {
@@ -63,6 +64,7 @@ struct option {
 		printf("option.execute = %s\n", execute ? "true" : "false");
 		printf("option.common_path = \"%s\"\n", common_path);
 		printf("option.hsp_path = \"%s\"\n", hsp_path);
+		printf("option.work_path = \"%s\"\n", work_path);
 		packfile.dump();
 	}
 #endif
@@ -79,7 +81,6 @@ void usage()
 		"    -n NAME , --name NAME\n"
 		"    -s X,Y , --size X,Y\n"
 		"    -I , --hidden\n"
-		"    -p PACKFILE , --packfile PACKFILE\n"
 		"    -d , --debug\n"
 		"    -P , --preprocess-only\n"
 		"    -a , --auto-make\n"
@@ -89,6 +90,7 @@ void usage()
 		"    -e , --execute\n"
 		"    -C COMMON_PATH , --common-path COMMON_PATH\n"
 		"    -H HSP_PATH , --hsp-path HSP_PATH\n"
+		"    -w WORK_PATH , --work-path WORK_PATH\n"
 		"   packname:\n"
 		"     packname : normal packing\n"
 		"    +packname : encryption packing\n"
@@ -119,9 +121,6 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "-I") || !strcmp(argv[i], "--hidden") ) {
 				// ウインドウの非表示の指定
 				option.hidden_window = true;
-			} else if( (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--packfile")) && i + 1 < argc ) {
-				// 既存のパックファイルの指定
-				option.packfile.load(argv[++i], true);
 			} else if(  !strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug") ) {
 				// デバッグ
 				option.debug = true;
@@ -150,6 +149,9 @@ bool read_args(int argc, char * argv[])
 			} else if( (!strcmp(argv[i], "-H") || !strcmp(argv[i], "--hsp-path")) && i + 1 < argc ) {
 				// HSPディレクトリの指定
 				option.hsp_path = argv[++i];
+			} else if( (!strcmp(argv[i], "-w") || !strcmp(argv[i], "--work-path")) && i + 1 < argc ) {
+				// 作業ディレクトリの指定
+				option.work_path = argv[++i];
 			} else if(  !strcmp(argv[i], "-e") || !strcmp(argv[i], "--execute") ) {
 				// 実行
 				option.execute = true;
@@ -281,6 +283,7 @@ int main(int argc, char * argv[])
 	int result;
 	std::string common_path;
 	std::string hsp_path;
+	std::string work_path;
 	std::string objname;
 	std::string runtime;
 	std::string exename;
@@ -292,6 +295,11 @@ int main(int argc, char * argv[])
 		cmp.hsc_ver(&tmp[0]);
 		print_message("hspcmp.dll : %s\n", &tmp[0]);
 		return 0;
+	}
+
+	if( !option.work_path ) {
+		work_path = ".\\";
+		option.work_path = work_path.c_str();
 	}
 
 	// 共通ディレクトリを指定
@@ -391,10 +399,7 @@ option.dump();
 	if( option.make )
 	{
 		// パックファイル生成
-		if( !*option.packfile.filename() ) {
-			option.packfile.load("packfile", true);
-		}
-		option.packfile.save();
+		option.packfile.save(option.work_path);
 
 		if( (result = cmp.pack_ini(option.exename)) != 0 ) {
 			print_message("can't set pack name!\n"); // 現状、常に正常処理になるので処理を通らない
