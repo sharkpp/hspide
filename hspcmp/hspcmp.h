@@ -41,7 +41,7 @@ public:
 	int hsc_refname    (const char * filename)                     { return _hsc_refname    (0, int(filename), 0, 0); }
 	int hsc_objname    (const char * filename)                     { return _hsc_objname    (0, int(filename), 0, 0); }
 	int hsc_compath    (const char * pathname)                     { return _hsc_compath    (0, int(pathname), 0, 0); }
-	int hsc_comp       (bool debug, bool macro, bool debug_window) { return _hsc_comp       (debug, macro, debug_window, 0); }
+	int hsc_comp       (int debug, int macro, int debug_window)    { return _hsc_comp       (debug, macro, debug_window, 0); }
 	int hsc_getmes     (char * messages)                           { return _hsc_getmes     (int(messages), 0, 0, 0); }
 	int hsc_clrmes     ()                                          { return _hsc_clrmes     (0, 0, 0, 0); }
 	int hsc_ver        (char * version)                            { return _hsc_ver        (0, 0, 0, int(version)); }
@@ -49,8 +49,8 @@ public:
 	int hsc3_getsym    ()                                          { return _hsc3_getsym    (0, 0, 0, 0); }
 	int hsc3_messize   (int * size)                                { return _hsc3_messize   (int(size), 0, 0, 0); }
 	int hsc3_make      (const char * path)                         { return _hsc3_make      (0, int(path), 0, 0); }
-	int hsc3_getruntime(char * runtime, char * objfile)            { return _hsc3_getruntime(int(runtime), int(objfile), 0, 0); }
-	int hsc3_run       (const char * cmdline)                      { return _hsc3_run       (0, int(cmdline), 0, 0); }
+	int hsc3_getruntime(char * runtime, const char * objfile)      { return _hsc3_getruntime(int(runtime), int(objfile), 0, 0); }
+	int hsc3_run       (const char * cmdline)                      { return _hsc3_run       (int(cmdline), 0, 0, 0); }
 	int pack_ini       (const char * filename)                     { return _pack_ini       (0, int(filename), 0, 0); }
 	int pack_view      ()                                          { return _pack_view      (0, 0, 0, 0); }
 	int pack_make      (int type, int crypt_key)                   { return _pack_make      (type, crypt_key, 0, 0); }
