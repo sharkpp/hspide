@@ -8,40 +8,37 @@
 #include <string>
 #include <map>
 #include "hspcmp.h"
+#include "packfile_manager.hpp"
 
 #if defined(_UNICODE) || defined(UNICODE)
 #error "Building in unicode is not supported"
 #endif
-
-typedef enum {
-	PACK_OPT_NORMAL = 0,
-	PACK_OPT_ENCRYPT,
-} PACK_OPTION;
-
-typedef std::vector<std::pair<PACK_OPTION, std::string> > PACK_LIST_TYPE;
 
 struct option {
 	bool		version;
 	bool		help;
 	const char * exename;
 	const char * filename;
-	PACK_LIST_TYPE	packlist;
-	const char * packfile;
-	bool		update_packlist;
+	packfile_manager
+				packfile;
 	int			wx, wy;
 	bool		hidden_window;
 	bool		debug;
+	bool		debug_window;
+	bool		debug_window_set;
 	bool		preprocess_only;
 	bool		auto_make;
+	bool		make;
 	bool		execute;
 	const char * refname;
 	const char * objname;
 	const char * common_path;
 	option()
 		: version(false), help(false)
-		, exename(NULL), filename(NULL), packfile(NULL)
-		, update_packlist(false), wx(-1), wy(-1), hidden_window(false)
-		, debug(false), preprocess_only(false), auto_make(false), execute(false)
+		, exename(NULL), filename(NULL)
+		, wx(-1), wy(-1), hidden_window(false)
+		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
+		, auto_make(false), make(false), execute(false)
 		, refname(NULL), objname(NULL), common_path(NULL)
 	{}
 #ifdef _DEBUG
@@ -51,21 +48,20 @@ struct option {
 		printf("option.help = %s\n", help ? "true" : "false");
 		printf("option.exename = \"%s\"\n", exename);
 		printf("option.filename = \"%s\"\n", filename);
-		for(size_t i = 0; i < packlist.size(); i++) {
-			printf("option.packlist[%d] = %s\"%s\"\n", i, packlist[i].first, packlist[i].second);
-		}
-		printf("option.packfile = \"%s\"\n", packfile);
-		printf("option.update_packlist = %s\n", update_packlist ? "true" : "false");
 		printf("option.wx = %d\n", wx);
 		printf("option.wy = %d\n", wy);
 		printf("option.hidden_window = %s\n", hidden_window ? "true" : "false");
 		printf("option.debug = %s\n", debug ? "true" : "false");
+		printf("option.debug_window = %s\n", debug_window ? "true" : "false");
+		printf("option.debug_window_set = %s\n", debug_window_set ? "true" : "false");
 		printf("option.preprocess_only = %s\n", preprocess_only ? "true" : "false");
 		printf("option.auto_make = %s\n", auto_make ? "true" : "false");
+		printf("option.make = %s\n", make ? "true" : "false");
 		printf("option.refname = \"%s\"\n", refname);
 		printf("option.objname = \"%s\"\n", objname);
 		printf("option.execute = %s\n", execute ? "true" : "false");
 		printf("option.common_path = \"%s\"\n", common_path);
+		packfile.dump();
 	}
 #endif
 } option;
@@ -84,7 +80,8 @@ void usage()
 		"    -p PACKFILE , --packfile PACKFILE\n"
 		"    -d , --debug\n"
 		"    -P , --preprocess-only\n"
-		"    -a , --auto_make\n"
+		"    -a , --auto-make\n"
+		"    -m , --make\n"
 		"    -r REFERENCE_NAME , --refname REFERENCE_NAME\n"
 		"    -o OBJCT_NAME , --objname OBJCT_NAME\n"
 		"    -e , --execute\n"
@@ -121,16 +118,26 @@ bool read_args(int argc, char * argv[])
 				option.hidden_window = true;
 			} else if( (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--packfile")) && i + 1 < argc ) {
 				// 既存のパックファイルの指定
-				option.packfile = argv[i];
+				option.packfile.load(argv[i]);
 			} else if(  !strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug") ) {
 				// デバッグ
 				option.debug = true;
+				if( !option.debug_window_set ) {
+					option.debug_window = true;
+				}
+			} else if(  !strcmp(argv[i], "-D") || !strcmp(argv[i], "--debug-window") ) {
+				// デバッグウインドウ
+				option.debug_window = true;
+				option.debug_window_set = true;
 			} else if(  !strcmp(argv[i], "-P") || !strcmp(argv[i], "--preprocess-only") ) {
 				// プリプロセス処理のみ
 				option.preprocess_only = true;
 			} else if(  !strcmp(argv[i], "-a") || !strcmp(argv[i], "--auto-make") ) {
 				// 自動生成
 				option.auto_make = true;
+			} else if(  !strcmp(argv[i], "-m") || !strcmp(argv[i], "--make") ) {
+				// 生成
+				option.make = true;
 			} else if( (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--refname")) && i + 1 < argc ) {
 				// 参照ファイル名の指定
 				option.refname = argv[i];
@@ -153,49 +160,20 @@ bool read_args(int argc, char * argv[])
 			char * filename = argv[i];
 			if( !option.filename ) { // コンパイル対象を指定
 				option.filename = filename;
+				option.packfile.append("start.ax", packfile_manager::PACK_OPTION_ENCRYPT);
 			} else {
 				// パック対象の一覧に追加
-				option.update_packlist = true;
-				if( '+' == *filename ) { // 暗号化して追加
-					filename++;
-					option.packlist.push_back(std::make_pair(PACK_OPT_ENCRYPT, filename));
-				} else {
-					option.packlist.push_back(std::make_pair(PACK_OPT_NORMAL, filename));
-				}
+				option.packfile.append(
+						  '+' == *filename ? filename + 1 : filename
+						, '+' == *filename ? packfile_manager::PACK_OPTION_ENCRYPT
+						                   : packfile_manager::PACK_OPTION_NORMAL
+					);
 			}
 		}
 	}
 #ifdef _DEBUG
 	option.dump();
 #endif
-	return true;
-}
-
-bool read_pack_file(const char * packfile, PACK_LIST_TYPE & packlist)
-{
-	std::ifstream ifs(packfile);
-	std::string buff;
-	while( std::getline(ifs, buff) && !buff.empty() )
-	{
-		if( '+' == buff[0] ) {
-			option.packlist.push_back(std::make_pair(PACK_OPT_ENCRYPT, buff));
-		} else {
-			option.packlist.push_back(std::make_pair(PACK_OPT_NORMAL, buff));
-		}
-	}
-	return true;
-}
-
-bool write_pack_file(const char * packfile, const PACK_LIST_TYPE & packlist)
-{
-	std::ofstream ofs(packfile);
-	for(PACK_LIST_TYPE::const_iterator
-			ite = packlist.begin(),
-			last= packlist.end();
-		ite != last; ++ite)
-	{
-		ofs << (PACK_OPT_ENCRYPT == ite->first ? "+" : "") << ite->second << std::endl;
-	}
 	return true;
 }
 
@@ -280,6 +258,7 @@ int main(int argc, char * argv[])
 	std::vector<char> tmp;
 	int result;
 	std::string objname;
+	std::string runtime;
 	hspcmp cmp;
 
 	if( option.version ) {
@@ -315,7 +294,11 @@ printf("common_path='%s'\n",common_path.c_str());
 	}
 
 	// オブジェクト名を指定
-	if( option.objname ) {
+	if( option.objname || option.make || option.auto_make ) {
+		if( option.make || option.auto_make ) {
+			objname = "start.ax";
+			option.objname = objname.c_str();
+		}
 		if( (result = cmp.hsc_objname(option.objname)) < 0 ) {
 			print_message("can't set object name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
@@ -329,10 +312,10 @@ option.dump();
 
 	// コンパイル
 	result = cmp.hsc_comp(
-					 (option.debug?1:0)				// デバッグ or リリース
-					|(option.preprocess_only?2:0)	// プリプロセス処理のみ
-					,(option.auto_make?4:0)			// 自動EXE生成
-					,(option.hidden_window?0:1)		// ウインドウを非表示
+					 (option.debug?DEBUG_INFO_ENABLE:0)				// デバッグ or リリース
+					|(option.preprocess_only?PREPROCESS_ONLY:0)		// プリプロセス処理のみ
+					,(option.auto_make?AUTO_MAKE:0)					// 自動EXE生成
+					,(option.debug_window?ENABLE_DEBUG_WINDOW:0)	// デバッグウインドウを表示
 				);
 	// エラーメッセージ取得＆表示
 	print_compiler_message(cmp);
@@ -341,22 +324,74 @@ option.dump();
 		return -1;
 	}
 
-	// 実行
-	if( option.execute )
+	// ランタイムを取得
+	if( option.make || option.auto_make || option.execute )
 	{
-		std::vector<char> runtime(MAX_PATH*2+1);
-		std::string cmdline;
-		if( (result = cmp.hsc3_getruntime(&runtime[0], option.objname)) < 0 ) {
+		tmp.resize(MAX_PATH*2+1);
+		if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) < 0 ) {
 			print_message("can't get runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
+		static const char DEFAULT_RELEASE_RUNTIME[] = "hsprt";
+		static const char DEFAULT_DEBUG_RUNTIME[]   = "hsp3.exe";
 		// デフォルトのランタイム名を指定
-		if( !runtime[0] ) {
-			static const char DEFAULT_RUNTIME[] = "hsp3.exe";
-			const static size_t SIZEOF_DEFAULT_RUNTIME = sizeof(DEFAULT_RUNTIME);
-			runtime.assign(DEFAULT_RUNTIME, DEFAULT_RUNTIME + SIZEOF_DEFAULT_RUNTIME);
+		if( !tmp[0] ) {
+			runtime = option.make || option.auto_make
+				? DEFAULT_RELEASE_RUNTIME : DEFAULT_DEBUG_RUNTIME;
+		} else {
+			runtime = &tmp[0];
 		}
-		cmdline = std::string(&runtime[0]) + " \"" + std::string(option.objname) + "\"";
+	}
+
+	if( option.make )
+	{
+		// パックファイル生成
+		if( !*option.packfile.filename() ) {
+			option.packfile.load("packfile");
+		}
+		option.packfile.save();
+
+		if( (result = cmp.pack_ini(option.packfile.filename())) < 0 ) {
+			print_message("can't set pack name!\n"); // 現状、常に正常処理になるので処理を通らない
+			return -1;
+		}
+
+		if( (result = cmp.pack_make(CREATE_DPM_EXE, ENCRYPTE_KEY_DEFAULT)) < 0 ) {
+			// エラーメッセージ取得＆表示
+			print_compiler_message(cmp);
+			return -1;
+		}
+
+		if( (result = cmp.pack_opt(
+							  option.wx, option.wy
+							, option.hidden_window ? EXE_OPT_HIDDEN_WINDOW : 0
+						)) < 0 )
+		{
+			print_message("can't set pack option!\n"); // 現状、常に正常処理になるので処理を通らない
+			return -1;
+		}
+
+		if( (result = cmp.pack_rt(runtime.c_str())) < 0 ) {
+			print_message("can't set runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
+			return -1;
+		}
+
+		if( (result = cmp.pack_exe(EXE_TYPE_DEFAULT)) < 0 ) {
+			// エラーメッセージ取得＆表示
+			print_compiler_message(cmp);
+			return -1;
+		}
+	}
+
+	// 実行
+	if( option.execute )
+	{
+		std::string cmdline;
+		if( option.make || option.auto_make ) {
+			cmdline = std::string(option.exename);
+		} else {
+			cmdline = runtime + " \"" + std::string(option.objname) + "\"";
+		}
 printf("'%s'\n", cmdline.c_str());
 		if( (result = cmp.hsc3_run(cmdline.c_str())) < 0 ) {
 			// エラーメッセージ取得＆表示

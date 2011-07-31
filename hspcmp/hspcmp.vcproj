@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\packfile_manager.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

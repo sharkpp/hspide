@@ -1,6 +1,32 @@
 
 #include "module_loader.hpp"
 
+// hsc_comp p1
+#define DEBUG_INFO_ENABLE	1	// デバッグ情報をオブジェクトファイルに付加
+#define PREPROCESS_ONLY		2	// プリプロセス処理のみ
+// hsc_comp p2
+#define EXTENSION_MACRO_ENABLE	1	// HSP拡張マクロを使用する
+#define AUTO_MAKE				4	// 実行ファイル自動作成
+// hsc_comp p3
+#define ENABLE_DEBUG_WINDOW	1	// デバッグウインドゥを表示
+
+// pack_make p1
+#define CREATE_DPM_EXE			0	// 標準EXEファイル用
+#define CREATE_DPM_EXTERNAL		1	// 外部DPMファイル用
+// pack_make p2
+#define ENCRYPTE_KEY_DEFAULT	0	// 暗号化キー 標準キーを使用
+//#define ENCRYPTE_KEY_CUSTOM		// 暗号化キー その他(値がそのまま暗号化キー)
+
+// pack_exe p1
+#define EXE_TYPE_DEFAULT		0	// 標準
+#define EXE_TYPE_FULLSCREEN		1	// フルスクリーンモード
+#define EXE_TYPE_SCREENSAVER	2	// スクリーンセーバー
+
+// pack_opt p3
+#define EXE_OPT_HIDDEN_WINDOW	0	// 初期ウィンドウ非表示
+#define EXE_OPT_NO_CHANGE_DIR	1	// ディレクトリ移動なし
+
+
 class hspcmp
 	: public spplib::module_loader<hspcmp>
 {
