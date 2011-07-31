@@ -33,13 +33,14 @@ struct option {
 	const char * refname;
 	const char * objname;
 	const char * common_path;
+	const char * hsp_path;
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
-		, wx(-1), wy(-1), hidden_window(false)
+		, wx(0), wy(0), hidden_window(false)
 		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
-		, refname(NULL), objname(NULL), common_path(NULL)
+		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL)
 	{}
 #ifdef _DEBUG
 	void dump() {
@@ -61,6 +62,7 @@ struct option {
 		printf("option.objname = \"%s\"\n", objname);
 		printf("option.execute = %s\n", execute ? "true" : "false");
 		printf("option.common_path = \"%s\"\n", common_path);
+		printf("option.hsp_path = \"%s\"\n", hsp_path);
 		packfile.dump();
 	}
 #endif
@@ -86,6 +88,7 @@ void usage()
 		"    -o OBJCT_NAME , --objname OBJCT_NAME\n"
 		"    -e , --execute\n"
 		"    -C COMMON_PATH , --common-path COMMON_PATH\n"
+		"    -H HSP_PATH , --hsp-path HSP_PATH\n"
 		"   packname:\n"
 		"     packname : normal packing\n"
 		"    +packname : encryption packing\n"
@@ -118,7 +121,7 @@ bool read_args(int argc, char * argv[])
 				option.hidden_window = true;
 			} else if( (!strcmp(argv[i], "-p") || !strcmp(argv[i], "--packfile")) && i + 1 < argc ) {
 				// 既存のパックファイルの指定
-				option.packfile.load(argv[i]);
+				option.packfile.load(argv[++i], true);
 			} else if(  !strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug") ) {
 				// デバッグ
 				option.debug = true;
@@ -140,10 +143,13 @@ bool read_args(int argc, char * argv[])
 				option.make = true;
 			} else if( (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--refname")) && i + 1 < argc ) {
 				// 参照ファイル名の指定
-				option.refname = argv[i];
+				option.refname = argv[++i];
 			} else if( (!strcmp(argv[i], "-C") || !strcmp(argv[i], "--common-path")) && i + 1 < argc ) {
 				// 共通ディレクトリの指定
-				option.common_path = argv[i];
+				option.common_path = argv[++i];
+			} else if( (!strcmp(argv[i], "-H") || !strcmp(argv[i], "--hsp-path")) && i + 1 < argc ) {
+				// HSPディレクトリの指定
+				option.hsp_path = argv[++i];
 			} else if(  !strcmp(argv[i], "-e") || !strcmp(argv[i], "--execute") ) {
 				// 実行
 				option.execute = true;
@@ -177,7 +183,8 @@ bool read_args(int argc, char * argv[])
 	return true;
 }
 
-void get_filename(const char * path, std::string & filename, bool with_extension)
+// ファイル名を取得
+void basename(const char * path, std::string & filename, bool with_extension)
 {
 	const char * filename_pos = path;
 	for(; *path; path = (const char*)CharNext(path)) {
@@ -200,6 +207,21 @@ void get_filename(const char * path, std::string & filename, bool with_extension
 			dot_pos = path;
 		}
 		filename.assign(filename_pos, 0, size_t(dot_pos - filename_pos));
+	}
+}
+
+// フォルダ名を取得
+void dirname(const char * path, std::string & filename)
+{
+	const char * last_sep = path;
+	for(const char * p = path; *p; p = (const char*)CharNext(p)) {
+		if( '\\' == *p ) {
+			last_sep = p;
+		}
+	}
+	filename.assign(last_sep, size_t(last_sep - path));
+	if( filename.empty() ) {
+		filename = ".";
 	}
 }
 
@@ -257,8 +279,12 @@ int main(int argc, char * argv[])
 
 	std::vector<char> tmp;
 	int result;
+	std::string common_path;
+	std::string hsp_path;
 	std::string objname;
 	std::string runtime;
+	std::string exename;
+	std::string tmp2;
 	hspcmp cmp;
 
 	if( option.version ) {
@@ -267,27 +293,38 @@ int main(int argc, char * argv[])
 		print_message("hspcmp.dll : %s\n", &tmp[0]);
 		return 0;
 	}
-//	OutputDebugString(tmp);
 
 	// 共通ディレクトリを指定
+	if( !option.common_path && option.hsp_path ) {
+		common_path = option.hsp_path;
+		normalize_directory(common_path);
+		common_path+= "common";
+		option.common_path = common_path.c_str();
+	}
 	if( option.common_path ) {
 		std::string common_path = option.common_path;
 		normalize_directory(common_path);
-		if( (result = cmp.hsc_compath(common_path.c_str())) < 0 ) {
+		if( (result = cmp.hsc_compath(common_path.c_str())) != 0 ) {
 			print_message("can't set common path!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
 printf("common_path='%s'\n",common_path.c_str());
 	}
+
+	if( !option.hsp_path ) {
+		hsp_path = ".";
+		option.hsp_path = hsp_path.c_str();
+	}
+
 	// コンパイル対象を指定
-	if( (result = cmp.hsc_ini(option.filename)) < 0 ) {
+	if( (result = cmp.hsc_ini(option.filename)) != 0 ) {
 		print_message("can't set target name!\n"); // 現状、常に正常処理になるので処理を通らない
 		return -1;
 	}
 
 	// 参照ファイル名を指定
 	if( option.refname ) {
-		if( (result = cmp.hsc_refname(option.refname)) < 0 ) {
+		if( (result = cmp.hsc_refname(option.refname)) != 0 ) {
 			print_message("can't set reference name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
@@ -299,12 +336,12 @@ printf("common_path='%s'\n",common_path.c_str());
 			objname = "start.ax";
 			option.objname = objname.c_str();
 		}
-		if( (result = cmp.hsc_objname(option.objname)) < 0 ) {
+		if( (result = cmp.hsc_objname(option.objname)) != 0 ) {
 			print_message("can't set object name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
 	} else {
-		get_filename(option.filename, objname, false);
+		basename(option.filename, objname, false);
 		objname += ".ax";
 		option.objname = objname.c_str();
 	}
@@ -320,7 +357,7 @@ option.dump();
 	// エラーメッセージ取得＆表示
 	print_compiler_message(cmp);
 	// エラーの場合は終了
-	if( result < 0 ) {
+	if( result != 0 ) {
 		return -1;
 	}
 
@@ -328,7 +365,7 @@ option.dump();
 	if( option.make || option.auto_make || option.execute )
 	{
 		tmp.resize(MAX_PATH*2+1);
-		if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) < 0 ) {
+		if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) != 0 ) {
 			print_message("can't get runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
@@ -341,22 +378,30 @@ option.dump();
 		} else {
 			runtime = &tmp[0];
 		}
+
+		// 実行ファイル名を指定
+		if( !option.exename ) {
+			basename(option.filename, exename, false);
+		} else {
+			basename(option.exename, exename, false);
+		}
+		option.exename = exename.c_str();
 	}
 
 	if( option.make )
 	{
 		// パックファイル生成
 		if( !*option.packfile.filename() ) {
-			option.packfile.load("packfile");
+			option.packfile.load("packfile", true);
 		}
 		option.packfile.save();
 
-		if( (result = cmp.pack_ini(option.packfile.filename())) < 0 ) {
+		if( (result = cmp.pack_ini(option.exename)) != 0 ) {
 			print_message("can't set pack name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
 
-		if( (result = cmp.pack_make(CREATE_DPM_EXE, ENCRYPTE_KEY_DEFAULT)) < 0 ) {
+		if( (result = cmp.pack_make(CREATE_DPM_EXE, ENCRYPTE_KEY_DEFAULT)) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
 			return -1;
@@ -365,18 +410,21 @@ option.dump();
 		if( (result = cmp.pack_opt(
 							  option.wx, option.wy
 							, option.hidden_window ? EXE_OPT_HIDDEN_WINDOW : 0
-						)) < 0 )
+						)) != 0 )
 		{
 			print_message("can't set pack option!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
 
-		if( (result = cmp.pack_rt(runtime.c_str())) < 0 ) {
+		tmp2  = option.hsp_path;
+		normalize_directory(tmp2);
+		tmp2 += runtime;
+		if( (result = cmp.pack_rt(tmp2.c_str())) != 0 ) {
 			print_message("can't set runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
 
-		if( (result = cmp.pack_exe(EXE_TYPE_DEFAULT)) < 0 ) {
+		if( (result = cmp.pack_exe(EXE_TYPE_DEFAULT)) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
 			return -1;
@@ -390,26 +438,18 @@ option.dump();
 		if( option.make || option.auto_make ) {
 			cmdline = std::string(option.exename);
 		} else {
-			cmdline = runtime + " \"" + std::string(option.objname) + "\"";
+			cmdline = option.hsp_path;
+			normalize_directory(cmdline);
+			cmdline = "\"" + cmdline + runtime + "\" \"" + std::string(option.objname) + "\"";
 		}
 printf("'%s'\n", cmdline.c_str());
-		if( (result = cmp.hsc3_run(cmdline.c_str())) < 0 ) {
+		if( (result = cmp.hsc3_run(cmdline.c_str())) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
 			print_message("can't execute!\n");
 			return -1;
 		}
 	}
-
-	//cmp.hsc3_messize(&len);
-	//cmp.hsc_getmes(tmp);
-	//OutputDebugString(tmp);
-
-//	printf("[%s]\n", GetCommandLine());
-//	for(int i = 0; i < 100; i++) {
-//		Sleep(100);
-//		printf(">>%d\n", i);
-//	}
 
 	return 0;
 }

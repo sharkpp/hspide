@@ -16,6 +16,8 @@
 #ifndef INCLUDE_GUARD_BFA758C4_8698_4B3F_A57F_51BB511D0EC5
 #define INCLUDE_GUARD_BFA758C4_8698_4B3F_A57F_51BB511D0EC5
 
+void dirname(const char * path, std::string & filename);
+
 class packfile_manager
 {
 public:
@@ -46,7 +48,7 @@ public:
 	bool modified() const;
 
 	// パックリストを読み込み
-	bool load(const char * packfile = NULL);
+	bool load(const char * packfile = NULL, bool merge = false);
 
 	// パックリストを書き込み
 	bool save(const char * packfile = NULL);
@@ -81,7 +83,7 @@ bool packfile_manager::modified() const
 
 // パックリストを読み込み
 inline
-bool packfile_manager::load(const char * packfile)
+bool packfile_manager::load(const char * packfile, bool merge)
 {
 	if( !packfile ) {
 		packfile = m_filename.c_str();
@@ -98,7 +100,12 @@ bool packfile_manager::load(const char * packfile)
 		return false;
 	}
 
-	m_modify = false;
+	// すでに読み込んでいるもとのマージを行うか？
+	if( !merge ) {
+		m_modify = false;
+		m_packlist.clear();
+	}
+
 	std::string buff;
 	while( std::getline(ifs, buff) && !buff.empty() )
 	{
@@ -125,7 +132,12 @@ bool packfile_manager::save(const char * packfile)
 		return true;
 	}
 
-	std::ofstream ofs(packfile);
+	std::string filename = packfile;
+	dirname(packfile, filename);
+	filename += "\\packfile";
+printf("%s\n",filename.c_str());
+
+	std::ofstream ofs(filename.c_str());
 	for(PACK_LIST_TYPE::const_iterator
 			ite = m_packlist.begin(),
 			last= m_packlist.end();
@@ -144,6 +156,10 @@ bool packfile_manager::save(const char * packfile)
 inline
 bool packfile_manager::append(const char * filename, PACK_OPTION option)
 {
+	if( 0 == SearchPath(".\\", filename, NULL, 0, NULL, NULL) ) {
+		return false;
+	}
+
 	for(PACK_LIST_TYPE::const_iterator
 			ite = m_packlist.begin(),
 			last= m_packlist.end();
