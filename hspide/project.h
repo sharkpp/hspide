@@ -1,6 +1,5 @@
-#include <QObject>
 #include <QProcess>
-#include <QString>
+#include "projectitem.h"
 
 #ifndef INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7
 #define INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7
@@ -9,6 +8,7 @@ class CEditor;
 
 class CProject
 	: public QObject
+	, public CProjectItem
 {
 	Q_OBJECT
 
@@ -25,12 +25,12 @@ private:
 
 public:
 
-	CProject(const CProject::Config & config);
+	CProject(QObject *parent, const CProject::Config & config);
 
-	~CProject();
+	virtual ~CProject();
 
 	// プロジェクトを読み込み
-	bool load();
+	bool load(const QString & filename);
 
 	// プロジェクトを保存
 	bool save(const QString & filename = QString());
@@ -47,6 +47,8 @@ public:
 	// プロジェクト内のファイルを閉じる
 	bool closeFile(CEditor* editor);
 
+// コンパイラ？クラスに移動予定
+/*
 	// プロジェクトをビルド
 	void build();
 
@@ -63,6 +65,7 @@ signals:
 	void buildStart();
 	void buildFinished(bool status);
 	void buildOutput(const QString & output);
+*/
 
 private:
 
@@ -74,4 +77,4 @@ private:
 
 };
 
-#endif // defined(INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7)
+#endif // !defined(INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7)

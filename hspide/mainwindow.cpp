@@ -16,14 +16,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	CSolution::Config config;
 	mSolution = new CSolution(this, config);
+mSolution->load("test.hspsln");
 	// 起動時は空ソリューション、プロジェクトを作る
 	mSolution->append();
-
+/*
 	// 処理完了時の通知を登録
 	connect(mSolution, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
 	connect(mSolution, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
 	connect(mSolution, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
-
+*/
 //	QTextEdit * textEdit = new QTextEdit;
 //	setCentralWidget(textEdit);
 	//QTabWidget * tabWidget = new QTabWidget(this);
@@ -329,7 +330,7 @@ void MainWindow::onNewFile()
 {
 	CEditor * textEditor = new CEditor(tabWidget);
 	tabWidget->addTab(textEditor, textEditor->fileName());
-	mSolution->openFile(textEditor);
+	mSolution->append()->openFile(textEditor);
 }
 
 void MainWindow::onOpenFile(const QString & filePath)
@@ -389,7 +390,7 @@ void MainWindow::onDebugRun()
 //		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
 //	}
 
-	mSolution->build();
+//	mSolution->build();
 }
 
 void MainWindow::buildStart()
@@ -397,6 +398,13 @@ void MainWindow::buildStart()
 	// ビルド処理開始
 
 	dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build start"));
+
+	// ファイルを保存
+	for(int index = 0, num = tabWidget->count(); index < num; index++)
+	{
+		CEditor * textEdit = dynamic_cast<CEditor*>(tabWidget->widget(index));
+		textEdit->save();
+	}
 
 	// プログラスバーをMarqueeスタイルに
 	taskProgress->setRange(0, 0);

@@ -1,9 +1,12 @@
 #include "project.h"
+#include "projectitem.h"
 #include "editor.h"
 #include <QDir>
 
-CProject::CProject(const CProject::Config & config)
-	: mConfig(config)
+CProject::CProject(QObject *parent, const CProject::Config & config)
+	: QObject(parent)
+	, CProjectItem(parent)
+	, mConfig(config)
 	, mProcess(NULL)
 {
 }
@@ -14,7 +17,7 @@ CProject::~CProject()
 }
 
 // プロジェクトを読み込み
-bool CProject::load()
+bool CProject::load(const QString & filename)
 {
 	return false;
 }
@@ -28,6 +31,9 @@ bool CProject::save(const QString & filename)
 // プロジェクトにファイルを追加
 bool CProject::append(const QString & filename)
 {
+	CProjectItem *item = new CProjectItem(this);
+	item->setPath(filename);
+//	return append(item);
 	return false;
 }
 
@@ -51,6 +57,7 @@ bool CProject::closeFile(CEditor* editor)
 	return false;
 }
 
+/*
 // プロジェクトをビルド
 void CProject::build()
 {
@@ -92,6 +99,7 @@ void CProject::buildReadOutput()
 	QString tmp(mProcess->readAllStandardOutput());
 	emit buildOutput(tmp);
 }
+*/
 
 // プロジェクト内のファイルを一時的に保存
 bool CProject::saveTemp()

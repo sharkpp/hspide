@@ -1,11 +1,12 @@
-#include <QTextEdit>
+#include <QTreeWidget>
+#include <QAbstractItemModel>
 
 class CProjectDock
 	: public QWidget
 {
 	Q_OBJECT
 
-	QTextEdit * mEditor;
+	QTreeWidget* mTree;
 
 public:
 

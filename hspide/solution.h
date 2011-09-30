@@ -1,7 +1,10 @@
-#include <QObject>
+//#include <QObject>
 #include <QString>
 #include <QMap>
 #include <QSharedPointer>
+#include <QXmlDefaultHandler>
+//#include <QAbstractItemModel>
+#include "projectitem.h"
 
 #ifndef INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079
 #define INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079
@@ -11,6 +14,8 @@ class CEditor;
 
 class CSolution
 	: public QObject
+	, public CProjectItem
+	, protected QXmlDefaultHandler
 {
 	Q_OBJECT
 
@@ -29,16 +34,16 @@ public:
 
 	CSolution(QObject *parent, const CSolution::Config & config);
 
-	~CSolution();
+	virtual ~CSolution();
 
 	// ソリューションを読み込み
-	bool load();
+	bool load(const QString & filename);
 
 	// ソリューションを保存
 	bool save(const QString & filename);
 
 	// ソリューションにプロジェクトを追加
-	bool append(const QString & filename = QString());
+	QSharedPointer<CProject> & append(const QString & filename = QString());
 
 	// ソリューションからプロジェクトを除外
 	bool remove(const QString & filename);
@@ -61,6 +66,7 @@ public:
 	// プロジェクトを取得
 	const CProject & at(int index) const;
 
+/*
 	// ソリューションのビルド
 	void build();
 
@@ -83,7 +89,19 @@ signals:
 	void buildStart();
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
+*/
+
+private:
+
+ // QXmlDefaultHandler class method override
+
+	bool startElement(const QString &namespaceURI, const QString &localName,
+	                  const QString &qName, const QXmlAttributes &attributes);
+	bool endElement(const QString &namespaceURI, const QString &localName,
+	                const QString &qName);
+	bool characters(const QString &str);
+	bool fatalError(const QXmlParseException &exception);
 
 };
 
-#endif // defined(INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079)
+#endif // !defined(INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079)
