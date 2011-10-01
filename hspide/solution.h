@@ -2,7 +2,6 @@
 #include <QString>
 #include <QMap>
 #include <QSharedPointer>
-#include <QXmlDefaultHandler>
 //#include <QAbstractItemModel>
 #include "projectitem.h"
 
@@ -13,26 +12,13 @@ class CProject;
 class CEditor;
 
 class CSolution
-	: public QObject
-	, public CProjectItem
-	, protected QXmlDefaultHandler
+	: public CProjectItem
 {
 	Q_OBJECT
 
 public:
 
-	typedef struct {
-	} Config;
-
-private:
-
-	Config	mConfig;
-
-	QMap<QString, QSharedPointer<CProject> >	mProjects;
-
-public:
-
-	CSolution(QObject *parent, const CSolution::Config & config);
+	CSolution(QObject *parent);
 
 	virtual ~CSolution();
 
@@ -43,7 +29,7 @@ public:
 	bool save(const QString & filename);
 
 	// ソリューションにプロジェクトを追加
-	QSharedPointer<CProject> & append(const QString & filename = QString());
+	CProject * append(const QString & filename = QString());
 
 	// ソリューションからプロジェクトを除外
 	bool remove(const QString & filename);
@@ -55,52 +41,18 @@ public:
 	bool closeFile(CEditor* editor);
 
 	// ソリューション名を取得
-	QString title();
+	QString title() const;
 
 	// ソリューション名を取得
-	QString filename();
+	QString filename() const;
 
 	// プロジェクト数を取得
-	int count();
+	int count() const;
 
 	// プロジェクトを取得
 	const CProject & at(int index) const;
 
-/*
-	// ソリューションのビルド
-	void build();
-
-	// ソリューションの実行
-	void run();
-
-public slots:
-
-	// プロジェクトのビルド開始
-	void buildStartProject();
-
-	// プロジェクトのビルド完了
-	void buildFinishedProject(bool successed);
-
-	// ビルド中の出力を取得
-	void buildOutputProject(const QString & output);
-
-signals:
-
-	void buildStart();
-	void buildFinished(bool successed);
-	void buildOutput(const QString & output);
-*/
-
 private:
-
- // QXmlDefaultHandler class method override
-
-	bool startElement(const QString &namespaceURI, const QString &localName,
-	                  const QString &qName, const QXmlAttributes &attributes);
-	bool endElement(const QString &namespaceURI, const QString &localName,
-	                const QString &qName);
-	bool characters(const QString &str);
-	bool fatalError(const QXmlParseException &exception);
 
 };
 

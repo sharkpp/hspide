@@ -7,8 +7,11 @@
 #define INCLUDE_GUARD_ACA7DD5A_DAF1_4F62_AD97_1E377CC1013C
 
 class CProjectItem
-	: public QStandardItem
+	: public QObject
+	, public QStandardItem
 {
+	Q_OBJECT
+
 public:
 
 private:
@@ -24,15 +27,9 @@ public:
 
 	virtual ~CProjectItem();
 
-	//int getRow(const CProjectItem & item) const;
-
-	//CProjectItem * child(int row);
-
-	//int rowCount() const;
-
-	//bool append(CProjectItem * item);
-
 	bool setPath(const QString & path);
+
+	bool setName(const QString & name);
 
 	const QString & filePath() const;
 
@@ -41,6 +38,26 @@ public:
 protected:
 
 	virtual QVariant data(int role = Qt::UserRole + 1) const;
+};
+
+class CFolderItem
+	: public CProjectItem
+{
+	Q_OBJECT
+
+public:
+
+	CFolderItem(QObject * parent) : CProjectItem(parent) {}
+};
+
+class CFileItem
+	: public CProjectItem
+{
+	Q_OBJECT
+
+public:
+
+	CFileItem(QObject * parent) : CProjectItem(parent) {}
 };
 
 #endif // !defined(INCLUDE_GUARD_ACA7DD5A_DAF1_4F62_AD97_1E377CC1013C)

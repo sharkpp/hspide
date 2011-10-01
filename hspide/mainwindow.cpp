@@ -14,8 +14,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setObjectName("MainWindow");
 	setWindowTitle("HSP script editor");
 
-	CSolution::Config config;
-	mSolution = new CSolution(this, config);
+	mSolution = new CSolution(this);
 mSolution->load("test.hspsln");
 	// 起動時は空ソリューション、プロジェクトを作る
 	mSolution->append();

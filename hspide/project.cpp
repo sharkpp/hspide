@@ -1,25 +1,26 @@
+#include <QtDebug>
+#include <QFileInfo>
 #include "project.h"
 #include "projectitem.h"
 #include "editor.h"
-#include <QDir>
+#include "projectreader.h"
 
-CProject::CProject(QObject *parent, const CProject::Config & config)
-	: QObject(parent)
-	, CProjectItem(parent)
-	, mConfig(config)
-	, mProcess(NULL)
+/////////////////////////////////////////////////////////////////////
+
+CProject::CProject(QObject *parent)
+	: CProjectItem(parent)
 {
 }
 
 CProject::~CProject()
 {
-	delete mProcess;
 }
 
 // プロジェクトを読み込み
 bool CProject::load(const QString & filename)
 {
-	return false;
+	CProjectReader reader;
+	return reader.load(filename, *this);
 }
 
 // プロジェクトを保存
@@ -28,13 +29,60 @@ bool CProject::save(const QString & filename)
 	return false;
 }
 
-// プロジェクトにファイルを追加
-bool CProject::append(const QString & filename)
+// フォルダを取得
+CProjectItem * CProject::getFolderItem(const QString & path, bool createAlways)
 {
+	CProjectItem *item = this;
+
+	for(QStringListIterator ite(path.split("/"));
+		ite.hasNext(); )
+	{
+		CFolderItem * folderItem = NULL;
+		QString name = ite.next();
+
+		for(int row = 0, rowNum = item->rowCount();
+			row < rowNum; row++, folderItem = NULL)
+		{
+			if( NULL != (folderItem = dynamic_cast<CFolderItem*>(item->child(row))) &&
+				!folderItem->fileName().compare(name, Qt::CaseSensitive) )
+			{
+				break;
+			}
+		}
+
+		if( folderItem )
+		{
+			item = folderItem;
+		}
+		else if( createAlways )
+		{
+			folderItem = new CFolderItem(this);
+			folderItem->setName(name);
+			item->insertRow(rowCount(), folderItem);
+			item = folderItem;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	return item;
+}
+
+// プロジェクトにファイルを追加
+bool CProject::append(const QString & filename, const QString & path)
+{
+	CProjectItem *folder = getFolderItem(path);
+	if( !folder ) {
+		return false;
+	}
+
 	CProjectItem *item = new CProjectItem(this);
 	item->setPath(filename);
-//	return append(item);
-	return false;
+
+	folder->insertRow(rowCount(), item);
+	return true;
 }
 
 // プロジェクトから除外
@@ -57,50 +105,6 @@ bool CProject::closeFile(CEditor* editor)
 	return false;
 }
 
-/*
-// プロジェクトをビルド
-void CProject::build()
-{
-#ifdef _DEBUG
-	QDir::setCurrent(QDir::currentPath() + "\\debug\\");
-#endif
-
-	QString program = "./hspcmp";
-	QStringList arguments;
-	arguments << "-style" << "motif";
-	delete mProcess;
-	mProcess = new QProcess(this);
-	mProcess->start(program, arguments);
-
-	if( !mProcess->waitForStarted() ) {
-		emit buildFinished(false);
-		delete mProcess;
-		return;
-	}
-
-	// 処理完了時の通知を登録
-	connect(mProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
-	connect(mProcess, SIGNAL(readyReadStandardOutput()),          this, SLOT(buildReadOutput()));
-
-	// シグナル発報
-	emit buildStart();
-}
-
-// プロジェクトのビルド完了
-void CProject::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	// シグナル発報
-	emit buildFinished(QProcess::NormalExit == exitStatus);
-}
-
-// ビルド中の出力を取得
-void CProject::buildReadOutput()
-{
-	QString tmp(mProcess->readAllStandardOutput());
-	emit buildOutput(tmp);
-}
-*/
-
 // プロジェクト内のファイルを一時的に保存
 bool CProject::saveTemp()
 {
@@ -113,3 +117,8 @@ bool CProject::clearTemp()
 	return false;
 }
 
+// プロジェクト名称取得
+QString CProject::name() const
+{
+	return QFileInfo(filePath()).baseName();
+}

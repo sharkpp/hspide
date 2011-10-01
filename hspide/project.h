@@ -1,4 +1,3 @@
-#include <QProcess>
 #include "projectitem.h"
 
 #ifndef INCLUDE_GUARD_DE12DB44_EA81_45D1_9E18_9CCA26479DE7
@@ -7,25 +6,16 @@
 class CEditor;
 
 class CProject
-	: public QObject
-	, public CProjectItem
+	: public CProjectItem
 {
 	Q_OBJECT
 
-public:
-
-	typedef struct {
-		QString	compilerPath;
-	} Config;
-
 private:
 
-	Config	mConfig;
-	QProcess *mProcess;
 
 public:
 
-	CProject(QObject *parent, const CProject::Config & config);
+	CProject(QObject *parent);
 
 	virtual ~CProject();
 
@@ -36,7 +26,7 @@ public:
 	bool save(const QString & filename = QString());
 
 	// プロジェクトにファイルを追加
-	bool append(const QString & filename);
+	bool append(const QString & filename, const QString & path = QString());
 
 	// プロジェクトから除外
 	bool remove(const QString & filename);
@@ -47,25 +37,11 @@ public:
 	// プロジェクト内のファイルを閉じる
 	bool closeFile(CEditor* editor);
 
-// コンパイラ？クラスに移動予定
-/*
-	// プロジェクトをビルド
-	void build();
+	// プロジェクト名称取得
+	QString name() const;
 
-public slots:
-
-	// プロジェクトのビルド完了
-	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-	// ビルド中の出力を取得
-	void buildReadOutput();
-
-signals:
-
-	void buildStart();
-	void buildFinished(bool status);
-	void buildOutput(const QString & output);
-*/
+	// フォルダを取得
+	CProjectItem * getFolderItem(const QString & path, bool createAlways = false);
 
 private:
 
