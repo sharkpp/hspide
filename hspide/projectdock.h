@@ -1,16 +1,20 @@
-#include <QTreeWidget>
-#include <QAbstractItemModel>
+#include <QTreeView>
+
+class CSolution;
 
 class CProjectDock
 	: public QWidget
 {
 	Q_OBJECT
 
-	QTreeWidget* mTree;
+	QTreeView* mTree;
 
 public:
 
 	CProjectDock(QWidget *parent = 0);
+
+	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ğŒ‹‡
+	bool setSolution(CSolution * solution);
 
 protected:
 

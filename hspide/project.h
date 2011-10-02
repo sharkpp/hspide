@@ -26,7 +26,7 @@ public:
 	bool save(const QString & filename = QString());
 
 	// プロジェクトにファイルを追加
-	bool append(const QString & filename, const QString & path = QString());
+	bool append(const QString & filename, const QString & path = QString(), bool isFolder = false);
 
 	// プロジェクトから除外
 	bool remove(const QString & filename);

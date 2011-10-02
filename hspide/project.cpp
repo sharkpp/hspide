@@ -40,6 +40,10 @@ CProjectItem * CProject::getFolderItem(const QString & path, bool createAlways)
 		CFolderItem * folderItem = NULL;
 		QString name = ite.next();
 
+		if( name.isEmpty() ) {
+			continue;
+		}
+
 		for(int row = 0, rowNum = item->rowCount();
 			row < rowNum; row++, folderItem = NULL)
 		{
@@ -58,7 +62,7 @@ CProjectItem * CProject::getFolderItem(const QString & path, bool createAlways)
 		{
 			folderItem = new CFolderItem(this);
 			folderItem->setName(name);
-			item->insertRow(rowCount(), folderItem);
+			item->appendRow(folderItem);
 			item = folderItem;
 		}
 		else
@@ -71,17 +75,31 @@ CProjectItem * CProject::getFolderItem(const QString & path, bool createAlways)
 }
 
 // プロジェクトにファイルを追加
-bool CProject::append(const QString & filename, const QString & path)
+bool CProject::append(const QString & filename, const QString & path, bool isFolder)
 {
-	CProjectItem *folder = getFolderItem(path);
-	if( !folder ) {
+	CProjectItem * parentFolder = getFolderItem(path);
+	if( !parentFolder ) {
 		return false;
 	}
 
-	CProjectItem *item = new CProjectItem(this);
-	item->setPath(filename);
+	CProjectItem * item;
+	if( !isFolder )
+	{
+		// ファイルを追加
+		CFileItem *file = new CFileItem(this);
+		file->setPath(filename);
+		item = file;
+	}
+	else
+	{
+		// 仮想フォルダを追加
+		CFolderItem *folder = new CFolderItem(this);
+		folder->setName(filename);
+		item = folder;
+	}
 
-	folder->insertRow(rowCount(), item);
+	parentFolder->appendRow(item);
+
 	return true;
 }
 

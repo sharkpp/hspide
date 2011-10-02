@@ -2,6 +2,8 @@
 #include <QSharedPointer>
 #include <QString>
 #include <QMap>
+#include <QDataStream>
+#include <QByteArray>
 #include "project.h"
 
 #ifndef INCLUDE_GUARD_EADFE3B9_3FA4_4DA3_BE5D_A6C644A9A637
@@ -12,7 +14,7 @@ class CSolutionReader
 {
 	QVector<QString> mXmlDomStack;
 
-	CSolution mSolution;
+	CSolution *mSolution;
 
 public:
 
@@ -31,7 +33,10 @@ public:
 		reader.setContentHandler(this);
 		reader.setErrorHandler(this);
 
-		mSolution.removeRows(0, mSolution.rowCount());
+		mSolution = &solution;
+		mSolution->removeRows(0, mSolution->rowCount());
+
+		mXmlDomStack.clear();
 
 		QFile file(filename);
 		if( !file.open(QFile::ReadOnly | QFile::Text) )
@@ -46,11 +51,16 @@ public:
 		}
 
 		// swapping solution
-		for(int row = 0, rowNum = mSolution.rowCount();
-			row < rowNum; row++)
-		{
-			solution.insertRow(row, mSolution.takeRow(row));
-		}
+		//for(int row = 0, rowNum = mSolution.rowCount();
+		//	row < rowNum; row++)
+		//{
+		//	solution.appendRow(mSolution.child(row));
+		//}
+		//solution.setText(mSolution.text());
+	//	QByteArray tmp0;
+	//	QDataStream tmp(&tmp0, QIODevice::ReadWrite);
+	//	mSolution.write(tmp);
+	//	solution.read(tmp);
 
 		return true;
 	}
@@ -68,11 +78,19 @@ protected:
 		{
 			// １レベル目 or プロジェクトが空ではなかったら
 			// XML構造がおかしいのでエラー
-			if( !mXmlDomStack.empty() ||
-				!mSolution.rowCount() )
+			if( !mXmlDomStack.isEmpty() ||
+				mSolution->rowCount() )
 			{
 				return false;
 			}
+
+			// 属性からプロジェクト名を取得
+			int idxAttr;
+			QString sName = 0 <= (idxAttr = attributes.index("name"))
+							? attributes.value(idxAttr)
+							: QString();
+
+			mSolution->setText(sName);
 		}
 		else if( !qName.compare("project", Qt::CaseSensitive) )
 		{
@@ -84,15 +102,15 @@ protected:
 				return false;
 			}
 
-			// 属性からプロジェクト名と
+			// 属性からプロジェクト名を取得
 			int idxAttr;
 			QString sPath = 0 <= (idxAttr = attributes.index("path"))
-							? attributes.qName(idxAttr)
+							? attributes.value(idxAttr)
 							: QString();
 
 			if( !sPath.isEmpty() )
 			{
-				mSolution.append(sPath);
+				mSolution->append(sPath);
 			}
 		}
 

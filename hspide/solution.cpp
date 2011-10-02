@@ -37,7 +37,11 @@ CProject * CSolution::append(const QString & filename)
 
 	newProject->setPath(filename);
 
-	insertRow(count(), newProject);
+	if( !filename.isEmpty() ) {
+		newProject->load(filename);
+	}
+
+	appendRow(newProject);
 
 	return newProject;
 }

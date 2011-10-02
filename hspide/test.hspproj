@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="test">
+	<folder name="test">
+		<file path="box.hsp" main="true" />
+		<file path="box2.hsp" />
+	</folder>
+	<folder name="test2">
+		<folder name="test3">
+			<file path="test.hsp" />
+			<file path="test2.hsp" />
+		</folder>
+		<file path="test3.hsp" />
+	</folder>
+</project>

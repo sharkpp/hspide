@@ -37,7 +37,7 @@ public:
 
 protected:
 
-	virtual QVariant data(int role = Qt::UserRole + 1) const;
+//	virtual QVariant data(int role = Qt::UserRole + 1) const;
 };
 
 class CFolderItem

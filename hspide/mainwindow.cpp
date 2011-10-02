@@ -17,23 +17,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	mSolution = new CSolution(this);
 mSolution->load("test.hspsln");
 	// 起動時は空ソリューション、プロジェクトを作る
-	mSolution->append();
+//	mSolution->append();
 /*
 	// 処理完了時の通知を登録
 	connect(mSolution, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
 	connect(mSolution, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
 	connect(mSolution, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
 */
-//	QTextEdit * textEdit = new QTextEdit;
-//	setCentralWidget(textEdit);
-	//QTabWidget * tabWidget = new QTabWidget(this);
 	tabWidget = new QTabWidget(this);
-//	QTabBar * tabBar = new QTabBar(this);
-//	tabWidget->setTabBar(tabBar);
-//	tabWidget->setElideMode(Qt::ElideRight);
-	for(int i = 0; i < 5; i++) {
-//	tabWidget->addTab(new QTextEdit, "test");
-	}
 	setCentralWidget(tabWidget);
 
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
@@ -45,6 +36,11 @@ mSolution->load("test.hspsln");
 	setupActions();
 	setupToolBars();
 	setupMenus();
+
+// test
+if( CProjectDock* dock = dynamic_cast<CProjectDock*>(projectDock->widget()) ) {
+	dock->setSolution(mSolution);
+}
 }
 
 void MainWindow::setupDockWindows()
@@ -77,6 +73,9 @@ void MainWindow::setupDockWindows()
 	tabifyDockWidget(projectDock, symbolDock);
 	tabifyDockWidget(outputDock, debuggerDock);
 	tabifyDockWidget(outputDock, searchDock);
+
+//	projectDock->setFocus();
+	projectDock->raise();
 }
 
 void MainWindow::setupStatusBar()

@@ -10,8 +10,9 @@ class CProjectReader
 	: public QXmlDefaultHandler
 {
 	QVector<QString> mXmlDomStack;
+	QStringList mVirtualPath;
 
-	CProject mProject;
+	CProject* mProject;
 
 public:
 
@@ -30,7 +31,11 @@ public:
 		reader.setContentHandler(this);
 		reader.setErrorHandler(this);
 
-		mProject.removeRows(0, mProject.rowCount());
+		mProject = &project;
+		mProject->removeRows(0, mProject->rowCount());
+
+		mVirtualPath.clear();
+		mXmlDomStack.clear();
 
 		QFile file(filename);
 		if( !file.open(QFile::ReadOnly | QFile::Text) )
@@ -45,11 +50,11 @@ public:
 		}
 
 		// swapping project
-		for(int row = 0, rowNum = mProject.rowCount();
-			row < rowNum; row++)
-		{
-			project.insertRow(row, mProject.takeRow(row));
-		}
+		//for(int row = 0, rowNum = mProject->rowCount();
+		//	row < rowNum; row++)
+		//{
+		//	project.appendRow(mProject.takeRow(row));
+		//}
 
 		return true;
 	}
@@ -67,11 +72,19 @@ protected:
 		{
 			// １レベル目 or プロジェクトが空ではなかったら
 			// XML構造がおかしいのでエラー
-			if( !mXmlDomStack.empty() ||
-				!mProject.rowCount() )
+			if( !mXmlDomStack.isEmpty() ||
+				mProject->rowCount() )
 			{
 				return false;
 			}
+
+			// 属性からプロジェクト名を取得
+			int idxAttr;
+			QString sName = 0 <= (idxAttr = attributes.index("name"))
+							? attributes.value(idxAttr)
+							: QString();
+
+		//	mProject->setText(sName);
 		}
 		else if( !qName.compare("folder", Qt::CaseSensitive) )
 		{
@@ -82,6 +95,20 @@ protected:
 				return false;
 			}
 
+			QString sBasePath = mVirtualPath.join("/");
+
+			// 属性からプロジェクト名を取得
+			int idxAttr;
+			QString sName = 0 <= (idxAttr = attributes.index("name"))
+							? attributes.value(idxAttr)
+							: QString();
+
+			if( !sName.isEmpty() )
+			{
+				mProject->append(sName, sBasePath, true);
+			}
+
+			mVirtualPath.push_back(sName);
 		}
 		else if( !qName.compare("file", Qt::CaseSensitive) )
 		{
@@ -92,6 +119,18 @@ protected:
 				return false;
 			}
 
+			QString sBasePath = mVirtualPath.join("/");
+
+			// 属性からプロジェクト名を取得
+			int idxAttr;
+			QString sPath = 0 <= (idxAttr = attributes.index("path"))
+							? attributes.value(idxAttr)
+							: QString();
+
+			if( !sPath.isEmpty() )
+			{
+				mProject->append(sPath, sBasePath);
+			}
 		}
 
 		mXmlDomStack.push_back(qName);
@@ -103,6 +142,11 @@ protected:
 	                const QString &qName)
 	{
 		qDebug() << __FUNCTION__ << "(" << namespaceURI << "," << localName << "," << qName << ")";
+
+		if( !qName.compare("folder", Qt::CaseSensitive) )
+		{
+			mVirtualPath.pop_back();
+		}
 
 		mXmlDomStack.pop_back();
 

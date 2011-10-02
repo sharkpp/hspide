@@ -14,6 +14,7 @@ bool CProjectItem::setPath(const QString & path)
 {
 	mItemPath = path;
 	mItemName = QFileInfo(mItemPath).fileName();
+	setText(mItemName);
 	return true;
 }
 
@@ -21,6 +22,7 @@ bool CProjectItem::setName(const QString & name)
 {
 	mItemPath.clear();
 	mItemName = name;
+	setText(name);
 	return true;
 }
 
@@ -34,13 +36,13 @@ const QString & CProjectItem::fileName() const
 	return mItemName;
 }
 
-QVariant CProjectItem::data(int role ) const
-{
-	switch(role)
-	{
-	case Qt::DisplayRole:
-		return fileName();
-	default:
-		return QStandardItem::data(role);
-	}
-}
+//QVariant CProjectItem::data(int role ) const
+//{
+//	switch(role)
+//	{
+//	case Qt::DisplayRole:
+//		return fileName();
+//	default:
+//		return QStandardItem::data(role);
+//	}
+//}
