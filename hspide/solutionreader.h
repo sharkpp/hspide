@@ -72,8 +72,6 @@ protected:
 	bool startElement(const QString &namespaceURI, const QString &localName,
 	                  const QString &qName, const QXmlAttributes &attributes)
 	{
-		qDebug() << __FUNCTION__ << "(" << namespaceURI << "," << localName << "," << qName << ")";
-
 		if( !qName.compare("solution", Qt::CaseSensitive) )
 		{
 			// １レベル目 or プロジェクトが空ではなかったら
@@ -102,7 +100,7 @@ protected:
 				return false;
 			}
 
-			// 属性からプロジェクト名を取得
+			// 属性からプロジェクトファイルパスを取得
 			int idxAttr;
 			QString sPath = 0 <= (idxAttr = attributes.index("path"))
 							? attributes.value(idxAttr)
@@ -122,8 +120,6 @@ protected:
 	bool endElement(const QString &namespaceURI, const QString &localName,
 	                const QString &qName)
 	{
-		qDebug() << __FUNCTION__ << "(" << namespaceURI << "," << localName << "," << qName << ")";
-
 		mXmlDomStack.pop_back();
 
 		return true;
@@ -131,7 +127,6 @@ protected:
 
 	bool characters(const QString &str)
 	{
-		qDebug() << __FUNCTION__ << "(" << str << ")";
 		return true;
 	}
 

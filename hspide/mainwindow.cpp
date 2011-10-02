@@ -37,10 +37,11 @@ mSolution->load("test.hspsln");
 	setupToolBars();
 	setupMenus();
 
+	if( CProjectDock* dock = dynamic_cast<CProjectDock*>(projectDock->widget()) ) {
+		connect(dock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
 // test
-if( CProjectDock* dock = dynamic_cast<CProjectDock*>(projectDock->widget()) ) {
-	dock->setSolution(mSolution);
-}
+		dock->setSolution(mSolution);
+	}
 }
 
 void MainWindow::setupDockWindows()

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="test">
-	<folder name="test">
+<project name="test project">
+	<folder name="hoge">
 		<file path="box.hsp" main="true" />
-		<file path="box2.hsp" />
+		<file path="test0.hsp" />
 	</folder>
-	<folder name="test2">
-		<folder name="test3">
-			<file path="test.hsp" />
+	<folder name="fuga">
+		<folder name="fugo">
+			<file path="test1.hsp" />
 			<file path="test2.hsp" />
 		</folder>
 		<file path="test3.hsp" />

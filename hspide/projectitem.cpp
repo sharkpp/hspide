@@ -4,6 +4,8 @@
 CProjectItem::CProjectItem(QObject *parent)
 	: QObject(parent)
 {
+	setSizeHint(QSize(0, 16));
+//	setEditable(false);
 }
 
 CProjectItem::~CProjectItem()

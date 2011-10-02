@@ -66,8 +66,6 @@ protected:
 	bool startElement(const QString &namespaceURI, const QString &localName,
 	                  const QString &qName, const QXmlAttributes &attributes)
 	{
-		qDebug() << __FUNCTION__ << "(" << namespaceURI << "," << localName << "," << qName << ")";
-
 		if( !qName.compare("project", Qt::CaseSensitive) )
 		{
 			// １レベル目 or プロジェクトが空ではなかったら
@@ -84,7 +82,7 @@ protected:
 							? attributes.value(idxAttr)
 							: QString();
 
-		//	mProject->setText(sName);
+			mProject->setText(sName);
 		}
 		else if( !qName.compare("folder", Qt::CaseSensitive) )
 		{
@@ -97,7 +95,7 @@ protected:
 
 			QString sBasePath = mVirtualPath.join("/");
 
-			// 属性からプロジェクト名を取得
+			// 属性からフォルダ名を取得
 			int idxAttr;
 			QString sName = 0 <= (idxAttr = attributes.index("name"))
 							? attributes.value(idxAttr)
@@ -121,7 +119,7 @@ protected:
 
 			QString sBasePath = mVirtualPath.join("/");
 
-			// 属性からプロジェクト名を取得
+			// 属性からファイルパスを取得
 			int idxAttr;
 			QString sPath = 0 <= (idxAttr = attributes.index("path"))
 							? attributes.value(idxAttr)
@@ -141,8 +139,6 @@ protected:
 	bool endElement(const QString &namespaceURI, const QString &localName,
 	                const QString &qName)
 	{
-		qDebug() << __FUNCTION__ << "(" << namespaceURI << "," << localName << "," << qName << ")";
-
 		if( !qName.compare("folder", Qt::CaseSensitive) )
 		{
 			mVirtualPath.pop_back();
@@ -155,7 +151,6 @@ protected:
 
 	bool characters(const QString &str)
 	{
-		qDebug() << __FUNCTION__ << "(" << str << ")";
 		return true;
 	}
 

@@ -2,6 +2,7 @@
 #include <QString>
 #include <QVector>
 #include <QStandardItem>
+#include <QIcon>
 
 #ifndef INCLUDE_GUARD_ACA7DD5A_DAF1_4F62_AD97_1E377CC1013C
 #define INCLUDE_GUARD_ACA7DD5A_DAF1_4F62_AD97_1E377CC1013C
@@ -47,7 +48,11 @@ class CFolderItem
 
 public:
 
-	CFolderItem(QObject * parent) : CProjectItem(parent) {}
+	CFolderItem(QObject * parent)
+		: CProjectItem(parent)
+	{
+		setIcon(QIcon(":/images/tango/folder.png"));
+	}
 };
 
 class CFileItem
@@ -57,7 +62,11 @@ class CFileItem
 
 public:
 
-	CFileItem(QObject * parent) : CProjectItem(parent) {}
+	CFileItem(QObject * parent)
+		: CProjectItem(parent)
+	{
+		setIcon(QIcon(":/images/tango/text-x-generic.png"));
+	}
 };
 
 #endif // !defined(INCLUDE_GUARD_ACA7DD5A_DAF1_4F62_AD97_1E377CC1013C)

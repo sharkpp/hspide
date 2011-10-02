@@ -22,6 +22,12 @@ protected:
 
 public slots:
 
+	void doubleClickedTree(const QModelIndex & inde);
+
+signals:
+
+	void oepnProjectFileItem(const QString & filename);
+
 private:
 
 };
