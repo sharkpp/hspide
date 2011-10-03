@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "editor.h"
-#include "solution.h"
 #include "project.h"
-#include "outputdock.h"
-#include "debuggerdock.h"
-#include "projectdock.h"
-#include "searchdock.h"
-#include "symboldock.h"
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
@@ -17,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	mCompiler = new CCompiler(this);
 
 	mSolution = new CSolution(this);
-mSolution->load("test.hspsln");
 	// 起動時は空ソリューション、プロジェクトを作る
 //	mSolution->append();
 
@@ -39,46 +32,49 @@ mSolution->load("test.hspsln");
 	setupToolBars();
 	setupMenus();
 
-	if( CProjectDock* dock = dynamic_cast<CProjectDock*>(projectDock->widget()) ) {
-		connect(dock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
-// test
-		dock->setSolution(mSolution);
-	}
+	connect(projectDock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
+
+//test
+mSolution->load("test.hspsln");
+projectDock->setSolution(mSolution);
 }
 
 void MainWindow::setupDockWindows()
 {
-	projectDock = new QDockWidget(tr("Project"), this);
-	projectDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	projectDock->setWidget(new CProjectDock(projectDock));
-	addDockWidget(Qt::LeftDockWidgetArea, projectDock);
+	QDockWidget* projectDockWidget = new QDockWidget(tr("Project"), this);
+	projectDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	projectDockWidget->setWidget(projectDock = new CProjectDock(projectDockWidget));
+	addDockWidget(Qt::LeftDockWidgetArea, projectDockWidget);
 
-	symbolDock = new QDockWidget(tr("Symbol list"), this);
-	symbolDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	symbolDock->setWidget(new CSymbolDock(symbolDock));
-	addDockWidget(Qt::LeftDockWidgetArea, symbolDock);
+	QDockWidget* symbolDockWidget = new QDockWidget(tr("Symbol list"), this);
+	symbolDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	symbolDockWidget->setWidget(symbolDock = new CSymbolDock(symbolDockWidget));
+	addDockWidget(Qt::LeftDockWidgetArea, symbolDockWidget);
 
-	outputDock = new QDockWidget(tr("Output"), this);
-	outputDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	outputDock->setWidget(new COutputDock(outputDock));
-	addDockWidget(Qt::BottomDockWidgetArea, outputDock);
+	QDockWidget* outputDockWidget = new QDockWidget(tr("Output"), this);
+	outputDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	outputDockWidget->setWidget(outputDock = new COutputDock(outputDockWidget));
+	addDockWidget(Qt::BottomDockWidgetArea, outputDockWidget);
 
-	debuggerDock = new QDockWidget(tr("Debugger"), this);
-	debuggerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	debuggerDock->setWidget(new CDebuggerDock(debuggerDock));
-	addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
+	QDockWidget* debuggerDockWidget = new QDockWidget(tr("Debugger"), this);
+	debuggerDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	debuggerDockWidget->setWidget(debuggerDock = new CDebuggerDock(debuggerDockWidget));
+	addDockWidget(Qt::BottomDockWidgetArea, debuggerDockWidget);
 
-	searchDock = new QDockWidget(tr("Search result"), this);
-	searchDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	searchDock->setWidget(new CSearchDock(searchDock));
-	addDockWidget(Qt::BottomDockWidgetArea, searchDock);
+	QDockWidget* searchDockWidget = new QDockWidget(tr("Search result"), this);
+	searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	searchDockWidget->setWidget(searchDock = new CSearchDock(searchDockWidget));
+	addDockWidget(Qt::BottomDockWidgetArea, searchDockWidget);
 
-	tabifyDockWidget(projectDock, symbolDock);
-	tabifyDockWidget(outputDock, debuggerDock);
-	tabifyDockWidget(outputDock, searchDock);
+	tabifyDockWidget(projectDockWidget, symbolDockWidget);
+	tabifyDockWidget(outputDockWidget, debuggerDockWidget);
+	tabifyDockWidget(outputDockWidget, searchDockWidget);
 
-//	projectDock->setFocus();
-	projectDock->raise();
+//	projectDockWidget->setFocus();
+	projectDockWidget->raise();
+
+//	outputDockWidget->setFocus();
+	outputDockWidget->raise();
 }
 
 void MainWindow::setupStatusBar()
@@ -398,7 +394,7 @@ void MainWindow::buildStart()
 {
 	// ビルド処理開始
 
-	dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build start"));
+	outputDock->outputCrLf(tr("Build start"));
 
 	// ファイルを保存
 	for(int index = 0, num = tabWidget->count(); index < num; index++)
@@ -410,6 +406,9 @@ void MainWindow::buildStart()
 	// プログラスバーをMarqueeスタイルに
 	taskProgress->setRange(0, 0);
 	taskProgress->setVisible(true);
+
+	// 出力をクリア
+	outputDock->clear();
 }
 
 void MainWindow::buildFinished(bool successed)
@@ -422,18 +421,18 @@ void MainWindow::buildFinished(bool successed)
 	{
 	//	QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
 
-		dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build failed"));
+		outputDock->outputCrLf(tr("Build failed"));
 	}
 	else
 	{
-		dynamic_cast<COutputDock*>(outputDock->widget())->outputCrLf(tr("Build complete"));
+		outputDock->outputCrLf(tr("Build complete"));
 	}
 }
 
 // ビルド中の出力を取得
 void MainWindow::buildOutput(const QString & output)
 {
-	dynamic_cast<COutputDock*>(outputDock->widget())->output(output);
+	outputDock->output(output);
 }
 
 void MainWindow::currentTabChanged(int index)

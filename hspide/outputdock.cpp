@@ -14,6 +14,12 @@ void COutputDock::resizeEvent(QResizeEvent * event)
 	mEditor->resize(event->size());
 }
 
+// 出力をクリア
+void COutputDock::clear()
+{
+	mEditor->clear();
+}
+
 // 出力に文字列を追記
 void COutputDock::output(const QString & text)
 {

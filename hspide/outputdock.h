@@ -11,6 +11,9 @@ public:
 
 	COutputDock(QWidget *parent = 0);
 
+	// 出力をクリア
+	void clear();
+
 	// 出力に文字列を追記
 	void output(const QString & text);
 	void outputCrLf(const QString & text);

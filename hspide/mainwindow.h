@@ -2,6 +2,11 @@
 #include <QtGui>
 #include "solution.h"
 #include "compiler.h"
+#include "outputdock.h"
+#include "debuggerdock.h"
+#include "projectdock.h"
+#include "searchdock.h"
+#include "symboldock.h"
 
 class MainWindow : public QMainWindow
 {
@@ -33,11 +38,11 @@ class MainWindow : public QMainWindow
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
 
-	QDockWidget * projectDock;
-	QDockWidget * symbolDock;
-	QDockWidget * outputDock;
-	QDockWidget * debuggerDock;
-	QDockWidget * searchDock;
+	CProjectDock *  projectDock;
+	CSymbolDock *   symbolDock;
+	COutputDock *   outputDock;
+	CDebuggerDock * debuggerDock;
+	CSearchDock *   searchDock;
 
 	// É\ÉäÉÖÅ[ÉVÉáÉì
 	CSolution*	mSolution;
