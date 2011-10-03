@@ -353,7 +353,9 @@ printf("common_path='%s'\n",common_path.c_str());
 		objname += ".ax";
 		option.objname = objname.c_str();
 	}
-option.dump();
+#if !defined(NDEBUG)
+	option.dump();
+#endif
 
 	// ƒRƒ“ƒpƒCƒ‹
 	result = cmp.hsc_comp(
