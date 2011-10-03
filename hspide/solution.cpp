@@ -2,7 +2,6 @@
 #include <QtDebug>
 #include "solution.h"
 #include "project.h"
-#include "projectitem.h"
 #include "editor.h"
 #include "solutionreader.h"
 

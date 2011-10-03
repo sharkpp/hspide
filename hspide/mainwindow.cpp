@@ -14,16 +14,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setObjectName("MainWindow");
 	setWindowTitle("HSP script editor");
 
+	mCompiler = new CCompiler(this);
+
 	mSolution = new CSolution(this);
 mSolution->load("test.hspsln");
 	// 起動時は空ソリューション、プロジェクトを作る
 //	mSolution->append();
-/*
+
 	// 処理完了時の通知を登録
-	connect(mSolution, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
-	connect(mSolution, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
-	connect(mSolution, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
-*/
+	connect(mCompiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
+	connect(mCompiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
+	connect(mCompiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
+
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
 
@@ -389,7 +391,7 @@ void MainWindow::onDebugRun()
 //		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
 //	}
 
-//	mSolution->build();
+	mCompiler->build();
 }
 
 void MainWindow::buildStart()

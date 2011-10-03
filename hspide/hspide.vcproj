@@ -126,6 +126,8 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="compiler.cpp" />
+			<File
 				RelativePath="debuggerdock.cpp" />
 			<File
 				RelativePath="editor.cpp" />
@@ -152,6 +154,29 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="compiler.h">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compiler.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o debug\moc_compiler.cpp"
+						Description="MOC compiler.h"
+						Outputs="debug\moc_compiler.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compiler.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o release\moc_compiler.cpp"
+						Description="MOC compiler.h"
+						Outputs="release\moc_compiler.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+			</File>
 			<File
 				RelativePath="debuggerdock.h">
 				<FileConfiguration
@@ -392,6 +417,18 @@
 			Filter="cpp;c;cxx;moc;h;def;odl;idl;res;"
 			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}">
 			<File
+				RelativePath="debug\moc_compiler.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_compiler.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
 				RelativePath="debug\moc_debuggerdock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
@@ -572,12 +609,14 @@
 			<File
 				RelativePath="images\tango\edit-undo.png" />
 			<File
+				RelativePath="images\tango\folder.png" />
+			<File
 				RelativePath="hspide.qrc">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\document-save-all.png;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\media-playback-start.png;images\tango\system-log-out.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\document-save-all.png;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\folder.png;images\tango\media-playback-start.png;images\tango\system-log-out.png;images\tango\text-x-generic.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="debug\qrc_hspide.cpp"
@@ -587,7 +626,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\document-save-all.png;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\media-playback-start.png;images\tango\system-log-out.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\document-save-all.png;images\tango\document-new.png;images\tango\document-open.png;images\tango\document-print-preview.png;images\tango\document-print.png;images\tango\document-save-as.png;images\tango\document-save.png;images\tango\edit-clear.png;images\tango\edit-copy.png;images\tango\edit-cut.png;images\tango\edit-delete.png;images\tango\edit-find-replace.png;images\tango\edit-find.png;images\tango\edit-paste.png;images\tango\edit-redo.png;images\tango\edit-select-all.png;images\tango\edit-undo.png;images\tango\folder.png;images\tango\media-playback-start.png;images\tango\system-log-out.png;images\tango\text-x-generic.png"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
 						Outputs="release\qrc_hspide.cpp"
@@ -600,6 +639,8 @@
 				RelativePath="images\tango\media-playback-start.png" />
 			<File
 				RelativePath="images\tango\system-log-out.png" />
+			<File
+				RelativePath="images\tango\text-x-generic.png" />
 		</Filter>
 	</Files>
 	<Globals>

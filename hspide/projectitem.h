@@ -1,6 +1,5 @@
 #include <QObject>
 #include <QString>
-#include <QVector>
 #include <QStandardItem>
 #include <QIcon>
 
@@ -16,8 +15,6 @@ class CProjectItem
 public:
 
 private:
-
-//	QVector<CProjectItem*>	mChildren;
 
 	QString	mItemName;
 	QString	mItemPath;

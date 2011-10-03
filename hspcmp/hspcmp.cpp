@@ -449,7 +449,9 @@ printf("common_path='%s'\n",common_path.c_str());
 			normalize_directory(cmdline);
 			cmdline = "\"" + cmdline + runtime + "\" \"" + std::string(option.objname) + "\"";
 		}
-printf("'%s'\n", cmdline.c_str());
+#if !defined(NDEBUG)
+		printf("'%s'\n", cmdline.c_str());
+#endif
 		if( (result = cmp.hsc3_run(cmdline.c_str())) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);

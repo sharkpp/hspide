@@ -1,7 +1,7 @@
-
 #include <QMainWindow>
 #include <QtGui>
 #include "solution.h"
+#include "compiler.h"
 
 class MainWindow : public QMainWindow
 {
@@ -41,6 +41,8 @@ class MainWindow : public QMainWindow
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CSolution*	mSolution;
+
+	CCompiler*	mCompiler;
 
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);

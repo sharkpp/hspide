@@ -1,7 +1,6 @@
 #include <QtDebug>
 #include <QFileInfo>
 #include "project.h"
-#include "projectitem.h"
 #include "editor.h"
 #include "projectreader.h"
 

@@ -1,8 +1,3 @@
-//#include <QObject>
-#include <QString>
-#include <QMap>
-#include <QSharedPointer>
-//#include <QAbstractItemModel>
 #include "projectitem.h"
 
 #ifndef INCLUDE_GUARD_3CBB7292_EDC6_4258_B45F_54C680152079
