@@ -4,6 +4,8 @@
 #ifndef INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
 #define INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
 
+class CProject;
+
 class CCompiler
 	: public QObject
 {
@@ -16,7 +18,7 @@ public:
 	CCompiler(QObject *parent = 0);
 
 	// プロジェクトをビルド
-	void build();
+	void build(CProject * project);
 
 	// 単一ファイルをコンパイル
 	void compile();

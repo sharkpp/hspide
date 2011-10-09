@@ -124,10 +124,18 @@ protected:
 			QString sPath = 0 <= (idxAttr = attributes.index("path"))
 							? attributes.value(idxAttr)
 							: QString();
+			QString sMain = 0 <= (idxAttr = attributes.index("main"))
+							? attributes.value(idxAttr)
+							: QString();
 
 			if( !sPath.isEmpty() )
 			{
-				mProject->append(sPath, sBasePath);
+				CProjectItem * item;
+				if( mProject->append(sPath, sBasePath, false, &item) ) {
+					if( CFileItem * fileItem = dynamic_cast<CFileItem*>(item) ) {
+						fileItem->setMainSource(!sMain.compare("true"));
+					}
+				}
 			}
 		}
 

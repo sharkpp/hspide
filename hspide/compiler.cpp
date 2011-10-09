@@ -10,15 +10,21 @@ CCompiler::CCompiler(QObject *parent)
 }
 
 // プロジェクトをビルド
-void CCompiler::build()
+void CCompiler::build(CProject * project)
 {
 #ifdef _DEBUG
 	QDir::setCurrent(QDir::currentPath() + "\\debug\\");
 #endif
 
+	QString filename;
+	if( !project->getMainSource(filename) )
+	{
+		return;
+	}
+
 	QString program = "./hspcmp";
 	QStringList arguments;
-	arguments << "-style" << "motif";
+	arguments << filename;
 	delete mProcess;
 	mProcess = new QProcess(this);
 	mProcess->start(program, arguments);

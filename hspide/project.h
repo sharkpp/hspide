@@ -26,7 +26,7 @@ public:
 	bool save(const QString & filename = QString());
 
 	// プロジェクトにファイルを追加
-	bool append(const QString & filename, const QString & path = QString(), bool isFolder = false);
+	bool append(const QString & filename, const QString & path = QString(), bool isFolder = false, CProjectItem **itemResult = NULL);
 
 	// プロジェクトから除外
 	bool remove(const QString & filename);
@@ -42,6 +42,12 @@ public:
 
 	// フォルダを取得
 	CProjectItem * getFolderItem(const QString & path, bool createAlways = false);
+
+	// アイテムを取得
+	CProjectItem * getItem(const QString & path);
+
+	// メインソースを取得
+	bool getMainSource(QString & filename) const;
 
 private:
 

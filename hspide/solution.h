@@ -45,7 +45,7 @@ public:
 	int count() const;
 
 	// プロジェクトを取得
-	const CProject & at(int index) const;
+	CProject & at(int index) const;
 
 private:
 

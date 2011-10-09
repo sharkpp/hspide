@@ -100,7 +100,7 @@ int CSolution::count() const
 }
 
 // プロジェクトを取得
-const CProject & CSolution::at(int index) const
+CProject & CSolution::at(int index) const
 {
 	return *dynamic_cast<CProject*>(child(index));
 }

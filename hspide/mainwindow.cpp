@@ -387,7 +387,7 @@ void MainWindow::onDebugRun()
 //		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
 //	}
 
-	mCompiler->build();
+	mCompiler->build(&mSolution->at(0));
 }
 
 void MainWindow::buildStart()

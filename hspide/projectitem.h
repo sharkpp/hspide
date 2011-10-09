@@ -57,12 +57,25 @@ class CFileItem
 {
 	Q_OBJECT
 
+	bool	mMainSource;
+
 public:
 
 	CFileItem(QObject * parent)
 		: CProjectItem(parent)
+		, mMainSource(false)
 	{
 		setIcon(QIcon(":/images/tango/text-x-generic.png"));
+	}
+
+	void setMainSource(bool mainSource)
+	{
+		mMainSource = mainSource;
+	}
+
+	bool mainSource() const
+	{
+		return mMainSource;
 	}
 };
 

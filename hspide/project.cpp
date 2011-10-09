@@ -73,8 +73,46 @@ CProjectItem * CProject::getFolderItem(const QString & path, bool createAlways)
 	return item;
 }
 
+// アイテムを取得
+CProjectItem * CProject::getItem(const QString & path)
+{
+	CProjectItem *item = this;
+
+	for(QStringListIterator ite(path.split("/"));
+		ite.hasNext(); )
+	{
+		CProjectItem * subItem = NULL;
+		QString name = ite.next();
+
+		if( name.isEmpty() ) {
+			continue;
+		}
+
+		for(int row = 0, rowNum = item->rowCount();
+			row < rowNum; row++, subItem = NULL)
+		{
+			if( NULL != (subItem = dynamic_cast<CProjectItem*>(item->child(row))) &&
+				!subItem->fileName().compare(name, Qt::CaseSensitive) )
+			{
+				break;
+			}
+		}
+
+		if( subItem )
+		{
+			item = subItem;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+
+	return item;
+}
+
 // プロジェクトにファイルを追加
-bool CProject::append(const QString & filename, const QString & path, bool isFolder)
+bool CProject::append(const QString & filename, const QString & path, bool isFolder, CProjectItem **itemResult)
 {
 	CProjectItem * parentFolder = getFolderItem(path);
 	if( !parentFolder ) {
@@ -98,6 +136,10 @@ bool CProject::append(const QString & filename, const QString & path, bool isFol
 	}
 
 	parentFolder->appendRow(item);
+
+	if( itemResult ) {
+		*itemResult = item;
+	}
 
 	return true;
 }
@@ -138,4 +180,31 @@ bool CProject::clearTemp()
 QString CProject::name() const
 {
 	return QFileInfo(filePath()).baseName();
+}
+
+// メインソースを取得
+bool CProject::getMainSource(QString & filename) const
+{
+	QVector<QPair<int, QStandardItem*> > stack;
+
+	stack.push_back(qMakePair(0, (QStandardItem*)this));
+	while( !stack.isEmpty() )
+	{
+		QStandardItem*item   = stack.back().second;
+		int          &row    = stack.back().first;
+		int           rowNum = item->rowCount();
+		if( rowNum <= row ) {
+			stack.pop_back();
+			continue;
+		}
+		item = item->child(row++);
+		if( CFileItem* fileItem = dynamic_cast<CFileItem*>(item) ) {
+			if( fileItem->mainSource() ) {
+				filename = fileItem->filePath();
+				return true;
+			}
+		}
+		stack.push_back(qMakePair(0, item));
+	}
+	return false;
 }
