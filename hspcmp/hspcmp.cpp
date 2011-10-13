@@ -398,7 +398,7 @@ printf("common_path='%s'\n",common_path.c_str());
 		option.exename = exename.c_str();
 	}
 
-	if( option.make )
+	if( option.make || option.auto_make )
 	{
 		// パックファイル生成
 		option.packfile.save(option.work_path);
