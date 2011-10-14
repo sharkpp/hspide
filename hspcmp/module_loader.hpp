@@ -123,6 +123,10 @@ public:
 		return false;
 	}
 
+	bool loaded() const
+	{
+		return NULL != m_module;
+	}
 };
 
 } // namespace spplib

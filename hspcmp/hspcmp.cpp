@@ -35,6 +35,7 @@ struct option {
 	const char * common_path;
 	const char * hsp_path;
 	const char * work_path;
+	const char * cmdline;
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
@@ -42,6 +43,7 @@ struct option {
 		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
+		, cmdline(NULL)
 	{}
 #ifdef _DEBUG
 	void dump() {
@@ -65,6 +67,7 @@ struct option {
 		printf("option.common_path = \"%s\"\n", common_path);
 		printf("option.hsp_path = \"%s\"\n", hsp_path);
 		printf("option.work_path = \"%s\"\n", work_path);
+		printf("option.cmdline = \"%s\"\n", cmdline);
 		packfile.dump();
 	}
 #endif
@@ -72,8 +75,17 @@ struct option {
 
 void usage()
 {
+	hspcmp cmp;
+	char version[256];
+	if( cmp.loaded() ) {
+		cmp.hsc_ver(version);
+	} else {
+		strcpy(version, "not found");
+	}
 	static const char * help = 
 		"hspcmp [Hot Soup Processer cui compiler]\n"
+		"  hspcmp.dll(%s)\n"
+		"\n"
 		"usage: hspcmp.exe option filename [packname ...]\n"
 		"  option:\n"
 		"    -h , --help , -?\n"
@@ -91,11 +103,12 @@ void usage()
 		"    -C COMMON_PATH , --common-path COMMON_PATH\n"
 		"    -H HSP_PATH , --hsp-path HSP_PATH\n"
 		"    -w WORK_PATH , --work-path WORK_PATH\n"
+		"    -c COMMAND_LINE , --cmdline COMMAND_LINE\n"
 		"   packname:\n"
 		"     packname : normal packing\n"
 		"    +packname : encryption packing\n"
 		;
-	puts(help);
+	printf(help, version);
 	exit(-1);
 }
 
@@ -155,6 +168,9 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "-e") || !strcmp(argv[i], "--execute") ) {
 				// 実行
 				option.execute = true;
+			} else if(  !strcmp(argv[i], "-c") || !strcmp(argv[i], "--cmdline") ) {
+				// 実行時の引数指定
+				option.cmdline = argv[++i];
 			} else if(  !strcmp(argv[i], "-v") || !strcmp(argv[i], "--version") ) {
 				// バージョンの表示
 				option.version = true;
@@ -273,12 +289,13 @@ int main(int argc, char * argv[])
 		((!option.filename || option.help) && !option.version) )
 	{
 #ifdef _DEBUG
-	option.dump();
+		option.dump();
 #endif
 		usage();
 		return -1;
 	}
 
+	hspcmp cmp;
 	std::vector<char> tmp;
 	int result;
 	std::string common_path;
@@ -288,7 +305,6 @@ int main(int argc, char * argv[])
 	std::string runtime;
 	std::string exename;
 	std::string tmp2;
-	hspcmp cmp;
 
 	if( option.version ) {
 		tmp.resize(1024*1024);
@@ -449,8 +465,12 @@ printf("common_path='%s'\n",common_path.c_str());
 			normalize_directory(cmdline);
 			cmdline = "\"" + cmdline + runtime + "\" \"" + std::string(option.objname) + "\"";
 		}
+		if( option.cmdline ) {
+			cmdline += " ";
+			cmdline += option.cmdline;
+		}
 #if !defined(NDEBUG)
-		printf("'%s'\n", cmdline.c_str());
+		printf("CMDLINE='%s'\n", cmdline.c_str());
 #endif
 		if( (result = cmp.hsc3_run(cmdline.c_str())) != 0 ) {
 			// エラーメッセージ取得＆表示
