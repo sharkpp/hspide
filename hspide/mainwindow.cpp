@@ -51,26 +51,31 @@ void MainWindow::setupDockWindows()
 	QDockWidget* projectDockWidget = new QDockWidget(tr("Project"), this);
 	projectDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	projectDockWidget->setWidget(projectDock = new CProjectDock(projectDockWidget));
+	projectDockWidget->setObjectName("Project"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::LeftDockWidgetArea, projectDockWidget);
 
 	QDockWidget* symbolDockWidget = new QDockWidget(tr("Symbol list"), this);
 	symbolDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	symbolDockWidget->setWidget(symbolDock = new CSymbolDock(symbolDockWidget));
+	symbolDockWidget->setObjectName("Symbol list"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::LeftDockWidgetArea, symbolDockWidget);
 
 	QDockWidget* outputDockWidget = new QDockWidget(tr("Output"), this);
 	outputDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	outputDockWidget->setWidget(outputDock = new COutputDock(outputDockWidget));
+	outputDockWidget->setObjectName("Output"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, outputDockWidget);
 
 	QDockWidget* debuggerDockWidget = new QDockWidget(tr("Debugger"), this);
 	debuggerDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	debuggerDockWidget->setWidget(debuggerDock = new CDebuggerDock(debuggerDockWidget));
+	debuggerDockWidget->setObjectName("Debugger"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, debuggerDockWidget);
 
 	QDockWidget* searchDockWidget = new QDockWidget(tr("Search result"), this);
 	searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	searchDockWidget->setWidget(searchDock = new CSearchDock(searchDockWidget));
+	searchDockWidget->setObjectName("Search result"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, searchDockWidget);
 
 	tabifyDockWidget(projectDockWidget, symbolDockWidget);
@@ -102,6 +107,7 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBars()
 {
 	QToolBar * generalToolbar = addToolBar(tr("General"));
+		generalToolbar->setObjectName("General"); // saveState()で警告がトレースで出るため
 		generalToolbar->setIconSize(QSize(16, 16));
 		generalToolbar->addAction(newDocumentAct);
 		generalToolbar->addAction(openDocumentAct);
