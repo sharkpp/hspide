@@ -8,6 +8,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 {
 	setObjectName("MainWindow");
 	setWindowTitle("HSP script editor");
+	setAcceptDrops(true);
+	resize(800, 600);
 
 	mCompiler = new CCompiler(this);
 
@@ -23,16 +25,13 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
 
-	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
-
-	setAcceptDrops(true);
-
 	setupDockWindows();
 	setupStatusBar();
 	setupActions();
 	setupToolBars();
 	setupMenus();
 
+	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(projectDock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
 
 	loadSettings();
@@ -287,7 +286,7 @@ void MainWindow::setupActions()
 void MainWindow::loadSettings()
 {
 //	QSettings settings("sharkpp", "hspide");
-	QSettings settings("setting.ini", QSettings::IniFormat);
+	QSettings settings("hspide.ini", QSettings::IniFormat);
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
 	QVariant tmp;
@@ -312,7 +311,7 @@ void MainWindow::loadSettings()
 void MainWindow::saveSettings()
 {
 //	QSettings settings("sharkpp", "hspide");
-	QSettings settings("setting.ini", QSettings::IniFormat);
+	QSettings settings("hspide.ini", QSettings::IniFormat);
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
 	QString tmp;
