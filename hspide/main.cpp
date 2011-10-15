@@ -27,7 +27,6 @@ int main(int argc, char **argv)
 //	QString y = QLocale::system().name();
 //	QString x = QLocale::languageToString(QLocale::system().language());
 	MainWindow mainWin;
-	mainWin.resize(800, 600);
 	mainWin.show();
 
 	return app.exec();
