@@ -1,3 +1,4 @@
+#include <QComboBox>
 #include "mainwindow.h"
 #include "editor.h"
 #include "project.h"
@@ -34,9 +35,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	connect(projectDock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
 
+	loadSettings();
+
 //test
 mSolution->load("test.hspsln");
 projectDock->setSolution(mSolution);
+}
+
+MainWindow::~MainWindow()
+{
 }
 
 void MainWindow::setupDockWindows()
@@ -95,6 +102,7 @@ void MainWindow::setupStatusBar()
 void MainWindow::setupToolBars()
 {
 	QToolBar * generalToolbar = addToolBar(tr("General"));
+		generalToolbar->setIconSize(QSize(16, 16));
 		generalToolbar->addAction(newDocumentAct);
 		generalToolbar->addAction(openDocumentAct);
 		generalToolbar->addAction(saveDocumentAct);
@@ -113,6 +121,7 @@ void MainWindow::setupToolBars()
 		generalToolbar->addAction(replaceTextAct);
 		generalToolbar->addSeparator();
 		generalToolbar->addAction(debugRunAct);
+//		generalToolbar->addWidget(new QComboBox(generalToolbar));
 }
 
 void MainWindow::setupMenus()
@@ -265,8 +274,49 @@ void MainWindow::setupActions()
 	buildSolutionAct->setEnabled(false);
 	buildProjectAct->setEnabled(false);
 	compileOnlyAct->setEnabled(false);
-	debugRunAct->setEnabled(false);
-	noDebugRunAct->setEnabled(false);
+//	debugRunAct->setEnabled(false);
+//	noDebugRunAct->setEnabled(false);
+}
+
+void MainWindow::loadSettings()
+{
+//	QSettings settings("sharkpp", "hspide");
+	QSettings settings("setting.ini", QSettings::IniFormat);
+	settings.setIniCodec("UTF-8"); // 文字コードを指定
+
+	QVariant tmp;
+
+	restoreGeometry(settings.value("window/geometry").toByteArray());
+	restoreState(settings.value("window/state").toByteArray());
+
+//	tmp = settings.value("window/position");
+//	if( QVariant::Invalid != tmp.type() ) {
+//		setGeometry(tmp.toRect());
+//	}
+//
+//	tmp = settings.value("dock/project-area");
+//	if( QVariant::Invalid != tmp.type() ) {
+//		addDockWidget(Qt::DockWidgetArea(tmp.toInt()), static_cast<QDockWidget*>(projectDock->parentWidget()));
+//	} else {
+//		addDockWidget(Qt::LeftDockWidgetArea, static_cast<QDockWidget*>(projectDock->parentWidget()));
+//	}
+
+}
+
+void MainWindow::saveSettings()
+{
+//	QSettings settings("sharkpp", "hspide");
+	QSettings settings("setting.ini", QSettings::IniFormat);
+	settings.setIniCodec("UTF-8"); // 文字コードを指定
+
+	QString tmp;
+
+//	settings.setValue("window/position", geometry());
+//	settings.setValue("dock/project-area",      QString("%1").arg(dockWidgetArea(static_cast<QDockWidget*>(projectDock->parentWidget()))));
+//	settings.setValue("dock/project-position",  projectDock->parentWidget()->geometry());
+
+	settings.setValue("window/geometry", saveGeometry());
+	settings.setValue("window/state", saveState());
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -279,6 +329,12 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 	if( event->mimeData()->hasUrls() ) {
 		event->acceptProposedAction();
 	}
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	saveSettings();
+	QMainWindow::closeEvent(event);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -445,7 +501,7 @@ void MainWindow::currentTabChanged(int index)
 		buildSolutionAct->setEnabled(true);
 		buildProjectAct->setEnabled(true);
 		compileOnlyAct->setEnabled(true);
-		debugRunAct->setEnabled(true);
-		noDebugRunAct->setEnabled(true);
+//		debugRunAct->setEnabled(true);
+//		noDebugRunAct->setEnabled(true);
 	}
 }
