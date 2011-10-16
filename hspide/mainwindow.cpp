@@ -25,12 +25,39 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
 
+//	QHBoxLayout *tabButtonLayout = new QHBoxLayout(this);
+//	QFrame *tabButtonWidget = new QFrame(this);
+//
+//	QToolButton *tabListButton = new QToolButton(this);
+//	tabListButton->setAutoRaise(true);
+//	tabListButton->setToolTip("Add new page");
+//	tabListButton->setIcon(QIcon(":/images/button-tab-list.png"));
+//
+//	QToolButton *tabCloseButton = new QToolButton(this);
+//	tabCloseButton->setAutoRaise(true);
+//	tabCloseButton->setToolTip("Add new page");
+//	tabCloseButton->setIcon(QIcon(":/images/button-tab-close.png"));
+////	tabCloseButton->setStyleSheet("border: none; hover: {border: 1px} pressed: {border: 1px}");
+//
+//	tabButtonLayout->addWidget(tabListButton);
+//	tabButtonLayout->addWidget(tabCloseButton);
+//
+//	tabButtonWidget->setLayout(tabButtonLayout);
+
+	QToolBar * tabButton = new QToolBar(this);
+	tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
+	tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
+	tabButton->setIconSize(QSize(12, 12));
+	tabButton->setStyleSheet("QToolBar{border:none}");
+	tabWidget->setCornerWidget(tabButton, Qt::TopRightCorner);
+
 	setupDockWindows();
 	setupStatusBar();
 	setupActions();
 	setupToolBars();
 	setupMenus();
 
+//	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(projectDock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
 
@@ -180,77 +207,77 @@ void MainWindow::setupActions()
 {
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 
-	newDocumentAct = new QAction(QIcon(":/images/tango/document-new.png"), tr("&New"), this);
+	newDocumentAct = new QAction(QIcon(":/images/tango/small/document-new.png"), tr("&New"), this);
 	newDocumentAct->setShortcuts(QKeySequence::New);
 	newDocumentAct->setStatusTip(tr("Create a new file"));
 	connect(newDocumentAct, SIGNAL(triggered()), this, SLOT(onNewFile()));
 
-	openDocumentAct = new QAction(QIcon(":/images/tango/document-open.png"), tr("&Open"), this);
+	openDocumentAct = new QAction(QIcon(":/images/tango/small/document-open.png"), tr("&Open"), this);
 	openDocumentAct->setShortcuts(QKeySequence::Open);
 	openDocumentAct->setStatusTip(tr("Open file"));
 	connect(openDocumentAct, SIGNAL(triggered()), this, SLOT(onOpenFile()));
 
-	saveDocumentAct = new QAction(QIcon(":/images/tango/document-save.png"), tr("&Save"), this);
+	saveDocumentAct = new QAction(QIcon(":/images/tango/small/document-save.png"), tr("&Save"), this);
 	saveDocumentAct->setShortcuts(QKeySequence::Save);
 	saveDocumentAct->setStatusTip(tr("Save file"));
 	connect(saveDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 
-	saveAsDocumentAct = new QAction(QIcon(":/images/tango/document-save-as.png"), tr("S&ave as"), this);
+	saveAsDocumentAct = new QAction(QIcon(":/images/tango/small/document-save-as.png"), tr("S&ave as"), this);
 	saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
 	saveAsDocumentAct->setStatusTip(tr("Save file with a name"));
 	connect(saveAsDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
 
-	saveAllDocumentAct = new QAction(QIcon(":/images/document-save-all.png"), tr("Save all"), this);
+	saveAllDocumentAct = new QAction(QIcon(":/images/icons/small/document-save-all.png"), tr("Save all"), this);
 	saveAllDocumentAct->setShortcuts(QKeySequence::SaveAs);
 	saveAllDocumentAct->setStatusTip(tr("Save all file"));
 	connect(saveAllDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAllFile()));
 
-	quitApplicationAct = new QAction(QIcon(":/images/tango/system-log-out.png"), tr("&Quit"), this);
+	quitApplicationAct = new QAction(QIcon(":/images/tango/small/system-log-out.png"), tr("&Quit"), this);
 	quitApplicationAct->setShortcuts(QKeySequence::Quit);
 	quitApplicationAct->setStatusTip(tr("Quit application"));
 	connect(quitApplicationAct, SIGNAL(triggered()), this, SLOT(onQuit()));
 
-	editUndoAct = new QAction(QIcon(":/images/tango/edit-undo.png"), tr("&Undo"), this);
+	editUndoAct = new QAction(QIcon(":/images/tango/small/edit-undo.png"), tr("&Undo"), this);
 	editUndoAct->setShortcuts(QKeySequence::Undo);
 	editUndoAct->setStatusTip(tr("Undo"));
 
-	editRedoAct = new QAction(QIcon(":/images/tango/edit-redo.png"), tr("&Redo"), this);
+	editRedoAct = new QAction(QIcon(":/images/tango/small/edit-redo.png"), tr("&Redo"), this);
 	editRedoAct->setShortcuts(QKeySequence::Redo);
 	editRedoAct->setStatusTip(tr("Redo"));
 
-	editCutAct = new QAction(QIcon(":/images/tango/edit-cut.png"), tr("Cu&t"), this);
+	editCutAct = new QAction(QIcon(":/images/tango/small/edit-cut.png"), tr("Cu&t"), this);
 	editCutAct->setShortcuts(QKeySequence::Cut);
 	editCutAct->setStatusTip(tr("Cut selected text"));
 
-	editCopyAct = new QAction(QIcon(":/images/tango/edit-copy.png"), tr("&Copy"), this);
+	editCopyAct = new QAction(QIcon(":/images/tango/small/edit-copy.png"), tr("&Copy"), this);
 	editCopyAct->setShortcuts(QKeySequence::Copy);
 	editCopyAct->setStatusTip(tr("Copy selected text"));
 
-	editPasteAct = new QAction(QIcon(":/images/tango/edit-paste.png"), tr("&Paste"), this);
+	editPasteAct = new QAction(QIcon(":/images/tango/small/edit-paste.png"), tr("&Paste"), this);
 	editPasteAct->setShortcuts(QKeySequence::Paste);
 	editPasteAct->setStatusTip(tr("Paste text"));
 
-	editClearAct = new QAction(QIcon(":/images/tango/edit-clear.png"), tr("&Delete"), this);
+	editClearAct = new QAction(QIcon(":/images/tango/small/edit-clear.png"), tr("&Delete"), this);
 	editClearAct->setShortcuts(QKeySequence::Delete);
 	editClearAct->setStatusTip(tr("Delete selected text"));
 
-	selectAllAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("&Select All"), this);
+	selectAllAct = new QAction(QIcon(":/images/tango/small/edit-select-all.png"), tr("&Select All"), this);
 	selectAllAct->setShortcuts(QKeySequence::SelectAll);
 	selectAllAct->setStatusTip(tr("Select all text"));
 
-	findTextAct = new QAction(QIcon(":/images/tango/edit-find.png"), tr("&Find"), this);
+	findTextAct = new QAction(QIcon(":/images/tango/small/edit-find.png"), tr("&Find"), this);
 	findTextAct->setShortcuts(QKeySequence::Find);
 	findTextAct->setStatusTip(tr("Find text"));
 
-	findPrevTextAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("Find &next"), this);
+	findPrevTextAct = new QAction(QIcon(":/images/tango/small/edit-select-all.png"), tr("Find &next"), this);
 	findPrevTextAct->setShortcuts(QKeySequence::FindNext);
 	findPrevTextAct->setStatusTip(tr("Find next text"));
 
-	findNextTextAct = new QAction(QIcon(":/images/tango/edit-select-all.png"), tr("Find &previous"), this);
+	findNextTextAct = new QAction(QIcon(":/images/tango/small/edit-select-all.png"), tr("Find &previous"), this);
 	findNextTextAct->setShortcuts(QKeySequence::FindPrevious);
 	findNextTextAct->setStatusTip(tr("Find previous text"));
 
-	replaceTextAct = new QAction(QIcon(":/images/tango/edit-find-replace.png"), tr("&Replace"), this);
+	replaceTextAct = new QAction(QIcon(":/images/tango/small/edit-find-replace.png"), tr("&Replace"), this);
 	replaceTextAct->setShortcuts(QKeySequence::Replace);
 	replaceTextAct->setStatusTip(tr("Replace text"));
 
@@ -267,7 +294,7 @@ void MainWindow::setupActions()
 //	compileOnlyAct->setShortcuts(QKeySequence::Replace);
 	compileOnlyAct->setStatusTip(tr("Compile only"));
 
-	debugRunAct = new QAction(QIcon(":/images/tango/media-playback-start.png"), tr("&Debug run"), this);
+	debugRunAct = new QAction(QIcon(":/images/tango/small/media-playback-start.png"), tr("&Debug run"), this);
 //	debugRunAct->setShortcuts(QKeySequence::Replace);
 	debugRunAct->setStatusTip(tr("Run program with debug"));
 	connect(debugRunAct, SIGNAL(triggered()), this, SLOT(onDebugRun()));

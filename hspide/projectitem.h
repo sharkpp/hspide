@@ -48,7 +48,7 @@ public:
 	CFolderItem(QObject * parent)
 		: CProjectItem(parent)
 	{
-		setIcon(QIcon(":/images/tango/folder.png"));
+		setIcon(QIcon(":/images/tango/small/folder.png"));
 	}
 };
 
@@ -65,7 +65,7 @@ public:
 		: CProjectItem(parent)
 		, mMainSource(false)
 	{
-		setIcon(QIcon(":/images/tango/text-x-generic.png"));
+		setIcon(QIcon(":/images/tango/small/text-x-generic.png"));
 	}
 
 	void setMainSource(bool mainSource)
