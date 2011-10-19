@@ -12,30 +12,6 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
-//	typedef enum {
-//		ACTION_NEW_DOCUMENT,		// 新規
-//		ACTION_OPEN_DOCUMENT,		// 開く
-//		ACTION_SAVE_DOCUMENT,		// 保存
-//		ACTION_SAVE_AS_DOCUMENT,	// 名前を付けて保存
-//		ACTION_SAVE_ALL_DOCUMENT,	// 全て保存
-//		ACTION_QUIT_APPLICATION,	// 終了
-//		ACTION_EDIT_UNDO,			// 元に戻す
-//		ACTION_EDIT_REDO,			// やり直し
-//		ACTION_EDIT_CUT,			// 切り取り
-//		ACTION_EDIT_COPY,			// コピー
-//		ACTION_EDIT_PASTE,			// 貼り付け
-//		ACTION_EDIT_CLEAR,			// 削除
-//		ACTION_SELECT_ALL,			// 全て選択
-//		ACTION_FIND_TEXT,			// 検索
-//		ACTION_FIND_PREV_TEXT,		// 前を検索
-//		ACTION_FIND_NEXT_TEXT,		// 次を検索
-//		ACTION_REPLACE_TEXT,		// 置換
-//		ACTION_BUILD_SOLUTION,		// ソリューションをビルド
-//		ACTION_BUILD_PROJECT,		// プロジェクトをビルド
-//		ACTION_COMPILE,				// コンパイル
-//		ACTION_EXECUTE,				// 実行
-//	} ACTION_TYPE_ENUM;
-
 	QTabWidget * tabWidget;
 	QProgressBar * taskProgress;
 
@@ -108,6 +84,4 @@ private:
 
 	void loadSettings();
 	void saveSettings();
-
-//	void newAction();
 };
