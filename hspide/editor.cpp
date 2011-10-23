@@ -1,12 +1,12 @@
+#include <QtGui>
 #include "editor.h"
-#include <QFileInfo>
-#include <QFile>
-#include <QTextStream>
+
+//////////////////////////////////////////////////////////////////////
 
 CEditor::CEditor(QWidget *parent)
 	: QWidget(parent)
 {
-	mEditor = new QTextEdit(this);
+	mEditor = new CCodeEdit(this);
 }
 
 void CEditor::resizeEvent(QResizeEvent * event)
