@@ -11,11 +11,30 @@ class CCompiler
 {
 	Q_OBJECT
 
+	QString mHspCompPath;
+	QString mHspPath;
+	QString mHspCommonPath;
+
 	QProcess *mProcess;
 
 public:
 
 	CCompiler(QObject *parent = 0);
+
+	// コンパイラのパスを取得
+	const QString &  compilerPath() const;
+	// コンパイラのパスを指定
+	void setCompilerPath(const QString & path);
+
+	// HSPディレクトリのパスを取得
+	const QString &  hspPath() const;
+	// HSPディレクトリのパスを指定
+	void setHspPath(const QString & path);
+
+	// HSPディレクトリのパスを取得
+	const QString &  hspCommonPath() const;
+	// HSP commonディレクトリのパスを指定
+	void setHspCommonPath(const QString & path);
 
 	// プロジェクトをビルド
 	void build(CProject * project);

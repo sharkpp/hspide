@@ -331,21 +331,16 @@ void MainWindow::loadSettings()
 
 	QVariant tmp;
 
+	// コンパイラパスを取得
+	mCompiler->setCompilerPath(settings.value("path/compiler", QDir::currentPath()).toString());
+	// HSPディレクトリの取得
+	mCompiler->setHspPath(settings.value("path/hsp", QDir::currentPath()).toString());
+	// Commonディレクトリの取得
+	mCompiler->setHspCommonPath(settings.value("path/hsp-common", mCompiler->hspPath() + "/common/").toString());
+
+	// ウインドウ位置などを取得
 	restoreGeometry(settings.value("window/geometry").toByteArray());
 	restoreState(settings.value("window/state").toByteArray());
-
-//	tmp = settings.value("window/position");
-//	if( QVariant::Invalid != tmp.type() ) {
-//		setGeometry(tmp.toRect());
-//	}
-//
-//	tmp = settings.value("dock/project-area");
-//	if( QVariant::Invalid != tmp.type() ) {
-//		addDockWidget(Qt::DockWidgetArea(tmp.toInt()), static_cast<QDockWidget*>(projectDock->parentWidget()));
-//	} else {
-//		addDockWidget(Qt::LeftDockWidgetArea, static_cast<QDockWidget*>(projectDock->parentWidget()));
-//	}
-
 }
 
 void MainWindow::saveSettings()
@@ -356,10 +351,14 @@ void MainWindow::saveSettings()
 
 	QString tmp;
 
-//	settings.setValue("window/position", geometry());
-//	settings.setValue("dock/project-area",      QString("%1").arg(dockWidgetArea(static_cast<QDockWidget*>(projectDock->parentWidget()))));
-//	settings.setValue("dock/project-position",  projectDock->parentWidget()->geometry());
+	// コンパイラパスを保存
+	settings.setValue("path/compiler", mCompiler->compilerPath());
+	// HSPディレクトリの保存
+	settings.setValue("path/hsp", mCompiler->hspPath());
+	// Commonディレクトリの保存
+	settings.setValue("path/hsp-common", mCompiler->hspCommonPath());
 
+	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
 	settings.setValue("window/state", saveState());
 }

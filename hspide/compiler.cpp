@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QDir>
 #include "compiler.h"
 #include "solution.h"
@@ -5,26 +6,63 @@
 
 CCompiler::CCompiler(QObject *parent)
 	: QObject(parent)
+	, mHspCompPath(QDir::toNativeSeparators("./"))
+	, mHspPath(QDir::toNativeSeparators("./"))
+	, mHspCommonPath(QDir::toNativeSeparators("./common/"))
 	, mProcess(NULL)
 {
+}
+
+// コンパイラのパスを取得
+const QString &  CCompiler::compilerPath() const
+{
+	return mHspCompPath;
+}
+
+// コンパイラのパスを指定
+void CCompiler::setCompilerPath(const QString & path)
+{
+	mHspCompPath = QDir::toNativeSeparators(path);
+}
+
+// HSPディレクトリのパスを取得
+const QString &  CCompiler::hspPath() const
+{
+	return mHspPath;
+}
+
+// HSPディレクトリのパスを指定
+void CCompiler::setHspPath(const QString & path)
+{
+	mHspPath = QDir::toNativeSeparators(path);
+}
+
+// HSPディレクトリのパスを取得
+const QString &  CCompiler::hspCommonPath() const
+{
+	return mHspCommonPath;
+}
+
+// HSP commonディレクトリのパスを指定
+void CCompiler::setHspCommonPath(const QString & path)
+{
+	mHspCommonPath = QDir::toNativeSeparators(path);
 }
 
 // プロジェクトをビルド
 void CCompiler::build(CProject * project)
 {
-#ifdef _DEBUG
-	QDir::setCurrent(QDir::currentPath() + "\\debug\\");
-#endif
-
 	QString filename;
 	if( !project->getMainSource(filename) )
 	{
 		return;
 	}
 
-	QString program = "./hspcmp";
+	QString program = mHspCompPath + "hspcmp";
 	QStringList arguments;
-	arguments << filename;
+	arguments << "-C" << mHspCommonPath
+	          << "-H" << mHspPath
+	          << filename;
 	delete mProcess;
 	mProcess = new QProcess(this);
 	mProcess->start(program, arguments);
