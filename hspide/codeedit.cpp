@@ -38,60 +38,132 @@ class CHighlighter
 {
 private:
 
+	struct HighlightingRule
+	{
+		QRegExp pattern;
+		QTextCharFormat format;
+	};
+	QVector<HighlightingRule> highlightingRules;
+
+	QRegExp commentStartExpression;
+	QRegExp commentEndExpression;
+
+	QTextCharFormat multiLineCommentFormat;
 
 public:
 
 	CHighlighter(QTextDocument *parent)
 		: QSyntaxHighlighter(parent)
 	{
+		commentStartExpression = QRegExp("/\\*");
+		commentEndExpression = QRegExp("\\*/");
 	}
 
 	virtual ~CHighlighter()
 	{
 	}
 
+	// シンボル一覧を指定
+	void setSymbols(const QVector<QStringList> & symbols)
+	{
+		HighlightingRule rule;
+
+		highlightingRules.clear();
+
+		QTextCharFormat functionFormat;
+		functionFormat.setForeground(Qt::blue);
+
+		QTextCharFormat preprocesserFormat;
+		preprocesserFormat.setForeground(Qt::blue);
+
+		QTextCharFormat macroFormat;
+		macroFormat.setForeground(Qt::blue);
+
+		foreach(const QStringList & symbol, symbols)
+		{
+			const QString & category1 = symbol[1];
+			const QString & category2 = symbol[2];
+			QString pattern = "\\b" + symbol[0] + "\\b";
+			QTextCharFormat format;
+			if( !category2.compare("macro") ) {
+				// 定義済みマクロ
+				format = macroFormat;
+			} else if( !category2.compare("func") ) {
+				if( !category1.compare("pre") ) {
+					// プリプロセッサ
+					pattern = symbol[0];
+					pattern = "(^|\\s)#\\s*" + pattern.remove("#") + "\\b";
+					format = preprocesserFormat;
+				} else {
+					// 関数/命令
+					format = functionFormat;
+				}
+			}
+			rule.pattern = QRegExp(pattern);
+			rule.format  = format;
+			highlightingRules.append(rule);
+		}
+
+		// ラベル
+		QTextCharFormat labelFormat;
+		labelFormat.setForeground(Qt::darkYellow);
+		rule.pattern = QRegExp("\\*[^\\s,.:;\\/()=0-9][^\\s,.:;\\/]*");
+		rule.format = labelFormat;
+		highlightingRules.append(rule);
+
+		// コメント(一行)
+		QTextCharFormat singleLineCommentFormat;
+		singleLineCommentFormat.setForeground(Qt::darkGreen);
+		rule.pattern = QRegExp("//[^\n]*");
+		rule.format = singleLineCommentFormat;
+		highlightingRules.append(rule);
+		rule.pattern = QRegExp(";[^\n]*");
+		rule.format = singleLineCommentFormat;
+		highlightingRules.append(rule);
+
+		// コメント(複数行)
+		multiLineCommentFormat.setForeground(Qt::darkGreen);
+
+		// 文字列
+		QTextCharFormat quotationFormat;
+		quotationFormat.setForeground(Qt::darkRed);
+		rule.pattern = QRegExp("\".*\"");
+		rule.format = quotationFormat;
+		highlightingRules.append(rule);
+
+	}
+
 private:
 
 	virtual void highlightBlock(const QString &text)
 	{
-		QTextCharFormat myClassFormat;
-		myClassFormat.setFontWeight(QFont::Bold);
-		myClassFormat.setForeground(Qt::darkMagenta);
-		QString pattern = "\\bMy[A-Za-z]+\\b";
-
-		QRegExp expression(pattern);
-		int index = text.indexOf(expression);
-		while (index >= 0) {
-			int length = expression.matchedLength();
-			setFormat(index, length, myClassFormat);
-			index = text.indexOf(expression, index + length);
+		foreach (const HighlightingRule &rule, highlightingRules) {
+			QRegExp expression(rule.pattern);
+			int index = expression.indexIn(text);
+			while (index >= 0) {
+				int length = expression.matchedLength();
+				setFormat(index, length, rule.format);
+				index = expression.indexIn(text, index + length);
+			}
 		}
-
-		QTextCharFormat multiLineCommentFormat;
-		multiLineCommentFormat.setForeground(Qt::red);
-
-		QRegExp startExpression("/\\*");
-		QRegExp endExpression("\\*/");
-
 		setCurrentBlockState(0);
 
 		int startIndex = 0;
 		if (previousBlockState() != 1)
-			startIndex = text.indexOf(startExpression);
+			startIndex = commentStartExpression.indexIn(text);
 
 		while (startIndex >= 0) {
-			int endIndex = text.indexOf(endExpression, startIndex);
+			int endIndex = commentEndExpression.indexIn(text, startIndex);
 			int commentLength;
 			if (endIndex == -1) {
 				setCurrentBlockState(1);
 				commentLength = text.length() - startIndex;
 			} else {
 				commentLength = endIndex - startIndex
-				              + endExpression.matchedLength();
+								+ commentEndExpression.matchedLength();
 			}
 			setFormat(startIndex, commentLength, multiLineCommentFormat);
-			startIndex = text.indexOf(startExpression,
-			                          startIndex + commentLength);
+			startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
 		}
 	}
 
@@ -107,14 +179,19 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	, mLineNumberBackgroundColor(QColor(255, 255, 255, 255))
 	, mLineNumberTextColor(QColor(255, 0, 0, 0))
 {
-	mLineNumber = new CLineNumberArea(this);
-
+	mLineNumber  = new CLineNumberArea(this);
 	mHighlighter = new CHighlighter(document());
 
 	connect(this, SIGNAL(blockCountChanged(int)),   this, SLOT(updateLineNumberWidth(int)));
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
 
 	updateLineNumberWidth(0);
+}
+
+// シンボル一覧を指定
+void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
+{
+	static_cast<CHighlighter*>(mHighlighter)->setSymbols(symbols);
 }
 
 int CCodeEdit::lineNumberWidth()
@@ -139,14 +216,7 @@ void CCodeEdit::updateLineNumberWidth(int newBlockCount)
 
 void CCodeEdit::updateLineNumber(const QRect & rect ,int dy)
 {
-	//if( rect.contains(mLineNumber->geometry()) ) 
-	//{
-	//}
-	//if( dy ) {
-	//	mLineNumber->scroll(0, dy);
-	//} else {
-		mLineNumber->update(0, rect.y(), mLineNumber->width(), rect.height());
-	//}
+	mLineNumber->update(0, rect.y(), mLineNumber->width(), rect.height());
 }
 
 void CCodeEdit::resizeEvent(QResizeEvent * event)

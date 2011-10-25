@@ -14,6 +14,12 @@ void CEditor::resizeEvent(QResizeEvent * event)
 	mEditor->resize(event->size());
 }
 
+// シンボル一覧を指定
+void CEditor::setSymbols(const QVector<QStringList> & symbols)
+{
+	mEditor->setSymbols(symbols);
+}
+
 // ファイルから読み込み
 bool CEditor::load(const QString & filepath)
 {

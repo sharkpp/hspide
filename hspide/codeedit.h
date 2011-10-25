@@ -13,6 +13,7 @@ class CCodeEdit
 	Q_OBJECT
 
 	friend class CLineNumberArea;
+	friend class CRulerArea;
 
 	QWidget *            mLineNumber;
 	QSyntaxHighlighter * mHighlighter;
@@ -26,6 +27,9 @@ class CCodeEdit
 public:
 
 	CCodeEdit(QWidget *parent = 0);
+
+	// ƒVƒ“ƒ{ƒ‹ˆê——‚ðŽw’è
+	void setSymbols(const QVector<QStringList> & symbols);
 
 	void setLineNumberBackgroundColorRole(const QPalette::ColorRole & role);
 	const QPalette::ColorRole & lineNumberBackgroundColorRole() const;
@@ -44,6 +48,7 @@ protected:
 	virtual void resizeEvent(QResizeEvent * event);
 
 	void paintLineNumEvent(QPaintEvent * event);
+	void paintRulerEvent(QPaintEvent * event);
 	void mousePressLineNumEvent(QMouseEvent * event);
 
 public slots:

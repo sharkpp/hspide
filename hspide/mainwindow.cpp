@@ -426,6 +426,7 @@ void MainWindow::actionTriggered(QAction *action)
 void MainWindow::onNewFile()
 {
 	CEditor * textEditor = new CEditor(tabWidget);
+	textEditor->setSymbols(mCompiler->symbols());
 	tabWidget->addTab(textEditor, textEditor->fileName());
 	mSolution->append()->openFile(textEditor);
 }
@@ -441,6 +442,7 @@ void MainWindow::onOpenFile(const QString & filePath)
 
 	if( !fileName.isEmpty() ) {
 		CEditor * textEditor = new CEditor(tabWidget);
+		textEditor->setSymbols(mCompiler->symbols());
 		if( !textEditor->load(fileName) ) {
 			delete textEditor;
 		} else {

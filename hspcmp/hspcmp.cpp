@@ -30,6 +30,7 @@ struct option {
 	bool		auto_make;
 	bool		make;
 	bool		execute;
+	bool		symbol_put;
 	const char * refname;
 	const char * objname;
 	const char * common_path;
@@ -42,6 +43,7 @@ struct option {
 		, wx(0), wy(0), hidden_window(false)
 		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
+		, symbol_put(false)
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 		, cmdline(NULL)
 	{}
@@ -68,6 +70,7 @@ struct option {
 		printf("option.hsp_path = \"%s\"\n", hsp_path);
 		printf("option.work_path = \"%s\"\n", work_path);
 		printf("option.cmdline = \"%s\"\n", cmdline);
+		printf("option.symbol_put = %s\n", symbol_put ? "true" : "false");
 		packfile.dump();
 	}
 #endif
@@ -104,6 +107,7 @@ void usage()
 		"    -H HSP_PATH , --hsp-path HSP_PATH\n"
 		"    -w WORK_PATH , --work-path WORK_PATH\n"
 		"    -c COMMAND_LINE , --cmdline COMMAND_LINE\n"
+		"    --symbol-put\n"
 		"   packname:\n"
 		"     packname : normal packing\n"
 		"    +packname : encryption packing\n"
@@ -177,6 +181,9 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || !strcmp(argv[i], "--?") ) {
 				// ヘルプの表示
 				option.help = true;
+			} else if(  !strcmp(argv[i], "--symbol-put") ) {
+				// シンボル一覧の表示
+				option.symbol_put = true;
 			} else {
 				return false;
 			}
@@ -286,7 +293,7 @@ int main(int argc, char * argv[])
 	setvbuf(stdout, NULL, _IONBF, 0); // 出力バッファリング無効
 
 	if( !read_args(argc, argv) ||
-		((!option.filename || option.help) && !option.version) )
+		((!option.filename || option.help) && !option.version && !option.symbol_put) )
 	{
 #ifdef _DEBUG
 		option.dump();
@@ -313,6 +320,13 @@ int main(int argc, char * argv[])
 		return 0;
 	}
 
+	if( option.symbol_put ) {
+		tmp.resize(1024*1024);
+		cmp.hsc3_getsym();
+		print_compiler_message(cmp);
+		return 0;
+	}
+
 	if( !option.work_path ) {
 		work_path = ".\\";
 		option.work_path = work_path.c_str();
@@ -332,7 +346,9 @@ int main(int argc, char * argv[])
 			print_message("can't set common path!\n"); // 現状、常に正常処理になるので処理を通らない
 			return -1;
 		}
-printf("common_path='%s'\n",common_path.c_str());
+#ifdef _DEBUG
+		printf("common_path='%s'\n",common_path.c_str());
+#endif
 	}
 
 	if( !option.hsp_path ) {

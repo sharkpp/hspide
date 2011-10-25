@@ -21,6 +21,9 @@ public:
 
 	CEditor(QWidget *parent = 0);
 
+	// シンボル一覧を指定
+	void setSymbols(const QVector<QStringList> & symbols);
+
 	// ファイルから読み込み
 	bool load(const QString & filepath);
 

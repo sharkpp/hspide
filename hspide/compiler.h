@@ -1,4 +1,6 @@
 #include <QObject>
+#include <QString>
+#include <QVector>
 #include <QProcess>
 
 #ifndef INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
@@ -16,10 +18,16 @@ class CCompiler
 	QString mHspCommonPath;
 
 	QProcess *mProcess;
+	QProcess *mProcessForListingSymbols;
+
+	QVector<QStringList> mSymbols;
 
 public:
 
 	CCompiler(QObject *parent = 0);
+
+	// シンボル一覧を取得
+	const QVector<QStringList> & symbols() const;
 
 	// コンパイラのパスを取得
 	const QString &  compilerPath() const;
@@ -44,7 +52,12 @@ public:
 
 protected:
 
+	void updateCompilerPath();
+
 public slots:
+
+	// シンボルの取得完了
+	void listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 	// プロジェクトのビルド完了
 	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
