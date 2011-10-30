@@ -174,13 +174,14 @@ private:
 
 CCodeEdit::CCodeEdit(QWidget *parent)
 	: QPlainTextEdit(parent)
-	, mLineNumberBackgroundColorRole(QPalette::Window)
-	, mLineNumberTextColorRole(QPalette::Text)
-	, mLineNumberBackgroundColor(QColor(255, 255, 255, 255))
-	, mLineNumberTextColor(QColor(255, 0, 0, 0))
+	, m_lineNumberBackgroundColorRole(QPalette::Window)
+	, m_lineNumberTextColorRole(QPalette::Text)
+	, m_lineNumberBackgroundColor(QColor(255, 255, 255, 255))
+	, m_lineNumberTextColor(QColor(255, 0, 0, 0))
+	, m_visibleLineNumber(true)
 {
-	mLineNumber  = new CLineNumberArea(this);
-	mHighlighter = new CHighlighter(document());
+	m_lineNumberWidget  = new CLineNumberArea(this);
+	m_highlighter = new CHighlighter(document());
 
 	connect(this, SIGNAL(blockCountChanged(int)),   this, SLOT(updateLineNumberWidth(int)));
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
@@ -191,11 +192,16 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 // シンボル一覧を指定
 void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
 {
-	static_cast<CHighlighter*>(mHighlighter)->setSymbols(symbols);
+	static_cast<CHighlighter*>(m_highlighter)->setSymbols(symbols);
 }
 
 int CCodeEdit::lineNumberWidth()
 {
+	if( !m_visibleLineNumber )
+	{
+		return 0;
+	}
+
 	int digits = 1;
 	for(int n = qMax(10, blockCount());
 		10 <= n; digits++)
@@ -209,6 +215,50 @@ int CCodeEdit::lineNumberWidth()
 	return space;
 }
 
+//////////////////////////////////////////////////////////////////////
+// プロパティ
+//////////////////////////////////////////////////////////////////////
+
+void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole & role)
+{
+	m_lineNumberBackgroundColorRole = role;
+}
+
+void CCodeEdit::setLineNumberTextColorRole(const QPalette::ColorRole & role)
+{
+	m_lineNumberTextColorRole = role;
+}
+
+void CCodeEdit::setLineNumberBackgroundColor(const QColor & color)
+{
+	m_lineNumberBackgroundColor = color;
+	m_lineNumberBackgroundColorRole = QPalette::NoRole;
+}
+
+inline void CCodeEdit::setLineNumberTextColor(const QColor & color)
+{
+	m_lineNumberTextColor = color;
+	m_lineNumberTextColorRole = QPalette::NoRole;
+}
+
+inline void CCodeEdit::setLineNumberVisible(bool visible)
+{
+	m_visibleLineNumber = visible;
+
+	if( visible != m_lineNumberWidget->isVisible() )
+	{
+		if( visible ) {
+			m_lineNumberWidget->show();
+		} else {
+			m_lineNumberWidget->hide();
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+// イベント
+//////////////////////////////////////////////////////////////////////
+
 void CCodeEdit::updateLineNumberWidth(int newBlockCount)
 {
 	setViewportMargins(lineNumberWidth(), 0, 0, 0);
@@ -216,7 +266,7 @@ void CCodeEdit::updateLineNumberWidth(int newBlockCount)
 
 void CCodeEdit::updateLineNumber(const QRect & rect ,int dy)
 {
-	mLineNumber->update(0, rect.y(), mLineNumber->width(), rect.height());
+	m_lineNumberWidget->update(0, rect.y(), m_lineNumberWidget->width(), rect.height());
 }
 
 void CCodeEdit::resizeEvent(QResizeEvent * event)
@@ -224,12 +274,17 @@ void CCodeEdit::resizeEvent(QResizeEvent * event)
 	QPlainTextEdit::resizeEvent(event);
 
 	const QRect & rc = contentsRect();
-	mLineNumber->setGeometry(rc.left(), rc.top(), lineNumberWidth(), rc.height());
+	m_lineNumberWidget->setGeometry(rc.left(), rc.top(), lineNumberWidth(), rc.height());
 }
 
 void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 {
-	QPainter painter(mLineNumber);
+	QPainter painter(m_lineNumberWidget);
+
+	if( !m_visibleLineNumber )
+	{
+		return;
+	}
 
 	// 行番号エリアをベタ塗り
 	painter.fillRect(event->rect(), lineNumberBackgroundColor());

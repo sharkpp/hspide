@@ -15,14 +15,16 @@ class CCodeEdit
 	friend class CLineNumberArea;
 	friend class CRulerArea;
 
-	QWidget *            mLineNumber;
-	QSyntaxHighlighter * mHighlighter;
+    QWidget *               m_lineNumberWidget;
+    QSyntaxHighlighter *    m_highlighter;
 
-	QPalette::ColorRole  mLineNumberBackgroundColorRole;
-	QPalette::ColorRole  mLineNumberTextColorRole;
+    QPalette::ColorRole     m_lineNumberBackgroundColorRole;
+    QPalette::ColorRole     m_lineNumberTextColorRole;
 
-	QColor               mLineNumberBackgroundColor;
-	QColor               mLineNumberTextColor;
+    QColor                  m_lineNumberBackgroundColor;
+    QColor                  m_lineNumberTextColor;
+
+    bool                    m_visibleLineNumber;
 
 public:
 
@@ -43,6 +45,9 @@ public:
 	void setLineNumberTextColor(const QColor & color);
 	const QColor & lineNumberTextColor() const;
 
+	void setLineNumberVisible(bool visible);
+	bool isLineNumberVisible() const;
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
@@ -62,44 +67,30 @@ private:
 
 };
 
-inline void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole & role) {
-	mLineNumberBackgroundColorRole = role;
-}
-
 inline const QPalette::ColorRole & CCodeEdit::lineNumberBackgroundColorRole() const {
-	return mLineNumberBackgroundColorRole;
-}
-
-inline void CCodeEdit::setLineNumberTextColorRole(const QPalette::ColorRole & role) {
-	mLineNumberTextColorRole = role;
+	return m_lineNumberBackgroundColorRole;
 }
 
 inline const QPalette::ColorRole & CCodeEdit::lineNumberTextColorRole() const {
-	return mLineNumberTextColorRole;
-}
-
-inline void CCodeEdit::setLineNumberBackgroundColor(const QColor & color) {
-	mLineNumberBackgroundColor = color;
-	mLineNumberBackgroundColorRole = QPalette::NoRole;
+	return m_lineNumberTextColorRole;
 }
 
 inline const QColor & CCodeEdit::lineNumberBackgroundColor() const {
 	return
-		QPalette::NoRole == mLineNumberBackgroundColorRole
-			? mLineNumberBackgroundColor
-			: palette().color(mLineNumberBackgroundColorRole);
-}
-
-inline void CCodeEdit::setLineNumberTextColor(const QColor & color) {
-	mLineNumberTextColor = color;
-	mLineNumberTextColorRole = QPalette::NoRole;
+		QPalette::NoRole == m_lineNumberBackgroundColorRole
+			? m_lineNumberBackgroundColor
+			: palette().color(m_lineNumberBackgroundColorRole);
 }
 
 inline const QColor & CCodeEdit::lineNumberTextColor() const {
 	return
-		QPalette::NoRole == mLineNumberTextColorRole
-			? mLineNumberTextColor
-			: palette().color(mLineNumberTextColorRole);
+		QPalette::NoRole == m_lineNumberTextColorRole
+			? m_lineNumberTextColor
+			: palette().color(m_lineNumberTextColorRole);
+}
+
+inline bool CCodeEdit::isLineNumberVisible() const {
+	return m_visibleLineNumber;
 }
 
 #endif // !defined(INCLUDE_GUARD_3ED30DA5_1A87_433A_9ED9_FCEC987B4EAA)
