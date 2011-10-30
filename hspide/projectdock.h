@@ -1,6 +1,7 @@
 #include <QTreeView>
 
 class CSolution;
+class CProjectItem;
 
 class CProjectDock
 	: public QWidget
@@ -15,6 +16,8 @@ public:
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ğŒ‹‡
 	bool setSolution(CSolution * solution);
+
+	void selectItem(CProjectItem * item);
 
 protected:
 

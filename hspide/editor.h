@@ -2,6 +2,7 @@
 #include <QSyntaxHighlighter>
 #include <QString>
 #include "codeedit.h"
+#include "projectitem.h"
 
 #pragma once
 
@@ -13,9 +14,9 @@ class CEditor
 {
 	Q_OBJECT
 
-	CCodeEdit * mEditor;
-
-	QString	mFilePath;
+	CCodeEdit *		m_editor;
+	QString			m_filePath;
+	CProjectItem *	m_item;
 
 public:
 
@@ -36,6 +37,10 @@ public:
 //	// 一時ファイルを削除
 //	bool clearTemporary();
 
+	// アイテムと関連付け
+	bool setAssignItem(CProjectItem * item);
+	CProjectItem * assignItem();
+
 	// ファイルパスを取得
 	const QString & filePath() const;
 
@@ -48,6 +53,7 @@ public:
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
+	virtual void focusInEvent(QFocusEvent * event);
 
 	void paintLineNumEvent(QPaintEvent * event);
 	void mousePressLineNumEvent(QMouseEvent * event);

@@ -16,7 +16,7 @@ bool CProjectItem::setPath(const QString & path)
 {
 	mItemPath = path;
 	mItemName = QFileInfo(mItemPath).fileName();
-	setText(mItemName);
+	setText(mItemName.isEmpty() ? tr("(no title)") : mItemName);
 	return true;
 }
 
@@ -24,7 +24,7 @@ bool CProjectItem::setName(const QString & name)
 {
 	mItemPath.clear();
 	mItemName = name;
-	setText(name);
+	setText(name.isEmpty() ? tr("(no title)") : name);
 	return true;
 }
 

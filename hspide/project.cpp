@@ -9,6 +9,8 @@
 CProject::CProject(QObject *parent)
 	: CProjectItem(parent)
 {
+	setText(tr("(no title)"));
+	setIcon(QIcon(":/images/tango/small/folder.png"));
 }
 
 CProject::~CProject()

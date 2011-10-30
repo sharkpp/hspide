@@ -5,19 +5,25 @@
 
 CEditor::CEditor(QWidget *parent)
 	: QWidget(parent)
+	, m_item(NULL)
 {
-	mEditor = new CCodeEdit(this);
+	m_editor = new CCodeEdit(this);
 }
 
 void CEditor::resizeEvent(QResizeEvent * event)
 {
-	mEditor->resize(event->size());
+	m_editor->resize(event->size());
+}
+
+void CEditor::focusInEvent(QFocusEvent * event)
+{
+	m_editor->setFocus();
 }
 
 // シンボル一覧を指定
 void CEditor::setSymbols(const QVector<QStringList> & symbols)
 {
-	mEditor->setSymbols(symbols);
+	m_editor->setSymbols(symbols);
 }
 
 // ファイルから読み込み
@@ -30,8 +36,8 @@ bool CEditor::load(const QString & filepath)
 		return false;
 	}
 
-	mFilePath = filepath;
-	mEditor->setPlainText(file.readAll());
+	m_filePath = filepath;
+	m_editor->setPlainText(file.readAll());
 
 	return true;
 }
@@ -47,7 +53,7 @@ bool CEditor::save(const QString & filepath)
 		return false;
 	}
 
-	QFile file(filepath.isEmpty() ? mFilePath : filepath);
+	QFile file(filepath.isEmpty() ? m_filePath : filepath);
 
 	if( !file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text) )
 	{
@@ -55,15 +61,27 @@ bool CEditor::save(const QString & filepath)
 	}
 
 	QTextStream out(&file);
-	out << mEditor->toPlainText();
+	out << m_editor->toPlainText();
 
 	return true;
+}
+
+// アイテムと関連付け
+bool CEditor::setAssignItem(CProjectItem * item)
+{
+	m_item = item;
+	return true;
+}
+
+CProjectItem * CEditor::assignItem()
+{
+	return m_item;
 }
 
 // ファイルパスを取得
 const QString & CEditor::filePath() const
 {
-	return mFilePath;
+	return m_filePath;
 }
 
 // ファイル名を取得
@@ -71,11 +89,11 @@ QString CEditor::fileName() const
 {
 	return isNoTitle()
 			? tr("(no title)")
-			: QFileInfo(mFilePath).fileName();
+			: QFileInfo(m_filePath).fileName();
 }
 
 // 空ファイルか？
 bool CEditor::isNoTitle() const
 {
-	return mFilePath.isEmpty();
+	return m_filePath.isEmpty();
 }

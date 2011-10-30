@@ -60,8 +60,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	loadSettings();
 
 //test
-mSolution->load("test.hspsln");
-projectDock->setSolution(mSolution);
+//mSolution->load("test.hspsln");
+//projectDock->setSolution(mSolution);
+	projectDock->setSolution(mSolution);
 }
 
 MainWindow::~MainWindow()
@@ -427,8 +428,11 @@ void MainWindow::onNewFile()
 {
 	CEditor * textEditor = new CEditor(tabWidget);
 	textEditor->setSymbols(mCompiler->symbols());
+	textEditor->setAssignItem(mSolution->append());
+	projectDock->setSolution(mSolution); // ツリーの変更を自動で適用できないものか？
 	tabWidget->addTab(textEditor, textEditor->fileName());
-	mSolution->append()->openFile(textEditor);
+	tabWidget->setCurrentWidget(textEditor);
+	static_cast<CProject*>(textEditor->assignItem())->openFile(textEditor);
 }
 
 void MainWindow::onOpenFile(const QString & filePath)
@@ -446,7 +450,10 @@ void MainWindow::onOpenFile(const QString & filePath)
 		if( !textEditor->load(fileName) ) {
 			delete textEditor;
 		} else {
+		//	textEditor->setAssignItem(mSolution->append());
+		//	textEditor->assignItem()->openFile(textEditor);
 			tabWidget->addTab(textEditor, textEditor->fileName());
+			tabWidget->setCurrentWidget(textEditor);
 			mSolution->openFile(textEditor);
 		}
 	}
@@ -542,12 +549,17 @@ void MainWindow::currentTabChanged(int index)
 	CEditor* textEditor
 		= dynamic_cast<CEditor*>(tabWidget->widget(index));
 
-	if( textEditor ) {
+	if( textEditor )
+	{
+		textEditor->setFocus();
+
 		saveDocumentAct->setEnabled( !textEditor->isNoTitle() );
 		buildSolutionAct->setEnabled(true);
 		buildProjectAct->setEnabled(true);
 		compileOnlyAct->setEnabled(true);
 //		debugRunAct->setEnabled(true);
 //		noDebugRunAct->setEnabled(true);
+
+		projectDock->selectItem(textEditor->assignItem());
 	}
 }

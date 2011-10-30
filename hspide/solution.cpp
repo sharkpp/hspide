@@ -10,6 +10,8 @@
 CSolution::CSolution(QObject *parent)
 	: CProjectItem(parent)
 {
+	setText(tr("(no title)"));
+	setIcon(QIcon(":/images/tango/small/folder.png"));
 }
 
 CSolution::~CSolution()
