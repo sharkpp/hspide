@@ -67,13 +67,13 @@ bool CEditor::save(const QString & filepath)
 }
 
 // アイテムと関連付け
-bool CEditor::setAssignItem(CProjectItem * item)
+bool CEditor::setAssignItem(CWorkSpaceItem * item)
 {
 	m_item = item;
 	return true;
 }
 
-CProjectItem * CEditor::assignItem()
+CWorkSpaceItem * CEditor::assignItem()
 {
 	return m_item;
 }

@@ -1,5 +1,9 @@
 #include <QTextEdit>
 
+#if defined(_MSC_VER) && 1000 < _MSC_VER
+#pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
+
 class CSearchDock
 	: public QWidget
 {

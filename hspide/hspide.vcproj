@@ -140,17 +140,15 @@
 			<File
 				RelativePath="outputdock.cpp" />
 			<File
-				RelativePath="project.cpp" />
-			<File
 				RelativePath="projectdock.cpp" />
-			<File
-				RelativePath="projectitem.cpp" />
 			<File
 				RelativePath="searchdock.cpp" />
 			<File
-				RelativePath="solution.cpp" />
-			<File
 				RelativePath="symboldock.cpp" />
+			<File
+				RelativePath="workspaceitem.cpp" />
+			<File
+				RelativePath="workspacemodel.cpp" />
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -295,29 +293,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="project.h">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;project.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 project.h -o debug\moc_project.cpp"
-						Description="MOC project.h"
-						Outputs="debug\moc_project.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;project.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 project.h -o release\moc_project.cpp"
-						Description="MOC project.h"
-						Outputs="release\moc_project.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="projectdock.h">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -340,31 +315,6 @@
 						Path="c:\Qt\4.7.3\bin" />
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="projectitem.h">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;projectitem.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 projectitem.h -o debug\moc_projectitem.cpp"
-						Description="MOC projectitem.h"
-						Outputs="debug\moc_projectitem.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;projectitem.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 projectitem.h -o release\moc_projectitem.cpp"
-						Description="MOC projectitem.h"
-						Outputs="release\moc_projectitem.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="projectreader.h" />
 			<File
 				RelativePath="searchdock.h">
 				<FileConfiguration
@@ -389,31 +339,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="solution.h">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;solution.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 solution.h -o debug\moc_solution.cpp"
-						Description="MOC solution.h"
-						Outputs="debug\moc_solution.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;solution.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 solution.h -o release\moc_solution.cpp"
-						Description="MOC solution.h"
-						Outputs="release\moc_solution.cpp"
-						Path="c:\Qt\4.7.3\bin" />
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="solutionreader.h" />
-			<File
 				RelativePath="symboldock.h">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -433,6 +358,52 @@
 						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 symboldock.h -o release\moc_symboldock.cpp"
 						Description="MOC symboldock.h"
 						Outputs="release\moc_symboldock.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="workspaceitem.h">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspaceitem.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o debug\moc_workspaceitem.cpp"
+						Description="MOC workspaceitem.h"
+						Outputs="debug\moc_workspaceitem.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspaceitem.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o release\moc_workspaceitem.cpp"
+						Description="MOC workspaceitem.h"
+						Outputs="release\moc_workspaceitem.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="workspacemodel.h">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacemodel.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o debug\moc_workspacemodel.cpp"
+						Description="MOC workspacemodel.h"
+						Outputs="debug\moc_workspacemodel.cpp"
+						Path="c:\Qt\4.7.3\bin" />
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacemodel.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o release\moc_workspacemodel.cpp"
+						Description="MOC workspacemodel.h"
+						Outputs="release\moc_workspacemodel.cpp"
 						Path="c:\Qt\4.7.3\bin" />
 				</FileConfiguration>
 			</File>
@@ -514,18 +485,6 @@
 					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_project.cpp">
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="release\moc_project.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
 				RelativePath="debug\moc_projectdock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
@@ -533,18 +492,6 @@
 			</File>
 			<File
 				RelativePath="release\moc_projectdock.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="debug\moc_projectitem.cpp">
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="release\moc_projectitem.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true" />
@@ -562,18 +509,6 @@
 					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_solution.cpp">
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
-				RelativePath="release\moc_solution.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true" />
-			</File>
-			<File
 				RelativePath="debug\moc_symboldock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
@@ -581,6 +516,30 @@
 			</File>
 			<File
 				RelativePath="release\moc_symboldock.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\moc_workspaceitem.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_workspaceitem.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\moc_workspacemodel.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_workspacemodel.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="true" />

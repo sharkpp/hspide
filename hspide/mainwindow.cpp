@@ -1,7 +1,6 @@
 #include <QComboBox>
 #include "mainwindow.h"
 #include "editor.h"
-#include "project.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -28,9 +27,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	mCompiler = new CCompiler(this);
 
-	mSolution = new CSolution(this);
-	// 起動時は空ソリューション、プロジェクトを作る
-//	mSolution->append();
+	workSpace = new CWorkSpaceModel(this);
+	workSpace->insertRow(0);
 
 	// 処理完了時の通知を登録
 	connect(mCompiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
@@ -59,10 +57,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	loadSettings();
 
-//test
-//mSolution->load("test.hspsln");
-//projectDock->setSolution(mSolution);
-	projectDock->setSolution(mSolution);
+	projectDock->setWorkSpace(workSpace);
 }
 
 MainWindow::~MainWindow()
@@ -426,13 +421,13 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::onNewFile()
 {
-	CEditor * textEditor = new CEditor(tabWidget);
-	textEditor->setSymbols(mCompiler->symbols());
-	textEditor->setAssignItem(mSolution->append());
-	projectDock->setSolution(mSolution); // ツリーの変更を自動で適用できないものか？
-	tabWidget->addTab(textEditor, textEditor->fileName());
-	tabWidget->setCurrentWidget(textEditor);
-	static_cast<CProject*>(textEditor->assignItem())->openFile(textEditor);
+	//CEditor * textEditor = new CEditor(tabWidget);
+	//textEditor->setSymbols(mCompiler->symbols());
+	//textEditor->setAssignItem(workSpace->append());
+	//projectDock->setSolution(workSpace); // ツリーの変更を自動で適用できないものか？
+	//tabWidget->addTab(textEditor, textEditor->fileName());
+	//tabWidget->setCurrentWidget(textEditor);
+	//static_cast<CWorkSpaceItem*>(textEditor->assignItem())->openFile(textEditor);
 }
 
 void MainWindow::onOpenFile(const QString & filePath)
@@ -450,11 +445,11 @@ void MainWindow::onOpenFile(const QString & filePath)
 		if( !textEditor->load(fileName) ) {
 			delete textEditor;
 		} else {
-		//	textEditor->setAssignItem(mSolution->append());
-		//	textEditor->assignItem()->openFile(textEditor);
-			tabWidget->addTab(textEditor, textEditor->fileName());
-			tabWidget->setCurrentWidget(textEditor);
-			mSolution->openFile(textEditor);
+		////	textEditor->setAssignItem(workSpace->append());
+		////	textEditor->assignItem()->openFile(textEditor);
+		//	tabWidget->addTab(textEditor, textEditor->fileName());
+		//	tabWidget->setCurrentWidget(textEditor);
+		//	workSpace->openFile(textEditor);
 		}
 	}
 }
@@ -480,7 +475,7 @@ void MainWindow::onSaveAsFile()
 
 void MainWindow::onSaveAllFile()
 {
-//	mSolution->save();
+//	workSpace->save();
 }
 
 void MainWindow::onQuit()
@@ -496,7 +491,7 @@ void MainWindow::onDebugRun()
 //		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
 //	}
 
-	mCompiler->build(&mSolution->at(0));
+//	mCompiler->build(&workSpace->at(0));
 }
 
 void MainWindow::buildStart()

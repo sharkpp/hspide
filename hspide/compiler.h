@@ -3,10 +3,14 @@
 #include <QVector>
 #include <QProcess>
 
+#if defined(_MSC_VER) && 1000 < _MSC_VER
+#pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
+
 #ifndef INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
 #define INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
 
-class CProject;
+class CWorkSpaceItem;
 
 class CCompiler
 	: public QObject
@@ -45,7 +49,7 @@ public:
 	void setHspCommonPath(const QString & path);
 
 	// プロジェクトをビルド
-	void build(CProject * project);
+	void build(CWorkSpaceItem * project);
 
 	// 単一ファイルをコンパイル
 	void compile();

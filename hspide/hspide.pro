@@ -9,13 +9,12 @@ INCLUDEPATH += .
 QT += xml
 
 # Input
-HEADERS += projectreader.h solutionreader.h \
-           outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h \
-           editor.h mainwindow.h project.h solution.h projectitem.h compiler.h \
+HEADERS += outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h \
+           editor.h mainwindow.h workspaceitem.h workspacemodel.h compiler.h \
            codeedit.h
 SOURCES += main.cpp \
            outputdock.cpp debuggerdock.cpp projectdock.cpp searchdock.cpp symboldock.cpp \
-           editor.cpp mainwindow.cpp project.cpp solution.cpp projectitem.cpp compiler.cpp \
+           editor.cpp mainwindow.cpp workspaceitem.cpp workspacemodel.cpp compiler.cpp \
            codeedit.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts

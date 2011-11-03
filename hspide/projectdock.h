@@ -1,7 +1,11 @@
 #include <QTreeView>
 
-class CSolution;
-class CProjectItem;
+#if defined(_MSC_VER) && 1000 < _MSC_VER
+#pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
+
+class CWorkSpaceModel;
+class CWorkSpaceItem;
 
 class CProjectDock
 	: public QWidget
@@ -15,9 +19,9 @@ public:
 	CProjectDock(QWidget *parent = 0);
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ðŒ‹‡
-	bool setSolution(CSolution * solution);
+	bool setWorkSpace(CWorkSpaceModel * workspace);
 
-	void selectItem(CProjectItem * item);
+	void selectItem(CWorkSpaceItem * item);
 
 protected:
 

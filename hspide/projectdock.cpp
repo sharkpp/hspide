@@ -2,8 +2,7 @@
 #include <QHeaderView>
 #include <QStandardItem>
 #include "projectdock.h"
-#include "solution.h"
-#include "projectitem.h"
+#include "workspacemodel.h"
 
 CProjectDock::CProjectDock(QWidget *parent)
 	: QWidget(parent)
@@ -15,8 +14,6 @@ CProjectDock::CProjectDock(QWidget *parent)
 //	mTree->setUniformRowHeights(true);
 	mTree->setEditTriggers(QTreeView::EditKeyPressed);
 
-	mTree->setModel(new QStandardItemModel(this));
-
 	connect(mTree, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedTree(const QModelIndex &)));
 }
 
@@ -26,36 +23,31 @@ void CProjectDock::resizeEvent(QResizeEvent * event)
 }
 
 // ソリューションを結合
-bool CProjectDock::setSolution(CSolution * solution)
+bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 {
-	QStandardItemModel *model = static_cast<QStandardItemModel*>(mTree->model());
-	QStandardItem *     root  = model->invisibleRootItem();
-	if( root->rowCount() ) {
-		root->takeRow(0);
-	}
-	root->appendRow(solution);
+	mTree->setModel(workspace);
 	mTree->expandAll();
 	return true;
 }
 
-void CProjectDock::selectItem(CProjectItem * item)
+void CProjectDock::selectItem(CWorkSpaceItem * item)
 {
 	mTree->selectionModel()->clear();
-	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select);
+//	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select);
 }
 
 void CProjectDock::doubleClickedTree(const QModelIndex & index)
 {
-//	QStandardItem *itemVoid = static_cast<QStandardItem*>(mTree->currentIndex().internalPointer());
-	QStandardItem *itemVoid = static_cast<QStandardItem*>(index.internalPointer());
-	               itemVoid = itemVoid->child(index.row(), index.column());
-
-	if( CFileItem *item = dynamic_cast<CFileItem*>(itemVoid) )
-	{
-		// シグナル発報
-		emit oepnProjectFileItem(item->filePath());
-	}
-	else if( CFolderItem *item = dynamic_cast<CFolderItem*>(itemVoid) )
-	{
-	}
+////	QStandardItem *itemVoid = static_cast<QStandardItem*>(mTree->currentIndex().internalPointer());
+//	QStandardItem *itemVoid = static_cast<QStandardItem*>(index.internalPointer());
+//	               itemVoid = itemVoid->child(index.row(), index.column());
+//
+//	if( CFileItem *item = dynamic_cast<CFileItem*>(itemVoid) )
+//	{
+//		// シグナル発報
+//		emit oepnProjectFileItem(item->filePath());
+//	}
+//	else if( CFolderItem *item = dynamic_cast<CFolderItem*>(itemVoid) )
+//	{
+//	}
 }

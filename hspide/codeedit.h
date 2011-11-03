@@ -2,7 +2,9 @@
 #include <QSyntaxHighlighter>
 #include <QString>
 
+#if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
 #ifndef INCLUDE_GUARD_3ED30DA5_1A87_433A_9ED9_FCEC987B4EAA
 #define INCLUDE_GUARD_3ED30DA5_1A87_433A_9ED9_FCEC987B4EAA

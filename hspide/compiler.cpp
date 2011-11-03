@@ -1,8 +1,7 @@
 #include <QDebug>
 #include <QDir>
 #include "compiler.h"
-#include "solution.h"
-#include "project.h"
+#include "workspaceitem.h"
 
 CCompiler::CCompiler(QObject *parent)
 	: QObject(parent)
@@ -78,10 +77,10 @@ const QVector<QStringList> & CCompiler::symbols() const
 }
 
 // プロジェクトをビルド
-void CCompiler::build(CProject * project)
+void CCompiler::build(CWorkSpaceItem * project)
 {
 	QString filename;
-	if( !project->getMainSource(filename) )
+	//if( !project->getMainSource(filename) )
 	{
 		return;
 	}

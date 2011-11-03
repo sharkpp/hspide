@@ -2,9 +2,11 @@
 #include <QSyntaxHighlighter>
 #include <QString>
 #include "codeedit.h"
-#include "projectitem.h"
+#include "workspaceitem.h"
 
+#if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
 #ifndef INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA
 #define INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA
@@ -16,7 +18,7 @@ class CEditor
 
 	CCodeEdit *		m_editor;
 	QString			m_filePath;
-	CProjectItem *	m_item;
+	CWorkSpaceItem*	m_item;
 
 public:
 
@@ -38,8 +40,8 @@ public:
 //	bool clearTemporary();
 
 	// アイテムと関連付け
-	bool setAssignItem(CProjectItem * item);
-	CProjectItem * assignItem();
+	bool setAssignItem(CWorkSpaceItem * item);
+	CWorkSpaceItem * assignItem();
 
 	// ファイルパスを取得
 	const QString & filePath() const;

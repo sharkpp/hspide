@@ -1,12 +1,16 @@
 #include <QMainWindow>
 #include <QtGui>
-#include "solution.h"
+#include "workspacemodel.h"
 #include "compiler.h"
 #include "outputdock.h"
 #include "debuggerdock.h"
 #include "projectdock.h"
 #include "searchdock.h"
 #include "symboldock.h"
+
+#if defined(_MSC_VER) && 1000 < _MSC_VER
+#pragma once
+#endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
 class MainWindow : public QMainWindow
 {
@@ -45,7 +49,7 @@ class MainWindow : public QMainWindow
 	CSearchDock *   searchDock;
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
-	CSolution*	mSolution;
+	CWorkSpaceModel*	workSpace;
 
 	CCompiler*	mCompiler;
 
