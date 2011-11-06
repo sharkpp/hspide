@@ -1,3 +1,4 @@
+#include <QDebug>
 #include <QResizeEvent>
 #include <QHeaderView>
 #include <QStandardItem>
@@ -30,17 +31,52 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 	return true;
 }
 
+// アイテムを選択
 void CProjectDock::selectItem(CWorkSpaceItem * item)
 {
 	mTree->selectionModel()->clear();
-	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select);
+	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
+	// 選択したアイテムを見えるようにする
+//	mTree->scrollTo(item->index());
+}
+
+// 現在のファイルを取得
+CWorkSpaceItem * CProjectDock::currentFile()
+{
+	QItemSelectionModel * model = mTree->selectionModel();
+
+	if( !model->hasSelection() ) {
+		return NULL;
+	}
+
+	QModelIndexList indexes = model->selectedIndexes();
+	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(indexes.front().internalPointer());
+
+	return CWorkSpaceItem::File != item->type()
+	           ? item : NULL;;
+}
+
+// 現在のプロジェクトを取得
+CWorkSpaceItem * CProjectDock::currentProject()
+{
+	QItemSelectionModel * model = mTree->selectionModel();
+
+	if( !model->hasSelection() ) {
+		return NULL;
+	}
+
+	QModelIndexList indexes = model->selectedIndexes();
+	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(indexes.front().internalPointer());
+
+	for(; item && CWorkSpaceItem::Project != item->subType();
+		item = item->parent());
+
+	return item;
 }
 
 void CProjectDock::doubleClickedTree(const QModelIndex & index)
 {
-	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(mTree->currentIndex().internalPointer());
-	//QStandardItem *itemVoid = static_cast<QStandardItem*>(index.internalPointer());
-	//               itemVoid = itemVoid->child(index.row(), index.column());
+	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 
 	if( item )
 	{

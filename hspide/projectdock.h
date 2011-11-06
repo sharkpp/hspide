@@ -21,7 +21,15 @@ public:
 	// ソリューションを結合
 	bool setWorkSpace(CWorkSpaceModel * workspace);
 
+	// アイテムを選択
 	void selectItem(CWorkSpaceItem * item);
+
+	// 現在のファイルを取得
+	CWorkSpaceItem * currentFile();
+
+	// 現在のプロジェクトを取得
+	CWorkSpaceItem * currentProject();
+
 
 protected:
 

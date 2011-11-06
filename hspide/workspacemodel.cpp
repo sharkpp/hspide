@@ -9,6 +9,8 @@ CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 	if( insertRow(0, rootIndex) ) {
 		QModelIndex solutionIndex = index(0, 0, rootIndex);
 		CWorkSpaceItem * solutionItem = getItem(solutionIndex);
+		solutionItem->setType(CWorkSpaceItem::File);
+		solutionItem->setSubType(CWorkSpaceItem::Solution);
 		solutionItem->setIcon(QIcon(":/images/tango/small/edit-copy.png"));
 		solutionItem->setText(tr("(untitled)"));
 	//	solutionItem->
@@ -39,12 +41,6 @@ bool CWorkSpaceModel::save(const QString & fileName)
 
 //////////////////////////////////////////////////////////////////////
 
-// 現在のプロジェクトを取得
-CWorkSpaceItem * CWorkSpaceModel::currentProject()
-{
-	return NULL;
-}
-
 // プロジェクトの追加
 CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 {
@@ -58,26 +54,36 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 
 	QModelIndex projectIndex = index(row, 0, solutionIndex);
 	CWorkSpaceItem * projectItem = getItem(projectIndex);
+	projectItem->setType(CWorkSpaceItem::File);
+	projectItem->setSubType(CWorkSpaceItem::Project);
 	projectItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	projectItem->setText(tr("(untitled)"));
+	projectItem->setText();
 
 	if( !insertRows(0, 4, projectIndex) ) {
 		return NULL;
 	}
 
-	CWorkSpaceItem * DependenceItem = getItem(index(0, 0, projectIndex));
-	DependenceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	DependenceItem->setText(tr("Dependence"));
+	CWorkSpaceItem * dependenceItem = getItem(index(0, 0, projectIndex));
+	dependenceItem->setType(CWorkSpaceItem::Folder);
+	dependenceItem->setSubType(CWorkSpaceItem::DependenceFolder);
+	dependenceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
+	dependenceItem->setText(tr("Dependence"));
 
 	CWorkSpaceItem * packItem = getItem(index(1, 0, projectIndex));
+	packItem->setType(CWorkSpaceItem::Folder);
+	packItem->setSubType(CWorkSpaceItem::PackFolder);
 	packItem->setIcon(QIcon(":/images/tango/small/folder.png"));
 	packItem->setText(tr("Packfile"));
 
 	CWorkSpaceItem * sourceItem = getItem(index(2, 0, projectIndex));
+	sourceItem->setType(CWorkSpaceItem::Folder);
+	sourceItem->setSubType(CWorkSpaceItem::SourceFolder);
 	sourceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
 	sourceItem->setText(tr("Source"));
 
 	CWorkSpaceItem * resourceItem = getItem(index(3, 0, projectIndex));
+	resourceItem->setType(CWorkSpaceItem::Folder);
+	resourceItem->setSubType(CWorkSpaceItem::ResourceFolder);
 	resourceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
 	resourceItem->setText(tr("Resource"));
 
@@ -85,10 +91,35 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 }
 
 // ファイルの追加
-CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName)
+CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpaceItem * parentItem)
 {
-	CWorkSpaceItem * projectItem = currentProject();
-	return NULL;
+	if( !parentItem )
+	{
+		return NULL;
+	}
+
+	QModelIndex projectIndex = parentItem->index();
+	QModelIndex itemIndex = index(0, 0, projectIndex);
+	for(int row = 0, count = rowCount(projectIndex);
+		row < count && CWorkSpaceItem::SourceFolder != getItem(itemIndex)->subType();
+		row++, itemIndex = index(row, 0, projectIndex));
+
+	if( CWorkSpaceItem::SourceFolder != getItem(itemIndex)->subType() ) {
+		return NULL;
+	}
+
+	if( !insertRow(rowCount(itemIndex), itemIndex) ) {
+		return NULL;
+	}
+
+	CWorkSpaceItem * fileItem
+		= getItem(index(rowCount(itemIndex) - 1, 0, itemIndex));
+	fileItem->setType(CWorkSpaceItem::File);
+	fileItem->setSubType(CWorkSpaceItem::Default);
+	fileItem->setIcon(QIcon(":/images/tango/small/text-x-generic.png"));
+	fileItem->setPath(fileName);
+
+	return fileItem;
 }
 
 //////////////////////////////////////////////////////////////////////

@@ -9,6 +9,13 @@
     </message>
 </context>
 <context>
+    <name>CWorkSpaceItem</name>
+    <message>
+        <source>(untitled)</source>
+        <translation>(無題)</translation>
+    </message>
+</context>
+<context>
     <name>CWorkSpaceModel</name>
     <message>
         <source>(untitled)</source>

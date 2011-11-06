@@ -1,11 +1,14 @@
 #include "workspacemodel.h"
 #include "workspaceitem.h"
+#include <QFileInfo>
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	: QObject(parent)
 	, m_model(model)
 	, m_parent(NULL)
 	, m_parentPos(0)
+	, m_type(UnkownType)
+	, m_subType(UnkownSubType)
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -16,6 +19,26 @@ CWorkSpaceItem::~CWorkSpaceItem()
 	qDeleteAll(m_children);
 }
 
+CWorkSpaceItem::Type CWorkSpaceItem::type() const
+{
+	return m_type;
+}
+
+void CWorkSpaceItem::setType(Type type)
+{
+	m_type = type;
+}
+
+CWorkSpaceItem::SubType CWorkSpaceItem::subType() const
+{
+	return m_subType;
+}
+
+void CWorkSpaceItem::setSubType(SubType type)
+{
+	m_subType = type;
+}
+
 const QString & CWorkSpaceItem::path() const
 {
 	return m_path;
@@ -24,6 +47,7 @@ const QString & CWorkSpaceItem::path() const
 void CWorkSpaceItem::setPath(const QString & path)
 {
 	m_path = path;
+	setText(path.isEmpty() ? QString() : QFileInfo(path).fileName());
 }
 
 const QString & CWorkSpaceItem::text() const
@@ -33,7 +57,7 @@ const QString & CWorkSpaceItem::text() const
 
 void CWorkSpaceItem::setText(const QString & text)
 {
-	m_text = text;
+	m_text = text.isEmpty() ? tr("(untitled)") : text;
 }
 
 const QIcon & CWorkSpaceItem::icon() const

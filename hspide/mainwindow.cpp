@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
-	connect(projectDock, SIGNAL(oepnItem(const QString &)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
+	connect(projectDock, SIGNAL(oepnItem(CWorkSpaceItem*)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
 
 	loadSettings();
 
@@ -447,20 +447,9 @@ void MainWindow::onOpenFile(const QString & filePath)
 	}
 
 	if( !fileName.isEmpty() ) {
-	//	CWorkSpaceItem * projectItem = workSpace->currentProject();
-		//CWorkSpaceItem * fileItem = workSpace->appendFile(fileName);
-		//onOpenFile(fileItem);
-//		CDocumentPane * document = new CDocumentPane(tabWidget);
-//		document->setSymbols(mCompiler->symbols());
-//		if( !document->load(fileName) ) {
-//			delete document;
-//		} else {
-//	//		document->setAssignItem(workSpace->append());
-//	//	//	document->assignItem()->openFile(document);
-//	//		tabWidget->addTab(document, document->fileName());
-//	//		tabWidget->setCurrentWidget(document);
-//	//	//	workSpace->openFile(document);
-//		}
+		CWorkSpaceItem * parentItem = projectDock->currentProject();
+		CWorkSpaceItem * fileItem   = workSpace->appendFile(fileName, parentItem);
+		onOpenFile(fileItem);
 	}
 }
 

@@ -24,16 +24,13 @@ public:
 	bool load(const QString & fileName);
 	bool save(const QString & fileName);
 
-	// 現在のプロジェクトを取得
-	CWorkSpaceItem * currentProject();
-
 	// プロジェクトの追加
 	CWorkSpaceItem * appendProject(const QString & fileName = QString());
 
 	// プロジェクトの削除
 
 	// ファイルの追加
-	CWorkSpaceItem * appendFile(const QString & fileName = QString());
+	CWorkSpaceItem * appendFile(const QString & fileName, CWorkSpaceItem * parentItem);
 
 	// ファイルの削除
 
