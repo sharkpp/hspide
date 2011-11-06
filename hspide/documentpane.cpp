@@ -1,33 +1,33 @@
 #include <QtGui>
-#include "editor.h"
+#include "documentpane.h"
 
 //////////////////////////////////////////////////////////////////////
 
-CEditor::CEditor(QWidget *parent)
+CDocumentPane::CDocumentPane(QWidget *parent)
 	: QWidget(parent)
 	, m_item(NULL)
 {
 	m_editor = new CCodeEdit(this);
 }
 
-void CEditor::resizeEvent(QResizeEvent * event)
+void CDocumentPane::resizeEvent(QResizeEvent * event)
 {
 	m_editor->resize(event->size());
 }
 
-void CEditor::focusInEvent(QFocusEvent * event)
+void CDocumentPane::focusInEvent(QFocusEvent * event)
 {
 	m_editor->setFocus();
 }
 
 // シンボル一覧を指定
-void CEditor::setSymbols(const QVector<QStringList> & symbols)
+void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 {
 	m_editor->setSymbols(symbols);
 }
 
 // ファイルから読み込み
-bool CEditor::load(const QString & filepath)
+bool CDocumentPane::load(const QString & filepath)
 {
 	QFile file(filepath);
 
@@ -43,7 +43,7 @@ bool CEditor::load(const QString & filepath)
 }
 
 // ファイルに保存
-bool CEditor::save(const QString & filepath)
+bool CDocumentPane::save(const QString & filepath)
 {
 	if( isNoTitle() &&
 		filepath.isEmpty() )
@@ -67,33 +67,33 @@ bool CEditor::save(const QString & filepath)
 }
 
 // アイテムと関連付け
-bool CEditor::setAssignItem(CWorkSpaceItem * item)
+bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 {
 	m_item = item;
 	return true;
 }
 
-CWorkSpaceItem * CEditor::assignItem()
+CWorkSpaceItem * CDocumentPane::assignItem()
 {
 	return m_item;
 }
 
 // ファイルパスを取得
-const QString & CEditor::filePath() const
+const QString & CDocumentPane::filePath() const
 {
 	return m_filePath;
 }
 
 // ファイル名を取得
-QString CEditor::fileName() const
+QString CDocumentPane::fileName() const
 {
 	return isNoTitle()
-			? tr("(no title)")
+			? tr("(untitled)")
 			: QFileInfo(m_filePath).fileName();
 }
 
 // 空ファイルか？
-bool CEditor::isNoTitle() const
+bool CDocumentPane::isNoTitle() const
 {
 	return m_filePath.isEmpty();
 }

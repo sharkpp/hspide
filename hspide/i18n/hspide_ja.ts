@@ -2,16 +2,16 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ja_JP">
 <context>
-    <name>CEditor</name>
+    <name>CDocumentPane</name>
     <message>
-        <source>(no title)</source>
+        <source>(untitled)</source>
         <translation>(無題)</translation>
     </message>
 </context>
 <context>
     <name>CWorkSpaceModel</name>
     <message>
-        <source>(no title)</source>
+        <source>(untitled)</source>
         <translation>(無題)</translation>
     </message>
     <message>

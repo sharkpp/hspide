@@ -1,6 +1,5 @@
-#include <QFileInfo>
-#include "workspaceitem.h"
 #include "workspacemodel.h"
+#include "workspaceitem.h"
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	: QObject(parent)
@@ -15,6 +14,36 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 CWorkSpaceItem::~CWorkSpaceItem()
 {
 	qDeleteAll(m_children);
+}
+
+const QString & CWorkSpaceItem::path() const
+{
+	return m_path;
+}
+
+void CWorkSpaceItem::setPath(const QString & path)
+{
+	m_path = path;
+}
+
+const QString & CWorkSpaceItem::text() const
+{
+	return m_text;
+}
+
+void CWorkSpaceItem::setText(const QString & text)
+{
+	m_text = text;
+}
+
+const QIcon & CWorkSpaceItem::icon() const
+{
+	return m_icon;
+}
+
+void CWorkSpaceItem::setIcon(const QIcon & icon)
+{
+	m_icon = icon;
 }
 
 int CWorkSpaceItem::count() const
@@ -42,6 +71,9 @@ int CWorkSpaceItem::parentPosition() const
 
 QModelIndex CWorkSpaceItem::index() const
 {
+	if( m_model ) {
+		return m_model->createIndex(m_parentPos, 0, (void*)this);
+	}
 	return QModelIndex();
 }
 
@@ -58,25 +90,5 @@ bool CWorkSpaceItem::insert(int position, CWorkSpaceItem * item)
 	m_children.insert(position, item);
 
 	return true;
-}
-
-const QString & CWorkSpaceItem::text() const
-{
-	return m_text;
-}
-
-const QIcon & CWorkSpaceItem::icon() const
-{
-	return m_icon;
-}
-
-void CWorkSpaceItem::setText(const QString & text)
-{
-	m_text = text;
-}
-
-void CWorkSpaceItem::setIcon(const QIcon & icon)
-{
-	m_icon = icon;
 }
 

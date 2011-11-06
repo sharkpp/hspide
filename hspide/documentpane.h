@@ -11,7 +11,7 @@
 #ifndef INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA
 #define INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA
 
-class CEditor
+class CDocumentPane
 	: public QWidget
 {
 	Q_OBJECT
@@ -22,7 +22,7 @@ class CEditor
 
 public:
 
-	CEditor(QWidget *parent = 0);
+	CDocumentPane(QWidget *parent = 0);
 
 	// ƒVƒ“ƒ{ƒ‹ˆê——‚ðŽw’è
 	void setSymbols(const QVector<QStringList> & symbols);

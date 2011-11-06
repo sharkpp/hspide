@@ -71,7 +71,9 @@ public slots:
 	void buildOutput(const QString & output);
 	void currentTabChanged(int index);
 	void onNewFile();
+	void onOpenFile();
 	void onOpenFile(const QString & filePath);
+	void onOpenFile(CWorkSpaceItem * item);
 	void onSaveFile();
 	void onSaveAsFile();
 	void onSaveAllFile();

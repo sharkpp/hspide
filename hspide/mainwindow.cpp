@@ -1,7 +1,7 @@
 #include <QComboBox>
 #include "mainwindow.h"
 #include "workspaceitem.h"
-#include "editor.h"
+#include "documentpane.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
-	connect(projectDock, SIGNAL(oepnProjectFileItem(const QString &)), this, SLOT(onOpenFile(const QString &)));
+	connect(projectDock, SIGNAL(oepnItem(const QString &)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
 
 	loadSettings();
 
@@ -421,48 +421,81 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::onNewFile()
 {
-	CEditor * textEditor = new CEditor(tabWidget);
-	CWorkSpaceItem *projectItem = workSpace->appendProject();
-	textEditor->setSymbols(mCompiler->symbols());
-//	projectItem->
-	//textEditor->setAssignItem(workSpace->appendProject());
-	tabWidget->addTab(textEditor, textEditor->fileName());
-	tabWidget->setCurrentWidget(textEditor);
-	//static_cast<CWorkSpaceItem*>(textEditor->assignItem())->openFile(textEditor);
+	// ソリューションにプロジェクトを追加し、
+	// タブで追加したファイルを開く
+	CWorkSpaceItem* projectItem = workSpace->appendProject();
+	CDocumentPane * document    = new CDocumentPane(tabWidget);
+	document->setSymbols(mCompiler->symbols());
+	document->setAssignItem(projectItem);
+	tabWidget->addTab(document, document->fileName());
+	tabWidget->setCurrentWidget(document);
+}
+
+void MainWindow::onOpenFile()
+{
+	onOpenFile(QString());
 }
 
 void MainWindow::onOpenFile(const QString & filePath)
 {
 	QString fileName = filePath;
 
+	// ファイル名が指定されていなかったら開く
 	if( fileName.isEmpty() ) {
 		fileName = QFileDialog::getOpenFileName(this,
 			tr("Open File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
 	}
 
 	if( !fileName.isEmpty() ) {
-		CEditor * textEditor = new CEditor(tabWidget);
-		textEditor->setSymbols(mCompiler->symbols());
-		if( !textEditor->load(fileName) ) {
-			delete textEditor;
-		} else {
-		////	textEditor->setAssignItem(workSpace->append());
-		////	textEditor->assignItem()->openFile(textEditor);
-		//	tabWidget->addTab(textEditor, textEditor->fileName());
-		//	tabWidget->setCurrentWidget(textEditor);
-		//	workSpace->openFile(textEditor);
+	//	CWorkSpaceItem * projectItem = workSpace->currentProject();
+		//CWorkSpaceItem * fileItem = workSpace->appendFile(fileName);
+		//onOpenFile(fileItem);
+//		CDocumentPane * document = new CDocumentPane(tabWidget);
+//		document->setSymbols(mCompiler->symbols());
+//		if( !document->load(fileName) ) {
+//			delete document;
+//		} else {
+//	//		document->setAssignItem(workSpace->append());
+//	//	//	document->assignItem()->openFile(document);
+//	//		tabWidget->addTab(document, document->fileName());
+//	//		tabWidget->setCurrentWidget(document);
+//	//	//	workSpace->openFile(document);
+//		}
+	}
+}
+
+void MainWindow::onOpenFile(CWorkSpaceItem * item)
+{
+	// すでに開いていたらタブを選択しなおす
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document &&
+			item == document->assignItem() )
+		{
+			tabWidget->setCurrentIndex(index);
+			return;
 		}
 	}
+
+	// 新たに開く
+	CDocumentPane * document = new CDocumentPane(tabWidget);
+	document->setSymbols(mCompiler->symbols());
+	document->setAssignItem(item);
+	document->load(item->path());
+	tabWidget->addTab(document, document->fileName());
+	tabWidget->setCurrentWidget(document);
 }
 
 void MainWindow::onSaveFile()
 {
-	CEditor* textEditor
-		= dynamic_cast<CEditor*>(tabWidget->currentWidget());
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
 
-	if( textEditor ) {
+	if( document ) {
 		QApplication::setOverrideCursor(Qt::WaitCursor);
-		textEditor->save();
+		document->save();
 		QApplication::restoreOverrideCursor();
 	}
 }
@@ -489,7 +522,7 @@ void MainWindow::onDebugRun()
 
 //	for(int index = 0, num = tabWidget->count(); index < num; index++)
 //	{
-//		CEditor * textEdit = static_cast<CEditor*>(tabWidget->widget(index));
+//		CDocumentPane * textEdit = static_cast<CDocumentPane*>(tabWidget->widget(index));
 //	}
 
 //	mCompiler->build(&workSpace->at(0));
@@ -504,7 +537,7 @@ void MainWindow::buildStart()
 	// ファイルを保存
 	for(int index = 0, num = tabWidget->count(); index < num; index++)
 	{
-		CEditor * textEdit = dynamic_cast<CEditor*>(tabWidget->widget(index));
+		CDocumentPane * textEdit = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 		textEdit->save();
 	}
 
@@ -540,22 +573,23 @@ void MainWindow::buildOutput(const QString & output)
 	outputDock->output(output);
 }
 
+// タブが変更された
 void MainWindow::currentTabChanged(int index)
 {
-	CEditor* textEditor
-		= dynamic_cast<CEditor*>(tabWidget->widget(index));
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 
-	if( textEditor )
+	if( document )
 	{
-		textEditor->setFocus();
+		document->setFocus();
 
-		saveDocumentAct->setEnabled( !textEditor->isNoTitle() );
+		saveDocumentAct->setEnabled( !document->isNoTitle() );
 		buildSolutionAct->setEnabled(true);
 		buildProjectAct->setEnabled(true);
 		compileOnlyAct->setEnabled(true);
 //		debugRunAct->setEnabled(true);
 //		noDebugRunAct->setEnabled(true);
 
-		projectDock->selectItem(textEditor->assignItem());
+		projectDock->selectItem(document->assignItem());
 	}
 }

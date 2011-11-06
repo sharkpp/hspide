@@ -33,21 +33,18 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 void CProjectDock::selectItem(CWorkSpaceItem * item)
 {
 	mTree->selectionModel()->clear();
-//	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select);
+	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select);
 }
 
 void CProjectDock::doubleClickedTree(const QModelIndex & index)
 {
-////	QStandardItem *itemVoid = static_cast<QStandardItem*>(mTree->currentIndex().internalPointer());
-//	QStandardItem *itemVoid = static_cast<QStandardItem*>(index.internalPointer());
-//	               itemVoid = itemVoid->child(index.row(), index.column());
-//
-//	if( CFileItem *item = dynamic_cast<CFileItem*>(itemVoid) )
-//	{
-//		// シグナル発報
-//		emit oepnProjectFileItem(item->filePath());
-//	}
-//	else if( CFolderItem *item = dynamic_cast<CFolderItem*>(itemVoid) )
-//	{
-//	}
+	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(mTree->currentIndex().internalPointer());
+	//QStandardItem *itemVoid = static_cast<QStandardItem*>(index.internalPointer());
+	//               itemVoid = itemVoid->child(index.row(), index.column());
+
+	if( item )
+	{
+		// シグナル発報
+		emit oepnItem(item);
+	}
 }

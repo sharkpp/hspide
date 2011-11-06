@@ -33,7 +33,7 @@ public slots:
 
 signals:
 
-	void oepnProjectFileItem(const QString & filename);
+	void oepnItem(CWorkSpaceItem * item);
 
 private:
 

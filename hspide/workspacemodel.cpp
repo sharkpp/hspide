@@ -10,7 +10,7 @@ CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 		QModelIndex solutionIndex = index(0, 0, rootIndex);
 		CWorkSpaceItem * solutionItem = getItem(solutionIndex);
 		solutionItem->setIcon(QIcon(":/images/tango/small/edit-copy.png"));
-		solutionItem->setText(tr("(no title)"));
+		solutionItem->setText(tr("(untitled)"));
 	//	solutionItem->
 	}
 }
@@ -39,6 +39,12 @@ bool CWorkSpaceModel::save(const QString & fileName)
 
 //////////////////////////////////////////////////////////////////////
 
+// 現在のプロジェクトを取得
+CWorkSpaceItem * CWorkSpaceModel::currentProject()
+{
+	return NULL;
+}
+
 // プロジェクトの追加
 CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 {
@@ -53,7 +59,7 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 	QModelIndex projectIndex = index(row, 0, solutionIndex);
 	CWorkSpaceItem * projectItem = getItem(projectIndex);
 	projectItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	projectItem->setText(tr("(no title)"));
+	projectItem->setText(tr("(untitled)"));
 
 	if( !insertRows(0, 4, projectIndex) ) {
 		return NULL;
@@ -76,6 +82,13 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 	resourceItem->setText(tr("Resource"));
 
 	return projectItem;
+}
+
+// ファイルの追加
+CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName)
+{
+	CWorkSpaceItem * projectItem = currentProject();
+	return NULL;
 }
 
 //////////////////////////////////////////////////////////////////////
