@@ -8,6 +8,8 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	, m_parent(NULL)
 	, m_parentPos(0)
 {
+	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
+	m_text = QString("this=%1").arg((int)this, 0, 16);
 }
 
 CWorkSpaceItem::~CWorkSpaceItem()
@@ -56,5 +58,25 @@ bool CWorkSpaceItem::insert(int position, CWorkSpaceItem * item)
 	m_children.insert(position, item);
 
 	return true;
+}
+
+const QString & CWorkSpaceItem::text() const
+{
+	return m_text;
+}
+
+const QIcon & CWorkSpaceItem::icon() const
+{
+	return m_icon;
+}
+
+void CWorkSpaceItem::setText(const QString & text)
+{
+	m_text = text;
+}
+
+void CWorkSpaceItem::setIcon(const QIcon & icon)
+{
+	m_icon = icon;
 }
 

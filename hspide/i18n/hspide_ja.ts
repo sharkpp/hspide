@@ -9,6 +9,29 @@
     </message>
 </context>
 <context>
+    <name>CWorkSpaceModel</name>
+    <message>
+        <source>(no title)</source>
+        <translation>(無題)</translation>
+    </message>
+    <message>
+        <source>Packfile</source>
+        <translation>パックファイル</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation>ソース</translation>
+    </message>
+    <message>
+        <source>Resource</source>
+        <translation>リソース</translation>
+    </message>
+    <message>
+        <source>Dependence</source>
+        <translation>依存関係</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Ready</source>
@@ -44,15 +67,15 @@
     </message>
     <message>
         <source>Open the file</source>
-        <translation>ファイルを開きます</translation>
+        <translation type="obsolete">ファイルを開きます</translation>
     </message>
     <message>
         <source>Save the file</source>
-        <translation>ファイルを保存します</translation>
+        <translation type="obsolete">ファイルを保存します</translation>
     </message>
     <message>
         <source>Save the file with a name</source>
-        <translation>名前を付けてファイルを保存します</translation>
+        <translation type="obsolete">名前を付けてファイルを保存します</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -257,6 +280,46 @@
     <message>
         <source>Save File</source>
         <translation>ファイルの保存</translation>
+    </message>
+    <message>
+        <source>Tab list</source>
+        <translation>タブ一覧</translation>
+    </message>
+    <message>
+        <source>Close tab</source>
+        <translation>タブを閉じる</translation>
+    </message>
+    <message>
+        <source>Open file</source>
+        <translation>ファイルを開きます</translation>
+    </message>
+    <message>
+        <source>Save file</source>
+        <translation>ファイルを保存します</translation>
+    </message>
+    <message>
+        <source>Save file with a name</source>
+        <translation>名前を付けてファイルを保存します</translation>
+    </message>
+    <message>
+        <source>Save all</source>
+        <translation>全て保存</translation>
+    </message>
+    <message>
+        <source>Save all file</source>
+        <translation>全てのファイルを保存します</translation>
+    </message>
+    <message>
+        <source>Build start</source>
+        <translation>ビルド開始</translation>
+    </message>
+    <message>
+        <source>Build failed</source>
+        <translation>ビルド失敗</translation>
+    </message>
+    <message>
+        <source>Build complete</source>
+        <translation>ビルド完了</translation>
     </message>
 </context>
 <context>

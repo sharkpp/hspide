@@ -1,5 +1,6 @@
 #include <QComboBox>
 #include "mainwindow.h"
+#include "workspaceitem.h"
 #include "editor.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
@@ -28,7 +29,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	mCompiler = new CCompiler(this);
 
 	workSpace = new CWorkSpaceModel(this);
-	workSpace->insertRow(0);
 
 	// 処理完了時の通知を登録
 	connect(mCompiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
@@ -421,12 +421,13 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::onNewFile()
 {
-	//CEditor * textEditor = new CEditor(tabWidget);
-	//textEditor->setSymbols(mCompiler->symbols());
-	//textEditor->setAssignItem(workSpace->append());
-	//projectDock->setSolution(workSpace); // ツリーの変更を自動で適用できないものか？
-	//tabWidget->addTab(textEditor, textEditor->fileName());
-	//tabWidget->setCurrentWidget(textEditor);
+	CEditor * textEditor = new CEditor(tabWidget);
+	CWorkSpaceItem *projectItem = workSpace->appendProject();
+	textEditor->setSymbols(mCompiler->symbols());
+//	projectItem->
+	//textEditor->setAssignItem(workSpace->appendProject());
+	tabWidget->addTab(textEditor, textEditor->fileName());
+	tabWidget->setCurrentWidget(textEditor);
 	//static_cast<CWorkSpaceItem*>(textEditor->assignItem())->openFile(textEditor);
 }
 

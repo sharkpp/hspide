@@ -18,6 +18,8 @@ class CWorkSpaceItem
 	CWorkSpaceItem*	 m_parent;
 	QVector<CWorkSpaceItem*> m_children;
 	int m_parentPos;
+	QIcon m_icon;
+	QString m_text;
 
 public:
 
@@ -30,5 +32,9 @@ public:
 	int parentPosition() const;
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem * item);
+	const QString & text() const;
+	const QIcon & icon() const;
+	void setText(const QString & text);
+	void setIcon(const QIcon & icon);
 };
 
