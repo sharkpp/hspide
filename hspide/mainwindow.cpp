@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "workspaceitem.h"
 #include "documentpane.h"
+#include "newfiledialog.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -421,6 +422,16 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::onNewFile()
 {
+	CNewFileDialog dlg(this);
+	switch( dlg.exec() )
+	{
+	case QDialog::Accepted:
+		break;
+	default:
+		;
+	}
+//	QMessageBox::information(this,"",QString("r=%1").arg(r));
+	return;
 	// ソリューションにプロジェクトを追加し、
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = workSpace->appendProject();
