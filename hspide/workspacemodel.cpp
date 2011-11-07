@@ -9,7 +9,7 @@ CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 	if( insertRow(0, rootIndex) ) {
 		QModelIndex solutionIndex = index(0, 0, rootIndex);
 		CWorkSpaceItem * solutionItem = getItem(solutionIndex);
-		solutionItem->setType(CWorkSpaceItem::File);
+		solutionItem->setType(CWorkSpaceItem::Folder);
 		solutionItem->setSubType(CWorkSpaceItem::Solution);
 		solutionItem->setIcon(QIcon(":/images/tango/small/edit-copy.png"));
 		solutionItem->setText(tr("(untitled)"));
