@@ -38,7 +38,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>&amp;File name:</string>
+        <string>File name:</string>
        </property>
        <property name="textFormat">
         <enum>Qt::AutoText</enum>
@@ -91,6 +91,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>templateList</tabstop>
+  <tabstop>fileName</tabstop>
+  <tabstop>selectFileName</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -125,5 +131,41 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>selectFileName</sender>
+   <signal>clicked()</signal>
+   <receiver>NewFileDialog</receiver>
+   <slot>onSelectFileName()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>379</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>templateList</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>NewFileDialog</receiver>
+   <slot>onChangeTemplate(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>116</x>
+     <y>111</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>onSelectFileName()</slot>
+  <slot>onChangeTemplate(QModelIndex)</slot>
+ </slots>
 </ui>

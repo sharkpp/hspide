@@ -426,12 +426,11 @@ void MainWindow::onNewFile()
 	switch( dlg.exec() )
 	{
 	case QDialog::Accepted:
+		//dlg.filePath();
 		break;
 	default:
-		;
+		return;
 	}
-//	QMessageBox::information(this,"",QString("r=%1").arg(r));
-	return;
 	// ソリューションにプロジェクトを追加し、
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = workSpace->appendProject();
