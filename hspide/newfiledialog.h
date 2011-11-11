@@ -20,9 +20,13 @@ class CNewFileDialog
 
 	Ui::NewFileDialog ui;
 
+	QString m_filePath;
+
 public:
 
 	CNewFileDialog(QWidget *parent = 0);
+
+	const QString & filePath() const;
 
 protected:
 
@@ -30,8 +34,15 @@ public slots:
 
 	void onSelectFileName();
 	void onChangeTemplate(const QModelIndex & index);
+	void onFileNameChanged(const QString & text);
 
 private:
 
 	void setupTemplateList();
 };
+
+inline
+const QString & CNewFileDialog::filePath() const
+{
+	return m_filePath;
+}

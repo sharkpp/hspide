@@ -426,7 +426,7 @@ void MainWindow::onNewFile()
 	switch( dlg.exec() )
 	{
 	case QDialog::Accepted:
-		//dlg.filePath();
+		// ファイル名が無いファイルの場合はあとでファイル保存ダイアログを出すで登録
 		break;
 	default:
 		return;
@@ -437,6 +437,8 @@ void MainWindow::onNewFile()
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
 	document->setSymbols(mCompiler->symbols());
 	document->setAssignItem(projectItem);
+//	テンプレートファイルを元に読み込み
+	document->load(dlg.filePath());
 	tabWidget->addTab(document, document->fileName());
 	tabWidget->setCurrentWidget(document);
 }
@@ -582,7 +584,7 @@ void MainWindow::currentTabChanged(int index)
 	{
 		document->setFocus();
 
-		saveDocumentAct->setEnabled( !document->isNoTitle() );
+		saveDocumentAct->setEnabled( !document->isUntitled() );
 		buildSolutionAct->setEnabled(true);
 		buildProjectAct->setEnabled(true);
 		compileOnlyAct->setEnabled(true);

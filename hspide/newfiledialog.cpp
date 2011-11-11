@@ -33,21 +33,6 @@ CNewFileDialog::CNewFileDialog(QWidget *parent)
 
 void CNewFileDialog::setupTemplateList()
 {
-	//QStandardItemModel * model = new QStandardItemModel();
-	//QFileSystemModel modelFs;
-
-	//QFileInfo appPath(qApp->applicationDirPath());
-	//modelFs.setRootPath(qApp->applicationDirPath());
-	//QModelIndex parentIndex = modelFs.index(qApp->applicationDirPath());
-
-	//for(int i = 0; i < 10/*modelFs.rowCount(parentIndex)*/; ++i)
-	//{
-	//	QModelIndex index = modelFs.index(i, 0, parentIndex);
-	//	QStandardItem * item = new QStandardItem(modelFs.fileIcon(index), modelFs.fileName(index));
-	//	item->setData(modelFs.fileName(index));
-	//	model->appendRow(item);
-	//}
-
 	QString path = qApp->applicationDirPath() + "/templates";
 	QFileSystemModel * model = new CNameOnlyFileSystemModel(this);
 	QModelIndex parentIndex = model->setRootPath(path);
@@ -81,4 +66,9 @@ void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
 			model->fileInfo(index).suffix());
 	// Šg’£Žq‚Ì‚Ý•ÏX
 	ui.fileName->setText(newPath);
+}
+
+void CNewFileDialog::onFileNameChanged(const QString & text)
+{
+	m_filePath = text;
 }

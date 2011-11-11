@@ -163,9 +163,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>fileName</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>NewFileDialog</receiver>
+   <slot>onFileNameChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>178</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>66</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onSelectFileName()</slot>
   <slot>onChangeTemplate(QModelIndex)</slot>
+  <slot>onFileNameChanged(QString)</slot>
  </slots>
 </ui>

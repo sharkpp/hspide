@@ -50,7 +50,7 @@ public:
 	QString fileName() const;
 
 	// 空ファイルか？
-	bool isNoTitle() const;
+	bool isUntitled() const;
 
 protected:
 

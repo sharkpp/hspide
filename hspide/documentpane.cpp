@@ -31,13 +31,12 @@ bool CDocumentPane::load(const QString & filepath)
 {
 	QFile file(filepath);
 
-	if( !file.open(QFile::ReadOnly | QFile::Text) )
+	if( file.open(QFile::ReadOnly | QFile::Text) )
 	{
-		return false;
+		m_editor->setPlainText(file.readAll());
 	}
 
 	m_filePath = filepath;
-	m_editor->setPlainText(file.readAll());
 
 	return true;
 }
@@ -45,12 +44,18 @@ bool CDocumentPane::load(const QString & filepath)
 // ファイルに保存
 bool CDocumentPane::save(const QString & filepath)
 {
-	if( isNoTitle() &&
+	if( isUntitled() &&
 		filepath.isEmpty() )
 	{
-		// 保持しているファイル名も新たに指定されたファイル名も無い場合
-		// 保存できないのでエラーとする
-		return false;
+		QString filepath
+			= QFileDialog::getSaveFileName(this,
+				tr("Save File"), m_filePath, tr("Hot Soup Processor Files (*.hsp *.as)"));
+		if( filepath.isEmpty() )
+		{
+			// 保持しているファイル名も新たに指定されたファイル名も無い場合
+			// 保存できないのでエラーとする
+			return false;
+		}
 	}
 
 	QFile file(filepath.isEmpty() ? m_filePath : filepath);
@@ -87,13 +92,13 @@ const QString & CDocumentPane::filePath() const
 // ファイル名を取得
 QString CDocumentPane::fileName() const
 {
-	return isNoTitle()
+	return isUntitled()
 			? tr("(untitled)")
 			: QFileInfo(m_filePath).fileName();
 }
 
 // 空ファイルか？
-bool CDocumentPane::isNoTitle() const
+bool CDocumentPane::isUntitled() const
 {
-	return m_filePath.isEmpty();
+	return QFileInfo(m_filePath).baseName().isEmpty();
 }
