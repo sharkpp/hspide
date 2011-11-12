@@ -66,6 +66,8 @@ void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
 			model->fileInfo(index).suffix());
 	// 拡張子のみ変更
 	ui.fileName->setText(newPath);
+	// テンプレート名を保存
+	m_templateFilePath = model->filePath(index);
 }
 
 void CNewFileDialog::onFileNameChanged(const QString & text)

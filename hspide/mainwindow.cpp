@@ -437,8 +437,7 @@ void MainWindow::onNewFile()
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
 	document->setSymbols(mCompiler->symbols());
 	document->setAssignItem(projectItem);
-//	テンプレートファイルを元に読み込み
-	document->load(dlg.filePath());
+	document->load(dlg.filePath(), dlg.templateFilePath());
 	tabWidget->addTab(document, document->fileName());
 	tabWidget->setCurrentWidget(document);
 }

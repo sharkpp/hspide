@@ -28,7 +28,7 @@ public:
 	void setSymbols(const QVector<QStringList> & symbols);
 
 	// ファイルから読み込み
-	bool load(const QString & filepath);
+	bool load(const QString & filepath, const QString & tmplFilePath = QString());
 
 	// ファイルに保存
 	bool save(const QString & filepath = QString());

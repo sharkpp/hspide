@@ -27,9 +27,9 @@ void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 }
 
 // ÉtÉ@ÉCÉãÇ©ÇÁì«Ç›çûÇ›
-bool CDocumentPane::load(const QString & filepath)
+bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 {
-	QFile file(filepath);
+	QFile file(tmplFilePath.isEmpty() ? filepath : tmplFilePath);
 
 	if( file.open(QFile::ReadOnly | QFile::Text) )
 	{

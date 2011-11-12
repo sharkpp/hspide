@@ -21,12 +21,14 @@ class CNewFileDialog
 	Ui::NewFileDialog ui;
 
 	QString m_filePath;
+	QString m_templateFilePath;
 
 public:
 
 	CNewFileDialog(QWidget *parent = 0);
 
 	const QString & filePath() const;
+	const QString & templateFilePath() const;
 
 protected:
 
@@ -45,4 +47,10 @@ inline
 const QString & CNewFileDialog::filePath() const
 {
 	return m_filePath;
+}
+
+inline
+const QString & CNewFileDialog::templateFilePath() const
+{
+	return m_templateFilePath;
 }
