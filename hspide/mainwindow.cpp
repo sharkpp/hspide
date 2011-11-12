@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setCentralWidget(tabWidget);
 
 	QToolBar * tabButton = new QToolBar(this);
-	tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
-	tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
+	QAction * tabListAct = tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
+	QAction * tabCloseAct= tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
 	tabButton->setIconSize(QSize(12, 12));
 	tabButton->setStyleSheet("QToolBar{border:none}");
 	tabWidget->setCornerWidget(tabButton, Qt::TopRightCorner);
@@ -52,9 +52,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setupToolBars();
 	setupMenus();
 
-//	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(projectDock, SIGNAL(oepnItem(CWorkSpaceItem*)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
+	connect(tabListAct, SIGNAL(triggered()), this, SLOT(onTabList()));
+	connect(tabCloseAct, SIGNAL(triggered()), this, SLOT(onTabClose()));
 
 	loadSettings();
 
@@ -526,6 +527,17 @@ void MainWindow::onDebugRun()
 //	}
 
 //	mCompiler->build(&workSpace->at(0));
+}
+
+void MainWindow::onTabList()
+{
+}
+
+void MainWindow::onTabClose()
+{
+	onSaveFile();
+
+	tabWidget->removeTab(tabWidget->currentIndex());
 }
 
 void MainWindow::buildStart()

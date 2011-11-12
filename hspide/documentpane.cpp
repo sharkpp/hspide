@@ -42,15 +42,25 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 }
 
 // ファイルに保存
-bool CDocumentPane::save(const QString & filepath)
+bool CDocumentPane::save(const QString & filePath)
 {
 	if( isUntitled() &&
-		filepath.isEmpty() )
+		filePath.isEmpty() )
 	{
-		QString filepath
-			= QFileDialog::getSaveFileName(this,
-				tr("Save File"), m_filePath, tr("Hot Soup Processor Files (*.hsp *.as)"));
-		if( filepath.isEmpty() )
+		// 無題の場合は適当なファイル名を付ける
+		QString fileName = m_filePath;
+		if( isUntitled() )
+		{
+			QFileInfo fileInfo(fileName);
+			fileName
+				= fileInfo.dir()
+					.absoluteFilePath("untitled" + fileInfo.fileName());
+			fileName = QDir::toNativeSeparators(fileName);
+		}
+		m_filePath = QFileDialog::getSaveFileName(this,
+						tr("Save File"), fileName,
+						tr("Hot Soup Processor Files (*.hsp *.as)"));
+		if( isUntitled() )
 		{
 			// 保持しているファイル名も新たに指定されたファイル名も無い場合
 			// 保存できないのでエラーとする
@@ -58,7 +68,7 @@ bool CDocumentPane::save(const QString & filepath)
 		}
 	}
 
-	QFile file(filepath.isEmpty() ? m_filePath : filepath);
+	QFile file(m_filePath);
 
 	if( !file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text) )
 	{

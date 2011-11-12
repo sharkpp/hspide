@@ -79,6 +79,8 @@ public slots:
 	void onSaveAllFile();
 	void onQuit();
 	void onDebugRun();
+	void onTabList();
+	void onTabClose();
 
 private:
 
