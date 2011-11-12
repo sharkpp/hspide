@@ -35,8 +35,9 @@ protected:
 public slots:
 
 	void onSelectFileName();
-	void onChangeTemplate(const QModelIndex & index);
 	void onFileNameChanged(const QString & text);
+	void onChangeTemplate(const QModelIndex & index);
+	void onDoubleClickedTemplate(const QModelIndex & index);
 
 private:
 

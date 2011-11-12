@@ -54,6 +54,11 @@ void CNewFileDialog::onSelectFileName()
 	}
 }
 
+void CNewFileDialog::onFileNameChanged(const QString & text)
+{
+	m_filePath = text;
+}
+
 void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
 {
 	QFileSystemModel* model = dynamic_cast<QFileSystemModel*>(ui.templateList->model());
@@ -70,7 +75,9 @@ void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
 	m_templateFilePath = model->filePath(index);
 }
 
-void CNewFileDialog::onFileNameChanged(const QString & text)
+void CNewFileDialog::onDoubleClickedTemplate(const QModelIndex & index)
 {
-	m_filePath = text;
+	onChangeTemplate(index);
+
+	accept();
 }

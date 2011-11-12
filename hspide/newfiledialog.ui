@@ -179,10 +179,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>templateList</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>NewFileDialog</receiver>
+   <slot>onDoubleClickedTemplate(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>143</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onSelectFileName()</slot>
   <slot>onChangeTemplate(QModelIndex)</slot>
   <slot>onFileNameChanged(QString)</slot>
+  <slot>onDoubleClickedTemplate(QModelIndex)</slot>
  </slots>
 </ui>
