@@ -24,11 +24,14 @@ public:
 	// アイテムを選択
 	void selectItem(CWorkSpaceItem * item);
 
-	// 現在のファイルを取得
-	CWorkSpaceItem * currentFile();
+	// 現在のアイテムを取得
+	CWorkSpaceItem * currentItem();
 
 	// 現在のプロジェクトを取得
 	CWorkSpaceItem * currentProject();
+
+	// 現在のファイルを取得
+	CWorkSpaceItem * currentFile();
 
 
 protected:

@@ -41,8 +41,8 @@ void CProjectDock::selectItem(CWorkSpaceItem * item)
 //	mTree->scrollTo(item->index());
 }
 
-// 現在のファイルを取得
-CWorkSpaceItem * CProjectDock::currentFile()
+// 現在のアイテムを取得
+CWorkSpaceItem * CProjectDock::currentItem()
 {
 	QItemSelectionModel * model = mTree->selectionModel();
 
@@ -53,6 +53,13 @@ CWorkSpaceItem * CProjectDock::currentFile()
 	QModelIndexList indexes = model->selectedIndexes();
 	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(indexes.front().internalPointer());
 
+	return item;
+}
+
+// 現在のファイルを取得
+CWorkSpaceItem * CProjectDock::currentFile()
+{
+	CWorkSpaceItem* item = currentItem();
 	return CWorkSpaceItem::File != item->type()
 	           ? item : NULL;;
 }
@@ -60,14 +67,7 @@ CWorkSpaceItem * CProjectDock::currentFile()
 // 現在のプロジェクトを取得
 CWorkSpaceItem * CProjectDock::currentProject()
 {
-	QItemSelectionModel * model = mTree->selectionModel();
-
-	if( !model->hasSelection() ) {
-		return NULL;
-	}
-
-	QModelIndexList indexes = model->selectedIndexes();
-	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(indexes.front().internalPointer());
+	CWorkSpaceItem* item = currentItem();
 
 	for(; item && CWorkSpaceItem::Project != item->subType();
 		item = item->parent());

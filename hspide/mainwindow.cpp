@@ -502,17 +502,27 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 
 void MainWindow::onSaveFile()
 {
-	CDocumentPane* document
-		= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+	//CDocumentPane* document
+	//	= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
 
-	if( document ) {
-		QApplication::setOverrideCursor(Qt::WaitCursor);
-		document->save();
-		QApplication::restoreOverrideCursor();
-		// ファイル名を更新
-		tabWidget->setTabText(tabWidget->currentIndex(), document->fileName());
-		document->assignItem()->setPath(document->filePath());
-	}
+	//if( document ) {
+	//	QApplication::setOverrideCursor(Qt::WaitCursor);
+	//	document->save();
+	//	QApplication::restoreOverrideCursor();
+	//	// ファイル名を更新
+	//	tabWidget->setTabText(tabWidget->currentIndex(), document->fileName());
+	//	document->assignItem()->setPath(document->filePath());
+	//}
+
+	//CWorkSpaceItem* item = projectDock->currentItem();
+
+	//if( item &&
+	//	item->save() )
+	//{
+	//	// ファイル名を更新
+	//	tabWidget->setTabText(tabWidget->currentIndex(), item->path());
+	//	document->assignItem()->setPath(document->filePath());
+	//}
 }
 
 void MainWindow::onSaveAsFile()

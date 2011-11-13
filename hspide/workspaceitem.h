@@ -66,6 +66,8 @@ public:
 	const QIcon & icon() const;
 	void setIcon(const QIcon & icon);
 
+//	bool save();
+
 	int count() const;
 	CWorkSpaceItem * at(int index) const;
 	CWorkSpaceItem * parent() const;
