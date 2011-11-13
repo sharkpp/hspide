@@ -34,6 +34,9 @@ public:
 
 	// ファイルの削除
 
+	// 削除
+	bool remove(CWorkSpaceItem * item);
+
   // QAbstractItemModel オーバーライド
 
 	virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -43,6 +46,7 @@ public:
 	virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
 	virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+	virtual bool removeRows(int row, int count, const QModelIndex & parent);
 
 private:
 

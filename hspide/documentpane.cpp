@@ -20,6 +20,11 @@ void CDocumentPane::focusInEvent(QFocusEvent * event)
 	m_editor->setFocus();
 }
 
+void CDocumentPane::onModificationChanged(bool changed)
+{
+	emit modificationChanged(isUntitled() | changed);
+}
+
 // シンボル一覧を指定
 void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 {
@@ -31,12 +36,17 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 {
 	QFile file(tmplFilePath.isEmpty() ? filepath : tmplFilePath);
 
-	if( file.open(QFile::ReadOnly | QFile::Text) )
+	if( !file.open(QFile::ReadOnly | QFile::Text) )
 	{
-		m_editor->setPlainText(file.readAll());
+		return false;
 	}
 
 	m_filePath = filepath;
+
+	m_editor->setPlainText(file.readAll());
+
+	// 変更通知シグナルに接続
+	connect(m_editor->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
 	return true;
 }
@@ -111,4 +121,12 @@ QString CDocumentPane::fileName() const
 bool CDocumentPane::isUntitled() const
 {
 	return QFileInfo(m_filePath).baseName().isEmpty();
+}
+
+// 変更されているか
+bool CDocumentPane::isModified() const
+{
+	return
+		isUntitled() ||
+		m_editor->document()->isModified();
 }

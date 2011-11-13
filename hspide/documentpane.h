@@ -24,6 +24,8 @@ public:
 
 	CDocumentPane(QWidget *parent = 0);
 
+	CCodeEdit * editor();
+
 	// シンボル一覧を指定
 	void setSymbols(const QVector<QStringList> & symbols);
 
@@ -52,6 +54,9 @@ public:
 	// 空ファイルか？
 	bool isUntitled() const;
 
+	// 変更されているか
+	bool isModified() const;
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
@@ -61,9 +66,19 @@ protected:
 	void mousePressLineNumEvent(QMouseEvent * event);
 
 public slots:
+	void onModificationChanged(bool changed);
+
+signals:
+	void modificationChanged(bool changed);
 
 private:
 
 };
+
+inline
+CCodeEdit * CDocumentPane::editor()
+{
+	return m_editor;
+}
 
 #endif // !defined(INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA)

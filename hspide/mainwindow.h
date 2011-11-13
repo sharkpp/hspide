@@ -48,6 +48,8 @@ class MainWindow : public QMainWindow
 	CDebuggerDock * debuggerDock;
 	CSearchDock *   searchDock;
 
+	QWidget*	m_lastActivatedDocument;
+
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CWorkSpaceModel*	workSpace;
 
@@ -69,6 +71,7 @@ public slots:
 	void buildStart();
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
+	void onDocumentChanged();
 	void currentTabChanged(int index);
 	void onNewFile();
 	void onOpenFile();

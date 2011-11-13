@@ -21,6 +21,7 @@ QIcon QMultiIcon(const QString & first, const QString & second, const QString & 
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
+	, m_lastActivatedDocument(NULL)
 {
 	setObjectName("MainWindow");
 	setWindowTitle("HSP script editor");
@@ -314,6 +315,16 @@ void MainWindow::setupActions()
 //	noDebugRunAct->setShortcuts(QKeySequence::Replace);
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 
+	saveDocumentAct->setEnabled(false);
+	saveAsDocumentAct->setEnabled(false);
+	saveAllDocumentAct->setEnabled(false);
+	editUndoAct->setEnabled(false);
+	editRedoAct->setEnabled(false);
+	editCutAct->setEnabled(false);
+	editCopyAct->setEnabled(false);
+	editPasteAct->setEnabled(false);
+	editClearAct->setEnabled(false);
+	selectAllAct->setEnabled(false);
 	buildSolutionAct->setEnabled(false);
 	buildProjectAct->setEnabled(false);
 	compileOnlyAct->setEnabled(false);
@@ -533,10 +544,17 @@ void MainWindow::onTabList()
 {
 }
 
+// タブを閉じる
 void MainWindow::onTabClose()
 {
+	// 何はともあれ保存
 	onSaveFile();
 
+	// 関連付けを解除
+	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	workSpace->remove(document->assignItem());
+
+	// タブを閉じる
 	tabWidget->removeTab(tabWidget->currentIndex());
 }
 
@@ -585,23 +603,61 @@ void MainWindow::buildOutput(const QString & output)
 	outputDock->output(output);
 }
 
+// 編集された
+void MainWindow::onDocumentChanged()
+{
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+
+	if( document )
+	{
+	//	saveDocumentAct->setEnabled( document->isModified() );
+		buildSolutionAct->setEnabled(true);
+		buildProjectAct->setEnabled(true);
+		compileOnlyAct->setEnabled(true);
+//		debugRunAct->setEnabled(true);
+//		noDebugRunAct->setEnabled(true);
+	}
+}
+
 // タブが変更された
 void MainWindow::currentTabChanged(int index)
 {
 	CDocumentPane* document
 		= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 
+	if( m_lastActivatedDocument )
+	{
+		CDocumentPane* lastDocument
+			= dynamic_cast<CDocumentPane*>(m_lastActivatedDocument);
+
+		// シグナルとの関連付けを切断
+		disconnect(lastDocument,                       SIGNAL(modificationChanged(bool)));
+		disconnect(lastDocument->editor()->document(), SIGNAL(undoAvailable(bool)));
+		disconnect(lastDocument->editor()->document(), SIGNAL(redoAvailable(bool)));
+		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
+		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
+	}
+
 	if( document )
 	{
-		document->setFocus();
+		// シグナルと関連付け
+		connect(document,                       SIGNAL(modificationChanged(bool)), saveDocumentAct, SLOT(setEnabled(bool)));
+		connect(document->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,     SLOT(setEnabled(bool)));
+		connect(document->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,     SLOT(setEnabled(bool)));
+		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCutAct,      SLOT(setEnabled(bool)));
+		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCopyAct,     SLOT(setEnabled(bool)));
 
-		saveDocumentAct->setEnabled( !document->isUntitled() );
-		buildSolutionAct->setEnabled(true);
-		buildProjectAct->setEnabled(true);
-		compileOnlyAct->setEnabled(true);
-//		debugRunAct->setEnabled(true);
-//		noDebugRunAct->setEnabled(true);
+		document->setFocus();
 
 		projectDock->selectItem(document->assignItem());
 	}
+
+	saveDocumentAct->   setEnabled( document ? document->isModified() : false );
+	saveAsDocumentAct-> setEnabled( NULL != document );
+	saveAllDocumentAct->setEnabled( NULL != document );
+
+	m_lastActivatedDocument = document;
+
+	onDocumentChanged();
 }

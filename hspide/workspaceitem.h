@@ -72,5 +72,6 @@ public:
 	int parentPosition() const;
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem * item);
+	bool remove(int position);
 };
 

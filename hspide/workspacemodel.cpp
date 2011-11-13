@@ -122,6 +122,12 @@ CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpac
 	return fileItem;
 }
 
+// 削除
+bool CWorkSpaceModel::remove(CWorkSpaceItem * item)
+{
+	return removeRow(item->parentPosition(), item->parent()->index());
+}
+
 //////////////////////////////////////////////////////////////////////
 // QAbstractItemModel オーバーライド
 
@@ -195,11 +201,26 @@ bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex & parent)
 
 	beginInsertRows(parent, row, row + count - 1);
 
-	for(; count; --count) {
+	for(; count; --count, ++row) {
 		item->insert(row, new CWorkSpaceItem(this));
 	}
 
 	endInsertRows();
+
+	return true;
+}
+
+bool CWorkSpaceModel::removeRows(int row, int count, const QModelIndex & parent)
+{
+	CWorkSpaceItem * item = getItem(parent);
+
+	beginRemoveRows(parent, row, row + count - 1);
+
+	for(; count; --count) {
+		item->remove(row);
+	}
+
+	endRemoveRows();
 
 	return true;
 }

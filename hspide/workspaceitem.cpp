@@ -116,3 +116,14 @@ bool CWorkSpaceItem::insert(int position, CWorkSpaceItem * item)
 	return true;
 }
 
+bool CWorkSpaceItem::remove(int position)
+{
+	if( position < 0 || m_children.size() < position ) {
+		return false;
+	}
+
+	m_children.removeAt(position);
+
+	return true;
+}
+
