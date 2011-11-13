@@ -28,6 +28,7 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 {
 	mTree->setModel(workspace);
 	mTree->expandAll();
+	workspace->setAssignWidget(mTree);
 	return true;
 }
 

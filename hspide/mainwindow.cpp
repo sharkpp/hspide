@@ -509,6 +509,9 @@ void MainWindow::onSaveFile()
 		QApplication::setOverrideCursor(Qt::WaitCursor);
 		document->save();
 		QApplication::restoreOverrideCursor();
+		// ファイル名を更新
+		tabWidget->setTabText(tabWidget->currentIndex(), document->fileName());
+		document->assignItem()->setPath(document->filePath());
 	}
 }
 

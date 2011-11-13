@@ -1,8 +1,10 @@
 #include <QFileInfo>
+#include <QTreeView>
 #include "workspacemodel.h"
 
 CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 	: QAbstractItemModel(parent)
+	, m_assignWidget(NULL)
 	, rootItem(new CWorkSpaceItem(this, this))
 {
 	QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
@@ -128,12 +130,26 @@ bool CWorkSpaceModel::remove(CWorkSpaceItem * item)
 	return removeRow(item->parentPosition(), item->parent()->index());
 }
 
+bool CWorkSpaceModel::setAssignWidget(QWidget * widget)
+{
+	m_assignWidget = widget;
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////
 // QAbstractItemModel オーバーライド
 
 int CWorkSpaceModel::columnCount(const QModelIndex & parent) const
 {
 	return 1;
+}
+
+bool CWorkSpaceModel::setData(const QModelIndex & index, const QVariant & value, int role)
+{
+	if( QTreeView *widget = dynamic_cast<QTreeView*>(m_assignWidget) ) {
+		widget->dataChanged(index, index);
+	}
+	return true;
 }
 
 QVariant CWorkSpaceModel::data(const QModelIndex & index, int role) const
@@ -151,7 +167,7 @@ QVariant CWorkSpaceModel::data(const QModelIndex & index, int role) const
 	case Qt::DecorationRole:
 		return item->icon();
 	case Qt::ToolTipRole:
-		return QString("TTTT");
+		return item->path();
 	}
 
 	return QVariant();

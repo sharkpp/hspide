@@ -58,6 +58,10 @@ const QString & CWorkSpaceItem::text() const
 void CWorkSpaceItem::setText(const QString & text)
 {
 	m_text = text.isEmpty() ? tr("(untitled)") : text;
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->setData(index(), m_text, Qt::DisplayRole);
+	}
 }
 
 const QIcon & CWorkSpaceItem::icon() const
@@ -68,6 +72,10 @@ const QIcon & CWorkSpaceItem::icon() const
 void CWorkSpaceItem::setIcon(const QIcon & icon)
 {
 	m_icon = icon;
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->setData(index(), m_icon, Qt::DecorationRole);
+	}
 }
 
 int CWorkSpaceItem::count() const

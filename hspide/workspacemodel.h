@@ -13,6 +13,8 @@ class CWorkSpaceModel
 
 	Q_OBJECT
 
+	QWidget* m_assignWidget;
+
 	CWorkSpaceItem*	rootItem;
 
 public:
@@ -37,9 +39,13 @@ public:
 	// 削除
 	bool remove(CWorkSpaceItem * item);
 
+	//
+	bool setAssignWidget(QWidget * widget);
+
   // QAbstractItemModel オーバーライド
 
 	virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
+	virtual bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 	virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 	virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 	virtual QModelIndex parent(const QModelIndex & index ) const;
