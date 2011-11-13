@@ -9,7 +9,7 @@ class COutputDock
 {
 	Q_OBJECT
 
-	QTextEdit * mEditor;
+	QTextEdit * editorWidget;
 
 public:
 

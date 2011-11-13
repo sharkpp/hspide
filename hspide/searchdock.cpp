@@ -4,12 +4,12 @@
 CSearchDock::CSearchDock(QWidget *parent)
 	: QWidget(parent)
 {
-	mEditor = new QTextEdit(this);
-	mEditor->setReadOnly(true);
+	editorWidget = new QTextEdit(this);
+	editorWidget->setReadOnly(true);
 }
 
 void CSearchDock::resizeEvent(QResizeEvent * event)
 {
-	mEditor->resize(event->size());
+	editorWidget->resize(event->size());
 }
 

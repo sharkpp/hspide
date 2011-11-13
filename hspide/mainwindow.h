@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
-	QTabWidget * tabWidget;
+	QTabWidget *   tabWidget;
 	QProgressBar * taskProgress;
 
 	QAction *newDocumentAct;
@@ -48,12 +48,12 @@ class MainWindow : public QMainWindow
 	CDebuggerDock * debuggerDock;
 	CSearchDock *   searchDock;
 
-	QWidget*	m_lastActivatedDocument;
+	QWidget* m_lastActivatedDocument;
 
 	// É\ÉäÉÖÅ[ÉVÉáÉì
-	CWorkSpaceModel*	workSpace;
+	CWorkSpaceModel* m_workSpace;
 
-	CCompiler*	mCompiler;
+	CCompiler* m_compiler;
 
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);

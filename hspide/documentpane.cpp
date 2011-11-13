@@ -5,19 +5,19 @@
 
 CDocumentPane::CDocumentPane(QWidget *parent)
 	: QWidget(parent)
-	, m_item(NULL)
+	, editorWidget(new CCodeEdit(this))
+	, m_assignItem(NULL)
 {
-	m_editor = new CCodeEdit(this);
 }
 
 void CDocumentPane::resizeEvent(QResizeEvent * event)
 {
-	m_editor->resize(event->size());
+	editorWidget->resize(event->size());
 }
 
 void CDocumentPane::focusInEvent(QFocusEvent * event)
 {
-	m_editor->setFocus();
+	editorWidget->setFocus();
 }
 
 void CDocumentPane::onModificationChanged(bool changed)
@@ -28,7 +28,7 @@ void CDocumentPane::onModificationChanged(bool changed)
 // シンボル一覧を指定
 void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 {
-	m_editor->setSymbols(symbols);
+	editorWidget->setSymbols(symbols);
 }
 
 // ファイルから読み込み
@@ -43,10 +43,10 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 
 	m_filePath = filepath;
 
-	m_editor->setPlainText(file.readAll());
+	editorWidget->setPlainText(file.readAll());
 
 	// 変更通知シグナルに接続
-	connect(m_editor->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
+	connect(editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
 	return true;
 }
@@ -86,7 +86,7 @@ bool CDocumentPane::save(const QString & filePath)
 	}
 
 	QTextStream out(&file);
-	out << m_editor->toPlainText();
+	out << editorWidget->toPlainText();
 
 	return true;
 }
@@ -94,13 +94,13 @@ bool CDocumentPane::save(const QString & filePath)
 // アイテムと関連付け
 bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 {
-	m_item = item;
+	m_assignItem = item;
 	return true;
 }
 
 CWorkSpaceItem * CDocumentPane::assignItem()
 {
-	return m_item;
+	return m_assignItem;
 }
 
 // ファイルパスを取得
@@ -128,5 +128,5 @@ bool CDocumentPane::isModified() const
 {
 	return
 		isUntitled() ||
-		m_editor->document()->isModified();
+		editorWidget->document()->isModified();
 }

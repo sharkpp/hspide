@@ -17,14 +17,14 @@ class CCompiler
 {
 	Q_OBJECT
 
-	QString mHspCompPath;
-	QString mHspPath;
-	QString mHspCommonPath;
+	QString m_hspCompPath;
+	QString m_hspPath;
+	QString m_hspCommonPath;
 
-	QProcess *mProcess;
-	QProcess *mProcessForListingSymbols;
+	QProcess *m_compilerProcess;
+	QProcess *m_listingSymbolsProcess;
 
-	QVector<QStringList> mSymbols;
+	QVector<QStringList> m_highlightSymbols;
 
 public:
 

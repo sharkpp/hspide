@@ -5,25 +5,25 @@
 COutputDock::COutputDock(QWidget *parent)
 	: QWidget(parent)
 {
-	mEditor = new QTextEdit(this);
-	mEditor->setReadOnly(true);
+	editorWidget = new QTextEdit(this);
+	editorWidget->setReadOnly(true);
 }
 
 void COutputDock::resizeEvent(QResizeEvent * event)
 {
-	mEditor->resize(event->size());
+	editorWidget->resize(event->size());
 }
 
 // 出力をクリア
 void COutputDock::clear()
 {
-	mEditor->clear();
+	editorWidget->clear();
 }
 
 // 出力に文字列を追記
 void COutputDock::output(const QString & text)
 {
-	QTextCursor cursor(mEditor->document());
+	QTextCursor cursor(editorWidget->document());
 	cursor.movePosition(QTextCursor::End);
 	cursor.insertText(text);
 }

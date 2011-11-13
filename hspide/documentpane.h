@@ -16,9 +16,11 @@ class CDocumentPane
 {
 	Q_OBJECT
 
-	CCodeEdit *		m_editor;
+	CCodeEdit *		editorWidget;
+
 	QString			m_filePath;
-	CWorkSpaceItem*	m_item;
+
+	CWorkSpaceItem*	m_assignItem;
 
 public:
 
@@ -78,7 +80,7 @@ private:
 inline
 CCodeEdit * CDocumentPane::editor()
 {
-	return m_editor;
+	return editorWidget;
 }
 
 #endif // !defined(INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA)

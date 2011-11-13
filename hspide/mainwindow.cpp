@@ -28,14 +28,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setAcceptDrops(true);
 	resize(800, 600);
 
-	mCompiler = new CCompiler(this);
+	m_compiler = new CCompiler(this);
 
-	workSpace = new CWorkSpaceModel(this);
+	m_workSpace = new CWorkSpaceModel(this);
 
 	// 処理完了時の通知を登録
-	connect(mCompiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
-	connect(mCompiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
-	connect(mCompiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
+	connect(m_compiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
+	connect(m_compiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
+	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	loadSettings();
 
-	projectDock->setWorkSpace(workSpace);
+	projectDock->setWorkSpace(m_workSpace);
 }
 
 MainWindow::~MainWindow()
@@ -341,11 +341,11 @@ void MainWindow::loadSettings()
 	QVariant tmp;
 
 	// コンパイラパスを取得
-	mCompiler->setCompilerPath(settings.value("path/compiler", QDir::currentPath()).toString());
+	m_compiler->setCompilerPath(settings.value("path/compiler", QDir::currentPath()).toString());
 	// HSPディレクトリの取得
-	mCompiler->setHspPath(settings.value("path/hsp", QDir::currentPath()).toString());
+	m_compiler->setHspPath(settings.value("path/hsp", QDir::currentPath()).toString());
 	// Commonディレクトリの取得
-	mCompiler->setHspCommonPath(settings.value("path/hsp-common", mCompiler->hspPath() + "/common/").toString());
+	m_compiler->setHspCommonPath(settings.value("path/hsp-common", m_compiler->hspPath() + "/common/").toString());
 
 	// ウインドウ位置などを取得
 	restoreGeometry(settings.value("window/geometry").toByteArray());
@@ -361,11 +361,11 @@ void MainWindow::saveSettings()
 	QString tmp;
 
 	// コンパイラパスを保存
-	settings.setValue("path/compiler", mCompiler->compilerPath());
+	settings.setValue("path/compiler", m_compiler->compilerPath());
 	// HSPディレクトリの保存
-	settings.setValue("path/hsp", mCompiler->hspPath());
+	settings.setValue("path/hsp", m_compiler->hspPath());
 	// Commonディレクトリの保存
-	settings.setValue("path/hsp-common", mCompiler->hspCommonPath());
+	settings.setValue("path/hsp-common", m_compiler->hspCommonPath());
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
@@ -445,9 +445,9 @@ void MainWindow::onNewFile()
 	}
 	// ソリューションにプロジェクトを追加し、
 	// タブで追加したファイルを開く
-	CWorkSpaceItem* projectItem = workSpace->appendProject();
+	CWorkSpaceItem* projectItem = m_workSpace->appendProject();
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
-	document->setSymbols(mCompiler->symbols());
+	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
 	tabWidget->addTab(document, document->fileName());
@@ -471,7 +471,7 @@ void MainWindow::onOpenFile(const QString & filePath)
 
 	if( !fileName.isEmpty() ) {
 		CWorkSpaceItem * parentItem = projectDock->currentProject();
-		CWorkSpaceItem * fileItem   = workSpace->appendFile(fileName, parentItem);
+		CWorkSpaceItem * fileItem   = m_workSpace->appendFile(fileName, parentItem);
 		onOpenFile(fileItem);
 	}
 }
@@ -493,7 +493,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 
 	// 新たに開く
 	CDocumentPane * document = new CDocumentPane(tabWidget);
-	document->setSymbols(mCompiler->symbols());
+	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(item);
 	document->load(item->path());
 	tabWidget->addTab(document, document->fileName());
@@ -534,7 +534,7 @@ void MainWindow::onSaveAsFile()
 
 void MainWindow::onSaveAllFile()
 {
-//	workSpace->save();
+//	m_workSpace->save();
 }
 
 void MainWindow::onQuit()
@@ -550,7 +550,7 @@ void MainWindow::onDebugRun()
 //		CDocumentPane * textEdit = static_cast<CDocumentPane*>(tabWidget->widget(index));
 //	}
 
-//	mCompiler->build(&workSpace->at(0));
+//	m_compiler->build(&m_workSpace->at(0));
 }
 
 void MainWindow::onTabList()
@@ -565,7 +565,7 @@ void MainWindow::onTabClose()
 
 	// 関連付けを解除
 	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
-	workSpace->remove(document->assignItem());
+	m_workSpace->remove(document->assignItem());
 
 	// タブを閉じる
 	tabWidget->removeTab(tabWidget->currentIndex());

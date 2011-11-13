@@ -12,7 +12,7 @@ class CProjectDock
 {
 	Q_OBJECT
 
-	QTreeView* mTree;
+	QTreeView* treeWidget;
 
 public:
 

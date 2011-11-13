@@ -9,7 +9,7 @@ class CDebuggerDock
 {
 	Q_OBJECT
 
-	QTextEdit * mEditor;
+	QTextEdit * editorWidget;
 
 public:
 

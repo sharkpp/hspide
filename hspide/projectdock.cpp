@@ -8,43 +8,43 @@
 CProjectDock::CProjectDock(QWidget *parent)
 	: QWidget(parent)
 {
-	mTree = new QTreeView(this);
-	mTree->header()->hide();
-	mTree->setRootIsDecorated(false);
-//	mTree->setIndentation(12);
-//	mTree->setUniformRowHeights(true);
-	mTree->setEditTriggers(QTreeView::EditKeyPressed);
+	treeWidget = new QTreeView(this);
+	treeWidget->header()->hide();
+	treeWidget->setRootIsDecorated(false);
+//	treeWidget->setIndentation(12);
+//	treeWidget->setUniformRowHeights(true);
+	treeWidget->setEditTriggers(QTreeView::EditKeyPressed);
 
-	connect(mTree, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedTree(const QModelIndex &)));
+	connect(treeWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedTree(const QModelIndex &)));
 }
 
 void CProjectDock::resizeEvent(QResizeEvent * event)
 {
-	mTree->resize(event->size());
+	treeWidget->resize(event->size());
 }
 
 // ソリューションを結合
 bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 {
-	mTree->setModel(workspace);
-	mTree->expandAll();
-	workspace->setAssignWidget(mTree);
+	treeWidget->setModel(workspace);
+	treeWidget->expandAll();
+	workspace->setAssignWidget(treeWidget);
 	return true;
 }
 
 // アイテムを選択
 void CProjectDock::selectItem(CWorkSpaceItem * item)
 {
-	mTree->selectionModel()->clear();
-	mTree->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
+	treeWidget->selectionModel()->clear();
+	treeWidget->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	// 選択したアイテムを見えるようにする
-//	mTree->scrollTo(item->index());
+//	treeWidget->scrollTo(item->index());
 }
 
 // 現在のアイテムを取得
 CWorkSpaceItem * CProjectDock::currentItem()
 {
-	QItemSelectionModel * model = mTree->selectionModel();
+	QItemSelectionModel * model = treeWidget->selectionModel();
 
 	if( !model->hasSelection() ) {
 		return NULL;
