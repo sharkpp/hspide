@@ -1,6 +1,11 @@
 #include "workspacemodel.h"
 #include "workspaceitem.h"
+#include "documentpane.h"
+#include <QApplication>
 #include <QFileInfo>
+#include <QFileDialog>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	: QObject(parent)
@@ -8,7 +13,8 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	, m_parent(NULL)
 	, m_parentPos(0)
 	, m_type(UnkownType)
-	, m_subType(UnkownSubType)
+	, m_nodeType(UnkownNodeType)
+	, m_assignDocument(NULL)
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -27,16 +33,34 @@ CWorkSpaceItem::Type CWorkSpaceItem::type() const
 void CWorkSpaceItem::setType(Type type)
 {
 	m_type = type;
+
+	switch( m_type )
+	{
+	case File:
+	case Project:
+		m_nodeType = FileNode;
+		break;
+	case Folder:
+	case Solution:
+	case DependenceFolder:
+	case PackFolder:
+	case SourceFolder:
+	case ResourceFolder:
+		m_nodeType = FolderNode;
+		break;
+	default:
+		;
+	}
 }
 
-CWorkSpaceItem::SubType CWorkSpaceItem::subType() const
+CWorkSpaceItem::NodeType CWorkSpaceItem::nodeType() const
 {
-	return m_subType;
+	return m_nodeType;
 }
 
-void CWorkSpaceItem::setSubType(SubType type)
+void CWorkSpaceItem::setNodeType(NodeType type)
 {
-	m_subType = type;
+	m_nodeType = type;
 }
 
 const QString & CWorkSpaceItem::path() const
@@ -135,3 +159,136 @@ bool CWorkSpaceItem::remove(int position)
 	return true;
 }
 
+bool CWorkSpaceItem::load(const QString & fileName)
+{
+	return true;
+}
+
+bool CWorkSpaceItem::save(const QString & fileName)
+{
+	// 子も全て保存
+	foreach(CWorkSpaceItem* item, m_children)
+	{
+		item->save();
+	}
+
+	if( m_assignDocument )
+	{
+		if( m_assignDocument->save(fileName) )
+		{
+			setPath(m_assignDocument->filePath());
+		}
+	}
+	else
+	{
+		switch(m_type)
+		{
+		case Solution:
+			saveSolution(fileName);
+			break;
+		}
+	}
+
+	return true;
+}
+
+bool CWorkSpaceItem::saveSolution(const QString & fileName)
+{
+	QXmlStreamWriter xml;
+	QString filePath = fileName;
+
+	if( filePath.isEmpty() )
+	{
+		filePath = QFileDialog::getSaveFileName(QApplication::activeWindow(),
+						tr("Save File"), tr("untitled") + ".hspsln",
+						tr("HSP IDE Solution File (*.hspsln)"));
+	}
+
+	QFile file(filePath);
+	if( !file.open(QFile::WriteOnly | QFile::Text) )
+	{
+		return false;
+	}
+
+	setPath(filePath);
+
+	xml.setDevice(&file);
+	xml.writeStartDocument();
+	xml.writeDTD("<!DOCTYPE xbel>");
+	xml.writeStartElement("solution");
+	xml.writeAttribute("version", "1.0");
+	serialize(&xml);
+	xml.writeEndDocument();
+
+	return true;
+}
+
+bool CWorkSpaceItem::loadSolution(const QString & fileName)
+{
+	return false;
+}
+
+bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
+{
+
+	switch( m_type )
+	{
+	case File:
+		xml->writeStartElement("file");
+		xml->writeAttribute("path", m_path);
+		break;
+	case Folder:
+		xml->writeStartElement("folder");
+		xml->writeAttribute("name", m_text);
+		break;
+	case Solution:
+		xml->writeStartElement("solution");
+		xml->writeAttribute("name", m_text);
+		break;
+	case Project:
+		xml->writeStartElement("project");
+		xml->writeAttribute("path", m_path);
+		break;
+	case DependenceFolder:
+		xml->writeStartElement("dependence");
+		break;
+	case PackFolder:
+		xml->writeStartElement("pack");
+		break;
+	case SourceFolder:
+		xml->writeStartElement("source");
+		break;
+	case ResourceFolder:
+		xml->writeStartElement("Resource");
+		break;
+	default:
+		return false;
+	}
+
+	// 子も全てシリアライズ
+	foreach(CWorkSpaceItem* item, m_children)
+	{
+		item->serialize(xml);
+	}
+
+	xml->writeEndElement();
+
+	return true;
+}
+
+bool CWorkSpaceItem::deserialize(QXmlStreamReader * xml)
+{
+	return false;
+}
+
+// アイテムと関連付け
+bool CWorkSpaceItem::setAssignDocument(CDocumentPane * doc)
+{
+	m_assignDocument = doc;
+	return true;
+}
+
+CDocumentPane * CWorkSpaceItem::assignDocument()
+{
+	return m_assignDocument;
+}

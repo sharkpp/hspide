@@ -64,7 +64,7 @@ bool CDocumentPane::save(const QString & filePath)
 			QFileInfo fileInfo(fileName);
 			fileName
 				= fileInfo.dir()
-					.absoluteFilePath("untitled" + fileInfo.fileName());
+					.absoluteFilePath(tr("untitled") + fileInfo.fileName());
 			fileName = QDir::toNativeSeparators(fileName);
 		}
 		m_filePath = QFileDialog::getSaveFileName(this,
@@ -94,7 +94,11 @@ bool CDocumentPane::save(const QString & filePath)
 // アイテムと関連付け
 bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 {
+	if( m_assignItem ) {
+		m_assignItem->setAssignDocument(NULL);
+	}
 	m_assignItem = item;
+	m_assignItem->setAssignDocument(this);
 	return true;
 }
 

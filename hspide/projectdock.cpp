@@ -69,7 +69,7 @@ CWorkSpaceItem * CProjectDock::currentProject()
 {
 	CWorkSpaceItem* item = currentItem();
 
-	for(; item && CWorkSpaceItem::Project != item->subType();
+	for(; item && CWorkSpaceItem::Project != item->type();
 		item = item->parent());
 
 	return item;

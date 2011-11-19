@@ -9,6 +9,9 @@
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
 class CWorkSpaceModel;
+class CDocumentPane;
+class QXmlStreamWriter;
+class QXmlStreamReader;
 
 class CWorkSpaceItem
 	: QObject
@@ -18,21 +21,22 @@ class CWorkSpaceItem
 public:
 
 	typedef enum {
+		UnkownNodeType = 0,
+		FileNode,
+		FolderNode,
+	} NodeType;
+
+	typedef enum {
 		UnkownType = 0,
 		File,
 		Folder,
-	} Type;
-
-	typedef enum {
-		UnkownSubType = 0,
-		Default,
 		Solution,
 		Project,
 		DependenceFolder,
 		PackFolder,
 		SourceFolder,
 		ResourceFolder,
-	} SubType;
+	} Type;
 
 private:
 
@@ -44,7 +48,9 @@ private:
 	QString					m_text;
 	QString					m_path;
 	Type					m_type;
-	SubType					m_subType;
+	NodeType				m_nodeType;
+
+	CDocumentPane*			m_assignDocument;
 
 public:
 
@@ -54,8 +60,8 @@ public:
 	Type type() const;
 	void setType(Type type);
 
-	SubType subType() const;
-	void setSubType(SubType type);
+	NodeType nodeType() const;
+	void setNodeType(NodeType type);
 
 	const QString & path() const;
 	void setPath(const QString & path);
@@ -66,7 +72,12 @@ public:
 	const QIcon & icon() const;
 	void setIcon(const QIcon & icon);
 
-//	bool save();
+	bool load(const QString & fileName);
+	bool save(const QString & fileName = QString());
+
+	// アイテムと関連付け
+	bool setAssignDocument(CDocumentPane * item);
+	CDocumentPane * assignDocument();
 
 	int count() const;
 	CWorkSpaceItem * at(int index) const;
@@ -75,5 +86,13 @@ public:
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem * item);
 	bool remove(int position);
+
+private:
+
+	bool saveSolution(const QString & fileName);
+	bool loadSolution(const QString & fileName);
+
+	bool serialize(QXmlStreamWriter * xml);
+	bool deserialize(QXmlStreamReader * xml);
 };
 
