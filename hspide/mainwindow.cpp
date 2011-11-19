@@ -466,13 +466,27 @@ void MainWindow::onOpenFile(const QString & filePath)
 	// ファイル名が指定されていなかったら開く
 	if( fileName.isEmpty() ) {
 		fileName = QFileDialog::getOpenFileName(this,
-			tr("Open File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
+			tr("Open File"), "",
+			tr("Hot Soup Processor Files (*.hsp *.as)") + ";;" +
+			tr("HSP IDE Solution File (*.hspsln)") + ";;" +
+			tr("All File (*.*)")
+			);
 	}
 
 	if( !fileName.isEmpty() ) {
-		CWorkSpaceItem * parentItem = projectDock->currentProject();
-		CWorkSpaceItem * fileItem   = m_workSpace->appendFile(fileName, parentItem);
-		onOpenFile(fileItem);
+		QString ext = QFileInfo(fileName).suffix();
+		if( !ext.compare("hspsln", Qt::CaseSensitive) ) {
+			CWorkSpaceItem * solutionItem = projectDock->currentSolution();
+			if( solutionItem &&
+				solutionItem->save() &&
+				solutionItem->load(fileName) )
+			{
+			}
+		} else {
+			CWorkSpaceItem * parentItem = projectDock->currentProject();
+			CWorkSpaceItem * fileItem   = m_workSpace->appendFile(fileName, parentItem);
+			onOpenFile(fileItem);
+		}
 	}
 }
 
@@ -489,6 +503,12 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 			tabWidget->setCurrentIndex(index);
 			return;
 		}
+	}
+
+	// ダブルクリックで開けるのはファイルのみ
+	if( CWorkSpaceItem::FileNode != item->nodeType() )
+	{
+		return;
 	}
 
 	// 新たに開く

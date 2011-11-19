@@ -56,12 +56,16 @@ CWorkSpaceItem * CProjectDock::currentItem()
 	return item;
 }
 
-// 現在のファイルを取得
-CWorkSpaceItem * CProjectDock::currentFile()
+// 現在のソリューションを取得
+CWorkSpaceItem * CProjectDock::currentSolution()
 {
-	CWorkSpaceItem* item = currentItem();
-	return CWorkSpaceItem::File != item->type()
-	           ? item : NULL;;
+	CWorkSpaceModel* model = dynamic_cast<CWorkSpaceModel*>(treeWidget->model());
+
+	if( !model ) {
+		return NULL;
+	}
+
+	return model->solution();
 }
 
 // 現在のプロジェクトを取得
@@ -73,6 +77,14 @@ CWorkSpaceItem * CProjectDock::currentProject()
 		item = item->parent());
 
 	return item;
+}
+
+// 現在のファイルを取得
+CWorkSpaceItem * CProjectDock::currentFile()
+{
+	CWorkSpaceItem* item = currentItem();
+	return CWorkSpaceItem::File != item->type()
+	           ? item : NULL;;
 }
 
 void CProjectDock::doubleClickedTree(const QModelIndex & index)

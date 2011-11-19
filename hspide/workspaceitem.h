@@ -58,6 +58,9 @@ public:
 	CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model = NULL);
 	~CWorkSpaceItem();
 
+	CWorkSpaceModel* model() const;
+	void setModel(CWorkSpaceModel* model);
+
 	Type type() const;
 	void setType(Type type);
 

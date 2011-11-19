@@ -74,6 +74,16 @@ CWorkSpaceItem::~CWorkSpaceItem()
 	qDeleteAll(m_children);
 }
 
+CWorkSpaceModel* CWorkSpaceItem::model() const
+{
+	return m_model;
+}
+
+void CWorkSpaceItem::setModel(CWorkSpaceModel* model)
+{
+	m_model = model;
+}
+
 CWorkSpaceItem::Type CWorkSpaceItem::type() const
 {
 	return m_type;
@@ -234,6 +244,7 @@ bool CWorkSpaceItem::load(const QString & fileName)
 		switch(m_type)
 		{
 		case Solution:
+			qDeleteAll(m_children);
 			loadSolution(fileName);
 			break;
 		}
@@ -280,7 +291,9 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 	{
 		filePath = QFileDialog::getSaveFileName(QApplication::activeWindow(),
 						tr("Save File"), tr("untitled") + ".hspsln",
-						tr("HSP IDE Solution File (*.hspsln)"));
+						tr("HSP IDE Solution File (*.hspsln)") + ";;" +
+						tr("All File (*.*)")
+						);
 	}
 
 	// 書き込み用のファイルをオープン
@@ -337,42 +350,63 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 			}
 			// ルートを指定
 			vItems.push_back(this);
+			if( m_model ) {
+				m_model->setData(index(), m_text, Qt::DisplayRole);
+			}
 			break;
 		case QXmlStreamReader::StartElement: {
 			CWorkSpaceItem* parentItem = vItems.back();
 			CWorkSpaceItem* newItem    = NULL;
-			       if( !xml.name().compare("solution", Qt::CaseSensitive) ) {
-				newItem = new CWorkSpaceItem(parentItem, Solution);
-				newItem->setText(xml.attributes().value("name").toString());
-			} else if( !xml.name().compare("project", Qt::CaseSensitive) ) {
+			QString name = xml.name().toString();
+			       if( !name.compare("solution", Qt::CaseSensitive) ) {
+				if( 1 != vItems.size() ) {
+					xml.clear();
+					return false;
+				}
+				setText(xml.attributes().value("name").toString());
+				continue;
+			} else if( !name.compare("project", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, Project);
 				newItem->setPath(xml.attributes().value("path").toString());
-			} else if( !xml.name().compare("folder", Qt::CaseSensitive) ) {
+			} else if( !name.compare("folder", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, Folder);
 				newItem->setText(xml.attributes().value("name").toString());
-			} else if( !xml.name().compare("file", Qt::CaseSensitive) ) {
+			} else if( !name.compare("file", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, File);
 				newItem->setPath(xml.attributes().value("path").toString());
-			} else if( !xml.name().compare("dependence", Qt::CaseSensitive) ) {
+			} else if( !name.compare("dependence", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, DependenceFolder);
-			} else if( !xml.name().compare("pack", Qt::CaseSensitive) ) {
+			} else if( !name.compare("pack", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, PackFolder);
-			} else if( !xml.name().compare("source", Qt::CaseSensitive) ) {
+			} else if( !name.compare("source", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, SourceFolder);
-			} else if( !xml.name().compare("resource", Qt::CaseSensitive) ) {
+			} else if( !name.compare("resource", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, ResourceFolder);
+			} else if( !name.compare("hspide", Qt::CaseSensitive) ) {
+				continue;
 			} else {
 				delete newItem;
 				xml.clear();
 				return false;
 			}
-			parentItem->insert(parentItem->count(), newItem);
+			newItem->setModel(m_model);
+			if( m_model ) {
+				m_model->appendRow(newItem, parentItem->index());
+				m_model->setData(newItem->index(), newItem->text(), Qt::DisplayRole);
+			} else {
+				parentItem->insert(parentItem->count(), newItem);
+			}
 			vItems.push_back(newItem);
 			break; }
-		case QXmlStreamReader::EndElement:
-			vItems.pop_back();
-			break;
-	}
+		case QXmlStreamReader::EndElement: {
+			QString name = xml.name().toString();
+			if( name.compare("solution", Qt::CaseSensitive) &&
+				name.compare("hspide", Qt::CaseSensitive) )
+			{
+				vItems.pop_back();
+			}
+			break; }
+		}
 	}
 
 	// エラーチェック＆処理

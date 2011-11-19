@@ -23,6 +23,12 @@ CWorkSpaceItem * CWorkSpaceModel::getItem(const QModelIndex & index) const
 		    : rootItem;
 }
 
+// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ðŽæ“¾
+CWorkSpaceItem* CWorkSpaceModel::solution()
+{
+	return rootItem->at(0);
+}
+
 bool CWorkSpaceModel::insertRow(int row, CWorkSpaceItem * item, const QModelIndex & parent)
 {
 	QVector<CWorkSpaceItem*> items;
@@ -43,6 +49,16 @@ bool CWorkSpaceModel::insertRows(int row, const QVector<CWorkSpaceItem*> & items
 	endInsertRows();
 
 	return true;
+}
+
+bool CWorkSpaceModel::appendRow(CWorkSpaceItem * item, const QModelIndex & parent)
+{
+	return insertRow(rowCount(parent), item, parent);
+}
+
+bool CWorkSpaceModel::appendRows(const QVector<CWorkSpaceItem*> & items, const QModelIndex & parent)
+{
+	return insertRows(rowCount(parent), items, parent);
 }
 
 //////////////////////////////////////////////////////////////////////

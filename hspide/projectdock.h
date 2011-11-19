@@ -27,6 +27,9 @@ public:
 	// 現在のアイテムを取得
 	CWorkSpaceItem * currentItem();
 
+	// 現在のソリューションを取得
+	CWorkSpaceItem * currentSolution();
+
 	// 現在のプロジェクトを取得
 	CWorkSpaceItem * currentProject();
 

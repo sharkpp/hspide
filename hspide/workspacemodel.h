@@ -42,6 +42,9 @@ public:
 	//
 	bool setAssignWidget(QWidget * widget);
 
+	// ソリューションを取得
+	CWorkSpaceItem* solution();
+
   // QAbstractItemModel オーバーライド
 
 	virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -54,10 +57,13 @@ public:
 	virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
 	virtual bool removeRows(int row, int count, const QModelIndex & parent);
 
-private:
-
 	bool insertRow(int row, CWorkSpaceItem * item, const QModelIndex & parent = QModelIndex());
 	bool insertRows(int row, const QVector<CWorkSpaceItem*> & items, const QModelIndex & parent = QModelIndex());
+
+	bool appendRow(CWorkSpaceItem * item, const QModelIndex & parent = QModelIndex());
+	bool appendRows(const QVector<CWorkSpaceItem*> & items, const QModelIndex & parent = QModelIndex());
+
+private:
 
 	CWorkSpaceItem * getItem(const QModelIndex & index) const;
 
