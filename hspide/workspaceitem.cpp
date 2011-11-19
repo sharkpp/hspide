@@ -20,6 +20,55 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	m_text = QString("this=%1").arg((int)this, 0, 16);
 }
 
+CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model)
+	: QObject(parent)
+	, m_model(NULL)
+	, m_parent(NULL)
+	, m_parentPos(0)
+	, m_assignDocument(NULL)
+{
+	setType(type);
+
+	// 種別に応じて属性をセット
+	switch( m_type )
+	{
+	case File:
+		setIcon(QIcon(":/images/tango/small/text-x-generic.png"));
+		break;
+	case Folder:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		break;
+	case Project:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		setText();
+		break;
+	case Solution:
+		setIcon(QIcon(":/images/tango/small/edit-copy.png"));
+		setText(tr("(untitled)"));
+		break;
+	case DependenceFolder:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		setText(tr("Dependence"));
+		break;
+	case PackFolder:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		setText(tr("Packfile"));
+		break;
+	case SourceFolder:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		setText(tr("Source"));
+		break;
+	case ResourceFolder:
+		setIcon(QIcon(":/images/tango/small/folder.png"));
+		setText(tr("Resource"));
+		break;
+	default:
+		;
+	}
+	
+	m_model = model;
+}
+
 CWorkSpaceItem::~CWorkSpaceItem()
 {
 	qDeleteAll(m_children);
@@ -71,7 +120,20 @@ const QString & CWorkSpaceItem::path() const
 void CWorkSpaceItem::setPath(const QString & path)
 {
 	m_path = path;
-	setText(path.isEmpty() ? QString() : QFileInfo(path).fileName());
+
+	switch( m_type )
+	{
+	case File:
+	case Folder:
+	case Project:
+		setText(path.isEmpty() ? QString() : QFileInfo(path).fileName());
+		break;
+	case Solution:
+		setText(path.isEmpty() ? QString() : QFileInfo(path).baseName());
+		break;
+	default:
+		;
+	}
 }
 
 const QString & CWorkSpaceItem::text() const
@@ -161,6 +223,22 @@ bool CWorkSpaceItem::remove(int position)
 
 bool CWorkSpaceItem::load(const QString & fileName)
 {
+	if( m_assignDocument )
+	{
+		if( m_assignDocument->load(fileName) )
+		{
+		}
+	}
+	else
+	{
+		switch(m_type)
+		{
+		case Solution:
+			loadSolution(fileName);
+			break;
+		}
+	}
+
 	return true;
 }
 
@@ -197,6 +275,7 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 	QXmlStreamWriter xml;
 	QString filePath = fileName;
 
+	// ファイル名が指定されていない場合はダイアログを表示して表示
 	if( filePath.isEmpty() )
 	{
 		filePath = QFileDialog::getSaveFileName(QApplication::activeWindow(),
@@ -204,6 +283,7 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 						tr("HSP IDE Solution File (*.hspsln)"));
 	}
 
+	// 書き込み用のファイルをオープン
 	QFile file(filePath);
 	if( !file.open(QFile::WriteOnly | QFile::Text) )
 	{
@@ -212,12 +292,17 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 
 	setPath(filePath);
 
+	// ファイルにXMLとして出力
 	xml.setDevice(&file);
 	xml.writeStartDocument();
 	xml.writeDTD("<!DOCTYPE xbel>");
-	xml.writeStartElement("solution");
+	xml.writeStartElement("hspide");
 	xml.writeAttribute("version", "1.0");
+	xml.writeAttribute("type", "solution");
+
+	// アイテムツリーをXMLに変換
 	serialize(&xml);
+
 	xml.writeEndDocument();
 
 	return true;
@@ -225,6 +310,80 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 
 bool CWorkSpaceItem::loadSolution(const QString & fileName)
 {
+	// 読み込み用のファイルをオープン
+	QFile file(fileName);
+	if( !file.open(QFile::ReadOnly | QFile::Text) )
+	{
+		return false;
+	}
+
+	QXmlStreamReader xml(&file);
+	QVector<CWorkSpaceItem*> vItems;
+
+	// XMLを終わりまで読み込む
+	while( !xml.atEnd() &&
+	       !xml.hasError() )
+	{
+		QXmlStreamReader::TokenType token = xml.readNext();
+
+		switch( token )
+		{
+		case QXmlStreamReader::StartDocument:
+			// 種別をチェック
+			if( !xml.attributes().value("type").compare("solution", Qt::CaseSensitive) )
+			{
+				xml.clear();
+				return false;
+			}
+			// ルートを指定
+			vItems.push_back(this);
+			break;
+		case QXmlStreamReader::StartElement: {
+			CWorkSpaceItem* parentItem = vItems.back();
+			CWorkSpaceItem* newItem    = NULL;
+			       if( !xml.name().compare("solution", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, Solution);
+				newItem->setText(xml.attributes().value("name").toString());
+			} else if( !xml.name().compare("project", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, Project);
+				newItem->setPath(xml.attributes().value("path").toString());
+			} else if( !xml.name().compare("folder", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, Folder);
+				newItem->setText(xml.attributes().value("name").toString());
+			} else if( !xml.name().compare("file", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, File);
+				newItem->setPath(xml.attributes().value("path").toString());
+			} else if( !xml.name().compare("dependence", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, DependenceFolder);
+			} else if( !xml.name().compare("pack", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, PackFolder);
+			} else if( !xml.name().compare("source", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, SourceFolder);
+			} else if( !xml.name().compare("resource", Qt::CaseSensitive) ) {
+				newItem = new CWorkSpaceItem(parentItem, ResourceFolder);
+			} else {
+				delete newItem;
+				xml.clear();
+				return false;
+			}
+			parentItem->insert(parentItem->count(), newItem);
+			vItems.push_back(newItem);
+			break; }
+		case QXmlStreamReader::EndElement:
+			vItems.pop_back();
+			break;
+	}
+	}
+
+	// エラーチェック＆処理
+	if( xml.hasError() )
+	{
+		xml.clear();
+		return false;
+	}
+
+	xml.clear();
+
 	return false;
 }
 
@@ -259,7 +418,7 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 		xml->writeStartElement("source");
 		break;
 	case ResourceFolder:
-		xml->writeStartElement("Resource");
+		xml->writeStartElement("resource");
 		break;
 	default:
 		return false;

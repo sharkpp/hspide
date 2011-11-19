@@ -517,7 +517,6 @@ void MainWindow::onSaveFile()
 	}
 
 	QApplication::restoreOverrideCursor();
-
 }
 
 void MainWindow::onSaveAsFile()

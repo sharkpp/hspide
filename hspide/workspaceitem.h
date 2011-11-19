@@ -14,7 +14,7 @@ class QXmlStreamWriter;
 class QXmlStreamReader;
 
 class CWorkSpaceItem
-	: QObject
+	: public QObject
 {
 	Q_OBJECT
 
@@ -55,6 +55,7 @@ private:
 public:
 
 	CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model = NULL);
+	CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model = NULL);
 	~CWorkSpaceItem();
 
 	Type type() const;

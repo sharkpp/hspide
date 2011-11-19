@@ -51,10 +51,13 @@ public:
 	virtual QModelIndex parent(const QModelIndex & index ) const;
 	virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
-	virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+	virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
 	virtual bool removeRows(int row, int count, const QModelIndex & parent);
 
 private:
+
+	bool insertRow(int row, CWorkSpaceItem * item, const QModelIndex & parent = QModelIndex());
+	bool insertRows(int row, const QVector<CWorkSpaceItem*> & items, const QModelIndex & parent = QModelIndex());
 
 	CWorkSpaceItem * getItem(const QModelIndex & index) const;
 

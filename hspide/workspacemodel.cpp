@@ -8,13 +8,9 @@ CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 	, rootItem(new CWorkSpaceItem(this, this))
 {
 	QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
-	if( insertRow(0, rootIndex) ) {
-		QModelIndex solutionIndex = index(0, 0, rootIndex);
-		CWorkSpaceItem * solutionItem = getItem(solutionIndex);
-		solutionItem->setType(CWorkSpaceItem::Solution);
-		solutionItem->setIcon(QIcon(":/images/tango/small/edit-copy.png"));
-		solutionItem->setText(tr("(untitled)"));
-	//	solutionItem->
+	CWorkSpaceItem* item  = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
+	if( insertRow(0, item, rootIndex) ) {
+	} else {
 	}
 }
 
@@ -25,6 +21,28 @@ CWorkSpaceItem * CWorkSpaceModel::getItem(const QModelIndex & index) const
 	return
 		ptr ? static_cast<CWorkSpaceItem*>(ptr)
 		    : rootItem;
+}
+
+bool CWorkSpaceModel::insertRow(int row, CWorkSpaceItem * item, const QModelIndex & parent)
+{
+	QVector<CWorkSpaceItem*> items;
+	items.push_back(item);
+	return insertRows(row, items, parent);
+}
+
+bool CWorkSpaceModel::insertRows(int row, const QVector<CWorkSpaceItem*> & items, const QModelIndex & parent)
+{
+	CWorkSpaceItem * parentItem = getItem(parent);
+
+	beginInsertRows(parent, row, row + items.count() - 1);
+
+	foreach(CWorkSpaceItem* item, items) {
+		parentItem->insert(row++, item);
+	}
+
+	endInsertRows();
+
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -47,41 +65,25 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 {
 	QModelIndex rootIndex     = createIndex(rootItem->parentPosition(), 0, rootItem);
 	QModelIndex solutionIndex = index(0, 0, rootIndex);
+	CWorkSpaceItem*projectItem= new CWorkSpaceItem(this, CWorkSpaceItem::Project, this);
 
 	int row = rowCount(solutionIndex);
-	if( !insertRow(row, solutionIndex) ) {
+	if( !insertRow(row, projectItem, solutionIndex) ) {
 		return NULL;
 	}
 
 	QModelIndex projectIndex = index(row, 0, solutionIndex);
-	CWorkSpaceItem * projectItem = getItem(projectIndex);
-	projectItem->setType(CWorkSpaceItem::Project);
-	projectItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	projectItem->setText();
+	QVector<CWorkSpaceItem*> items;
+	items.push_back(new CWorkSpaceItem(projectItem, CWorkSpaceItem::DependenceFolder, this));
+	items.push_back(new CWorkSpaceItem(projectItem, CWorkSpaceItem::PackFolder,       this));
+	items.push_back(new CWorkSpaceItem(projectItem, CWorkSpaceItem::SourceFolder,     this));
+	items.push_back(new CWorkSpaceItem(projectItem, CWorkSpaceItem::ResourceFolder,   this));
 
-	if( !insertRows(0, 4, projectIndex) ) {
+	if( !insertRows(0, items, projectIndex) ) {
 		return NULL;
 	}
 
-	CWorkSpaceItem * dependenceItem = getItem(index(0, 0, projectIndex));
-	dependenceItem->setType(CWorkSpaceItem::DependenceFolder);
-	dependenceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	dependenceItem->setText(tr("Dependence"));
-
-	CWorkSpaceItem * packItem = getItem(index(1, 0, projectIndex));
-	packItem->setType(CWorkSpaceItem::PackFolder);
-	packItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	packItem->setText(tr("Packfile"));
-
-	CWorkSpaceItem * sourceItem = getItem(index(2, 0, projectIndex));
-	sourceItem->setType(CWorkSpaceItem::SourceFolder);
-	sourceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	sourceItem->setText(tr("Source"));
-
-	CWorkSpaceItem * resourceItem = getItem(index(3, 0, projectIndex));
-	resourceItem->setType(CWorkSpaceItem::ResourceFolder);
-	resourceItem->setIcon(QIcon(":/images/tango/small/folder.png"));
-	resourceItem->setText(tr("Resource"));
+	items.clear();
 
 	return projectItem;
 }
@@ -94,8 +96,8 @@ CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpac
 		return NULL;
 	}
 
-	QModelIndex projectIndex = parentItem->index();
-	QModelIndex itemIndex = index(0, 0, projectIndex);
+	QModelIndex projectIndex  = parentItem->index();
+	QModelIndex itemIndex     = index(0, 0, projectIndex);
 	for(int row = 0, count = rowCount(projectIndex);
 		row < count && CWorkSpaceItem::SourceFolder != getItem(itemIndex)->type();
 		row++, itemIndex = index(row, 0, projectIndex));
@@ -104,14 +106,13 @@ CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpac
 		return NULL;
 	}
 
-	if( !insertRow(rowCount(itemIndex), itemIndex) ) {
+	CWorkSpaceItem* fileItem
+		= new CWorkSpaceItem(parentItem, CWorkSpaceItem::File, this);
+
+	if( !insertRow(rowCount(itemIndex), fileItem, itemIndex) ) {
 		return NULL;
 	}
 
-	CWorkSpaceItem * fileItem
-		= getItem(index(rowCount(itemIndex) - 1, 0, itemIndex));
-	fileItem->setType(CWorkSpaceItem::File);
-	fileItem->setIcon(QIcon(":/images/tango/small/text-x-generic.png"));
 	fileItem->setPath(fileName);
 
 	return fileItem;
@@ -206,12 +207,12 @@ int CWorkSpaceModel::rowCount(const QModelIndex & parent) const
 
 bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex & parent)
 {
-	CWorkSpaceItem * item = getItem(parent);
+	CWorkSpaceItem * parentItem = getItem(parent);
 
 	beginInsertRows(parent, row, row + count - 1);
 
 	for(; count; --count, ++row) {
-		item->insert(row, new CWorkSpaceItem(this));
+		parentItem->insert(row, new CWorkSpaceItem(this));
 	}
 
 	endInsertRows();
@@ -221,12 +222,12 @@ bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex & parent)
 
 bool CWorkSpaceModel::removeRows(int row, int count, const QModelIndex & parent)
 {
-	CWorkSpaceItem * item = getItem(parent);
+	CWorkSpaceItem * parentItem = getItem(parent);
 
 	beginRemoveRows(parent, row, row + count - 1);
 
 	for(; count; --count) {
-		item->remove(row);
+		parentItem->remove(row);
 	}
 
 	endRemoveRows();
