@@ -7,6 +7,29 @@
         <source>(untitled)</source>
         <translation>(無題)</translation>
     </message>
+    <message>
+        <source>untitled</source>
+        <translation>無題</translation>
+    </message>
+    <message>
+        <source>Save File</source>
+        <translation>ファイルの保存</translation>
+    </message>
+    <message>
+        <source>Hot Soup Processor Files (*.hsp *.as)</source>
+        <translation>Hot Soup Processor ファイル (*.hsp *.as)</translation>
+    </message>
+</context>
+<context>
+    <name>CNewFileDialog</name>
+    <message>
+        <source>Open File</source>
+        <translation>ファイルを開く</translation>
+    </message>
+    <message>
+        <source>Hot Soup Processor Files (*.hsp *.as)</source>
+        <translation>Hot Soup Processor ファイル (*.hsp *.as)</translation>
+    </message>
 </context>
 <context>
     <name>CWorkSpaceItem</name>
@@ -14,12 +37,9 @@
         <source>(untitled)</source>
         <translation>(無題)</translation>
     </message>
-</context>
-<context>
-    <name>CWorkSpaceModel</name>
     <message>
-        <source>(untitled)</source>
-        <translation>(無題)</translation>
+        <source>Dependence</source>
+        <translation>依存関係</translation>
     </message>
     <message>
         <source>Packfile</source>
@@ -34,8 +54,43 @@
         <translation>リソース</translation>
     </message>
     <message>
+        <source>Save File</source>
+        <translation>ファイルの保存</translation>
+    </message>
+    <message>
+        <source>untitled</source>
+        <translation>無題</translation>
+    </message>
+    <message>
+        <source>HSP IDE Solution File (*.hspsln)</source>
+        <translation>HSP IDE ソリューションファイル (*.hspsln)</translation>
+    </message>
+    <message>
+        <source>All File (*.*)</source>
+        <translation>全てのファイル (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>CWorkSpaceModel</name>
+    <message>
+        <source>(untitled)</source>
+        <translation type="obsolete">(無題)</translation>
+    </message>
+    <message>
+        <source>Packfile</source>
+        <translation type="obsolete">パックファイル</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation type="obsolete">ソース</translation>
+    </message>
+    <message>
+        <source>Resource</source>
+        <translation type="obsolete">リソース</translation>
+    </message>
+    <message>
         <source>Dependence</source>
-        <translation>依存関係</translation>
+        <translation type="obsolete">依存関係</translation>
     </message>
 </context>
 <context>
@@ -327,6 +382,29 @@
     <message>
         <source>Build complete</source>
         <translation>ビルド完了</translation>
+    </message>
+    <message>
+        <source>HSP IDE Solution File (*.hspsln)</source>
+        <translation>HSP IDE ソリューションファイル (*.hspsln)</translation>
+    </message>
+    <message>
+        <source>All File (*.*)</source>
+        <translation>全てのファイル (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>NewFileDialog</name>
+    <message>
+        <source>New file</source>
+        <translation>新規作成</translation>
+    </message>
+    <message>
+        <source>File name:</source>
+        <translation>ファイル名:</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
     </message>
 </context>
 <context>

@@ -244,7 +244,11 @@ bool CWorkSpaceItem::load(const QString & fileName)
 		switch(m_type)
 		{
 		case Solution:
-			qDeleteAll(m_children);
+			if( m_model ) {
+				m_model->removeRows(0, count(), index());
+			} else {
+				qDeleteAll(m_children);
+			}
 			loadSolution(fileName);
 			break;
 		}
