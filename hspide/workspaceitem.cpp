@@ -231,6 +231,23 @@ bool CWorkSpaceItem::remove(int position)
 	return true;
 }
 
+bool CWorkSpaceItem::isUntitled() const
+{
+	if( m_assignDocument )
+	{
+		return m_assignDocument->isUntitled();
+	}
+	else
+	{
+		switch(m_type)
+		{
+		case Solution:
+			return m_text.isEmpty() || m_text == tr("(untitled)");
+		}
+	}
+	return true;
+}
+
 bool CWorkSpaceItem::load(const QString & fileName)
 {
 	if( m_assignDocument )
@@ -245,7 +262,9 @@ bool CWorkSpaceItem::load(const QString & fileName)
 		{
 		case Solution:
 			if( m_model ) {
-				m_model->removeRows(0, count(), index());
+				if( count() ) {
+					m_model->removeRows(0, count(), index());
+				}
 			} else {
 				qDeleteAll(m_children);
 			}

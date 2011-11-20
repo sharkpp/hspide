@@ -14,8 +14,10 @@ CProjectDock::CProjectDock(QWidget *parent)
 //	treeWidget->setIndentation(12);
 //	treeWidget->setUniformRowHeights(true);
 	treeWidget->setEditTriggers(QTreeView::EditKeyPressed);
+	treeWidget->setExpandsOnDoubleClick(false);
 
 	connect(treeWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedTree(const QModelIndex &)));
+	connect(treeWidget, SIGNAL(expanded(const QModelIndex &)),      this, SLOT(expandedTree(const QModelIndex &)));
 }
 
 void CProjectDock::resizeEvent(QResizeEvent * event)
@@ -91,9 +93,26 @@ void CProjectDock::doubleClickedTree(const QModelIndex & index)
 {
 	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 
+	//if( item &&
+	//	!item->assignDocument() )
+	//{
+	//	treeWidget->setExpanded(index, false);
+	//}
+
 	if( item )
 	{
 		// ƒVƒOƒiƒ‹”­•ñ
 		emit oepnItem(item);
 	}
+}
+
+void CProjectDock::expandedTree(const QModelIndex & index)
+{
+	//CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
+
+	//if( item &&
+	//	!item->assignDocument() )
+	//{
+	//	treeWidget->setExpanded(index, false);
+	//}
 }

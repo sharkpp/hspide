@@ -36,14 +36,16 @@ public:
 	// Œ»İ‚Ìƒtƒ@ƒCƒ‹‚ğæ“¾
 	CWorkSpaceItem * currentFile();
 
+	QTreeView* tree();
 
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
 
-public slots:
+protected slots:
 
 	void doubleClickedTree(const QModelIndex & inde);
+	void expandedTree(const QModelIndex & index);
 
 signals:
 
@@ -52,3 +54,9 @@ signals:
 private:
 
 };
+
+inline
+QTreeView* CProjectDock::tree()
+{
+	return treeWidget;
+}

@@ -79,6 +79,8 @@ public:
 	bool load(const QString & fileName);
 	bool save(const QString & fileName = QString());
 
+	bool isUntitled() const;
+
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane * item);
 	CDocumentPane * assignDocument();

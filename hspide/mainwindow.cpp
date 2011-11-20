@@ -467,6 +467,7 @@ void MainWindow::onOpenFile(const QString & filePath)
 	if( fileName.isEmpty() ) {
 		fileName = QFileDialog::getOpenFileName(this,
 			tr("Open File"), "",
+			tr("All Supported Files (*.hsp *.as *.hspsln)") + ";;" +
 			tr("Hot Soup Processor Files (*.hsp *.as)") + ";;" +
 			tr("HSP IDE Solution File (*.hspsln)") + ";;" +
 			tr("All File (*.*)")
@@ -579,7 +580,17 @@ void MainWindow::onTabClose()
 
 	// 関連付けを解除
 	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
-	m_workSpace->remove(document->assignItem());
+
+	CWorkSpaceItem * solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem * currentItem  = document->assignItem();
+
+	currentItem->setAssignDocument(NULL);
+
+	if( solutionItem &&
+		solutionItem->isUntitled() )
+	{
+		m_workSpace->remove(currentItem);
+	}
 
 	// タブを閉じる
 	tabWidget->removeTab(tabWidget->currentIndex());
