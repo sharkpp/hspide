@@ -14,6 +14,7 @@
 #error "Building in unicode is not supported"
 #endif
 
+static
 struct option {
 	bool		version;
 	bool		help;
@@ -97,6 +98,7 @@ void usage()
 		"    -s X,Y , --size X,Y\n"
 		"    -I , --hidden\n"
 		"    -d , --debug\n"
+		"    -D , --debug-window\n"
 		"    -P , --preprocess-only\n"
 		"    -a , --auto-make\n"
 		"    -m , --make\n"
@@ -160,6 +162,9 @@ bool read_args(int argc, char * argv[])
 			} else if( (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--refname")) && i + 1 < argc ) {
 				// 参照ファイル名の指定
 				option.refname = argv[++i];
+			} else if( (!strcmp(argv[i], "-o") || !strcmp(argv[i], "--objname")) && i + 1 < argc ) {
+				// オブジェクトファイル名の指定
+				option.objname = argv[++i];
 			} else if( (!strcmp(argv[i], "-C") || !strcmp(argv[i], "--common-path")) && i + 1 < argc ) {
 				// 共通ディレクトリの指定
 				option.common_path = argv[++i];
