@@ -88,6 +88,8 @@ public:
 	int count() const;
 	CWorkSpaceItem * at(int index) const;
 	CWorkSpaceItem * parent() const;
+	CWorkSpaceItem * ancestor(Type type);
+	CWorkSpaceItem * search(const QString & path);
 	int parentPosition() const;
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem * item);

@@ -2,6 +2,7 @@
 #include <QDir>
 #include "compiler.h"
 #include "workspaceitem.h"
+#include "documentpane.h"
 
 CCompiler::CCompiler(QObject *parent)
 	: QObject(parent)
@@ -76,36 +77,74 @@ const QVector<QStringList> & CCompiler::symbols() const
 	return m_highlightSymbols;
 }
 
-// プロジェクトをビルド
-void CCompiler::build(CWorkSpaceItem * project)
+// コンパイラ呼び出し
+bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun)
 {
-	QString filename;
-	//if( !project->getMainSource(filename) )
+	QString workDir = QDir::currentPath(); // いらないかも
+
+	QString filename = targetItem->path();
+	bool tempSave = false;
+
+	// 無題の場合は一時的なファイルに保存
+	if( filename.isEmpty() &&
+		targetItem->isUntitled() )
 	{
-		return;
+		CDocumentPane* document = targetItem->assignDocument();
+		if( !document )
+		{
+			emit buildStart(filename);
+			emit buildFinished(false);
+			return false;
+		}
+
+		// 一時的なファイルに保存
+		tempSave = true;
+		filename = QDir::toNativeSeparators(workDir + "/hsptmp");
+		document->save(filename);
 	}
+
+	// シグナル発報
+	emit buildStart(filename);
 
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
-	          << "-H" << m_hspPath
-	          << filename;
+	          << "-H" << m_hspPath;
+	if( tempSave ) {
+		arguments << "-o" << "obj"
+		          << "-r" << "???";
+	}
+	if( buildAfterRun ) {
+		arguments << "-e";
+	}
+	arguments << filename;
 	delete m_compilerProcess;
 	m_compilerProcess = new QProcess(this);
+	m_compilerProcess->setWorkingDirectory(workDir);
 	m_compilerProcess->start(program, arguments);
 
 	if( !m_compilerProcess->waitForStarted() ) {
 		emit buildFinished(false);
 		delete m_compilerProcess;
-		return;
+		m_compilerProcess = NULL;
+		return false;
 	}
 
 	// 処理完了時の通知を登録
 	connect(m_compilerProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
 	connect(m_compilerProcess, SIGNAL(readyReadStandardOutput()),          this, SLOT(buildReadOutput()));
+}
 
-	// シグナル発報
-	emit buildStart();
+// ビルド
+bool CCompiler::build(CWorkSpaceItem * targetItem)
+{
+	return execCompiler(targetItem, false);
+}
+
+// 実行
+bool CCompiler::run(CWorkSpaceItem * targetItem)
+{
+	return execCompiler(targetItem, true);
 }
 
 // シンボルの取得完了
@@ -142,6 +181,7 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 //	qDebug() << mSymbols;
 
 	delete m_listingSymbolsProcess;
+	m_listingSymbolsProcess = NULL;
 }
 
 // プロジェクトのビルド完了
@@ -150,6 +190,7 @@ void CCompiler::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
 	// シグナル発報
 	emit buildFinished(QProcess::NormalExit == exitStatus);
 	delete m_compilerProcess;
+	m_compilerProcess = NULL;
 }
 
 // ビルド中の出力を取得

@@ -17,14 +17,16 @@ class CCompiler
 {
 	Q_OBJECT
 
-	QString m_hspCompPath;
-	QString m_hspPath;
-	QString m_hspCommonPath;
+	QString m_hspCompPath;		// HSPコンパイラDLLへのパス
+	QString m_hspPath;			// HSPインストールディレクトリへのパス
+	QString m_hspCommonPath;	// HSP Commonフォルダへのパス
 
-	QProcess *m_compilerProcess;
-	QProcess *m_listingSymbolsProcess;
+	QString m_buildAfterRunArgs;		// ビルド後に実行を行うか？
 
-	QVector<QStringList> m_highlightSymbols;
+	QProcess *m_compilerProcess;	// コンパイラプロセス
+	QProcess *m_listingSymbolsProcess;	// シンボル取得プロセス
+
+	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
 
 public:
 
@@ -48,8 +50,11 @@ public:
 	// HSP commonディレクトリのパスを指定
 	void setHspCommonPath(const QString & path);
 
-	// プロジェクトをビルド
-	void build(CWorkSpaceItem * project);
+	// ビルド
+	bool build(CWorkSpaceItem * targetItem);
+
+	// 実行
+	bool run(CWorkSpaceItem * targetItem);
 
 	// 単一ファイルをコンパイル
 	void compile();
@@ -57,6 +62,8 @@ public:
 protected:
 
 	void updateCompilerPath();
+
+	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun);
 
 public slots:
 
@@ -71,7 +78,7 @@ public slots:
 
 signals:
 
-	void buildStart();
+	void buildStart(const QString & filePath);
 	void buildFinished(bool status);
 	void buildOutput(const QString & output);
 

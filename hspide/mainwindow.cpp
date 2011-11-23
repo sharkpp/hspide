@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	m_workSpace = new CWorkSpaceModel(this);
 
 	// 処理完了時の通知を登録
-	connect(m_compiler, SIGNAL(buildStart()),                 this, SLOT(buildStart()));
+	connect(m_compiler, SIGNAL(buildStart(const QString &)),  this, SLOT(buildStart(const QString &)));
 	connect(m_compiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
 	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
 
@@ -297,10 +297,12 @@ void MainWindow::setupActions()
 	buildSolutionAct = new QAction(tr("Build &solution"), this);
 //	buildSolutionAct->setShortcuts(QKeySequence::Replace);
 	buildSolutionAct->setStatusTip(tr("Build solution"));
+	connect(buildSolutionAct, SIGNAL(triggered()), this, SLOT(onBuildSolution()));
 
 	buildProjectAct = new QAction(tr("&Build project"), this);
 //	buildProjectAct->setShortcuts(QKeySequence::Replace);
 	buildProjectAct->setStatusTip(tr("Build project"));
+	connect(buildProjectAct, SIGNAL(triggered()), this, SLOT(onBuildProject()));
 
 	compileOnlyAct = new QAction(tr("&Compile only"), this);
 //	compileOnlyAct->setShortcuts(QKeySequence::Replace);
@@ -557,15 +559,49 @@ void MainWindow::onQuit()
 	qApp->quit();
 }
 
+void MainWindow::onBuildProject()
+{
+}
+
+void MainWindow::onBuildSolution()
+{
+}
+
 void MainWindow::onDebugRun()
 {
+	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	CWorkSpaceItem* currentItem = NULL;
 
-//	for(int index = 0, num = tabWidget->count(); index < num; index++)
-//	{
-//		CDocumentPane * textEdit = static_cast<CDocumentPane*>(tabWidget->widget(index));
-//	}
+	if( document )
+	{
+		// 現在選択しているタブに関連付けられているファイルを取得
+		currentItem = document->assignItem();
+	}
+	else
+	{
+		// なければ、プロジェクトツリーから選択しているファイルを取得
+		currentItem = projectDock->currentItem();
+	}
 
-//	m_compiler->build(&m_workSpace->at(0));
+	// もし、プロジェクトに属していたら取得
+	CWorkSpaceItem* currentProject
+		= currentItem->ancestor(CWorkSpaceItem::Project);
+
+	// もし、ソリューションに属していたら取得
+	CWorkSpaceItem* currentSolution
+		= currentItem->ancestor(CWorkSpaceItem::Solution);
+
+	if( currentSolution &&
+		0 )
+	{
+		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
+		
+	}
+	else if( currentProject )
+	{
+		// プロジェクトが取得できたらビルド＆実行
+		m_compiler->run(currentProject);
+	}
 }
 
 void MainWindow::onTabList()
@@ -596,17 +632,32 @@ void MainWindow::onTabClose()
 	tabWidget->removeTab(tabWidget->currentIndex());
 }
 
-void MainWindow::buildStart()
+void MainWindow::buildStart(const QString & filePath)
 {
 	// ビルド処理開始
 
 	outputDock->outputCrLf(tr("Build start"));
 
-	// ファイルを保存
-	for(int index = 0, num = tabWidget->count(); index < num; index++)
+	CWorkSpaceItem* targetProjectItem
+		= projectDock->currentSolution()->search(filePath);
+
+	// ビルドを開始したプロジェクトに関連するファイルを全て保存
+	if( targetProjectItem )
 	{
-		CDocumentPane * textEdit = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-		textEdit->save();
+		// ファイルを保存
+		for(int index = 0, num = tabWidget->count(); index < num; index++)
+		{
+			CDocumentPane * textEdit = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+			CWorkSpaceItem* assignItem = textEdit->assignItem();
+			if( targetProjectItem ==
+					assignItem->ancestor(CWorkSpaceItem::Project) )
+			{
+				if( !textEdit->isUntitled() )
+				{
+					textEdit->save();
+				}
+			}
+		}
 	}
 
 	// プログラスバーをMarqueeスタイルに

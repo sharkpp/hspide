@@ -192,6 +192,32 @@ CWorkSpaceItem * CWorkSpaceItem::parent() const
 	return m_parent;
 }
 
+CWorkSpaceItem * CWorkSpaceItem::ancestor(Type type)
+{
+	return m_parent ? type == m_type ? this
+	                                 : m_parent->ancestor(type)
+	                : NULL;
+}
+
+CWorkSpaceItem * CWorkSpaceItem::search(const QString & path)
+{
+	if( !m_path.compare(path, Qt::CaseSensitive) )
+	{
+		return this;
+	}
+
+	foreach(CWorkSpaceItem* item, m_children)
+	{
+		CWorkSpaceItem* result = item->search(path);
+		if( result )
+		{
+			return result;
+		}
+	}
+
+	return NULL;
+}
+
 int CWorkSpaceItem::parentPosition() const
 {
 	return m_parentPos;

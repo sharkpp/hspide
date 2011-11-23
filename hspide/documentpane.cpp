@@ -54,31 +54,39 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 // ファイルに保存
 bool CDocumentPane::save(const QString & filePath)
 {
-	if( isUntitled() &&
-		filePath.isEmpty() )
+	QString fileName = filePath;
+
+	// 引数にファイル名が指定されていた場合はそのファイルに保存
+	// 指定されていなかった場合は、
+	// (無題)で無い場合はそのファイルに保存
+	// (無題)の場合はファイル指定ダイアログを表示し指定
+
+	if( fileName.isEmpty() )
 	{
+		fileName = m_filePath;
 		// 無題の場合は適当なファイル名を付ける
-		QString fileName = m_filePath;
 		if( isUntitled() )
 		{
 			QFileInfo fileInfo(fileName);
+
 			fileName
 				= fileInfo.dir()
 					.absoluteFilePath(tr("untitled") + fileInfo.fileName());
 			fileName = QDir::toNativeSeparators(fileName);
-		}
-		m_filePath = QFileDialog::getSaveFileName(this,
-						tr("Save File"), fileName,
-						tr("Hot Soup Processor Files (*.hsp *.as)"));
-		if( isUntitled() )
-		{
-			// 保持しているファイル名も新たに指定されたファイル名も無い場合
-			// 保存できないのでエラーとする
-			return false;
+
+			m_filePath = QFileDialog::getSaveFileName(this,
+							tr("Save File"), fileName,
+							tr("Hot Soup Processor Files (*.hsp *.as)"));
+			if( isUntitled() )
+			{
+				// 保持しているファイル名も新たに指定されたファイル名も無い場合
+				// 保存できないのでエラーとする
+				return false;
+			}
 		}
 	}
 
-	QFile file(m_filePath);
+	QFile file(fileName);
 
 	if( !file.open(QFile::WriteOnly | QFile::Truncate | QFile::Text) )
 	{

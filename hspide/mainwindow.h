@@ -68,7 +68,7 @@ protected:
 
 public slots:
 	void actionTriggered(QAction *action);
-	void buildStart();
+	void buildStart(const QString & filePath);
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
 	void onDocumentChanged();
@@ -81,6 +81,8 @@ public slots:
 	void onSaveAsFile();
 	void onSaveAllFile();
 	void onQuit();
+	void onBuildProject();
+	void onBuildSolution();
 	void onDebugRun();
 	void onTabList();
 	void onTabClose();
