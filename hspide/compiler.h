@@ -51,10 +51,10 @@ public:
 	void setHspCommonPath(const QString & path);
 
 	// ビルド
-	bool build(CWorkSpaceItem * targetItem);
+	bool build(CWorkSpaceItem * targetItem, bool debugMode);
 
 	// 実行
-	bool run(CWorkSpaceItem * targetItem);
+	bool run(CWorkSpaceItem * targetItem, bool debugMode);
 
 	// 単一ファイルをコンパイル
 	void compile();
@@ -63,7 +63,7 @@ protected:
 
 	void updateCompilerPath();
 
-	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun);
+	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bool debugMode);
 
 public slots:
 

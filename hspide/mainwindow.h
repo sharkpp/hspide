@@ -84,6 +84,7 @@ public slots:
 	void onBuildProject();
 	void onBuildSolution();
 	void onDebugRun();
+	void onNoDebugRun();
 	void onTabList();
 	void onTabClose();
 

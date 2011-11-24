@@ -78,7 +78,7 @@ const QVector<QStringList> & CCompiler::symbols() const
 }
 
 // コンパイラ呼び出し
-bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun)
+bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bool debugMode)
 {
 	QString workDir = QDir::currentPath(); // いらないかも
 
@@ -110,11 +110,14 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun)
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
 	          << "-H" << m_hspPath;
-	if( tempSave ) {
+	if( debugMode ) { // デバッグモード
+		arguments << "-d";
+	}
+	if( tempSave ) { // 一時的なファイルに保存
 		arguments << "-o" << "obj"
 		          << "-r" << "???";
 	}
-	if( buildAfterRun ) {
+	if( buildAfterRun ) { // ビルド後に実行
 		arguments << "-e";
 	}
 	arguments << filename;
@@ -136,15 +139,15 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun)
 }
 
 // ビルド
-bool CCompiler::build(CWorkSpaceItem * targetItem)
+bool CCompiler::build(CWorkSpaceItem * targetItem, bool debugMode)
 {
-	return execCompiler(targetItem, false);
+	return execCompiler(targetItem, false, debugMode);
 }
 
 // 実行
-bool CCompiler::run(CWorkSpaceItem * targetItem)
+bool CCompiler::run(CWorkSpaceItem * targetItem, bool debugMode)
 {
-	return execCompiler(targetItem, true);
+	return execCompiler(targetItem, true, debugMode);
 }
 
 // シンボルの取得完了

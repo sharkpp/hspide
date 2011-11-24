@@ -316,6 +316,7 @@ void MainWindow::setupActions()
 	noDebugRunAct = new QAction(tr("&NO debug run"), this);
 //	noDebugRunAct->setShortcuts(QKeySequence::Replace);
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
+	connect(noDebugRunAct, SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -600,7 +601,44 @@ void MainWindow::onDebugRun()
 	else if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
-		m_compiler->run(currentProject);
+		m_compiler->run(currentProject, true);
+	}
+}
+
+void MainWindow::onNoDebugRun()
+{
+	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	CWorkSpaceItem* currentItem = NULL;
+
+	if( document )
+	{
+		// 現在選択しているタブに関連付けられているファイルを取得
+		currentItem = document->assignItem();
+	}
+	else
+	{
+		// なければ、プロジェクトツリーから選択しているファイルを取得
+		currentItem = projectDock->currentItem();
+	}
+
+	// もし、プロジェクトに属していたら取得
+	CWorkSpaceItem* currentProject
+		= currentItem->ancestor(CWorkSpaceItem::Project);
+
+	// もし、ソリューションに属していたら取得
+	CWorkSpaceItem* currentSolution
+		= currentItem->ancestor(CWorkSpaceItem::Solution);
+
+	if( currentSolution &&
+		0 )
+	{
+		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
+		
+	}
+	else if( currentProject )
+	{
+		// プロジェクトが取得できたらビルド＆実行
+		m_compiler->run(currentProject, false);
 	}
 }
 
@@ -689,7 +727,7 @@ void MainWindow::buildFinished(bool successed)
 // ビルド中の出力を取得
 void MainWindow::buildOutput(const QString & output)
 {
-	outputDock->output(output);
+	outputDock->output(QString(output).replace("\r\n", "\n"));
 }
 
 // 編集された
