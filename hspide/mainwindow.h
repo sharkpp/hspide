@@ -7,6 +7,7 @@
 #include "projectdock.h"
 #include "searchdock.h"
 #include "symboldock.h"
+#include "messagedock.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -47,6 +48,7 @@ class MainWindow : public QMainWindow
 	COutputDock *   outputDock;
 	CDebuggerDock * debuggerDock;
 	CSearchDock *   searchDock;
+	CMessageDock *  messageDock;
 
 	QWidget* m_lastActivatedDocument;
 

@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	, m_lastActivatedDocument(NULL)
 {
 	setObjectName("MainWindow");
-	setWindowTitle("HSP script editor");
+	setWindowTitle(tr("HSP script editor"));
 	setAcceptDrops(true);
 	resize(800, 600);
 
@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
 
+	// タブの一覧と閉じるボタン
 	QToolBar * tabButton = new QToolBar(this);
 	QAction * tabListAct = tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
 	QAction * tabCloseAct= tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
@@ -99,9 +100,16 @@ void MainWindow::setupDockWindows()
 	searchDockWidget->setObjectName("Search result"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, searchDockWidget);
 
+	QDockWidget* messageDockWidget = new QDockWidget(tr("Messages"), this);
+	messageDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	messageDockWidget->setWidget(messageDock = new CMessageDock(messageDockWidget));
+	messageDockWidget->setObjectName("Messages"); // saveState()で警告がトレースで出るため
+	addDockWidget(Qt::BottomDockWidgetArea, messageDockWidget);
+
 	tabifyDockWidget(projectDockWidget, symbolDockWidget);
 	tabifyDockWidget(outputDockWidget, debuggerDockWidget);
 	tabifyDockWidget(outputDockWidget, searchDockWidget);
+	tabifyDockWidget(outputDockWidget, messageDockWidget);
 
 //	projectDockWidget->setFocus();
 	projectDockWidget->raise();

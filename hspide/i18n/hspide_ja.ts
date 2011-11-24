@@ -21,6 +21,25 @@
     </message>
 </context>
 <context>
+    <name>CMessageDock</name>
+    <message>
+        <source>Category</source>
+        <translation>カテゴリ</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>説明</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation>ファイル</translation>
+    </message>
+    <message>
+        <source>Line</source>
+        <translation>行</translation>
+    </message>
+</context>
+<context>
     <name>CNewFileDialog</name>
     <message>
         <source>Open File</source>
@@ -68,29 +87,6 @@
     <message>
         <source>All File (*.*)</source>
         <translation>全てのファイル (*.*)</translation>
-    </message>
-</context>
-<context>
-    <name>CWorkSpaceModel</name>
-    <message>
-        <source>(untitled)</source>
-        <translation type="obsolete">(無題)</translation>
-    </message>
-    <message>
-        <source>Packfile</source>
-        <translation type="obsolete">パックファイル</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="obsolete">ソース</translation>
-    </message>
-    <message>
-        <source>Resource</source>
-        <translation type="obsolete">リソース</translation>
-    </message>
-    <message>
-        <source>Dependence</source>
-        <translation type="obsolete">依存関係</translation>
     </message>
 </context>
 <context>
@@ -390,6 +386,18 @@
     <message>
         <source>All File (*.*)</source>
         <translation>全てのファイル (*.*)</translation>
+    </message>
+    <message>
+        <source>HSP script editor</source>
+        <translation>HSPスクリプトエディタ</translation>
+    </message>
+    <message>
+        <source>Messages</source>
+        <translation>メッセージ</translation>
+    </message>
+    <message>
+        <source>All Supported Files (*.hsp *.as *.hspsln)</source>
+        <translation>サポートする全てのファイル (*.hsp *.as *.hspsln)</translation>
     </message>
 </context>
 <context>
