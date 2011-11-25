@@ -712,6 +712,7 @@ void MainWindow::buildStart(const QString & filePath)
 
 	// 出力をクリア
 	outputDock->clear();
+	messageDock->clear();
 }
 
 void MainWindow::buildFinished(bool successed)
@@ -735,7 +736,31 @@ void MainWindow::buildFinished(bool successed)
 // ビルド中の出力を取得
 void MainWindow::buildOutput(const QString & output)
 {
-	outputDock->output(QString(output).replace("\r\n", "\n"));
+	QString tmp = QString(output).replace("\r\n", "\n");
+	outputDock->output(tmp);
+
+	QRegExp reCompiler("^((.+)\\(([0-9]+)\\) : (.+))$");
+	QRegExp rePreProcessor("^#Error:(.+) in line ([0-9]+) \\[(.*)\\]$");
+
+	for(QStringListIterator ite(tmp.split("\n"));
+		ite.hasNext(); )
+	{
+		QString line = ite.next();
+		line.replace("\r", "");
+
+		if( 0 <= reCompiler.indexIn(line) ) {
+			QString fileName = reCompiler.cap(2);
+			QString lineNum  = reCompiler.cap(3);
+			QString desc     = reCompiler.cap(4);
+			messageDock->addMessage(fileName, lineNum.toInt(), desc);
+		}
+		else if( 0 <= rePreProcessor.indexIn(line) ) {
+			QString fileName = rePreProcessor.cap(3);
+			QString lineNum  = rePreProcessor.cap(2);
+			QString desc     = rePreProcessor.cap(1);
+			messageDock->addMessage(fileName, lineNum.toInt(), desc);
+		}
+	}
 }
 
 // 編集された

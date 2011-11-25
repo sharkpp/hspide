@@ -15,6 +15,9 @@ public:
 
 	CMessageDock(QWidget *parent = 0);
 
+	void clear();
+	void addMessage(const QString & fileName, int lineNum, const QString & description);
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);

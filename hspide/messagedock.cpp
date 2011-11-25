@@ -22,3 +22,24 @@ void CMessageDock::resizeEvent(QResizeEvent * event)
 	listWidget->resize(event->size());
 }
 
+void CMessageDock::clear()
+{
+	QStandardItemModel* model
+		= static_cast<QStandardItemModel*>(listWidget->model());
+	if( model->rowCount() ) {
+		model->removeRows(0, model->rowCount());
+	}
+}
+
+void CMessageDock::addMessage(const QString & fileName, int lineNum, const QString & description)
+{
+	QStandardItemModel* model
+		= static_cast<QStandardItemModel*>(listWidget->model());
+	int row = model->rowCount();
+    model->insertRow(row);
+    model->setData(model->index(row, 0), "");
+    model->setData(model->index(row, 1), description);
+    model->setData(model->index(row, 2), fileName);
+    model->setData(model->index(row, 3), QString("%1").arg(lineNum));
+//	listWidget->update(item->index());
+}
