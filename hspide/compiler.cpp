@@ -136,6 +136,8 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	// ˆ—Š®—¹‚Ì’Ê’m‚ğ“o˜^
 	connect(m_compilerProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
 	connect(m_compilerProcess, SIGNAL(readyReadStandardOutput()),          this, SLOT(buildReadOutput()));
+
+	return true;
 }
 
 // ƒrƒ‹ƒh

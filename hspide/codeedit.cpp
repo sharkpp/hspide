@@ -179,6 +179,7 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	, m_lineNumberBackgroundColor(QColor(255, 255, 255, 255))
 	, m_lineNumberTextColor(QColor(255, 0, 0, 0))
 	, m_visibleLineNumber(true)
+	, m_lineIconSize(16, 16)
 {
 	m_lineNumberWidget  = new CLineNumberArea(this);
 	m_highlighter = new CHighlighter(document());
@@ -187,6 +188,8 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
 
 	updateLineNumberWidth(0);
+	
+setLineIcon(0, QIcon(":/images/tango/small/dialog-error.png"));
 }
 
 // シンボル一覧を指定
@@ -197,22 +200,24 @@ void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
 
 int CCodeEdit::lineNumberWidth()
 {
-	if( !m_visibleLineNumber )
+	int drawWidth = 0;
+
+	drawWidth += m_lineIconSize.width();
+
+	if( m_visibleLineNumber )
 	{
-		return 0;
+		int digits = 1;
+		for(int n = qMax(10, blockCount());
+			10 <= n; digits++)
+		{
+			n /= 10;
+		}
+
+		drawWidth += 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+		drawWidth += fontMetrics().width(QLatin1Char('#'));
 	}
 
-	int digits = 1;
-	for(int n = qMax(10, blockCount());
-		10 <= n; digits++)
-	{
-		n /= 10;
-	}
-
-	int space = 3 + fontMetrics().width(QLatin1Char('9')) * digits;
-	    space+= fontMetrics().width(QLatin1Char('#'));
-
-	return space;
+	return drawWidth;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -252,6 +257,56 @@ inline void CCodeEdit::setLineNumberVisible(bool visible)
 		} else {
 			m_lineNumberWidget->hide();
 		}
+	}
+}
+
+void CCodeEdit::setLineIcon(int lineNo, const QIcon & icon)
+{
+	m_lineIconMap[lineNo] = icon;
+}
+
+const QIcon & CCodeEdit::lineIcon(int lineNo)
+{
+	QMap<int, QIcon>::iterator
+		ite = m_lineIconMap.find(lineNo);
+	if( m_lineIconMap.end() != ite )
+	{
+		return ite.value();
+	}
+	return QIcon();
+}
+
+void CCodeEdit::clearLineIcon()
+{
+	m_lineIconMap.clear();
+}
+
+void CCodeEdit::clearLineIcon(const QIcon & icon)
+{
+	qint64 iconHash = icon.cacheKey();
+
+	for(QMap<int, QIcon>::iterator
+			ite = m_lineIconMap.begin();
+		ite != m_lineIconMap.end(); )
+	{
+		if( iconHash == ite.value().cacheKey() )
+		{
+			m_lineIconMap.erase(ite++);
+		}
+		else
+		{
+			++ite;
+		}
+	}
+}
+
+void CCodeEdit::clearLineIcon(int lineNo)
+{
+	QMap<int, QIcon>::iterator
+		ite = m_lineIconMap.find(lineNo);
+	if( m_lineIconMap.end() != ite )
+	{
+		m_lineIconMap.erase(ite);
 	}
 }
 
@@ -296,12 +351,24 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 	int y = event->rect().y();
 	int lineNumWidth = lineNumberWidth();
 	int lineNumSpace = fontMetrics().width(QLatin1Char('#')) / 2;
-	for(int lineNum = block.blockNumber();
+	for(int lineNo = block.blockNumber();
 		block.isValid() && y <= event->rect().bottom();
-		lineNum++, block = block.next())
+		lineNo++, block = block.next())
 	{
-		y = (int)blockBoundingGeometry(block).translated(contentOffset()).top();
-		painter.drawText(0, y, lineNumWidth - lineNumSpace, lineHeight, Qt::AlignRight, QString::number(lineNum + 1));
+		// 行番号を描画
+		QRectF rect = blockBoundingGeometry(block).translated(contentOffset());
+		y = (int)rect.top();
+		painter.drawText(0, y,
+		                 lineNumWidth - lineNumSpace, lineHeight,
+		                 Qt::AlignRight, QString::number(lineNo + 1));
+		// アイコンを描画
+		QMap<int, QIcon>::iterator
+			ite = m_lineIconMap.find(lineNo);
+		if( m_lineIconMap.end() != ite )
+		{
+			QPixmap pixmap = ite.value().pixmap(m_lineIconSize, QIcon::Normal);
+			painter.drawPixmap(QPoint(0, y + int(rect.height() - m_lineIconSize.height())), pixmap);
+		}
 	}
 }
 

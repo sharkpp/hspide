@@ -22,8 +22,14 @@ protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
 
-public slots:
-
 private:
+
+protected slots:
+
+	void doubleClickedList(const QModelIndex & inde);
+
+signals:
+
+//	void oepnItem(CWorkSpaceItem * item);
 
 };

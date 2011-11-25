@@ -37,10 +37,12 @@
 	<file>images/tango/small/edit-find.png</file>
 	<file>images/tango/small/edit-find-replace.png</file>
 	<file>images/tango/small/system-log-out.png</file>
-	<file>images/icons/middle/document-save-all.png</file>
-	<file>images/icons/small/document-save-all.png</file>
 	<file>images/tango/small/folder.png</file>
 	<file>images/tango/small/text-x-generic.png</file>
+	<file>images/tango/small/dialog-error.png</file>
+	<file>images/icons/middle/document-save-all.png</file>
+	<file>images/icons/small/document-save-all.png</file>
+	<file>images/icons/small/software-update-urgent-yellow.png</file>
 	<file>images/button-tab-close.png</file>
 	<file>images/button-tab-list.png</file>
 </qresource>

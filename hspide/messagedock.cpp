@@ -15,6 +15,7 @@ CMessageDock::CMessageDock(QWidget *parent)
 	model->setHeaderData(1, Qt::Horizontal, tr("Description"));
 	model->setHeaderData(2, Qt::Horizontal, tr("File"));
 	model->setHeaderData(3, Qt::Horizontal, tr("Line"));
+	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 }
 
 void CMessageDock::resizeEvent(QResizeEvent * event)
@@ -41,5 +42,9 @@ void CMessageDock::addMessage(const QString & fileName, int lineNum, const QStri
     model->setData(model->index(row, 1), description);
     model->setData(model->index(row, 2), fileName);
     model->setData(model->index(row, 3), QString("%1").arg(lineNum));
-//	listWidget->update(item->index());
+}
+
+void CMessageDock::doubleClickedList(const QModelIndex & index)
+{
+	QStandardItem *item = static_cast<QStandardItem*>(index.internalPointer());
 }
