@@ -366,8 +366,8 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 			ite = m_lineIconMap.find(lineNo);
 		if( m_lineIconMap.end() != ite )
 		{
-			QPixmap pixmap = ite.value().pixmap(m_lineIconSize, QIcon::Normal);
-			painter.drawPixmap(QPoint(0, y + int(rect.height() - m_lineIconSize.height())), pixmap);
+			QPixmap pixmap = ite.value().pixmap(QSize(m_lineIconSize.width() - 2, m_lineIconSize.height() - 2), QIcon::Normal);
+			painter.drawPixmap(QPoint(1, y + int(rect.height() - m_lineIconSize.height()) + 1), pixmap);
 		}
 	}
 }
