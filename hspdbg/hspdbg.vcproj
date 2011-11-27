@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ipc_qt_client_win.hpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

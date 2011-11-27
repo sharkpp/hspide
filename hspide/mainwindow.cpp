@@ -28,6 +28,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setAcceptDrops(true);
 	resize(800, 600);
 
+	m_server = new QLocalServer(this);
+    if( !m_server->listen("test@hspide") ) {
+	}
+    connect(m_server, SIGNAL(newConnection()), this, SLOT(attachDebugger()));
+
 	m_compiler = new CCompiler(this);
 
 	m_workSpace = new CWorkSpaceModel(this);
@@ -820,4 +825,20 @@ void MainWindow::currentTabChanged(int index)
 	m_lastActivatedDocument = document;
 
 	onDocumentChanged();
+}
+
+void MainWindow::attachDebugger()
+{
+	QLocalSocket *clientConnection = m_server->nextPendingConnection();
+	connect(clientConnection, SIGNAL(disconnected()),
+			clientConnection, SLOT(deleteLater()));
+	connect(clientConnection, SIGNAL(readyRead()),
+			this, SLOT(recvDebugger()));
+	m_client = clientConnection;
+}
+
+void MainWindow::recvDebugger()
+{
+	QByteArray data = m_client->readAll();
+	qDebug() << data;
 }

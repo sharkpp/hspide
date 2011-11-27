@@ -6,7 +6,7 @@ TEMPLATE = vcapp
 TARGET = 
 DEPENDPATH += . debug release i18n
 INCLUDEPATH += .
-QT += xml
+QT += xml network
 
 # Input
 HEADERS += outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h messagedock.h \

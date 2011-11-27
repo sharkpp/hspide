@@ -68,7 +68,8 @@ void CCompiler::updateCompilerPath()
 	}
 
 	// ˆ—Š®—¹‚Ì’Ê’m‚ğ“o˜^
-	connect(m_listingSymbolsProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(listedSymbolsFinished(int,QProcess::ExitStatus)));
+	connect(m_listingSymbolsProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+			this, SLOT(listedSymbolsFinished(int,QProcess::ExitStatus)));
 }
 
 // ƒVƒ“ƒ{ƒ‹ˆê——‚ğæ“¾
