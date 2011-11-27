@@ -4,7 +4,7 @@
 
 TEMPLATE = vcapp
 TARGET = 
-DEPENDPATH += . debug i18n
+DEPENDPATH += . debug release i18n
 INCLUDEPATH += .
 QT += xml
 

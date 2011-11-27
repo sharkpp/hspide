@@ -3,12 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hspide", "hspide\hspide.vcproj", "{56D696A1-E870-3F2B-B635-7E96C154EAE4}"
 	ProjectSection(ProjectDependencies) = postProject
+		{3C78C82C-3A56-4911-8BB0-B432923FA0F8} = {3C78C82C-3A56-4911-8BB0-B432923FA0F8}
+		{DE542236-99CC-489D-B024-8622CF07DDA2} = {DE542236-99CC-489D-B024-8622CF07DDA2}
 		{D39E1373-2572-4717-BCF5-DF5C9F64256D} = {D39E1373-2572-4717-BCF5-DF5C9F64256D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qt", "qt.vcproj", "{D39E1373-2572-4717-BCF5-DF5C9F64256D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hspcmp", "hspcmp\hspcmp.vcproj", "{3C78C82C-3A56-4911-8BB0-B432923FA0F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE542236-99CC-489D-B024-8622CF07DDA2} = {DE542236-99CC-489D-B024-8622CF07DDA2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hspdbg", "hspdbg\hspdbg.vcproj", "{DE542236-99CC-489D-B024-8622CF07DDA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +40,12 @@ Global
 		{3C78C82C-3A56-4911-8BB0-B432923FA0F8}.Qt|Win32.ActiveCfg = Debug|Win32
 		{3C78C82C-3A56-4911-8BB0-B432923FA0F8}.Release|Win32.ActiveCfg = Release|Win32
 		{3C78C82C-3A56-4911-8BB0-B432923FA0F8}.Release|Win32.Build.0 = Release|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Debug|Win32.Build.0 = Debug|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Qt|Win32.ActiveCfg = Release|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Qt|Win32.Build.0 = Release|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Release|Win32.ActiveCfg = Release|Win32
+		{DE542236-99CC-489D-B024-8622CF07DDA2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
