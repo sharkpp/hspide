@@ -59,9 +59,6 @@ class MainWindow : public QMainWindow
 
 	CCompiler* m_compiler;
 
-	QLocalServer* m_server;
-	QLocalSocket* m_client;
-
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	virtual ~MainWindow();
@@ -78,8 +75,6 @@ public slots:
 	void buildStart(const QString & filePath);
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
-	void attachDebugger();
-	void recvDebugger();
 	void onDocumentChanged();
 	void currentTabChanged(int index);
 	void onNewFile();

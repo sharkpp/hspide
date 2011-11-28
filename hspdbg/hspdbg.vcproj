@@ -249,6 +249,22 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<Filter
+			Name="hspsdk"
+			>
+			<File
+				RelativePath=".\hspsdk\hsp3debug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hspsdk\hsp3struct.h"
+				>
+			</File>
+			<File
+				RelativePath=".\hspsdk\hspvar_core.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

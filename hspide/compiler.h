@@ -1,7 +1,9 @@
 #include <QObject>
 #include <QString>
-#include <QVector>
 #include <QProcess>
+#include <QVector>
+#include <QMap>
+#include <QLocalServer>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -11,6 +13,7 @@
 #define INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29
 
 class CWorkSpaceItem;
+class CDebugger;
 
 class CCompiler
 	: public QObject
@@ -23,10 +26,13 @@ class CCompiler
 
 	QString m_buildAfterRunArgs;		// ビルド後に実行を行うか？
 
-	QProcess *m_compilerProcess;	// コンパイラプロセス
 	QProcess *m_listingSymbolsProcess;	// シンボル取得プロセス
 
 	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
+
+	QMap<quint64, CDebugger*> m_debugger;
+
+	QLocalServer* m_server;
 
 public:
 
@@ -70,11 +76,12 @@ public slots:
 	// シンボルの取得完了
 	void listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-	// プロジェクトのビルド完了
+	void buildError(QProcess::ProcessError);
 	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-	// ビルド中の出力を取得
 	void buildReadOutput();
+
+	void attachDebugger();
+	void recvCommand();
 
 signals:
 

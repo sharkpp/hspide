@@ -38,6 +38,7 @@ struct option {
 	const char * hsp_path;
 	const char * work_path;
 	const char * cmdline;
+	const char * attach;
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
@@ -47,6 +48,7 @@ struct option {
 		, symbol_put(false)
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 		, cmdline(NULL)
+		, attach(NULL)
 	{}
 #ifdef _DEBUG
 	void dump() {
@@ -180,6 +182,9 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "-c") || !strcmp(argv[i], "--cmdline") ) {
 				// 実行時の引数指定
 				option.cmdline = argv[++i];
+			} else if(  !strcmp(argv[i], "--attach") ) {
+				// デバッガ用
+				option.attach = argv[++i];
 			} else if(  !strcmp(argv[i], "-v") || !strcmp(argv[i], "--version") ) {
 				// バージョンの表示
 				option.version = true;
@@ -317,6 +322,14 @@ int main(int argc, char * argv[])
 	std::string runtime;
 	std::string exename;
 	std::string tmp2;
+	
+	if( option.attach ) {
+		static const char KEY[] = "hspide#attach=";
+		static const size_t KEY_LEN = sizeof(KEY) - 1;
+		tmp.assign(KEY, KEY + KEY_LEN);
+		tmp.insert(tmp.end(), option.attach, option.attach + strlen(option.attach));
+		_putenv(&tmp[0]);
+	}
 
 	if( option.version ) {
 		tmp.resize(1024*1024);
