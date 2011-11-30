@@ -137,6 +137,8 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	}
 	arguments << filename;
 
+qDebug() << (quint64)debugger;
+
 	if( !debugger->execCompiler(program, arguments, workDir) )
 	{
 		emit buildFinished(false);
@@ -265,19 +267,27 @@ void CCompiler::recvCommand()
 	}
 
 	QByteArray data = clientConnection->readAll();
-	QDataStream in(&data, QIODevice::ReadOnly);
+	CDebuggerCommand cmd(data.data(), data.size());
 	quint64 id;
-	quint8  cmd;
-	in >> id >> cmd;
+	quint8  cmd_id;
+	quint32 length;
 
-	QMap<quint64,CDebugger*>::iterator
-		ite = m_debugger.find(id);
-	if( ite != m_debugger.end() )
+	CDebuggerCommand::scoped_ptr ptr = cmd.read(id, cmd_id, length);
+	if( ptr.valid() )
 	{
-		ite.value()->setClientConnection(clientConnection);
-		disconnect(clientConnection, SIGNAL(readyRead()));
-	}
+		ptr.reset();
 
-//	qDebug() << data;
+		qDebug() << id << cmd_id;
+
+		// それぞれのデバッガと関連付け
+		QMap<quint64,CDebugger*>::iterator
+			ite = m_debugger.find(id);
+		if( ite != m_debugger.end() )
+		{
+			disconnect(clientConnection, SIGNAL(readyRead()));
+			ite.value()->setClientConnection(clientConnection);
+			ite.value()->setCommandQueue(cmd);
+		}
+	}
 }
 

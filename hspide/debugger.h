@@ -2,6 +2,7 @@
 #include <QString>
 #include <QProcess>
 #include <QLocalSocket>
+#include "debuggercommand.hpp"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -18,6 +19,8 @@ class CDebugger
 
 	bool			m_waitAttach;
 
+	CDebuggerCommand m_cmdQueue;
+
 public:
 
 	CDebugger(QObject *parent = 0);
@@ -26,6 +29,8 @@ public:
 
 	void setClientConnection(QLocalSocket* client);
 
+	void setCommandQueue(CDebuggerCommand& cmdQueue);
+
 	QProcess* compilerProcess();
 
 	void standbyAttach();
@@ -33,6 +38,7 @@ public:
 
 protected:
 
+	void parseCommand();
 
 public slots:
 

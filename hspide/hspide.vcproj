@@ -230,6 +230,8 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="debuggercommand.hpp" />
+			<File
 				RelativePath="debuggerdock.h">
 				<FileConfiguration
 					Name="Debug|Win32">

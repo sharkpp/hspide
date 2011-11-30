@@ -11,7 +11,7 @@ QT += xml network
 # Input
 HEADERS += outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h messagedock.h \
            documentpane.h mainwindow.h workspaceitem.h workspacemodel.h compiler.h debugger.h \
-           codeedit.h newfiledialog.h
+           codeedit.h newfiledialog.h debuggercommand.hpp
 SOURCES += main.cpp \
            outputdock.cpp debuggerdock.cpp projectdock.cpp searchdock.cpp symboldock.cpp messagedock.cpp \
            documentpane.cpp mainwindow.cpp workspaceitem.cpp workspacemodel.cpp compiler.cpp debugger.cpp \
