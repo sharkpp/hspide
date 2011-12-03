@@ -14,6 +14,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
+MessageBox(NULL,"","",0);
 		g_dbgId = _strtoui64(getenv("hspide#attach"), NULL, 16);
 		g_dbgSocket.connectToServer("test@hspide");
 		break;
