@@ -8,6 +8,15 @@ DEPENDPATH += . debug release i18n
 INCLUDEPATH += .
 QT += xml network
 
+
+# ランタイムライブラリを静的リンク 
+QMAKE_CXXFLAGS_RELEASE-= -MD
+QMAKE_CXXFLAGS_DEBUG  -= -MDd
+QMAKE_CXXFLAGS_RELEASE+= -MT
+QMAKE_CXXFLAGS_DEBUG  += -MTd
+QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:"msvcrt.lib"
+QMAKE_LFLAGS_DEBUG   += /NODEFAULTLIB:"msvcrtd.lib"
+
 # Input
 HEADERS += outputdock.h debuggerdock.h projectdock.h searchdock.h symboldock.h messagedock.h \
            documentpane.h mainwindow.h workspaceitem.h workspacemodel.h compiler.h debugger.h \

@@ -9,11 +9,17 @@ INCLUDEPATH += .
 QT += network
 QT -= gui
 CONFIG -= embed_manifest_dll
-CONFIG += dll static
+CONFIG += dll thread
 DEFINES += HSPDBG_EXPORTS
 QMAKE_POST_LINK += copy $(TargetPath) $(ProjectDir)\..\\$(ConfigurationName)\hsp3debug.dll
 
-# 文字コードはMBCSを使う
+# ランタイムライブラリを静的リンク 
+QMAKE_CXXFLAGS_RELEASE-= -MD
+QMAKE_CXXFLAGS_DEBUG  -= -MDd
+QMAKE_CXXFLAGS_RELEASE+= -MT
+QMAKE_CXXFLAGS_DEBUG  += -MTd
+
+# 文字コードはMBCSを使う 
 CharacterSet=2
 DEFINES -= UNICODE
 

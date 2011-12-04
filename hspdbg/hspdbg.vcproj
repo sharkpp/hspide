@@ -19,7 +19,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="."
 			IntermediateDirectory="debug\"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
@@ -47,10 +47,10 @@
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				Optimization="4"
 				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;debug&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
+				PreprocessorDefinitions="_WINDOWS,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				BufferSecurityCheck="false"
 				TreatWChar_tAsBuiltInType="false"
 				RuntimeTypeInfo="true"
@@ -66,19 +66,28 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,_DEBUG"
-				ResourceOutputFileName="debug\/$(InputName).res"
+				PreprocessorDefinitions="_WINDOWS,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="debug\hspdbg.lib"
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="c:\Qt\4.7.3\lib\QtNetworkd.lib c:\Qt\4.7.3\lib\QtCored.lib ws2_32.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib"
+				OutputFile="debug\hspdbg.dll"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile=""
+				SubSystem="0"
+				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -90,6 +99,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 				Description="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
 				CommandLine="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
@@ -99,7 +111,7 @@
 			Name="Release|Win32"
 			OutputDirectory="."
 			IntermediateDirectory="release\"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
@@ -127,10 +139,10 @@
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				Optimization="2"
 				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;release&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,NDEBUG"
+				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,NDEBUG"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				TreatWChar_tAsBuiltInType="false"
 				RuntimeTypeInfo="true"
@@ -146,19 +158,29 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
-				ResourceOutputFileName="release\/$(InputName).res"
+				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="release\hspdbg.lib"
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="true"
+				AdditionalDependencies="c:\Qt\4.7.3\lib\QtNetwork.lib c:\Qt\4.7.3\lib\QtCore.lib ws2_32.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib"
+				OutputFile="release\hspdbg.dll"
+				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
+				GenerateDebugInformation="false"
+				ProgramDatabaseFile=""
+				SubSystem="0"
+				LinkTimeCodeGeneration="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -168,6 +190,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
