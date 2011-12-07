@@ -14,10 +14,13 @@ DEFINES += HSPDBG_EXPORTS
 QMAKE_POST_LINK += copy $(TargetPath) $(ProjectDir)\..\\$(ConfigurationName)\hsp3debug.dll
 
 # ランタイムライブラリを静的リンク 
-QMAKE_CXXFLAGS_RELEASE-= -MD
+# Qtライブラリ側も同じオプションでビルドされていること！
 QMAKE_CXXFLAGS_DEBUG  -= -MDd
-QMAKE_CXXFLAGS_RELEASE+= -MT
 QMAKE_CXXFLAGS_DEBUG  += -MTd
+QMAKE_CXXFLAGS_RELEASE-= -MD
+QMAKE_CXXFLAGS_RELEASE+= -MT
+QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:"msvcrt.lib"
+QMAKE_LFLAGS_DEBUG   += /NODEFAULTLIB:"msvcrtd.lib"
 
 # 文字コードはMBCSを使う 
 CharacterSet=2
