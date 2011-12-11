@@ -32,8 +32,10 @@ QMAKE_LFLAGS_DEBUG   += /NODEFAULTLIB:"msvcrtd.lib"
 HEADERS += hspdbg.h \
            stdafx.h \
            targetver.h \
+           dbgmain.h \
            hspsdk/hsp3debug.h \
            hspsdk/hsp3struct.h \
            hspsdk/hspvar_core.h \
            ../hspide/debuggercommand.hpp
-SOURCES += dllmain.cpp hspdbg.cpp stdafx.cpp
+SOURCES += dllmain.cpp hspdbg.cpp stdafx.cpp \
+           dbgmain.cpp
