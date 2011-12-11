@@ -13,8 +13,6 @@ class CDebugger
 {
 	Q_OBJECT
 
-	QProcess*		m_compilerProcess;	// コンパイラプロセス
-
 	QLocalSocket*	m_clientConnection;
 
 	bool			m_waitAttach;
@@ -23,18 +21,7 @@ class CDebugger
 
 public:
 
-	CDebugger(QObject *parent = 0);
-
-	bool execCompiler(const QString & program, const QStringList & arguments, const QString & workDir);
-
-	void setClientConnection(QLocalSocket* client);
-
-	void setCommandQueue(CDebuggerCommand& cmdQueue);
-
-	QProcess* compilerProcess();
-
-	void standbyAttach();
-	bool waitAttach();
+	CDebugger(QObject *parent, QLocalSocket* socket);
 
 protected:
 
@@ -42,15 +29,9 @@ protected:
 
 public slots:
 
-	void compileError(QProcess::ProcessError);
-	void compileFinished(int exitCode, QProcess::ExitStatus exitStatus);
-	void compileReadOutput();
 	void recvCommand();
 
 signals:
 
-	void buildError(QProcess::ProcessError);
-	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
-	void buildReadOutput();
 
 };

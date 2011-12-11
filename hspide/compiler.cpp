@@ -113,9 +113,6 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	// シグナル発報
 	emit buildStart(filename);
 
-	CDebugger* debugger = new CDebugger(this);
-	m_debugger[(quint64)debugger] = debugger;
-
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
@@ -132,32 +129,27 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	}
 	if( buildAfterRun && debugMode ) { // デバッガでアタッチを待機
 		arguments << "--attach"
-		          << QString("%1").arg((quint64)debugger, 0, 16);
-		debugger->standbyAttach();
+		          << QString("%1").arg((quint64)0, 0, 16);
 	}
 	arguments << filename;
 
-qDebug() << (quint64)debugger;
+	QProcess* proccess = new QProcess(this);
 
-	if( !debugger->execCompiler(program, arguments, workDir) )
-	{
+	// 処理完了時の通知を登録
+	connect(proccess, SIGNAL(error(QProcess::ProcessError)),      this, SLOT(buildError(QProcess::ProcessError)));
+	connect(proccess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
+	connect(proccess, SIGNAL(readyReadStandardOutput()),          this, SLOT(buildReadOutput()));
+
+	proccess->setWorkingDirectory(workDir);
+	proccess->start(program, arguments);
+
+	if( !proccess->waitForStarted() ) {
+		delete proccess;
 		emit buildFinished(false);
 		return false;
 	}
 
-//	QProcess* compilerProcess = debugger->compilerProcess();
-
-	// 処理完了時の通知を登録
-	connect(debugger, SIGNAL(buildError(QProcess::ProcessError)),      this, SLOT(buildError(QProcess::ProcessError)));
-	connect(debugger, SIGNAL(buildFinished(int,QProcess::ExitStatus)), this, SLOT(buildFinished(int,QProcess::ExitStatus)));
-	connect(debugger, SIGNAL(buildReadOutput()),                       this, SLOT(buildReadOutput()));
-
-//	if( !compilerProcess->waitForStarted() ) {
-//		emit buildFinished(false);
-//		delete m_compilerProcess;
-//		m_compilerProcess = NULL;
-//		return false;
-//	}
+	m_compilerProcesses.append(proccess);
 
 	return true;
 }
@@ -214,14 +206,10 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 // プロジェクトのビルド失敗
 void CCompiler::buildError(QProcess::ProcessError error)
 {
-	CDebugger* debugger = qobject_cast<CDebugger*>(sender());
-	QMap<quint64,CDebugger*>::iterator
-		ite = m_debugger.find((quint64)debugger);
-	if( ite != m_debugger.end() )
-	{
-		delete ite.value();
-		m_debugger.erase(ite);
-	}
+	// ビルド処理リストから取り除く
+	QProcess* compiler = qobject_cast<QProcess*>(sender());
+	m_compilerProcesses.removeAll(compiler);
+	delete compiler;
 }
 
 // プロジェクトのビルド完了
@@ -230,64 +218,27 @@ void CCompiler::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
 	// シグナル発報
 	emit buildFinished(QProcess::NormalExit == exitStatus);
 
-	CDebugger* debugger = qobject_cast<CDebugger*>(sender());
-	QMap<quint64,CDebugger*>::iterator
-		ite = m_debugger.find((quint64)debugger);
-	if( ite != m_debugger.end() )
-	{
-		if( !ite.value()->waitAttach() )
-		{
-			delete ite.value();
-			m_debugger.erase(ite);
-		}
-	}
+	// ビルド処理リストから取り除く
+	QProcess* compiler = qobject_cast<QProcess*>(sender());
+	m_compilerProcesses.removeAll(compiler);
+	delete compiler;
 }
 
 // ビルド中の出力を取得
 void CCompiler::buildReadOutput()
 {
-	CDebugger* debugger = qobject_cast<CDebugger*>(sender());
-	QString tmp(debugger->compilerProcess()->readAllStandardOutput());
+	QProcess* compiler = qobject_cast<QProcess*>(sender());
+	QString tmp(compiler->readAllStandardOutput());
 	emit buildOutput(tmp);
 }
 
 void CCompiler::attachDebugger()
 {
 	QLocalSocket* clientConnection = m_server->nextPendingConnection();
+
+	// 切断されたら勝手に削除
 	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
-	connect(clientConnection, SIGNAL(readyRead()),    this,             SLOT(recvCommand()));
+
+	// デバッガと関連付け
+	CDebugger* debugger = new CDebugger(this, clientConnection);
 }
-
-void CCompiler::recvCommand()
-{
-	QLocalSocket* clientConnection = qobject_cast<QLocalSocket*>(sender());
-	if( !clientConnection )
-	{
-		return;
-	}
-
-	QByteArray data = clientConnection->readAll();
-	CDebuggerCommand cmd(data.data(), data.size());
-	quint64 id;
-	quint8  cmd_id;
-	quint32 length;
-
-	CDebuggerCommand::scoped_ptr ptr = cmd.read(id, cmd_id, length);
-	if( ptr.valid() )
-	{
-		ptr.detach();
-
-		qDebug()<< (void*)clientConnection << id << cmd_id;
-
-		// それぞれのデバッガと関連付け
-		QMap<quint64,CDebugger*>::iterator
-			ite = m_debugger.find(id);
-		if( ite != m_debugger.end() )
-		{
-			disconnect(clientConnection, SIGNAL(readyRead()));
-			ite.value()->setClientConnection(clientConnection);
-			ite.value()->setCommandQueue(cmd);
-		}
-	}
-}
-

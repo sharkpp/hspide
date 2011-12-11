@@ -31,6 +31,7 @@ class CCompiler
 	QVector<QStringList> m_highlightSymbols;	// Žæ“¾‚µ‚½ƒVƒ“ƒ{ƒ‹‚Ìˆê——
 
 	QMap<quint64, CDebugger*> m_debugger;
+	QList<QProcess*> m_compilerProcesses;
 
 	QLocalServer* m_server;
 
@@ -81,7 +82,6 @@ public slots:
 	void buildReadOutput();
 
 	void attachDebugger();
-	void recvCommand();
 
 signals:
 
