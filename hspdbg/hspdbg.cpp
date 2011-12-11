@@ -30,10 +30,15 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 
 	if( 1 == p2 )
 	{
-	//	long long id = _strtoui64(getenv("hspide#attach"), NULL, 16);
 		HSPCTX* ctx = (HSPCTX*)p1->hspctx;
 		g_app->putLog(ctx->stmp, strlen(ctx->stmp));
 	}
+
+	p1->dbg_curinf();
+
+	char tmp[256];
+	sprintf(tmp,"L:%d",p1->line);
+	g_app->putLog(tmp, strlen(tmp));
 
 //	QtLocalSocket sock;
 //	g_sock.connectToServer("test@hspide");
@@ -41,6 +46,7 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 //	g_sock.writeData("/", 1);
 //	g_sock.writeData(getenv("hspide#attach"), strlen(getenv("hspide#attach")));
 //	g_sock.writeData("\n", 1);
+
 	return FALSE;
 }
 

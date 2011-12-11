@@ -20,7 +20,7 @@ public:
 		scoped_ptr(const scoped_ptr & lhs);
 		scoped_ptr & operator=(const scoped_ptr & lhs);
 		~scoped_ptr();
-		void reset();
+		void detach();
 		const unsigned char* data() const;
 		size_t size() const;
 		bool valid() const;
@@ -96,9 +96,11 @@ CDebuggerCommand::scoped_ptr::~scoped_ptr()
 }
 
 inline
-void CDebuggerCommand::scoped_ptr::reset()
+void CDebuggerCommand::scoped_ptr::detach()
 {
-	m_data = NULL;
+	if( m_data ) {
+		m_parent->unlock(m_data, m_size);
+	}
 }
 
 inline

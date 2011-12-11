@@ -275,9 +275,9 @@ void CCompiler::recvCommand()
 	CDebuggerCommand::scoped_ptr ptr = cmd.read(id, cmd_id, length);
 	if( ptr.valid() )
 	{
-		ptr.reset();
+		ptr.detach();
 
-		qDebug() << id << cmd_id;
+		qDebug()<< (void*)clientConnection << id << cmd_id;
 
 		// それぞれのデバッガと関連付け
 		QMap<quint64,CDebugger*>::iterator

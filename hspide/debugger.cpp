@@ -78,10 +78,10 @@ void CDebugger::parseCommand()
 		case 0x01: {
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
-			qDebug() <<"CDebugger::recvCommand"<< id << cmd_id << length << s;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
 			break; }
 		default:
-			qDebug() <<"CDebugger::recvCommand"<< id << cmd_id;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;
 		}
 	}
 }
