@@ -206,10 +206,6 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 // プロジェクトのビルド失敗
 void CCompiler::buildError(QProcess::ProcessError error)
 {
-	// ビルド処理リストから取り除く
-	QProcess* compiler = qobject_cast<QProcess*>(sender());
-	m_compilerProcesses.removeAll(compiler);
-	delete compiler;
 }
 
 // プロジェクトのビルド完了
