@@ -32,20 +32,20 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 	//			p2: 0=stop event
 	//			    1=send message
 
-	BYTE   data[1024];
-	size_t len = 0;
+	HSPCTX* ctx = (HSPCTX*)p1->hspctx;
 
 	if( 1 == p2 )
 	{
-		HSPCTX* ctx = (HSPCTX*)p1->hspctx;
 		g_app->putLog(ctx->stmp, strlen(ctx->stmp));
 	}
 
 	p1->dbg_curinf();
 
 	char tmp[256];
-	sprintf(tmp,"L:%d",p1->line);
+	sprintf(tmp,"%s(%d) p2=%d runmode=%d",p1->fname?p1->fname:"???",p1->line,p2,ctx->runmode);
 	g_app->putLog(tmp, strlen(tmp));
+
+	p1->dbg_set( HSPDEBUG_STEPIN );
 
 //	QtLocalSocket sock;
 //	g_sock.connectToServer("test@hspide");
@@ -68,7 +68,7 @@ void hook_code_next()
 {
 	g_hsp3dbg->dbg_curinf();
 
-	char tmp[256];
+	static char tmp[256];
 	sprintf(tmp,"hook L:%d",g_hsp3dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
@@ -84,7 +84,7 @@ EXPORT void WINAPI hspdbg_init(HSP3TYPEINFO * info)
 	//info->cmdfunc = cmdfunc;		// ŽÀsŠÖ”(cmdfunc)‚Ì“o˜^
 	//info->reffunc = reffunc;		// ŽQÆŠÖ”(reffunc)‚Ì“o˜^
 	//info->termfunc = termfunc;		// I—¹ŠÖ”(termfunc)‚Ì“o˜^
-
+return;
 	BYTE* code_next = (BYTE*)info->hspexinfo->HspFunc_prm_next;
 
 	DWORD op;
