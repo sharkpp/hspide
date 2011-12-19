@@ -32,22 +32,18 @@ void CDebugger::parseCommand()
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
+CDebuggerCommand cmd;
+cmd.write(id, 0x02, "aaa", 3);
+m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 			break; }
 		default:
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;
 		}
-CDebuggerCommand cmd;
-cmd.write(id, 0x02, "aaa", 3);
-m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 	}
 }
 
 void CDebugger::recvCommand()
 {
-CDebuggerCommand cmd;
-cmd.write(0, 0x02, "aaa", 3);
-(qobject_cast<QLocalSocket*>(sender()))->write(QByteArray((char*)cmd.data(), cmd.size()));
-
 	QByteArray data = m_clientConnection->readAll();
 	m_cmdQueue.push(data.data(), data.size());
 	parseCommand();

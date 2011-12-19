@@ -1,39 +1,77 @@
+#include <process.h>
 #include "dbgmain.h"
+
+extern CDbgMain* g_app;
 
 // dummy argument for QCoreApplication
 static int argc_ = 1;
 static char *argv_[] = {""};
 
+HANDLE	CDbgMain::m_handle = NULL;
+HANDLE	CDbgMain::m_waitThread = NULL;
+
 CDbgMain::CDbgMain()
-	: QThread()
-	, m_app(NULL)
-	, m_socket(NULL)
+	: QCoreApplication(argc_, argv_)
+	, m_socket(new QLocalSocket(this))
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
 {
-//	connect(m_thread, SIGNAL(finished()), m_thread, SLOT(quit()));
-	start();
+	// 受信通知などのシグナルと接続
+	connect(m_socket, SIGNAL(connected()),  this, SLOT(connected()));
+	connect(m_socket, SIGNAL(readyRead()),  this, SLOT(recvCommand()));
+	connect(m_socket, SIGNAL(disconnect()), this, SLOT(deleteLater()));
+
+	// デバッガサーバーに接続
+	m_socket->connectToServer("test@hspide");
+
+	// 接続通知送信
+	connectToDebugger();
 }
 
 CDbgMain::~CDbgMain()
 {
 	m_socket->disconnectFromServer();
-	m_app->quit();
 }
 
-void CDbgMain::run()
+void CDbgMain::create()
 {
-	QCoreApplication app(argc_, argv_);
-	m_app = &app;
+	// 通知イベント初期化
+	m_waitThread = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+	// スレッド開始
+	m_handle
+		= (HANDLE)::_beginthreadex(NULL, 0, CDbgMain::runStatic,
+		                           (void*)&g_app, 0, NULL);
+	// 初期化完了まで待機
+	::WaitForSingleObject(m_waitThread, INFINITE);
+}
 
-	m_socket = new QLocalSocket(&app);
+void CDbgMain::destroy()
+{
+	// 終了要求
+	g_app->quit();
+	// 終了待機
+	::WaitForSingleObject(m_waitThread, INFINITE);
+	// リソース解放
+	::CloseHandle(m_waitThread);
+	::CloseHandle(m_handle);
+}
 
-	connect(m_socket, SIGNAL(connected()), this, SLOT(connected()));
-	connect(m_socket, SIGNAL(readyRead()), this, SLOT(recvCommand()));
-	connect(m_socket, SIGNAL(disconnect()), this, SLOT(deleteLater()));
+unsigned CDbgMain::runStatic(void* p)
+{
+	CDbgMain* app
+		= new CDbgMain();
+	*static_cast<CDbgMain**>(p) = app;
 
-	m_socket->connectToServer("test@hspide");
+	// 初期化完了を通知
+	::SetEvent(m_waitThread);
 
-	app.exec();
+	app->exec();
+
+	delete app;
+
+	// 終了完了を通知
+	::SetEvent(m_waitThread);
+
+	return 0;
 }
 
 void CDbgMain::connectToDebugger()
