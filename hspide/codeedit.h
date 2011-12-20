@@ -70,6 +70,10 @@ protected:
 	void mouseReleaseLineNumEvent(QMouseEvent * event);
 	void mouseMoveLineNumEvent(QMouseEvent * event);
 
+signals:
+
+	void pressIconArea(int lineNo);
+
 public slots:
 
 	void updateLineNumberWidth(int newBlockCount);

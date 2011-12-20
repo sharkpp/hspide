@@ -44,6 +44,7 @@
 	<file>images/icons/middle/document-save-all.png</file>
 	<file>images/icons/small/document-save-all.png</file>
 	<file>images/icons/small/software-update-urgent-yellow.png</file>
+	<file>images/icons/small/media-record-blue.png</file>
 	<file>images/button-tab-close.png</file>
 	<file>images/button-tab-list.png</file>
 </qresource>

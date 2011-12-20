@@ -198,8 +198,6 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
 
 	updateLineNumberWidth(0);
-	
-setLineIcon(0, QIcon(":/images/tango/small/dialog-error.png"));
 }
 
 // シンボル一覧を指定
@@ -273,6 +271,7 @@ inline void CCodeEdit::setLineNumberVisible(bool visible)
 void CCodeEdit::setLineIcon(int lineNo, const QIcon & icon)
 {
 	m_lineIconMap[lineNo] = icon;
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
 const QIcon & CCodeEdit::lineIcon(int lineNo)
@@ -289,6 +288,7 @@ const QIcon & CCodeEdit::lineIcon(int lineNo)
 void CCodeEdit::clearLineIcon()
 {
 	m_lineIconMap.clear();
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
 void CCodeEdit::clearLineIcon(const QIcon & icon)
@@ -308,6 +308,7 @@ void CCodeEdit::clearLineIcon(const QIcon & icon)
 			++ite;
 		}
 	}
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
 void CCodeEdit::clearLineIcon(int lineNo)
@@ -318,6 +319,7 @@ void CCodeEdit::clearLineIcon(int lineNo)
 	{
 		m_lineIconMap.erase(ite);
 	}
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -384,11 +386,21 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 
 void CCodeEdit::mousePressLineNumEvent(QMouseEvent * event)
 {
-	QPoint pt(0, event->y());
-	QTextCursor cursor = cursorForPosition(pt);
-	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
-	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-	setTextCursor(cursor);
+	if( m_lineIconSize.width() < event->x() )
+	{
+		QPoint pt(0, event->y());
+		QTextCursor cursor = cursorForPosition(pt);
+		cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		setTextCursor(cursor);
+	}
+	else
+	{
+		// アイコン部分がクリックされた
+		QPoint pt(0, event->y());
+		QTextCursor cursor = cursorForPosition(pt);
+		emit pressIconArea(cursor.blockNumber());
+	}
 }
 
 void CCodeEdit::mouseReleaseLineNumEvent(QMouseEvent * event)
@@ -399,7 +411,8 @@ void CCodeEdit::mouseMoveLineNumEvent(QMouseEvent * event)
 {
 	QPoint pt(0, event->y());
 
-	if( event->buttons() & Qt::LeftButton )
+	if( m_lineIconSize.width() < event->x() &&
+		0 != (event->buttons() & Qt::LeftButton) )
 	{
 		QTextCursor cursor = textCursor();
 		if( cursor.position() == cursor.selectionStart() )

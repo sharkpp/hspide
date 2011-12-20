@@ -8,6 +8,7 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	, editorWidget(new CCodeEdit(this))
 	, m_assignItem(NULL)
 {
+	connect(editorWidget, SIGNAL(pressIconArea(int)), this, SLOT(onPressEditorIconArea(int)));
 }
 
 void CDocumentPane::resizeEvent(QResizeEvent * event)
@@ -23,6 +24,18 @@ void CDocumentPane::focusInEvent(QFocusEvent * event)
 void CDocumentPane::onModificationChanged(bool changed)
 {
 	emit modificationChanged(isUntitled() | changed);
+}
+
+void CDocumentPane::onPressEditorIconArea(int lineNo)
+{
+	if( editorWidget->lineIcon(lineNo).isNull() )
+	{
+		editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
+	}
+	else
+	{
+		editorWidget->clearLineIcon(lineNo);
+	}
 }
 
 // ƒVƒ“ƒ{ƒ‹ˆê——‚ğw’è

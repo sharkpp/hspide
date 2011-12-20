@@ -69,6 +69,7 @@ protected:
 
 public slots:
 	void onModificationChanged(bool changed);
+	void onPressEditorIconArea(int lineNo);
 
 signals:
 	void modificationChanged(bool changed);
