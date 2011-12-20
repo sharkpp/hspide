@@ -29,6 +29,16 @@ public:
 		static_cast<CCodeEdit*>(parentWidget())->mousePressLineNumEvent(event);
 	}
 
+	virtual void mouseReleaseEvent(QMouseEvent * event)
+	{
+		static_cast<CCodeEdit*>(parentWidget())->mouseReleaseLineNumEvent(event);
+	}
+
+	virtual void mouseMoveEvent(QMouseEvent * event)
+	{
+		static_cast<CCodeEdit*>(parentWidget())->mouseMoveLineNumEvent(event);
+	}
+
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -376,5 +386,39 @@ void CCodeEdit::mousePressLineNumEvent(QMouseEvent * event)
 {
 	QPoint pt(0, event->y());
 	QTextCursor cursor = cursorForPosition(pt);
+	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+	cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 	setTextCursor(cursor);
+}
+
+void CCodeEdit::mouseReleaseLineNumEvent(QMouseEvent * event)
+{
+}
+
+void CCodeEdit::mouseMoveLineNumEvent(QMouseEvent * event)
+{
+	QPoint pt(0, event->y());
+
+	if( event->buttons() & Qt::LeftButton )
+	{
+		QTextCursor cursor = textCursor();
+		if( cursor.position() == cursor.selectionStart() )
+		{
+			// 選択開始位置より前を選択
+			cursor.setPosition(cursor.selectionEnd());
+			cursor.movePosition(QTextCursor::EndOfLine);
+			cursor.setPosition(cursorForPosition(pt).position(), QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::KeepAnchor);
+		}
+		else
+		{
+			// 選択開始位置より後ろを選択
+			cursor.setPosition(cursor.selectionStart());
+			cursor.movePosition(QTextCursor::StartOfLine);
+			cursor.setPosition(cursorForPosition(pt).position(), QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+		}
+		setTextCursor(cursor);
+	}
 }

@@ -67,6 +67,8 @@ protected:
 	void paintLineNumEvent(QPaintEvent * event);
 	void paintRulerEvent(QPaintEvent * event);
 	void mousePressLineNumEvent(QMouseEvent * event);
+	void mouseReleaseLineNumEvent(QMouseEvent * event);
+	void mouseMoveLineNumEvent(QMouseEvent * event);
 
 public slots:
 
