@@ -47,6 +47,16 @@ void CDebugger::parseCommand()
 			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
 			break; }
+		case CDebuggerCommand::CMD_STOP_RUNNING: {
+			QByteArray data((char*)ptr.data(), ptr.size());
+			QDataStream in(data);
+			in.setVersion(QDataStream::Qt_4_4);
+			QString fname;
+			int lineNum;
+			in >> fname >> lineNum;
+			emit stopDebugging(fname, lineNum);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << fname << lineNum;
+			break; }
 		default:
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;
 		}

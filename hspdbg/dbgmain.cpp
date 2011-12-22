@@ -91,11 +91,20 @@ void CDbgMain::putLog(const char *text, int len)
 bool CDbgMain::isBreak(const char* filename, int lineNo)
 {
 	QMutexLocker lck(&m_lock);
-	QString fname = filename ? filename : "";
+	QString fname = filename ? filename : "???";
 	CBreakPointInfo::iterator
 		ite = m_bp.find(fname);
-	if( ite != m_bp.end() ) {
-		return ite->end() != ite->find(lineNo);
+	if( ite != m_bp.end() &&
+		ite->end() != ite->find(lineNo) )
+	{
+		CDebuggerCommand cmd;
+		QByteArray data;
+		QDataStream out(&data, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_4);
+		out << fname << lineNo;
+		cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
+		m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+		return true;
 	}
 	return false;
 }

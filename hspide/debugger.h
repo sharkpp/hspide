@@ -33,5 +33,6 @@ public slots:
 
 signals:
 
+	void stopDebugging(const QString & filename, int lineNum);
 
 };
