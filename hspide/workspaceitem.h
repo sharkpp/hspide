@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QModelIndex>
 #include <QList>
+#include <QSet>
 #include <QString>
 #include <QIcon>
 
@@ -12,6 +13,8 @@ class CWorkSpaceModel;
 class CDocumentPane;
 class QXmlStreamWriter;
 class QXmlStreamReader;
+
+typedef QMap<QString, QSet<int> > CBreakPointInfo;
 
 class CWorkSpaceItem
 	: public QObject
@@ -52,6 +55,8 @@ private:
 
 	CDocumentPane*			m_assignDocument;
 
+	QSet<int>				m_breakpoints;
+
 public:
 
 	CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model = NULL);
@@ -80,6 +85,9 @@ public:
 	bool save(const QString & fileName = QString());
 
 	bool isUntitled() const;
+
+	void setBreakPoint(int lineNo);
+	bool getBreakPoints(CBreakPointInfo & breakpoints);
 
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane * item);

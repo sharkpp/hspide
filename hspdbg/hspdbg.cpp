@@ -44,11 +44,13 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 
 	p1->dbg_curinf();
 
+	bool breaked = g_app->isBreak(p1->fname, p1->line);
+
 	char tmp[256];
-	sprintf(tmp,"%s(%d) p2=%d runmode=%d",p1->fname?p1->fname:"???",p1->line,p2,ctx->runmode);
+	sprintf(tmp,"%s(%d) p2=%d runmode=%d,breaked=%d",p1->fname?p1->fname:"???",p1->line,p2,ctx->runmode,breaked);
 	g_app->putLog(tmp, strlen(tmp));
 
-	p1->dbg_set( HSPDEBUG_STEPIN );
+	p1->dbg_set( breaked ? HSPDEBUG_STOP : HSPDEBUG_STEPIN );
 
 	return FALSE;
 }

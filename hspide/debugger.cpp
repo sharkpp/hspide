@@ -1,5 +1,7 @@
 #include <QDebug>
 #include <QTextCodec>
+#include <QDataStream>
+#include "compiler.h"
 #include "debugger.h"
 
 CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
@@ -25,16 +27,25 @@ void CDebugger::parseCommand()
 
 		switch(cmd_id)
 		{
-		case 0x00: {
+		case CDebuggerCommand::CMD_CONNECT: {
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id;
+			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
+			if( compiler )
+			{
+				CBreakPointInfo bp = compiler->getBreakPoint(id);
+				QByteArray data;
+				QDataStream out(&data, QIODevice::WriteOnly);
+				out.setVersion(QDataStream::Qt_4_4);
+				out << bp;
+				CDebuggerCommand cmd;
+				cmd.write(id, CDebuggerCommand::CMD_SET_BREAK_POINT, data.data(), data.size());
+				m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+			}
 			break; }
-		case 0x01: {
+		case CDebuggerCommand::CMD_PUT_LOG: {
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
-CDebuggerCommand cmd;
-cmd.write(id, 0x02, "aaa", 3);
-m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 			break; }
 		default:
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;

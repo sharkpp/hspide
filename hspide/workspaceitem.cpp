@@ -274,6 +274,33 @@ bool CWorkSpaceItem::isUntitled() const
 	return true;
 }
 
+void CWorkSpaceItem::setBreakPoint(int lineNo)
+{
+	m_breakpoints.insert(lineNo);
+}
+
+bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints)
+{
+	QString filename = QFileInfo(m_path).baseName();
+
+	breakpoints[filename.isEmpty() ? "???" : filename] = m_breakpoints;
+
+	// 子のブレイクポイントも列挙
+	foreach(CWorkSpaceItem* item, m_children)
+	{
+		switch(item->m_type)
+		{
+		case File:
+		case Solution:
+		case Project:
+			item->getBreakPoints(breakpoints);
+			break;
+		}
+	}
+
+	return true;
+}
+
 bool CWorkSpaceItem::load(const QString & fileName)
 {
 	if( m_assignDocument )

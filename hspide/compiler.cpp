@@ -58,6 +58,11 @@ void CCompiler::setHspCommonPath(const QString & path)
 	m_hspCommonPath = QDir::toNativeSeparators(path);
 }
 
+const CBreakPointInfo & CCompiler::getBreakPoint(qint64 id)
+{
+	return m_breakpoints[id];
+}
+
 void CCompiler::updateCompilerPath()
 {
 	QString program = m_hspCompPath + "hspcmp";
@@ -113,6 +118,16 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	// シグナル発報
 	emit buildStart(filename);
 
+	QProcess* proccess = new QProcess(this);
+
+	quint64 id = (quint64)proccess;
+
+	CBreakPointInfo bpi;
+	if( targetItem->getBreakPoints(bpi) )
+	{
+		m_breakpoints[id] = bpi;
+	}
+
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
@@ -129,11 +144,9 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	}
 	if( buildAfterRun && debugMode ) { // デバッガでアタッチを待機
 		arguments << "--attach"
-		          << QString("%1").arg((quint64)0, 0, 16);
+		          << QString("%1").arg(id, 0, 16);
 	}
 	arguments << filename;
-
-	QProcess* proccess = new QProcess(this);
 
 	// 処理完了時の通知を登録
 	connect(proccess, SIGNAL(error(QProcess::ProcessError)),      this, SLOT(buildError(QProcess::ProcessError)));

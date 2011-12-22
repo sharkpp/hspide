@@ -15,6 +15,8 @@
 class CWorkSpaceItem;
 class CDebugger;
 
+typedef QMap<QString, QSet<int> > CBreakPointInfo;
+
 class CCompiler
 	: public QObject
 {
@@ -30,7 +32,7 @@ class CCompiler
 
 	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
 
-	QMap<quint64, CDebugger*> m_debugger;
+	QMap<quint64, CBreakPointInfo> m_breakpoints;
 	QList<QProcess*> m_compilerProcesses;
 
 	QLocalServer* m_server;
@@ -65,6 +67,8 @@ public:
 
 	// 単一ファイルをコンパイル
 	void compile();
+
+	const CBreakPointInfo & getBreakPoint(qint64 id);
 
 protected:
 

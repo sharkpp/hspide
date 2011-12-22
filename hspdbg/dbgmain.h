@@ -1,8 +1,14 @@
 #include <windows.h>
 #include <QCoreApplication>
 #include <QThread>
+#include <QMutex>
 #include <QLocalSocket>
+#include <QString>
+#include <QMap>
+#include <QSet>
 #include "../hspide/debuggercommand.hpp"
+
+typedef QMap<QString, QSet<int> > CBreakPointInfo;
 
 class CDbgMain
 	: public QCoreApplication
@@ -15,6 +21,10 @@ class CDbgMain
 	QLocalSocket*	m_socket;
 	long long		m_id;
 
+	QMutex			m_lock;
+
+	CBreakPointInfo	m_bp;
+
 	CDebuggerCommand m_cmdQueue;
 
 public:
@@ -23,6 +33,8 @@ public:
 
 	void connectToDebugger();
 	void putLog(const char *text, int len);
+
+	bool isBreak(const char* filename, int lineNo);
 
 	static void create();
 	static void destroy();

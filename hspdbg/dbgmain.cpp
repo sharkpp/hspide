@@ -62,7 +62,7 @@ unsigned CDbgMain::runStatic(void* p)
 	*static_cast<CDbgMain**>(p) = app;
 
 	// ‰Šú‰»Š®—¹‚ð’Ê’m
-	::SetEvent(m_waitThread);
+//	::SetEvent(m_waitThread);
 
 	app->exec();
 
@@ -77,15 +77,27 @@ unsigned CDbgMain::runStatic(void* p)
 void CDbgMain::connectToDebugger()
 {
 	CDebuggerCommand cmd;
-	cmd.write(m_id, 0x00, NULL, 0);
+	cmd.write(m_id, CDebuggerCommand::CMD_CONNECT, NULL, 0);
 	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
 }
 
 void CDbgMain::putLog(const char *text, int len)
 {
 	CDebuggerCommand cmd;
-	cmd.write(m_id, 0x01, text, len);
+	cmd.write(m_id, CDebuggerCommand::CMD_PUT_LOG, text, len);
 	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+}
+
+bool CDbgMain::isBreak(const char* filename, int lineNo)
+{
+	QMutexLocker lck(&m_lock);
+	QString fname = filename ? filename : "";
+	CBreakPointInfo::iterator
+		ite = m_bp.find(fname);
+	if( ite != m_bp.end() ) {
+		return ite->end() != ite->find(lineNo);
+	}
+	return false;
 }
 
 void CDbgMain::connected()
@@ -111,10 +123,19 @@ void CDbgMain::recvCommand()
 
 		switch(cmd_id)
 		{
+		case CDebuggerCommand::CMD_SET_BREAK_POINT: {
+			QMutexLocker lck(&m_lock);
+			QByteArray data((char*)ptr.data(), ptr.size());
+			QDataStream in(data);
+			in.setVersion(QDataStream::Qt_4_4);
+			in >> m_bp;
+			// ‰Šú‰»Š®—¹‚ð’Ê’m
+			::SetEvent(m_waitThread);
+			break; }
 		default: {
-			CDebuggerCommand cmd;
-			cmd.write(m_id, 0x02, "", 0);
-			m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+//			CDebuggerCommand cmd;
+//			cmd.write(m_id, 0x02, "", 0);
+//			m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
 			qDebug() <<"CDbgMain::recvCommand"<< (void*)m_socket<< id << cmd_id;
 			}
 		}

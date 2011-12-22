@@ -9,6 +9,10 @@ class CDebuggerCommand
 
 public:
 
+	static const unsigned char CMD_CONNECT = 0x00;
+	static const unsigned char CMD_PUT_LOG = 0x01;
+	static const unsigned char CMD_SET_BREAK_POINT = 0x02;
+
 	class scoped_ptr {
 		friend class CDebuggerCommand;
 		const unsigned char* m_data;

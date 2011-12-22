@@ -36,6 +36,11 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 	{
 		editorWidget->clearLineIcon(lineNo);
 	}
+
+	if( m_assignItem )
+	{
+		m_assignItem->setBreakPoint(lineNo + 1); // 1オリジン
+	}
 }
 
 // シンボル一覧を指定
