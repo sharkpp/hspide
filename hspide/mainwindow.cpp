@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(m_compiler, SIGNAL(buildStart(const QString &)),  this, SLOT(buildStart(const QString &)));
 	connect(m_compiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
 	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
+	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
+	connect(m_compiler, SIGNAL(attachedDebugger(CDebugger*)), this, SLOT(attachedDebugger(CDebugger*)));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
@@ -668,8 +670,10 @@ void MainWindow::onTabClose()
 
 	currentItem->setAssignDocument(NULL);
 
-	if( solutionItem &&
-		solutionItem->isUntitled() )
+	// ソリューションが空もしくはプロジェクトに名前を
+	// つけていない場合はツリーから削除
+	if( (solutionItem && solutionItem->isUntitled()) ||
+		currentItem->isUntitled() )
 	{
 		m_workSpace->remove(currentItem);
 	}
@@ -760,6 +764,23 @@ void MainWindow::buildOutput(const QString & output)
 			QString desc     = rePreProcessor.cap(1);
 			messageDock->addMessage(fileName, lineNum.toInt(), desc);
 		}
+	}
+}
+
+void MainWindow::attachedDebugger(CDebugger* debugger)
+{
+	connect(debugger, SIGNAL(stopAtBreakPoint(const QString &,int)), this, SLOT(stopAtBreakPoint(const QString &,int)));
+}
+
+void MainWindow::stopAtBreakPoint(const QString & filename, int lineNum)
+{
+	CWorkSpaceItem* targetProjectItem
+		= projectDock->currentSolution()->search(filename);
+
+	// ファイルを開く
+	if( targetProjectItem )
+	{
+		onOpenFile(targetProjectItem);
 	}
 }
 

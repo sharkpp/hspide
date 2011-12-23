@@ -33,6 +33,6 @@ public slots:
 
 signals:
 
-	void stopDebugging(const QString & filename, int lineNum);
+	void stopAtBreakPoint(const QString & filename, int lineNum);
 
 };

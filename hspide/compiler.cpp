@@ -250,4 +250,6 @@ void CCompiler::attachDebugger()
 
 	// デバッガと関連付け
 	CDebugger* debugger = new CDebugger(this, clientConnection);
+
+	emit attachedDebugger(debugger);
 }

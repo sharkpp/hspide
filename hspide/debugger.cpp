@@ -54,7 +54,7 @@ void CDebugger::parseCommand()
 			QString fname;
 			int lineNum;
 			in >> fname >> lineNum;
-			emit stopDebugging(fname, lineNum);
+			emit stopAtBreakPoint(fname, lineNum);
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << fname << lineNum;
 			break; }
 		default:

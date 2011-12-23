@@ -91,7 +91,7 @@ void CDbgMain::putLog(const char *text, int len)
 bool CDbgMain::isBreak(const char* filename, int lineNo)
 {
 	QMutexLocker lck(&m_lock);
-	QString fname = filename ? filename : "???";
+	QString fname = filename && 0 != lstrcmpA(filename, "???") ? filename : "";
 	CBreakPointInfo::iterator
 		ite = m_bp.find(fname);
 	if( ite != m_bp.end() &&

@@ -93,6 +93,8 @@ signals:
 	void buildFinished(bool status);
 	void buildOutput(const QString & output);
 
+	void attachedDebugger(CDebugger* debugger);
+
 };
 
 #endif // !defined(INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29)

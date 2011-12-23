@@ -201,7 +201,8 @@ CWorkSpaceItem * CWorkSpaceItem::ancestor(Type type)
 
 CWorkSpaceItem * CWorkSpaceItem::search(const QString & path)
 {
-	if( !m_path.compare(path, Qt::CaseSensitive) )
+	if( (FileNode == m_nodeType || !path.isEmpty()) &&
+		!m_path.compare(path, Qt::CaseSensitive) )
 	{
 		return this;
 	}
@@ -283,7 +284,7 @@ bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints)
 {
 	QString filename = QFileInfo(m_path).baseName();
 
-	breakpoints[filename.isEmpty() ? "???" : filename] = m_breakpoints;
+	breakpoints[!filename.compare("???") ? "" : filename] = m_breakpoints;
 
 	// 子のブレイクポイントも列挙
 	foreach(CWorkSpaceItem* item, m_children)

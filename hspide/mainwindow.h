@@ -4,6 +4,7 @@
 #include <QLocalServer>
 #include "workspacemodel.h"
 #include "compiler.h"
+#include "debugger.h"
 #include "outputdock.h"
 #include "debuggerdock.h"
 #include "projectdock.h"
@@ -75,6 +76,8 @@ public slots:
 	void buildStart(const QString & filePath);
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
+	void attachedDebugger(CDebugger* debugger);
+	void stopAtBreakPoint(const QString & filename, int lineNum);
 	void onDocumentChanged();
 	void currentTabChanged(int index);
 	void onNewFile();
