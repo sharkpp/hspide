@@ -270,6 +270,9 @@ bool CWorkSpaceItem::isUntitled() const
 		{
 		case Solution:
 			return m_text.isEmpty() || m_text == tr("(untitled)");
+		case Project:
+		case File:
+			return QFileInfo(m_path).baseName().isEmpty();
 		}
 	}
 	return true;
