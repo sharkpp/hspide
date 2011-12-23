@@ -87,6 +87,7 @@ public:
 	bool isUntitled() const;
 
 	void setBreakPoint(int lineNo);
+	void clearBreakPoint(int lineNo);
 	bool getBreakPoints(CBreakPointInfo & breakpoints);
 
 	// アイテムと関連付け

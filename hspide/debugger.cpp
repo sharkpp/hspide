@@ -37,6 +37,11 @@ void CDebugger::parseCommand()
 				QDataStream out(&data, QIODevice::WriteOnly);
 				out.setVersion(QDataStream::Qt_4_4);
 				out << bp;
+				foreach(const QString &key, bp.keys()) {
+					foreach(int lineNo, bp[key]) {
+						qDebug() << "bp" << key << lineNo;
+					}
+				}
 				CDebuggerCommand cmd;
 				cmd.write(id, CDebuggerCommand::CMD_SET_BREAK_POINT, data.data(), data.size());
 				m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));

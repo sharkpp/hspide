@@ -283,6 +283,11 @@ void CWorkSpaceItem::setBreakPoint(int lineNo)
 	m_breakpoints.insert(lineNo);
 }
 
+void CWorkSpaceItem::clearBreakPoint(int lineNo)
+{
+	m_breakpoints.remove(lineNo);
+}
+
 bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints)
 {
 	QString filename = QFileInfo(m_path).baseName();

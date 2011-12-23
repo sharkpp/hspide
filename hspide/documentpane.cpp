@@ -31,16 +31,22 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 	if( editorWidget->lineIcon(lineNo).isNull() )
 	{
 		editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
+		// ブレークポイントをセット
+		if( m_assignItem )
+		{
+			m_assignItem->setBreakPoint(lineNo + 1); // 1オリジン
+		}
 	}
 	else
 	{
 		editorWidget->clearLineIcon(lineNo);
+		// ブレークポイントをリセット
+		if( m_assignItem )
+		{
+			m_assignItem->clearBreakPoint(lineNo + 1); // 1オリジン
+		}
 	}
 
-	if( m_assignItem )
-	{
-		m_assignItem->setBreakPoint(lineNo + 1); // 1オリジン
-	}
 }
 
 // シンボル一覧を指定
