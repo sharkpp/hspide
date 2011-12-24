@@ -6,9 +6,11 @@
 #include <QString>
 #include <QMap>
 #include <QSet>
+#include <QUuid>
 #include "../hspide/debuggercommand.hpp"
 
-typedef QMap<QString, QSet<int> > CBreakPointInfo;
+typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
+typedef QMap<QString, QUuid> CUuidLookupInfo;
 
 class CDbgMain
 	: public QCoreApplication
@@ -24,6 +26,7 @@ class CDbgMain
 	QMutex			m_lock;
 
 	CBreakPointInfo	m_bp;
+	CUuidLookupInfo	m_lookup;
 
 	CDebuggerCommand m_cmdQueue;
 

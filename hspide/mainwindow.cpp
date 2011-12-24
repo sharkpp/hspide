@@ -800,7 +800,7 @@ void MainWindow::buildOutput(const QString & output)
 
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
-	connect(debugger, SIGNAL(stopAtBreakPoint(const QString &,int)), this, SLOT(stopAtBreakPoint(const QString &,int)));
+	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(stopAtBreakPoint(const QUuid &,int)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
 
 	m_debuggers.insert(debugger);
@@ -813,15 +813,23 @@ void MainWindow::dettachedDebugger()
 	m_debuggers.remove(debugger);
 }
 
-void MainWindow::stopAtBreakPoint(const QString & filename, int lineNum)
+void MainWindow::stopAtBreakPoint(const QUuid & uuid, int lineNum)
 {
 	CWorkSpaceItem* targetProjectItem
-		= projectDock->currentSolution()->search(filename);
+		= projectDock->currentSolution()->search(uuid);
 
-	// ファイルを開く
 	if( targetProjectItem )
 	{
+		// ファイルを開く
 		onOpenFile(targetProjectItem);
+
+		// 行を移動
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+		if( document )
+		{
+			document->jump(lineNum);
+		}
 	}
 }
 

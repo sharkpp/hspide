@@ -15,6 +15,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	, m_type(UnkownType)
 	, m_nodeType(UnkownNodeType)
 	, m_assignDocument(NULL)
+	, m_uuid(QUuid::createUuid())
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -219,6 +220,25 @@ CWorkSpaceItem * CWorkSpaceItem::search(const QString & path)
 	return NULL;
 }
 
+CWorkSpaceItem * CWorkSpaceItem::search(const QUuid & uuid)
+{
+	if( uuid == m_uuid )
+	{
+		return this;
+	}
+
+	foreach(CWorkSpaceItem* item, m_children)
+	{
+		CWorkSpaceItem* result = item->search(uuid);
+		if( result )
+		{
+			return result;
+		}
+	}
+
+	return NULL;
+}
+
 int CWorkSpaceItem::parentPosition() const
 {
 	return m_parentPos;
@@ -278,6 +298,11 @@ bool CWorkSpaceItem::isUntitled() const
 	return true;
 }
 
+const QUuid & CWorkSpaceItem::uuid() const
+{
+	return m_uuid;
+}
+
 void CWorkSpaceItem::setBreakPoint(int lineNo)
 {
 	m_breakpoints.insert(lineNo);
@@ -288,11 +313,12 @@ void CWorkSpaceItem::clearBreakPoint(int lineNo)
 	m_breakpoints.remove(lineNo);
 }
 
-bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints)
+bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints, CUuidLookupInfo & lookup)
 {
 	QString filename = QFileInfo(m_path).baseName();
 
-	breakpoints[!filename.compare("???") ? "" : filename] = m_breakpoints;
+	breakpoints[m_uuid] = m_breakpoints;
+	lookup[!filename.compare("???") ? "" : filename] = m_uuid;
 
 	// 子のブレイクポイントも列挙
 	foreach(CWorkSpaceItem* item, m_children)
@@ -302,7 +328,7 @@ bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints)
 		case File:
 		case Solution:
 		case Project:
-			item->getBreakPoints(breakpoints);
+			item->getBreakPoints(breakpoints, lookup);
 			break;
 		}
 	}
@@ -474,6 +500,12 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 				xml.clear();
 				return false;
 			}
+			// UUIDが存在する時のみUUIDセット
+			QUuid uuid(xml.attributes().value("uuid").toString());
+			if( !uuid.isNull() ) {
+				newItem->m_uuid = uuid;
+			}
+			// ツリーモデルをセット
 			newItem->setModel(m_model);
 			if( m_model ) {
 				m_model->appendRow(newItem, parentItem->index());
@@ -542,6 +574,8 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 	default:
 		return false;
 	}
+
+	xml->writeAttribute("uuid", m_uuid.toString());
 
 	// 子も全てシリアライズ
 	foreach(CWorkSpaceItem* item, m_children)

@@ -33,12 +33,14 @@ void CDebugger::parseCommand()
 			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
 			if( compiler )
 			{
-				CBreakPointInfo bp = compiler->getBreakPoint(id);
+				CBreakPointInfo bp;
+				CUuidLookupInfo lookup;
+				compiler->getBreakPoint(id, bp, lookup);
 				QByteArray data;
 				QDataStream out(&data, QIODevice::WriteOnly);
 				out.setVersion(QDataStream::Qt_4_4);
-				out << bp;
-				foreach(const QString &key, bp.keys()) {
+				out << lookup << bp;
+				foreach(const QUuid &key, bp.keys()) {
 					foreach(int lineNo, bp[key]) {
 						qDebug() << "bp" << key << lineNo;
 					}
@@ -57,11 +59,11 @@ void CDebugger::parseCommand()
 			QByteArray data((char*)ptr.data(), ptr.size());
 			QDataStream in(data);
 			in.setVersion(QDataStream::Qt_4_4);
-			QString fname;
+			QUuid uuid;
 			int lineNum;
-			in >> fname >> lineNum;
-			emit stopAtBreakPoint(fname, lineNum);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << fname << lineNum;
+			in >> uuid >> lineNum;
+			emit stopAtBreakPoint(uuid, lineNum);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << uuid << lineNum;
 			break; }
 		default:
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;

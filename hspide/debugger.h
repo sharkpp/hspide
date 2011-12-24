@@ -2,6 +2,7 @@
 #include <QString>
 #include <QProcess>
 #include <QLocalSocket>
+#include <QUuid>
 #include "debuggercommand.hpp"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -39,6 +40,6 @@ public slots:
 
 signals:
 
-	void stopAtBreakPoint(const QString & filename, int lineNum);
+	void stopAtBreakPoint(const QUuid & uuid, int lineNum);
 
 };

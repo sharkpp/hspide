@@ -43,6 +43,9 @@ public:
 //	// 一時ファイルを削除
 //	bool clearTemporary();
 
+	// 行に移動
+	bool jump(int lineNo);
+
 	// アイテムと関連付け
 	bool setAssignItem(CWorkSpaceItem * item);
 	CWorkSpaceItem * assignItem();

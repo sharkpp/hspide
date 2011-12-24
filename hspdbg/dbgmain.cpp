@@ -92,19 +92,24 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 {
 	QMutexLocker lck(&m_lock);
 	QString fname = filename && 0 != lstrcmpA(filename, "???") ? filename : "";
-	CBreakPointInfo::iterator
-		ite = m_bp.find(fname);
-	if( ite != m_bp.end() &&
-		ite->end() != ite->find(lineNo) )
+	CUuidLookupInfo::iterator
+		ite = m_lookup.find(fname);
+	if( ite != m_lookup.end() )
 	{
-		CDebuggerCommand cmd;
-		QByteArray data;
-		QDataStream out(&data, QIODevice::WriteOnly);
-		out.setVersion(QDataStream::Qt_4_4);
-		out << fname << lineNo;
-		cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
-		m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
-		return true;
+		CBreakPointInfo::iterator
+			ite2 = m_bp.find(*ite);
+		if( ite2 != m_bp.end() &&
+			ite2->end() != ite2->find(lineNo) )
+		{
+			CDebuggerCommand cmd;
+			QByteArray data;
+			QDataStream out(&data, QIODevice::WriteOnly);
+			out.setVersion(QDataStream::Qt_4_4);
+			out << *ite << lineNo;
+			cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
+			m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+			return true;
+		}
 	}
 	return false;
 }
@@ -137,7 +142,7 @@ void CDbgMain::recvCommand()
 			QByteArray data((char*)ptr.data(), ptr.size());
 			QDataStream in(data);
 			in.setVersion(QDataStream::Qt_4_4);
-			in >> m_bp;
+			in >> m_lookup >> m_bp;
 			// ‰Šú‰»Š®—¹‚ğ’Ê’m
 			::SetEvent(m_waitThread);
 			break; }

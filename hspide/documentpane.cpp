@@ -123,6 +123,16 @@ bool CDocumentPane::save(const QString & filePath)
 	return true;
 }
 
+// 行に移動
+bool CDocumentPane::jump(int lineNo)
+{
+	QTextCursor cursor;
+	cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNo - 1);
+	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+	editorWidget->setTextCursor(cursor);
+	return false;
+}
+
 // アイテムと関連付け
 bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 {

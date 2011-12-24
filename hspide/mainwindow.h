@@ -82,7 +82,7 @@ public slots:
 	void buildOutput(const QString & output);
 	void attachedDebugger(CDebugger* debugger);
 	void dettachedDebugger();
-	void stopAtBreakPoint(const QString & filename, int lineNum);
+	void stopAtBreakPoint(const QUuid & filename, int lineNum);
 	void onDocumentChanged();
 	void currentTabChanged(int index);
 	void onNewFile();

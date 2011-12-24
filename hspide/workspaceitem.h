@@ -4,6 +4,7 @@
 #include <QSet>
 #include <QString>
 #include <QIcon>
+#include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -14,7 +15,8 @@ class CDocumentPane;
 class QXmlStreamWriter;
 class QXmlStreamReader;
 
-typedef QMap<QString, QSet<int> > CBreakPointInfo;
+typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
+typedef QMap<QString, QUuid> CUuidLookupInfo;
 
 class CWorkSpaceItem
 	: public QObject
@@ -52,6 +54,7 @@ private:
 	QString					m_path;
 	Type					m_type;
 	NodeType				m_nodeType;
+	QUuid					m_uuid;
 
 	CDocumentPane*			m_assignDocument;
 
@@ -86,9 +89,11 @@ public:
 
 	bool isUntitled() const;
 
+	const QUuid & uuid() const;
+
 	void setBreakPoint(int lineNo);
 	void clearBreakPoint(int lineNo);
-	bool getBreakPoints(CBreakPointInfo & breakpoints);
+	bool getBreakPoints(CBreakPointInfo & breakpoints, CUuidLookupInfo & lookup);
 
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane * item);
@@ -99,6 +104,7 @@ public:
 	CWorkSpaceItem * parent() const;
 	CWorkSpaceItem * ancestor(Type type);
 	CWorkSpaceItem * search(const QString & path);
+	CWorkSpaceItem * search(const QUuid & path);
 	int parentPosition() const;
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem * item);

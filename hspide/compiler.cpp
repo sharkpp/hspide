@@ -58,9 +58,11 @@ void CCompiler::setHspCommonPath(const QString & path)
 	m_hspCommonPath = QDir::toNativeSeparators(path);
 }
 
-const CBreakPointInfo & CCompiler::getBreakPoint(qint64 id)
+bool CCompiler::getBreakPoint(qint64 id, CBreakPointInfo & bp, CUuidLookupInfo & lookup)
 {
-	return m_breakpoints[id];
+	bp = m_breakpoints[id];
+	lookup = m_lookup[id];
+	return true;
 }
 
 void CCompiler::updateCompilerPath()
@@ -123,9 +125,11 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	quint64 id = (quint64)proccess;
 
 	CBreakPointInfo bpi;
-	if( targetItem->getBreakPoints(bpi) )
+	CUuidLookupInfo lookup;
+	if( targetItem->getBreakPoints(bpi, lookup) )
 	{
 		m_breakpoints[id] = bpi;
+		m_lookup[id] = lookup;
 	}
 
 	QString program = m_hspCompPath + "hspcmp";
