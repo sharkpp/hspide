@@ -127,6 +127,7 @@ bool CDocumentPane::save(const QString & filePath)
 bool CDocumentPane::jump(int lineNo)
 {
 	QTextCursor cursor = editorWidget->textCursor();
+	cursor.setPosition(0, QTextCursor::MoveAnchor);
 	cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNo - 1);
 	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
 	editorWidget->setTextCursor(cursor);
