@@ -9,6 +9,7 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	, m_clientConnection(socket)
 {
 	connect(m_clientConnection, SIGNAL(readyRead()), this, SLOT(recvCommand()));
+	connect(m_clientConnection, SIGNAL(destroyed()), this, SLOT(deleteLater()));
 }
 
 void CDebugger::parseCommand()
@@ -73,4 +74,20 @@ void CDebugger::recvCommand()
 	QByteArray data = m_clientConnection->readAll();
 	m_cmdQueue.push(data.data(), data.size());
 	parseCommand();
+}
+
+// デバッグを中断
+void CDebugger::suspendDebugging()
+{
+	CDebuggerCommand cmd;
+	cmd.write(0, CDebuggerCommand::CMD_SUSPEND_DEBUG);
+	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+}
+
+// デバッグを停止
+void CDebugger::stopDebugging()
+{
+	CDebuggerCommand cmd;
+	cmd.write(0, CDebuggerCommand::CMD_STOP_DEBUG);
+	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 }

@@ -201,6 +201,8 @@ void MainWindow::setupMenus()
 	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
 		debugMenu->addAction(debugRunAct);
 		debugMenu->addAction(noDebugRunAct);
+		debugMenu->addAction(debugAllSuspendAct);
+		debugMenu->addAction(debugStopAct);
 
 	QMenu * toolsMenu = menuBar()->addMenu(tr("&Tools"));
 
@@ -318,7 +320,8 @@ void MainWindow::setupActions()
 //	compileOnlyAct->setShortcuts(QKeySequence::Replace);
 	compileOnlyAct->setStatusTip(tr("Compile only"));
 
-	debugRunAct = new QAction(QIcon(":/images/tango/small/media-playback-start.png"), tr("&Debug run"), this);
+	debugRunAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
+	                                     ":/images/tango/small/media-playback-start.png"), tr("&Debug run"), this);
 //	debugRunAct->setShortcuts(QKeySequence::Replace);
 	debugRunAct->setStatusTip(tr("Run program with debug"));
 	connect(debugRunAct, SIGNAL(triggered()), this, SLOT(onDebugRun()));
@@ -327,6 +330,18 @@ void MainWindow::setupActions()
 //	noDebugRunAct->setShortcuts(QKeySequence::Replace);
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 	connect(noDebugRunAct, SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
+
+	debugAllSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
+	                                            ":/images/tango/small/media-playback-pause.png"), tr("&All suspend"), this);
+//	debugAllSuspendAct->setShortcuts(QKeySequence::Replace);
+	debugAllSuspendAct->setStatusTip(tr("Run program without debug"));
+	connect(debugAllSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugAllSuspend()));
+
+	debugStopAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-stop.png",
+	                                      ":/images/tango/small/media-playback-stop.png"), tr("&Stop debugging"), this);
+//	debugStopAct->setShortcuts(QKeySequence::Replace);
+	debugStopAct->setStatusTip(tr("Run program without debug"));
+	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -652,6 +667,22 @@ void MainWindow::onNoDebugRun()
 	}
 }
 
+void MainWindow::onDebugAllSuspend()
+{
+	// 全てのデバッグを中断
+	foreach(CDebugger* debugger, m_debuggers) {
+		debugger->suspendDebugging();
+	}
+}
+
+void MainWindow::onDebugStop()
+{
+	// 全てのデバッグを停止
+	foreach(CDebugger* debugger, m_debuggers) {
+		debugger->stopDebugging();
+	}
+}
+
 void MainWindow::onTabList()
 {
 }
@@ -770,6 +801,16 @@ void MainWindow::buildOutput(const QString & output)
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
 	connect(debugger, SIGNAL(stopAtBreakPoint(const QString &,int)), this, SLOT(stopAtBreakPoint(const QString &,int)));
+	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
+
+	m_debuggers.insert(debugger);
+}
+
+void MainWindow::dettachedDebugger()
+{
+	CDebugger* debugger = reinterpret_cast<CDebugger*>(sender());
+
+	m_debuggers.remove(debugger);
 }
 
 void MainWindow::stopAtBreakPoint(const QString & filename, int lineNum)

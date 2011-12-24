@@ -141,6 +141,10 @@ void CDbgMain::recvCommand()
 			// ‰Šú‰»Š®—¹‚ğ’Ê’m
 			::SetEvent(m_waitThread);
 			break; }
+		case CDebuggerCommand::CMD_SUSPEND_DEBUG: {
+			break; }
+		case CDebuggerCommand::CMD_STOP_DEBUG: {
+			break; }
 		default: {
 //			CDebuggerCommand cmd;
 //			cmd.write(m_id, 0x02, "", 0);

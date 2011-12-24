@@ -45,6 +45,8 @@ class MainWindow : public QMainWindow
 	QAction *compileOnlyAct;
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
+	QAction *debugAllSuspendAct;
+	QAction *debugStopAct;
 
 	CProjectDock *  projectDock;
 	CSymbolDock *   symbolDock;
@@ -59,6 +61,8 @@ class MainWindow : public QMainWindow
 	CWorkSpaceModel* m_workSpace;
 
 	CCompiler* m_compiler;
+
+	QSet<CDebugger*> m_debuggers;
 
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
@@ -77,6 +81,7 @@ public slots:
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
 	void attachedDebugger(CDebugger* debugger);
+	void dettachedDebugger();
 	void stopAtBreakPoint(const QString & filename, int lineNum);
 	void onDocumentChanged();
 	void currentTabChanged(int index);
@@ -92,6 +97,8 @@ public slots:
 	void onBuildSolution();
 	void onDebugRun();
 	void onNoDebugRun();
+	void onDebugAllSuspend();
+	void onDebugStop();
 	void onTabList();
 	void onTabClose();
 

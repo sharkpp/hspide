@@ -23,6 +23,12 @@ public:
 
 	CDebugger(QObject *parent, QLocalSocket* socket);
 
+	// デバッグを中断
+	void suspendDebugging();
+
+	// デバッグを停止
+	void stopDebugging();
+
 protected:
 
 	void parseCommand();
