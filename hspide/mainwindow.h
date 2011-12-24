@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow
 	QAction *findPrevTextAct;
 	QAction *findNextTextAct;
 	QAction *replaceTextAct;
+	QAction *gotoLineAct;
 	QAction *buildSolutionAct;
 	QAction *buildProjectAct;
 	QAction *compileOnlyAct;
@@ -93,6 +94,7 @@ public slots:
 	void onSaveAsFile();
 	void onSaveAllFile();
 	void onQuit();
+	void onGoToLine();
 	void onBuildProject();
 	void onBuildSolution();
 	void onDebugRun();

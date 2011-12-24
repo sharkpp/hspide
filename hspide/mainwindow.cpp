@@ -3,6 +3,7 @@
 #include "workspaceitem.h"
 #include "documentpane.h"
 #include "newfiledialog.h"
+#include "jumpdialog.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -191,6 +192,8 @@ void MainWindow::setupMenus()
 		searchMenu->addAction(findPrevTextAct);
 		searchMenu->addAction(findNextTextAct);
 		searchMenu->addAction(replaceTextAct);
+		searchMenu->addSeparator();
+		searchMenu->addAction(gotoLineAct);
 
 	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
 		buildMenu->addAction(buildProjectAct);
@@ -304,6 +307,12 @@ void MainWindow::setupActions()
 	                                        ":/images/tango/small/edit-find-replace.png"), tr("&Replace"), this);
 	replaceTextAct->setShortcuts(QKeySequence::Replace);
 	replaceTextAct->setStatusTip(tr("Replace text"));
+
+	gotoLineAct = new QAction(QMultiIcon(":/images/tango/middle/go-jump.png",
+	                                     ":/images/tango/small/go-jump.png"), tr("&Go to line"), this);
+	gotoLineAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_J));
+	gotoLineAct->setStatusTip(tr("Go to line"));
+	connect(gotoLineAct, SIGNAL(triggered()), this, SLOT(onGoToLine()));
 
 
 	buildSolutionAct = new QAction(tr("Build &solution"), this);
@@ -583,6 +592,22 @@ void MainWindow::onSaveAllFile()
 void MainWindow::onQuit()
 {
 	qApp->quit();
+}
+
+void MainWindow::onGoToLine()
+{
+	CJumpDialog dlg(this);
+
+	if( QDialog::Accepted == dlg.exec() )
+	{
+		// s‚ğˆÚ“®
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+		if( document )
+		{
+			document->jump(dlg.lineNo());
+		}
+	}
 }
 
 void MainWindow::onBuildProject()

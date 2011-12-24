@@ -1,54 +1,56 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 	<file>i18n/hspide_ja.qm</file>
-	<file>images/tango/middle/edit-paste.png</file>
-	<file>images/tango/middle/edit-redo.png</file>
-	<file>images/tango/middle/edit-select-all.png</file>
-	<file>images/tango/middle/edit-undo.png</file>
-	<file>images/tango/middle/media-playback-start.png</file>
-	<file>images/tango/middle/media-playback-pause.png</file>
-	<file>images/tango/middle/media-playback-stop.png</file>
 	<file>images/tango/middle/document-new.png</file>
 	<file>images/tango/middle/document-open.png</file>
-	<file>images/tango/middle/document-print.png</file>
 	<file>images/tango/middle/document-print-preview.png</file>
-	<file>images/tango/middle/document-save.png</file>
+	<file>images/tango/middle/document-print.png</file>
 	<file>images/tango/middle/document-save-as.png</file>
+	<file>images/tango/middle/document-save.png</file>
 	<file>images/tango/middle/edit-clear.png</file>
 	<file>images/tango/middle/edit-copy.png</file>
 	<file>images/tango/middle/edit-cut.png</file>
 	<file>images/tango/middle/edit-delete.png</file>
-	<file>images/tango/middle/edit-find.png</file>
 	<file>images/tango/middle/edit-find-replace.png</file>
+	<file>images/tango/middle/edit-find.png</file>
+	<file>images/tango/middle/edit-paste.png</file>
+	<file>images/tango/middle/edit-redo.png</file>
+	<file>images/tango/middle/edit-select-all.png</file>
+	<file>images/tango/middle/edit-undo.png</file>
+	<file>images/tango/middle/go-jump.png</file>
+	<file>images/tango/middle/media-playback-pause.png</file>
+	<file>images/tango/middle/media-playback-start.png</file>
+	<file>images/tango/middle/media-playback-stop.png</file>
 	<file>images/tango/middle/system-log-out.png</file>
-	<file>images/tango/small/edit-paste.png</file>
-	<file>images/tango/small/edit-redo.png</file>
-	<file>images/tango/small/edit-select-all.png</file>
-	<file>images/tango/small/edit-undo.png</file>
-	<file>images/tango/small/media-playback-start.png</file>
-	<file>images/tango/small/media-playback-pause.png</file>
-	<file>images/tango/small/media-playback-stop.png</file>
+	<file>images/tango/small/dialog-error.png</file>
 	<file>images/tango/small/document-new.png</file>
 	<file>images/tango/small/document-open.png</file>
-	<file>images/tango/small/document-print.png</file>
 	<file>images/tango/small/document-print-preview.png</file>
-	<file>images/tango/small/document-save.png</file>
+	<file>images/tango/small/document-print.png</file>
 	<file>images/tango/small/document-save-as.png</file>
+	<file>images/tango/small/document-save.png</file>
 	<file>images/tango/small/edit-clear.png</file>
 	<file>images/tango/small/edit-copy.png</file>
 	<file>images/tango/small/edit-cut.png</file>
 	<file>images/tango/small/edit-delete.png</file>
-	<file>images/tango/small/edit-find.png</file>
 	<file>images/tango/small/edit-find-replace.png</file>
-	<file>images/tango/small/system-log-out.png</file>
+	<file>images/tango/small/edit-find.png</file>
+	<file>images/tango/small/edit-paste.png</file>
+	<file>images/tango/small/edit-redo.png</file>
+	<file>images/tango/small/edit-select-all.png</file>
+	<file>images/tango/small/edit-undo.png</file>
 	<file>images/tango/small/folder.png</file>
-	<file>images/tango/small/text-x-generic.png</file>
-	<file>images/tango/small/dialog-error.png</file>
+	<file>images/tango/small/go-jump.png</file>
 	<file>images/tango/small/go-next.png</file>
+	<file>images/tango/small/media-playback-pause.png</file>
+	<file>images/tango/small/media-playback-start.png</file>
+	<file>images/tango/small/media-playback-stop.png</file>
+	<file>images/tango/small/system-log-out.png</file>
+	<file>images/tango/small/text-x-generic.png</file>
 	<file>images/icons/middle/document-save-all.png</file>
 	<file>images/icons/small/document-save-all.png</file>
-	<file>images/icons/small/software-update-urgent-yellow.png</file>
 	<file>images/icons/small/media-record-blue.png</file>
+	<file>images/icons/small/software-update-urgent-yellow.png</file>
 	<file>images/button-tab-close.png</file>
 	<file>images/button-tab-list.png</file>
 </qresource>
