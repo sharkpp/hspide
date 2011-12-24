@@ -830,6 +830,8 @@ void MainWindow::stopAtBreakPoint(const QUuid & uuid, int lineNum)
 		{
 			document->jump(lineNum);
 		}
+
+		activateWindow();
 	}
 }
 

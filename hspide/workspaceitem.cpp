@@ -27,6 +27,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * mo
 	, m_parent(NULL)
 	, m_parentPos(0)
 	, m_assignDocument(NULL)
+	, m_uuid(QUuid::createUuid())
 {
 	setType(type);
 
