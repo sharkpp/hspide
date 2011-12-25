@@ -46,7 +46,8 @@ class MainWindow : public QMainWindow
 	QAction *compileOnlyAct;
 	QAction *debugRunAct;
 	QAction *noDebugRunAct;
-	QAction *debugAllSuspendAct;
+	QAction *debugSuspendAct;
+	QAction *debugResumeAct;
 	QAction *debugStopAct;
 
 	CProjectDock *  projectDock;
@@ -99,7 +100,8 @@ public slots:
 	void onBuildSolution();
 	void onDebugRun();
 	void onNoDebugRun();
-	void onDebugAllSuspend();
+	void onDebugSuspend();
+	void onDebugResume();
 	void onDebugStop();
 	void onTabList();
 	void onTabClose();

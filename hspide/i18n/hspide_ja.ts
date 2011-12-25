@@ -90,6 +90,17 @@
     </message>
 </context>
 <context>
+    <name>JumpDialog</name>
+    <message>
+        <source>Go to line</source>
+        <translation>指定行へ移動</translation>
+    </message>
+    <message>
+        <source>Line number(&amp;L):</source>
+        <translation>行番号(&amp;L):</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Ready</source>
@@ -398,6 +409,26 @@
     <message>
         <source>All Supported Files (*.hsp *.as *.hspsln)</source>
         <translation>サポートする全てのファイル (*.hsp *.as *.hspsln)</translation>
+    </message>
+    <message>
+        <source>&amp;Go to line</source>
+        <translation>指定行へ移動(&amp;G)</translation>
+    </message>
+    <message>
+        <source>Go to line</source>
+        <translation>指定行へ移動</translation>
+    </message>
+    <message>
+        <source>All &amp;suspend</source>
+        <translation>全て中断(&amp;S)</translation>
+    </message>
+    <message>
+        <source>All &amp;resume</source>
+        <translation>全て再開(&amp;R)</translation>
+    </message>
+    <message>
+        <source>Stop &amp;debugging</source>
+        <translation>デバッグの停止(&amp;D)</translation>
     </message>
 </context>
 <context>

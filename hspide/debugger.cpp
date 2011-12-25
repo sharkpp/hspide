@@ -86,6 +86,11 @@ void CDebugger::suspendDebugging()
 	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 }
 
+// デバッグを再開
+void CDebugger::resumeDebugging()
+{
+}
+
 // デバッグを停止
 void CDebugger::stopDebugging()
 {

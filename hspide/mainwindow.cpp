@@ -159,6 +159,7 @@ void MainWindow::setupToolBars()
 		generalToolbar->addAction(replaceTextAct);
 		generalToolbar->addSeparator();
 		generalToolbar->addAction(debugRunAct);
+		generalToolbar->addAction(debugResumeAct);
 //		generalToolbar->addWidget(new QComboBox(generalToolbar));
 }
 
@@ -204,7 +205,8 @@ void MainWindow::setupMenus()
 	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
 		debugMenu->addAction(debugRunAct);
 		debugMenu->addAction(noDebugRunAct);
-		debugMenu->addAction(debugAllSuspendAct);
+		debugMenu->addAction(debugResumeAct);
+		debugMenu->addAction(debugSuspendAct);
 		debugMenu->addAction(debugStopAct);
 
 	QMenu * toolsMenu = menuBar()->addMenu(tr("&Tools"));
@@ -340,14 +342,20 @@ void MainWindow::setupActions()
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 	connect(noDebugRunAct, SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
 
-	debugAllSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
-	                                            ":/images/tango/small/media-playback-pause.png"), tr("&All suspend"), this);
-//	debugAllSuspendAct->setShortcuts(QKeySequence::Replace);
-	debugAllSuspendAct->setStatusTip(tr("Run program without debug"));
-	connect(debugAllSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugAllSuspend()));
+	debugSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
+	                                         ":/images/tango/small/media-playback-pause.png"), tr("All &suspend"), this);
+//	debugSuspendAct->setShortcuts(QKeySequence::Replace);
+	debugSuspendAct->setStatusTip(tr("Run program without debug"));
+	connect(debugSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
+
+	debugResumeAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
+	                                        ":/images/tango/small/media-playback-start.png"), tr("All &resume"), this);
+//	debugResumeAct->setShortcuts(QKeySequence::Replace);
+	debugResumeAct->setStatusTip(tr("Run program without debug"));
+	connect(debugResumeAct, SIGNAL(triggered()), this, SLOT(onDebugResume()));
 
 	debugStopAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-stop.png",
-	                                      ":/images/tango/small/media-playback-stop.png"), tr("&Stop debugging"), this);
+	                                      ":/images/tango/small/media-playback-stop.png"), tr("Stop &debugging"), this);
 //	debugStopAct->setShortcuts(QKeySequence::Replace);
 	debugStopAct->setStatusTip(tr("Run program without debug"));
 	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
@@ -367,6 +375,9 @@ void MainWindow::setupActions()
 	compileOnlyAct->setEnabled(false);
 //	debugRunAct->setEnabled(false);
 //	noDebugRunAct->setEnabled(false);
+	debugSuspendAct->setVisible(false);
+	debugResumeAct->setVisible(false);
+	debugStopAct->setVisible(false);
 }
 
 void MainWindow::loadSettings()
@@ -692,11 +703,19 @@ void MainWindow::onNoDebugRun()
 	}
 }
 
-void MainWindow::onDebugAllSuspend()
+void MainWindow::onDebugSuspend()
 {
 	// 全てのデバッグを中断
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->suspendDebugging();
+	}
+}
+
+void MainWindow::onDebugResume()
+{
+	// 全てのデバッグを再開
+	foreach(CDebugger* debugger, m_debuggers) {
+		debugger->resumeDebugging();
 	}
 }
 
@@ -828,6 +847,12 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(stopAtBreakPoint(const QUuid &,int)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
 
+	debugRunAct    ->setVisible( !m_debuggers.empty() );
+	noDebugRunAct  ->setVisible( !m_debuggers.empty() );
+	debugSuspendAct->setVisible( m_debuggers.empty() );
+	debugResumeAct ->setVisible( m_debuggers.empty() );
+	debugStopAct   ->setVisible( m_debuggers.empty() );
+
 	m_debuggers.insert(debugger);
 }
 
@@ -836,6 +861,12 @@ void MainWindow::dettachedDebugger()
 	CDebugger* debugger = reinterpret_cast<CDebugger*>(sender());
 
 	m_debuggers.remove(debugger);
+
+	debugRunAct    ->setVisible( m_debuggers.empty() );
+	noDebugRunAct  ->setVisible( m_debuggers.empty() );
+	debugSuspendAct->setVisible( !m_debuggers.empty() );
+	debugResumeAct ->setVisible( !m_debuggers.empty() );
+	debugStopAct   ->setVisible( !m_debuggers.empty() );
 }
 
 void MainWindow::stopAtBreakPoint(const QUuid & uuid, int lineNum)

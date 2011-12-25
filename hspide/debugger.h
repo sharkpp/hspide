@@ -27,6 +27,9 @@ public:
 	// デバッグを中断
 	void suspendDebugging();
 
+	// デバッグを再開
+	void resumeDebugging();
+
 	// デバッグを停止
 	void stopDebugging();
 
