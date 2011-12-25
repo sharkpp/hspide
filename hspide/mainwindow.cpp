@@ -376,6 +376,7 @@ void MainWindow::setupActions()
 //	debugRunAct->setEnabled(false);
 //	noDebugRunAct->setEnabled(false);
 	debugSuspendAct->setVisible(false);
+	debugResumeAct->setEnabled(false);
 	debugResumeAct->setVisible(false);
 	debugStopAct->setVisible(false);
 }
@@ -709,6 +710,9 @@ void MainWindow::onDebugSuspend()
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->suspendDebugging();
 	}
+
+	debugResumeAct->setEnabled(true);
+	debugSuspendAct->setEnabled(false);
 }
 
 void MainWindow::onDebugResume()
@@ -717,6 +721,9 @@ void MainWindow::onDebugResume()
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->resumeDebugging();
 	}
+
+	debugResumeAct->setEnabled(false);
+	debugSuspendAct->setEnabled(true);
 }
 
 void MainWindow::onDebugStop()
