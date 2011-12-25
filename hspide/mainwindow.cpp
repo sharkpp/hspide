@@ -264,6 +264,7 @@ void MainWindow::setupActions()
 	                                     ":/images/tango/small/edit-redo.png"), tr("&Redo"), this);
 	editRedoAct->setShortcuts(QKeySequence::Redo);
 	editRedoAct->setStatusTip(tr("Redo"));
+	connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
 
 	editCutAct = new QAction(QMultiIcon(":/images/tango/middle/edit-cut.png",
 	                                    ":/images/tango/small/edit-cut.png"), tr("Cu&t"), this);
@@ -711,6 +712,7 @@ void MainWindow::onDebugSuspend()
 		debugger->suspendDebugging();
 	}
 
+	// メニューを変更
 	debugResumeAct->setEnabled(true);
 	debugSuspendAct->setEnabled(false);
 }
@@ -722,6 +724,7 @@ void MainWindow::onDebugResume()
 		debugger->resumeDebugging();
 	}
 
+	// メニューを変更
 	debugResumeAct->setEnabled(false);
 	debugSuspendAct->setEnabled(true);
 }
@@ -931,17 +934,31 @@ void MainWindow::currentTabChanged(int index)
 		disconnect(lastDocument->editor()->document(), SIGNAL(undoAvailable(bool)));
 		disconnect(lastDocument->editor()->document(), SIGNAL(redoAvailable(bool)));
 		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
-		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
+		disconnect(editUndoAct,                        SIGNAL(triggered()));
+		disconnect(editRedoAct,                        SIGNAL(triggered()));
+		disconnect(editCopyAct,                        SIGNAL(triggered()));
+		disconnect(editPasteAct,                       SIGNAL(triggered()));
+		disconnect(editCutAct,                         SIGNAL(triggered()));
+		disconnect(editClearAct,                       SIGNAL(triggered()));
+		disconnect(selectAllAct,                       SIGNAL(triggered()));
 	}
 
 	if( document )
 	{
 		// シグナルと関連付け
-		connect(document,                       SIGNAL(modificationChanged(bool)), saveDocumentAct, SLOT(setEnabled(bool)));
-		connect(document->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,     SLOT(setEnabled(bool)));
-		connect(document->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,     SLOT(setEnabled(bool)));
-		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCutAct,      SLOT(setEnabled(bool)));
-		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCopyAct,     SLOT(setEnabled(bool)));
+		connect(document,                       SIGNAL(modificationChanged(bool)), saveDocumentAct,    SLOT(setEnabled(bool)));
+		connect(document->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,        SLOT(setEnabled(bool)));
+		connect(document->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,        SLOT(setEnabled(bool)));
+		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCutAct,         SLOT(setEnabled(bool)));
+		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCopyAct,        SLOT(setEnabled(bool)));
+		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editClearAct,       SLOT(setEnabled(bool)));
+		connect(editUndoAct,                    SIGNAL(triggered()),               document->editor(), SLOT(undo()));
+		connect(editRedoAct,                    SIGNAL(triggered()),               document->editor(), SLOT(redo()));
+		connect(editCopyAct,                    SIGNAL(triggered()),               document->editor(), SLOT(copy()));
+		connect(editPasteAct,                   SIGNAL(triggered()),               document->editor(), SLOT(paste()));
+		connect(editCutAct,                     SIGNAL(triggered()),               document->editor(), SLOT(cut()));
+		connect(editClearAct,                   SIGNAL(triggered()),               document->editor(), SLOT(del()));
+		connect(selectAllAct,                   SIGNAL(triggered()),               document->editor(), SLOT(selectAll()));
 
 		document->setFocus();
 
@@ -955,5 +972,14 @@ void MainWindow::currentTabChanged(int index)
 	m_lastActivatedDocument = document;
 
 	onDocumentChanged();
+	clipboardDataChanged();
 }
 
+void MainWindow::clipboardDataChanged()
+{
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+	const QMimeData *md = QApplication::clipboard()->mimeData();
+
+	editPasteAct->setEnabled(document && md && md->hasText());
+}

@@ -79,6 +79,8 @@ public slots:
 	void updateLineNumberWidth(int newBlockCount);
 	void updateLineNumber(const QRect & rect ,int dy);
 
+	void del();
+
 private:
 
 	int lineNumberWidth();

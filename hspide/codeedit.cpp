@@ -336,6 +336,12 @@ void CCodeEdit::updateLineNumber(const QRect & rect ,int dy)
 	m_lineNumberWidget->update(0, rect.y(), m_lineNumberWidget->width(), rect.height());
 }
 
+void CCodeEdit::del()
+{
+	QTextCursor cursor = textCursor();
+	cursor.deleteChar();
+}
+
 void CCodeEdit::resizeEvent(QResizeEvent * event)
 {
 	QPlainTextEdit::resizeEvent(event);

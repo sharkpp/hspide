@@ -105,6 +105,7 @@ public slots:
 	void onDebugStop();
 	void onTabList();
 	void onTabClose();
+	void clipboardDataChanged();
 
 private:
 
