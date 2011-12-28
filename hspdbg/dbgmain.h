@@ -25,6 +25,8 @@ class CDbgMain
 
 	QMutex			m_lock;
 
+	bool			m_breaked;
+
 	CBreakPointInfo	m_bp;
 	CUuidLookupInfo	m_lookup;
 
@@ -35,7 +37,10 @@ public:
 	virtual ~CDbgMain();
 
 	void connectToDebugger();
-	void putLog(const char *text, int len);
+	void putLog(const char* text, int len);
+
+	void updateDebugInfo(const char* ptr);
+	void updateVarInfo(const char* ptr);
 
 	bool isBreak(const char* filename, int lineNo);
 

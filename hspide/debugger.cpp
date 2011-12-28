@@ -28,7 +28,7 @@ void CDebugger::parseCommand()
 
 		switch(cmd_id)
 		{
-		case CDebuggerCommand::CMD_CONNECT: {
+		case CDebuggerCommand::CMD_CONNECT: { // デバッガに接続
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id;
 			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
 			if( compiler )
@@ -50,12 +50,12 @@ void CDebugger::parseCommand()
 				m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 			}
 			break; }
-		case CDebuggerCommand::CMD_PUT_LOG: {
+		case CDebuggerCommand::CMD_PUT_LOG: { // ログを出力
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
 			break; }
-		case CDebuggerCommand::CMD_STOP_RUNNING: {
+		case CDebuggerCommand::CMD_STOP_RUNNING: { // 実行の停止
 			QByteArray data((char*)ptr.data(), ptr.size());
 			QDataStream in(data);
 			in.setVersion(QDataStream::Qt_4_4);
@@ -64,6 +64,22 @@ void CDebugger::parseCommand()
 			in >> uuid >> lineNum;
 			emit stopAtBreakPoint(uuid, lineNum);
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << uuid << lineNum;
+			break; }
+		case CDebuggerCommand::CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
+			QByteArray data((char*)ptr.data(), ptr.size());
+			QDataStream in(data);
+			in.setVersion(QDataStream::Qt_4_4);
+			QVector<QPair<QString,QString> > debugInfo;
+			in >> debugInfo;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << debugInfo;
+			break; }
+		case CDebuggerCommand::CMD_UPDATE_VAR_INFO: { // 変数名情報を更新
+			QByteArray data((char*)ptr.data(), ptr.size());
+			QDataStream in(data);
+			in.setVersion(QDataStream::Qt_4_4);
+			QVector<QString> varInfo;
+			in >> varInfo;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << varInfo;
 			break; }
 		default:
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;
@@ -89,6 +105,9 @@ void CDebugger::suspendDebugging()
 // デバッグを再開
 void CDebugger::resumeDebugging()
 {
+	CDebuggerCommand cmd;
+	cmd.write(0, CDebuggerCommand::CMD_RESUME_DEBUG);
+	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
 }
 
 // デバッグを停止

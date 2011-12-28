@@ -9,12 +9,15 @@ class CDebuggerCommand
 
 public:
 
-	static const unsigned char CMD_CONNECT			= 0x00;
-	static const unsigned char CMD_PUT_LOG			= 0x01;
-	static const unsigned char CMD_SET_BREAK_POINT	= 0x02;
-	static const unsigned char CMD_STOP_RUNNING		= 0x03;
-	static const unsigned char CMD_SUSPEND_DEBUG	= 0x04;
-	static const unsigned char CMD_STOP_DEBUG		= 0x05;
+	static const unsigned char CMD_CONNECT			= 0x00; // デバッガに接続
+	static const unsigned char CMD_PUT_LOG			= 0x01; // ログを出力
+	static const unsigned char CMD_SET_BREAK_POINT	= 0x02; // ブレークポイントを設定
+	static const unsigned char CMD_STOP_RUNNING		= 0x03; // 実行の停止
+	static const unsigned char CMD_SUSPEND_DEBUG	= 0x04;	// デバッグを停止
+	static const unsigned char CMD_RESUME_DEBUG		= 0x05;	// デバッグを再開
+	static const unsigned char CMD_STOP_DEBUG		= 0x06;	// デバッグを中止
+	static const unsigned char CMD_UPDATE_DEBUG_INFO= 0x07;	// デバッグ情報を更新
+	static const unsigned char CMD_UPDATE_VAR_INFO	= 0x08;	// 変数名情報を更新
 
 	class scoped_ptr {
 		friend class CDebuggerCommand;

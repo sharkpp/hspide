@@ -160,6 +160,8 @@ void MainWindow::setupToolBars()
 		generalToolbar->addSeparator();
 		generalToolbar->addAction(debugRunAct);
 		generalToolbar->addAction(debugResumeAct);
+		generalToolbar->addAction(debugSuspendAct);
+		generalToolbar->addAction(debugStopAct);
 //		generalToolbar->addWidget(new QComboBox(generalToolbar));
 }
 
@@ -647,6 +649,11 @@ void MainWindow::onDebugRun()
 		currentItem = projectDock->currentItem();
 	}
 
+	if( !currentItem )
+	{
+		return;
+	}
+
 	// もし、プロジェクトに属していたら取得
 	CWorkSpaceItem* currentProject
 		= currentItem->ancestor(CWorkSpaceItem::Project);
@@ -842,12 +849,16 @@ void MainWindow::buildOutput(const QString & output)
 			QString lineNum  = reCompiler.cap(3);
 			QString desc     = reCompiler.cap(4);
 			messageDock->addMessage(fileName, lineNum.toInt(), desc);
+			QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
+			dock->raise();
 		}
 		else if( 0 <= rePreProcessor.indexIn(line) ) {
 			QString fileName = rePreProcessor.cap(3);
 			QString lineNum  = rePreProcessor.cap(2);
 			QString desc     = rePreProcessor.cap(1);
 			messageDock->addMessage(fileName, lineNum.toInt(), desc);
+			QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
+			dock->raise();
 		}
 	}
 }

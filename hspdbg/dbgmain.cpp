@@ -1,3 +1,4 @@
+#include <QTextCodec>
 #include <process.h>
 #include "dbgmain.h"
 
@@ -14,6 +15,7 @@ CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
 	, m_socket(new QLocalSocket(this))
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
+	, m_breaked(false)
 {
 	// 受信通知などのシグナルと接続
 	connect(m_socket, SIGNAL(connected()),  this, SLOT(connected()));
@@ -91,6 +93,12 @@ void CDbgMain::putLog(const char *text, int len)
 bool CDbgMain::isBreak(const char* filename, int lineNo)
 {
 	QMutexLocker lck(&m_lock);
+
+	// デバッガからの停止指示
+	bool breaked = m_breaked;
+	m_breaked = false;
+
+	// ブレークポイントに引っかかるか調べる
 	QString fname = filename && 0 != lstrcmpA(filename, "???") ? filename : "";
 	CUuidLookupInfo::iterator
 		ite = m_lookup.find(fname);
@@ -101,21 +109,88 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 		if( ite2 != m_bp.end() &&
 			ite2->end() != ite2->find(lineNo) )
 		{
-			CDebuggerCommand cmd;
-			QByteArray data;
-			QDataStream out(&data, QIODevice::WriteOnly);
-			out.setVersion(QDataStream::Qt_4_4);
-			out << *ite << lineNo;
-			cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
-			m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
-			return true;
+			breaked = true;
 		}
 	}
+
+	if( breaked )
+	{
+		CDebuggerCommand cmd;
+		QByteArray data;
+		QDataStream out(&data, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_4);
+		out << *ite << lineNo;
+		cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
+		m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+		return true;
+	}
+
 	return false;
+}
+
+void CDbgMain::updateDebugInfo(const char* ptr)
+{
+	QTextCodec* codec = QTextCodec::codecForLocale();
+
+	QVector<QPair<QString,QString> > debugInfo;
+
+	for(const char* p = ptr; *p;)
+	{
+		const char* key = p;
+		const char* value = p;
+		for(;    *p && 0x0D != p[0] && 0x0A != p[1]; ++value, ++p);
+		if( 0x0D != *p ) { break; }
+		value += 2;
+		p += 2;
+		for(; *p && 0x0D != p[0] && 0x0A != p[1]; ++p);
+		if( 0x0D != *p ) { break; }
+		p += 2;
+
+		QString key_str   = codec->toUnicode(key,   int(value - 2 - key));
+		QString value_str = codec->toUnicode(value, int(p - 2 - value));
+
+		debugInfo.append(qMakePair(key_str, value_str));
+	}
+
+	CDebuggerCommand cmd;
+	QByteArray data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << debugInfo;
+	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_DEBUG_INFO, data.data(), data.size());
+	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+}
+
+void CDbgMain::updateVarInfo(const char* ptr)
+{
+	QTextCodec* codec = QTextCodec::codecForLocale();
+
+	QVector<QString> varInfo;
+
+	for(const char* p = ptr; *p;)
+	{
+		const char* key = p;
+		for(;    *p && 0x0D != p[0] && 0x0A != p[1]; ++p);
+		if( 0x0D != *p ) { break; }
+		p += 2;
+
+		QString key_str = codec->toUnicode(key, int(p - 2 - key));
+
+		varInfo.append(key_str);
+	}
+
+	CDebuggerCommand cmd;
+	QByteArray data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << varInfo;
+	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_VAR_INFO, data.data(), data.size());
+	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
 }
 
 void CDbgMain::connected()
 {
+
 }
 
 void CDbgMain::recvCommand()
@@ -137,7 +212,7 @@ void CDbgMain::recvCommand()
 
 		switch(cmd_id)
 		{
-		case CDebuggerCommand::CMD_SET_BREAK_POINT: {
+		case CDebuggerCommand::CMD_SET_BREAK_POINT: { // ブレークポイントを設定
 			QMutexLocker lck(&m_lock);
 			QByteArray data((char*)ptr.data(), ptr.size());
 			QDataStream in(data);
@@ -146,9 +221,15 @@ void CDbgMain::recvCommand()
 			// 初期化完了を通知
 			::SetEvent(m_waitThread);
 			break; }
-		case CDebuggerCommand::CMD_SUSPEND_DEBUG: {
+		case CDebuggerCommand::CMD_SUSPEND_DEBUG: { // デバッグを停止
+			QMutexLocker lck(&m_lock);
+			m_breaked = true;
 			break; }
-		case CDebuggerCommand::CMD_STOP_DEBUG: {
+		case CDebuggerCommand::CMD_RESUME_DEBUG: { // デバッグを再開
+			QMutexLocker lck(&m_lock);
+			m_breaked = false;
+			break; }
+		case CDebuggerCommand::CMD_STOP_DEBUG: { // デバッグを中止
 			break; }
 		default: {
 //			CDebuggerCommand cmd;
