@@ -201,17 +201,20 @@ CWorkSpaceItem * CWorkSpaceItem::ancestor(Type type)
 	                : NULL;
 }
 
-CWorkSpaceItem * CWorkSpaceItem::search(const QString & path)
+CWorkSpaceItem * CWorkSpaceItem::search(const QString & path, bool basename)
 {
+	QString comp = basename ? QFileInfo(m_path).baseName()
+							: m_path;
+
 	if( (FileNode == m_nodeType || !path.isEmpty()) &&
-		!m_path.compare(path, Qt::CaseSensitive) )
+		!comp.compare(path, Qt::CaseSensitive) )
 	{
 		return this;
 	}
 
 	foreach(CWorkSpaceItem* item, m_children)
 	{
-		CWorkSpaceItem* result = item->search(path);
+		CWorkSpaceItem* result = item->search(path, basename);
 		if( result )
 		{
 			return result;

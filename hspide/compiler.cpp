@@ -141,7 +141,9 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	}
 	if( tempSave ) { // 一時的なファイルに保存
 		arguments << "-o" << "obj"
-		          << "-r" << "???";
+		          << "-r" << QString("?%1").arg(targetItem->uuid().toString());
+	} else {
+		arguments << "-r" << QString("?%1").arg(targetItem->uuid().toString());
 	}
 	if( buildAfterRun ) { // ビルド後に実行
 		arguments << "-e";

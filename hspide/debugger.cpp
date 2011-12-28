@@ -60,10 +60,10 @@ void CDebugger::parseCommand()
 			QDataStream in(data);
 			in.setVersion(QDataStream::Qt_4_4);
 			QUuid uuid;
-			int lineNum;
-			in >> uuid >> lineNum;
-			emit stopAtBreakPoint(uuid, lineNum);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << uuid << lineNum;
+			int lineNo;
+			in >> uuid >> lineNo;
+			emit stopAtBreakPoint(uuid, lineNo);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << uuid << lineNo;
 			break; }
 		case CDebuggerCommand::CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
 			QByteArray data((char*)ptr.data(), ptr.size());

@@ -99,15 +99,30 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 	m_breaked = false;
 
 	// ブレークポイントに引っかかるか調べる
-	QString fname = filename && 0 != lstrcmpA(filename, "???") ? filename : "";
-	CUuidLookupInfo::iterator
-		ite = m_lookup.find(fname);
-	if( ite != m_lookup.end() )
+	QString fname = filename ? filename : "";
+	QUuid uuid;
+
+	if( '?' == fname[0] )
+	{
+		// UUID直接指定
+		uuid = QUuid(fname.mid(1));
+	}
+	else
+	{
+		// 名前引き
+		CUuidLookupInfo::iterator
+			ite = m_lookup.find(fname);
+		if( ite != m_lookup.end() )
+		{
+			uuid = *ite;
+		}
+	}
+	if( !uuid.isNull() )
 	{
 		CBreakPointInfo::iterator
-			ite2 = m_bp.find(*ite);
-		if( ite2 != m_bp.end() &&
-			ite2->end() != ite2->find(lineNo) )
+			ite = m_bp.find(uuid);
+		if( ite != m_bp.end() &&
+			ite->end() != ite->find(lineNo) )
 		{
 			breaked = true;
 		}
@@ -119,7 +134,7 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 		QByteArray data;
 		QDataStream out(&data, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_4);
-		out << *ite << lineNo;
+		out << uuid << lineNo;
 		cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
 		m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
 		return true;

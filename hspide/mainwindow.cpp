@@ -57,10 +57,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setupToolBars();
 	setupMenus();
 
-	connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
+	connect(tabWidget,   SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
 	connect(projectDock, SIGNAL(oepnItem(CWorkSpaceItem*)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
-	connect(tabListAct, SIGNAL(triggered()), this, SLOT(onTabList()));
+	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTabList()));
 	connect(tabCloseAct, SIGNAL(triggered()), this, SLOT(onTabClose()));
+	connect(messageDock, SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
 
 	loadSettings();
 
@@ -625,6 +626,28 @@ void MainWindow::onGoToLine()
 	}
 }
 
+void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
+{
+	CWorkSpaceItem* targetProjectItem
+		= projectDock->currentSolution()->search(uuid);
+
+	if( targetProjectItem )
+	{
+		// ファイルを開く
+		onOpenFile(targetProjectItem);
+
+		// 行を移動
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
+		if( document )
+		{
+			document->jump(lineNo);
+		}
+
+		activateWindow();
+	}
+}
+
 void MainWindow::onBuildProject()
 {
 }
@@ -832,8 +855,26 @@ void MainWindow::buildFinished(bool successed)
 // ビルド中の出力を取得
 void MainWindow::buildOutput(const QString & output)
 {
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+
 	QString tmp = QString(output).replace("\r\n", "\n");
+
+	QRegExp reFileName("\\?(\\{[0-9a-fA-F-]+\\})");
+
+	// uuidをファイル名に変換
+	if( 0 <= reFileName.indexIn(tmp) ) {
+		QString uuid = reFileName.cap(1);
+		CWorkSpaceItem* item = solutionItem ? solutionItem->search(QUuid(uuid)) : NULL;
+		if( item ) {
+			tmp.replace(reFileName, item->text());
+		}
+	}
+
 	outputDock->output(tmp);
+
+	bool raiseDock = false;
+
+	tmp = QString(output).replace("\r\n", "\n");
 
 	QRegExp reCompiler("^((.+)\\(([0-9]+)\\) : (.+))$");
 	QRegExp rePreProcessor("^#Error:(.+) in line ([0-9]+) \\[(.*)\\]$");
@@ -844,28 +885,64 @@ void MainWindow::buildOutput(const QString & output)
 		QString line = ite.next();
 		line.replace("\r", "");
 
-		if( 0 <= reCompiler.indexIn(line) ) {
-			QString fileName = reCompiler.cap(2);
-			QString lineNum  = reCompiler.cap(3);
-			QString desc     = reCompiler.cap(4);
-			messageDock->addMessage(fileName, lineNum.toInt(), desc);
-			QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
-			dock->raise();
+		for(int i = 0; i < 2; i++)
+		{
+			QString fileName, lineNo, desc;
+			QUuid uuid;
+
+			switch(i)
+			{
+			case 0: // コンパイルエラー
+				if( reCompiler.indexIn(line) < 0 ) {
+					continue;
+				}
+				fileName = reCompiler.cap(2);
+				lineNo   = reCompiler.cap(3);
+				desc     = reCompiler.cap(4);
+				break;
+			case 1: // プリプロセスエラー
+				if( rePreProcessor.indexIn(line) < 0 ) {
+					continue;
+				}
+				fileName = rePreProcessor.cap(3);
+				lineNo   = rePreProcessor.cap(2);
+				desc     = rePreProcessor.cap(1);
+				break;
+			}
+			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
+			if( 0 <= reFileName.indexIn(fileName) ) {
+				uuid = QUuid(reFileName.cap(1));
+				if( CWorkSpaceItem* item
+						= solutionItem ? solutionItem->search(uuid)
+						               : NULL )
+				{
+					fileName = item->text();
+				}
+			} else {
+				if( CWorkSpaceItem* item
+						= solutionItem ? solutionItem->search(fileName)
+						               : NULL )
+				{
+					uuid = item->uuid();
+				}
+			}
+			// メッセージを追加
+			messageDock->addMessage(uuid, fileName, lineNo.toInt(), desc);
+			raiseDock = true;
 		}
-		else if( 0 <= rePreProcessor.indexIn(line) ) {
-			QString fileName = rePreProcessor.cap(3);
-			QString lineNum  = rePreProcessor.cap(2);
-			QString desc     = rePreProcessor.cap(1);
-			messageDock->addMessage(fileName, lineNum.toInt(), desc);
-			QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
-			dock->raise();
-		}
+	}
+
+	// ドックが隠れていたら表に表示
+	if( raiseDock )
+	{
+		QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
+		dock->raise();
 	}
 }
 
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
-	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(stopAtBreakPoint(const QUuid &,int)));
+	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(onGoToLine(const QUuid &,int)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
 
 	debugRunAct    ->setVisible( !m_debuggers.empty() );
@@ -888,28 +965,6 @@ void MainWindow::dettachedDebugger()
 	debugSuspendAct->setVisible( !m_debuggers.empty() );
 	debugResumeAct ->setVisible( !m_debuggers.empty() );
 	debugStopAct   ->setVisible( !m_debuggers.empty() );
-}
-
-void MainWindow::stopAtBreakPoint(const QUuid & uuid, int lineNum)
-{
-	CWorkSpaceItem* targetProjectItem
-		= projectDock->currentSolution()->search(uuid);
-
-	if( targetProjectItem )
-	{
-		// ファイルを開く
-		onOpenFile(targetProjectItem);
-
-		// 行を移動
-		CDocumentPane* document
-			= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
-		if( document )
-		{
-			document->jump(lineNum);
-		}
-
-		activateWindow();
-	}
 }
 
 // 編集された

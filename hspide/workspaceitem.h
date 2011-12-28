@@ -103,7 +103,7 @@ public:
 	CWorkSpaceItem * at(int index) const;
 	CWorkSpaceItem * parent() const;
 	CWorkSpaceItem * ancestor(Type type);
-	CWorkSpaceItem * search(const QString & path);
+	CWorkSpaceItem * search(const QString & path, bool basename = false);
 	CWorkSpaceItem * search(const QUuid & path);
 	int parentPosition() const;
 	QModelIndex index() const;

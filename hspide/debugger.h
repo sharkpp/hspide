@@ -43,6 +43,6 @@ public slots:
 
 signals:
 
-	void stopAtBreakPoint(const QUuid & uuid, int lineNum);
+	void stopAtBreakPoint(const QUuid & uuid, int lineNo);
 
 };

@@ -1,4 +1,6 @@
 #include <QTreeView>
+#include <QVector>
+#include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -9,14 +11,30 @@ class CMessageDock
 {
 	Q_OBJECT
 
+	typedef enum {
+		MsgCategory = 0,
+		MsgDescription,
+		MsgFile,
+		MsgLine,
+	};
+
+	typedef struct {
+		QString	description;
+		QUuid	uuid;
+		QString	fileName;
+		int		lineNo;
+	} MessageInfoType;
+
 	QTreeView * listWidget;
+
+	QVector<MessageInfoType> m_messages;
 
 public:
 
 	CMessageDock(QWidget *parent = 0);
 
 	void clear();
-	void addMessage(const QString & fileName, int lineNum, const QString & description);
+	void addMessage(const QUuid & uuid, const QString & fileName, int lineNo, const QString & description);
 
 protected:
 
@@ -31,5 +49,6 @@ protected slots:
 signals:
 
 //	void oepnItem(CWorkSpaceItem * item);
+	void gotoLine(const QUuid & uuid, int lineNo);
 
 };
