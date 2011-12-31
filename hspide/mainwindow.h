@@ -6,7 +6,8 @@
 #include "compiler.h"
 #include "debugger.h"
 #include "outputdock.h"
-#include "debuggerdock.h"
+#include "sysinfodock.h"
+#include "varinfodock.h"
 #include "projectdock.h"
 #include "searchdock.h"
 #include "symboldock.h"
@@ -23,39 +24,40 @@ class MainWindow : public QMainWindow
 	QTabWidget *   tabWidget;
 	QProgressBar * taskProgress;
 
-	QAction *newDocumentAct;
-	QAction *openDocumentAct;
-	QAction *saveDocumentAct;
-	QAction *saveAsDocumentAct;
-	QAction *saveAllDocumentAct;
-	QAction *quitApplicationAct;
-	QAction *editUndoAct;
-	QAction *editRedoAct;
-	QAction *editCutAct;
-	QAction *editCopyAct;
-	QAction *editPasteAct;
-	QAction *editClearAct;
-	QAction *selectAllAct;
-	QAction *findTextAct;
-	QAction *findPrevTextAct;
-	QAction *findNextTextAct;
-	QAction *replaceTextAct;
-	QAction *gotoLineAct;
-	QAction *buildSolutionAct;
-	QAction *buildProjectAct;
-	QAction *compileOnlyAct;
-	QAction *debugRunAct;
-	QAction *noDebugRunAct;
-	QAction *debugSuspendAct;
-	QAction *debugResumeAct;
-	QAction *debugStopAct;
+	QAction* newDocumentAct;
+	QAction* openDocumentAct;
+	QAction* saveDocumentAct;
+	QAction* saveAsDocumentAct;
+	QAction* saveAllDocumentAct;
+	QAction* quitApplicationAct;
+	QAction* editUndoAct;
+	QAction* editRedoAct;
+	QAction* editCutAct;
+	QAction* editCopyAct;
+	QAction* editPasteAct;
+	QAction* editClearAct;
+	QAction* selectAllAct;
+	QAction* findTextAct;
+	QAction* findPrevTextAct;
+	QAction* findNextTextAct;
+	QAction* replaceTextAct;
+	QAction* gotoLineAct;
+	QAction* buildSolutionAct;
+	QAction* buildProjectAct;
+	QAction* compileOnlyAct;
+	QAction* debugRunAct;
+	QAction* noDebugRunAct;
+	QAction* debugSuspendAct;
+	QAction* debugResumeAct;
+	QAction* debugStopAct;
 
-	CProjectDock *  projectDock;
-	CSymbolDock *   symbolDock;
-	COutputDock *   outputDock;
-	CDebuggerDock * debuggerDock;
-	CSearchDock *   searchDock;
-	CMessageDock *  messageDock;
+	CProjectDock*      projectDock;
+	CSymbolDock*       symbolDock;
+	COutputDock*       outputDock;
+	CSystemInfoDock*   sysInfoDock;
+	CVariableInfoDock* varInfoDock;
+	CSearchDock*       searchDock;
+	CMessageDock*      messageDock;
 
 	QWidget* m_lastActivatedDocument;
 

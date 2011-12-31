@@ -220,10 +220,6 @@
 				>
 			</File>
 			<File
-				RelativePath="debuggerdock.cpp"
-				>
-			</File>
-			<File
 				RelativePath="documentpane.cpp"
 				>
 			</File>
@@ -261,6 +257,14 @@
 			</File>
 			<File
 				RelativePath="symboldock.cpp"
+				>
+			</File>
+			<File
+				RelativePath="sysinfodock.cpp"
+				>
+			</File>
+			<File
+				RelativePath="varinfodock.cpp"
 				>
 			</File>
 			<File
@@ -358,32 +362,6 @@
 			<File
 				RelativePath="debuggercommand.hpp"
 				>
-			</File>
-			<File
-				RelativePath="debuggerdock.h"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="MOC debuggerdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debuggerdock.h -o debug\moc_debuggerdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;debuggerdock.h"
-						Outputs="debug\moc_debuggerdock.cpp"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="MOC debuggerdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debuggerdock.h -o release\moc_debuggerdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;debuggerdock.h"
-						Outputs="release\moc_debuggerdock.cpp"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="documentpane.h"
@@ -620,6 +598,58 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="sysinfodock.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC sysinfodock.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o debug\moc_sysinfodock.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;sysinfodock.h"
+						Outputs="debug\moc_sysinfodock.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC sysinfodock.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o release\moc_sysinfodock.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;sysinfodock.h"
+						Outputs="release\moc_sysinfodock.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="varinfodock.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC varinfodock.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o debug\moc_varinfodock.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;varinfodock.h"
+						Outputs="debug\moc_varinfodock.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC varinfodock.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o release\moc_varinfodock.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;varinfodock.h"
+						Outputs="release\moc_varinfodock.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="workspaceitem.h"
 				>
 				<FileConfiguration
@@ -750,22 +780,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_debuggerdock.cpp"
+				RelativePath="release\moc_documentpane.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_debuggerdock.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -786,10 +804,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_documentpane.cpp"
+				RelativePath="debug\moc_jumpdialog.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -802,18 +820,6 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_jumpdialog.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -870,10 +876,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_newfiledialog.cpp"
+				RelativePath="release\moc_newfiledialog.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -882,10 +888,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_newfiledialog.cpp"
+				RelativePath="debug\moc_newfiledialog.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -918,10 +924,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_projectdock.cpp"
+				RelativePath="debug\moc_projectdock.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -930,10 +936,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_projectdock.cpp"
+				RelativePath="release\moc_projectdock.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -979,6 +985,54 @@
 			</File>
 			<File
 				RelativePath="debug\moc_symboldock.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="release\moc_sysinfodock.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_sysinfodock.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="release\moc_varinfodock.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_varinfodock.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"

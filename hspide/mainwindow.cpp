@@ -91,11 +91,17 @@ void MainWindow::setupDockWindows()
 	outputDockWidget->setObjectName("Output"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, outputDockWidget);
 
-	QDockWidget* debuggerDockWidget = new QDockWidget(tr("Debugger"), this);
-	debuggerDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	debuggerDockWidget->setWidget(debuggerDock = new CDebuggerDock(debuggerDockWidget));
-	debuggerDockWidget->setObjectName("Debugger"); // saveState()で警告がトレースで出るため
-	addDockWidget(Qt::BottomDockWidgetArea, debuggerDockWidget);
+	QDockWidget* sysInfoDockWidget = new QDockWidget(tr("SystemInfo"), this);
+	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
+	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
+	addDockWidget(Qt::BottomDockWidgetArea, sysInfoDockWidget);
+
+	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
+	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
+	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
+	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
 
 	QDockWidget* searchDockWidget = new QDockWidget(tr("Search result"), this);
 	searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
@@ -110,7 +116,8 @@ void MainWindow::setupDockWindows()
 	addDockWidget(Qt::BottomDockWidgetArea, messageDockWidget);
 
 	tabifyDockWidget(projectDockWidget, symbolDockWidget);
-	tabifyDockWidget(outputDockWidget, debuggerDockWidget);
+	tabifyDockWidget(outputDockWidget, sysInfoDockWidget);
+	tabifyDockWidget(outputDockWidget, varInfoDockWidget);
 	tabifyDockWidget(outputDockWidget, searchDockWidget);
 	tabifyDockWidget(outputDockWidget, messageDockWidget);
 

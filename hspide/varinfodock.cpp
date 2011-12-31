@@ -1,14 +1,14 @@
-#include "debuggerdock.h"
+#include "varinfodock.h"
 #include <QResizeEvent>
 
-CDebuggerDock::CDebuggerDock(QWidget *parent)
+CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	: QWidget(parent)
 {
 	editorWidget = new QTextEdit(this);
 	editorWidget->setReadOnly(true);
 }
 
-void CDebuggerDock::resizeEvent(QResizeEvent * event)
+void CVariableInfoDock::resizeEvent(QResizeEvent * event)
 {
 	editorWidget->resize(event->size());
 }
