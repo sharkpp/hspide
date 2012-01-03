@@ -10,11 +10,11 @@ CMessageDock::CMessageDock(QWidget *parent)
 	listWidget->setRootIsDecorated(false);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
-	model->invisibleRootItem()->insertColumns(0, 4);
-	model->setHeaderData(MsgCategory,    Qt::Horizontal, tr("Category"));
-	model->setHeaderData(MsgDescription, Qt::Horizontal, tr("Description"));
-	model->setHeaderData(MsgFile,        Qt::Horizontal, tr("File"));
-	model->setHeaderData(MsgLine,        Qt::Horizontal, tr("Line"));
+	model->invisibleRootItem()->insertColumns(0, ColumnCount);
+	model->setHeaderData(CategoryColumn,    Qt::Horizontal, tr("Category"));
+	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
+	model->setHeaderData(FileColumn,        Qt::Horizontal, tr("File"));
+	model->setHeaderData(LineColumn,        Qt::Horizontal, tr("Line"));
 	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 }
 
@@ -39,10 +39,10 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 		= static_cast<QStandardItemModel*>(listWidget->model());
 	int row = model->rowCount();
     model->insertRow(row);
-    model->setData(model->index(row, MsgCategory   ), "");
-    model->setData(model->index(row, MsgDescription), description);
-    model->setData(model->index(row, MsgFile       ), fileName);
-    model->setData(model->index(row, MsgLine       ), QString("%1").arg(lineNo));
+    model->setData(model->index(row, CategoryColumn   ), "");
+    model->setData(model->index(row, DescriptionColumn), description);
+    model->setData(model->index(row, FileColumn       ), fileName);
+    model->setData(model->index(row, LineColumn       ), QString("%1").arg(lineNo));
 	//
 	MessageInfoType info;
 	info.description= description;

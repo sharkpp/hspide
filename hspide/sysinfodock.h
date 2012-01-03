@@ -14,11 +14,17 @@ class CSystemInfoDock
 {
 	Q_OBJECT
 
-	QTreeView * listWidget;
+	typedef enum {
+		NameColumn = 0,
+		DescriptionColumn,
+		ColumnCount,
+	} ColumnType;
 
 	typedef struct INFO_TYPE {
 		QString typeName;
 	};
+
+	QTreeView * listWidget;
 
 	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
 
@@ -31,6 +37,8 @@ public:
 protected:
 
 	QStandardItem* getItem(const QString & valueName);
+
+	void setItem(QStandardItem* item, ColumnType type, const QString & value);
 
 protected:
 

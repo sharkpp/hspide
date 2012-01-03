@@ -12,10 +12,11 @@ class CMessageDock
 	Q_OBJECT
 
 	typedef enum {
-		MsgCategory = 0,
-		MsgDescription,
-		MsgFile,
-		MsgLine,
+		CategoryColumn = 0,
+		DescriptionColumn,
+		FileColumn,
+		LineColumn,
+		ColumnCount,
 	};
 
 	typedef struct {

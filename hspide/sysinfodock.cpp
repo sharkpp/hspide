@@ -10,15 +10,15 @@ CSystemInfoDock::CSystemInfoDock(QWidget *parent)
 	listWidget->setRootIsDecorated(false);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
-	model->invisibleRootItem()->setColumnCount(2);
-	model->setHeaderData(0, Qt::Horizontal, tr("Name"));
-	model->setHeaderData(1, Qt::Horizontal, tr("Description"));
+	model->invisibleRootItem()->setColumnCount(ColumnCount);
+	model->setHeaderData(NameColumn,        Qt::Horizontal, tr("Name"));
+	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
 //	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 
-	getItem("test/hoge");
-	getItem("test/fuga");
-	getItem("test");
-	getItem("fuga");
+	setItem(getItem("test/hoge"), DescriptionColumn, ">>hoge");
+	setItem(getItem("test/fuga"), DescriptionColumn, ">>fuga");
+	setItem(getItem("test"), DescriptionColumn, ">>test");
+	setItem(getItem("fuga"), DescriptionColumn, ">>fuga");
 }
 
 void CSystemInfoDock::resizeEvent(QResizeEvent * event)
@@ -30,6 +30,7 @@ void CSystemInfoDock::setVariable(const QString & valueName, const QString & typ
 {
 }
 
+// 指定したパスのアイテムを取得
 QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
@@ -63,7 +64,7 @@ QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
 		item   = new QStandardItem(key.front());
 		parent = itemPath.back();
 		// アイテム追加
-		parent->setColumnCount(2);
+		parent->setColumnCount(ColumnCount);
 		parent->appendRow(item);
 		// 下のレベルに移動
 		itemPath.push_back(item);
@@ -71,5 +72,12 @@ QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
 	}
 
 	return item;
+}
+
+// アイテムの指定のカラムに値をセット
+void CSystemInfoDock::setItem(QStandardItem* item, ColumnType type, const QString & value)
+{
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	model->setData(model->index(item->index().row(), int(type), item->index().parent()), value);
 }
 
