@@ -5,15 +5,35 @@
 #include <string>
 #include "apihook.h"
 
+//-------------------------------------------------------------------
+// 関数宣言
+
 void InstallAPIHookCore(HMODULE handle);
 
+//-------------------------------------------------------------------
+// 型宣言
+
+// ファイル情報
 typedef struct {
-	std::string			filename;
-	DWORD				offset;
-	std::vector<BYTE>	data;
+	std::string			filename;	// ファイル名
+	DWORD				offset;		// 書き込み位置
+	std::vector<BYTE>	data;		// 書き込みデータ
 } FILE_INFO;
 
+//-------------------------------------------------------------------
+// 変数定義
+
+// ファイル情報
 std::map<HANDLE, FILE_INFO> g_mapFileInfo;
+
+// フックを行うAPIのオリジナルを保存しておく変数
+static HANDLE  (WINAPI *  CreateFileA_)(LPCTSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE) = NULL;
+static BOOL    (WINAPI *  CloseHandle_)(HANDLE) = NULL;
+static BOOL    (WINAPI *    WriteFile_)(HANDLE,LPCVOID,DWORD,LPDWORD,LPOVERLAPPED) = NULL;
+static HMODULE (WINAPI * LoadLibraryA_)(LPCTSTR) = NULL;
+
+//-------------------------------------------------------------------
+// APIフック用関数実装
 
 HANDLE WINAPI HookCreateFileA(
 					LPCTSTR lpFileName,                         // ファイル名
@@ -25,10 +45,6 @@ HANDLE WINAPI HookCreateFileA(
 					HANDLE hTemplateFile                        // テンプレートファイルのハンドル
 				)
 {
-	HANDLE (WINAPI *pfnOrig)(LPCTSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE) = 
-	      (HANDLE (WINAPI *)(LPCTSTR,DWORD,DWORD,LPSECURITY_ATTRIBUTES,DWORD,DWORD,HANDLE))
-			GetProcAddress( GetModuleHandleA(_T("kernel32.dll")), _T("CreateFileA") );
-
 	TCHAR filename[MAX_PATH*2+1];
 
 	std::string hook_filename;
@@ -43,12 +59,8 @@ HANDLE WINAPI HookCreateFileA(
 	}
 
 	// オリジナルのAPIを呼び出し
-	HANDLE r = pfnOrig(lpFileName,dwDesiredAccess,dwShareMode,lpSecurityAttributes,
-	                   dwCreationDisposition,dwFlagsAndAttributes,hTemplateFile);
-
-//TCHAR tmp[256];
-//sprintf(tmp,"%s(%s) = %p\n", __FUNCTION__, lpFileName, r);
-//OutputDebugString(tmp);
+	HANDLE r = CreateFileA_(lpFileName,dwDesiredAccess,dwShareMode,lpSecurityAttributes,
+	                        dwCreationDisposition,dwFlagsAndAttributes,hTemplateFile);
 
 	if( !hook_filename.empty() )
 	{
@@ -65,14 +77,6 @@ BOOL WINAPI HookCloseHandle(
 					HANDLE hObject   // オブジェクトのハンドル
 				)
 {
-	BOOL (WINAPI *pfnOrig)(HANDLE) = 
-	      (BOOL (WINAPI *)(HANDLE))
-			GetProcAddress( GetModuleHandleA(_T("kernel32.dll")), _T("CloseHandle") );
-
-//TCHAR tmp[256];
-//sprintf(tmp,"%s(%p)\n", __FUNCTION__, hObject);
-//OutputDebugString(tmp);
-
 	// 標準入力/出力/エラーのハンドルではないこと
 	if( GetStdHandle(STD_INPUT_HANDLE)  != hObject &&
 		GetStdHandle(STD_OUTPUT_HANDLE) != hObject &&
@@ -99,7 +103,7 @@ BOOL WINAPI HookCloseHandle(
 	}
 
 	// オリジナルのAPIを呼び出し
-	BOOL r = pfnOrig(hObject);
+	BOOL r = CloseHandle_(hObject);
 
 	return r;
 }
@@ -112,10 +116,6 @@ BOOL WINAPI HookWriteFile(
 					LPOVERLAPPED lpOverlapped        // オーバーラップ構造体のバッファ
 				)
 {
-	BOOL (WINAPI *pfnOrig)(HANDLE,LPCVOID,DWORD,LPDWORD,LPOVERLAPPED) = 
-	      (BOOL (WINAPI *)(HANDLE,LPCVOID,DWORD,LPDWORD,LPOVERLAPPED))
-			GetProcAddress( GetModuleHandleA(_T("kernel32.dll")), _T("WriteFile") );
-
 	// 標準入力/出力/エラーのハンドルではないこと
 	if( GetStdHandle(STD_INPUT_HANDLE)  != hFile &&
 		GetStdHandle(STD_OUTPUT_HANDLE) != hFile &&
@@ -133,16 +133,12 @@ BOOL WINAPI HookWriteFile(
 			}
 			ite->second.offset += nNumberOfBytesToWrite;
 
-//TCHAR tmp[256];
-//sprintf(tmp,"%s(%p,%d)\n", __FUNCTION__, hFile, nNumberOfBytesToWrite);
-//OutputDebugString(tmp);
-
 			return TRUE;
 		}
 	}
 
 	// オリジナルのAPIを呼び出し
-	BOOL r = pfnOrig(hFile,lpBuffer,nNumberOfBytesToWrite,lpNumberOfBytesWritten,lpOverlapped);
+	BOOL r = WriteFile_(hFile,lpBuffer,nNumberOfBytesToWrite,lpNumberOfBytesWritten,lpOverlapped);
 
 	return r;
 }
@@ -151,14 +147,8 @@ HMODULE WINAPI HookLoadLibraryA(
 					LPCTSTR lpFileName   // モジュールのファイル名
 				)
 {
-	HMODULE (WINAPI *pfnOrig)(LPCTSTR) = 
-	      (HMODULE (WINAPI *)(LPCTSTR))
-			GetProcAddress( GetModuleHandleA(_T("kernel32.dll")), _T("LoadLibraryA") );
 	// オリジナルのAPIを呼び出し
-	HMODULE r = pfnOrig(lpFileName);
-//TCHAR tmp[256];
-//sprintf(tmp,"%s(%s) = %p\n", __FUNCTION__, lpFileName, r);
-//OutputDebugString(tmp);
+	HMODULE r = LoadLibraryA_(lpFileName);
 
 	// 読み込んだDLLで使用しているAPIにフックを仕掛ける
 	InstallAPIHookCore(r);
@@ -166,8 +156,20 @@ HMODULE WINAPI HookLoadLibraryA(
 	return r;
 }
 
+//-------------------------------------------------------------------
+// 関数実装
+
 void InstallAPIHook()
 {
+	// オリジナルのAPIを保存
+	if( !LoadLibraryA_ ) {
+		LoadLibraryA_	= LoadLibraryA;
+		CreateFileA_	= CreateFileA;
+		CloseHandle_	= CloseHandle;
+		WriteFile_		= WriteFile;
+	}
+
+	// APIフック
 	InstallAPIHookCore(NULL);
 }
 
@@ -186,3 +188,4 @@ void UninstallAPIHook()
 	UNINSTALL_HOOK(_T("kernel32.dll"), _T("CloseHandle"),	HookCloseHandle,	NULL);
 	UNINSTALL_HOOK(_T("kernel32.dll"), _T("WriteFile"),		HookWriteFile,		NULL);
 }
+
