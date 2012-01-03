@@ -32,7 +32,11 @@ public:
 
 	CSystemInfoDock(QWidget *parent = 0);
 
-	void setVariable(const QString & valueName, const QString & typeName, const QString & description);
+	void setEnable(bool enable);
+
+	void clear();
+
+	void update(const QString & valueName, const QString & description);
 
 protected:
 

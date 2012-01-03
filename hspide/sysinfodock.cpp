@@ -14,11 +14,7 @@ CSystemInfoDock::CSystemInfoDock(QWidget *parent)
 	model->setHeaderData(NameColumn,        Qt::Horizontal, tr("Name"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
 //	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
-
-	setItem(getItem("test/hoge"), DescriptionColumn, ">>hoge");
-	setItem(getItem("test/fuga"), DescriptionColumn, ">>fuga");
-	setItem(getItem("test"), DescriptionColumn, ">>test");
-	setItem(getItem("fuga"), DescriptionColumn, ">>fuga");
+	setEnable(false);
 }
 
 void CSystemInfoDock::resizeEvent(QResizeEvent * event)
@@ -26,8 +22,24 @@ void CSystemInfoDock::resizeEvent(QResizeEvent * event)
 	listWidget->resize(event->size());
 }
 
-void CSystemInfoDock::setVariable(const QString & valueName, const QString & typeName, const QString & description)
+void CSystemInfoDock::setEnable(bool enable)
 {
+	listWidget->setEnabled(enable);
+}
+
+void CSystemInfoDock::clear()
+{
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItem* root = model->invisibleRootItem();
+	while( root->rowCount() ) {
+		root->removeRow(0);
+	}
+}
+
+void CSystemInfoDock::update(const QString & valueName, const QString & description)
+{
+	QStandardItem* item = getItem(valueName);
+	setItem(item, DescriptionColumn, description);
 }
 
 // 指定したパスのアイテムを取得

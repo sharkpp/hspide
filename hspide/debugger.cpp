@@ -69,9 +69,9 @@ void CDebugger::parseCommand()
 			QByteArray data((char*)ptr.data(), ptr.size());
 			QDataStream in(data);
 			in.setVersion(QDataStream::Qt_4_4);
-			QVector<QPair<QString,QString> > debugInfo;
-			in >> debugInfo;
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << debugInfo;
+			in >> m_debugInfo;
+			emit updateDebugInfo(m_debugInfo);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << m_debugInfo;
 			break; }
 		case CDebuggerCommand::CMD_UPDATE_VAR_INFO: { // •Ï”–¼î•ñ‚ðXV
 			QByteArray data((char*)ptr.data(), ptr.size());

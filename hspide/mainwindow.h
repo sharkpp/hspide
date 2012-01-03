@@ -98,6 +98,7 @@ public slots:
 	void onQuit();
 	void onGoToLine();
 	void onGoToLine(const QUuid & uuid, int lineNo);
+	void onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info);
 	void onBuildProject();
 	void onBuildSolution();
 	void onDebugRun();

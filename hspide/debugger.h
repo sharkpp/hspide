@@ -1,4 +1,5 @@
 #include <QObject>
+#include <QVector>
 #include <QString>
 #include <QProcess>
 #include <QLocalSocket>
@@ -19,6 +20,8 @@ class CDebugger
 	bool			m_waitAttach;
 
 	CDebuggerCommand m_cmdQueue;
+
+	QVector<QPair<QString,QString> >	m_debugInfo;
 
 public:
 
@@ -44,5 +47,6 @@ public slots:
 signals:
 
 	void stopAtBreakPoint(const QUuid & uuid, int lineNo);
+	void updateDebugInfo(const QVector<QPair<QString,QString> > & info);
 
 };

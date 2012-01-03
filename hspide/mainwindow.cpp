@@ -1,4 +1,3 @@
-#include <QComboBox>
 #include "mainwindow.h"
 #include "workspaceitem.h"
 #include "documentpane.h"
@@ -654,6 +653,14 @@ void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
 	}
 }
 
+void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info)
+{
+	typedef QPair<QString,QString> string_pair; // 直接だとマクロの展開エラーになるので...
+	foreach(const string_pair & val, info) {
+		sysInfoDock->update(val.first, val.second);
+	}
+}
+
 void MainWindow::onBuildProject()
 {
 }
@@ -949,6 +956,7 @@ void MainWindow::buildOutput(const QString & output)
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
 	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(onGoToLine(const QUuid &,int)));
+	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> > &)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
 
 	debugRunAct    ->setVisible( !m_debuggers.empty() );
@@ -958,6 +966,12 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	debugStopAct   ->setVisible( m_debuggers.empty() );
 
 	m_debuggers.insert(debugger);
+
+	// 最初のデバッガの場合のみクリア
+	if( 1 == m_debuggers.size() ) {
+		sysInfoDock->clear();
+		sysInfoDock->setEnable(true);
+	}
 }
 
 void MainWindow::dettachedDebugger()
@@ -971,6 +985,10 @@ void MainWindow::dettachedDebugger()
 	debugSuspendAct->setVisible( !m_debuggers.empty() );
 	debugResumeAct ->setVisible( !m_debuggers.empty() );
 	debugStopAct   ->setVisible( !m_debuggers.empty() );
+
+	if( m_debuggers.empty() ) {
+		sysInfoDock->setEnable(false);
+	}
 }
 
 // 編集された
