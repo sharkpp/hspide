@@ -1001,6 +1001,8 @@ void MainWindow::beginDebugging()
 	// 最初のデバッガの場合のみクリア
 	sysInfoDock->clear();
 	sysInfoDock->setEnable(true);
+	varInfoDock->clear();
+	varInfoDock->setEnable(true);
 
 	// デバッグ用のレイアウトに変更
 	m_stateDefault = saveState();
@@ -1012,6 +1014,7 @@ void MainWindow::beginDebugging()
 void MainWindow::endDebugging()
 {
 	sysInfoDock->setEnable(false);
+	varInfoDock->setEnable(false);
 
 	// 通常のレイアウトに変更
 	m_stateDebugging = saveState();
