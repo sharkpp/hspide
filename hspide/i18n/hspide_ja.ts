@@ -51,6 +51,17 @@
     </message>
 </context>
 <context>
+    <name>CSystemInfoDock</name>
+    <message>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>説明</translation>
+    </message>
+</context>
+<context>
     <name>CWorkSpaceItem</name>
     <message>
         <source>(untitled)</source>
@@ -320,7 +331,7 @@
     </message>
     <message>
         <source>Debugger</source>
-        <translation>デバッガ</translation>
+        <translation type="obsolete">デバッガ</translation>
     </message>
     <message>
         <source>Search result</source>
@@ -429,6 +440,14 @@
     <message>
         <source>Stop &amp;debugging</source>
         <translation>デバッグの停止(&amp;D)</translation>
+    </message>
+    <message>
+        <source>SystemInfo</source>
+        <translation>システム情報</translation>
+    </message>
+    <message>
+        <source>VariableInfo</source>
+        <translation>変数情報</translation>
     </message>
 </context>
 <context>
