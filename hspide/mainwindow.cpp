@@ -94,12 +94,14 @@ void MainWindow::setupDockWindows()
 	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
 	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
+	sysInfoDockWidget->setVisible(false);
 	addDockWidget(Qt::BottomDockWidgetArea, sysInfoDockWidget);
 
 	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
 	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
 	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
+	varInfoDockWidget->setVisible(false);
 	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
 
 	QDockWidget* searchDockWidget = new QDockWidget(tr("Search result"), this);
@@ -406,8 +408,12 @@ void MainWindow::loadSettings()
 	m_compiler->setHspCommonPath(settings.value("path/hsp-common", m_compiler->hspPath() + "/common/").toString());
 
 	// ウインドウ位置などを取得
-	restoreGeometry(settings.value("window/geometry").toByteArray());
-	restoreState(settings.value("window/state").toByteArray());
+	m_geometryDefault   = settings.value("window/geometry").toByteArray();
+	m_stateDefault      = settings.value("window/state").toByteArray();
+	m_geometryDebugging = settings.value("window/geometry-debugging").toByteArray();
+	m_stateDebugging    = settings.value("window/state-debugging").toByteArray();
+	restoreGeometry(m_geometryDefault);
+	restoreState(m_stateDefault);
 }
 
 void MainWindow::saveSettings()
@@ -427,7 +433,9 @@ void MainWindow::saveSettings()
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
-	settings.setValue("window/state", saveState());
+	settings.setValue("window/state",    saveState());
+	settings.setValue("window/geometry-debugging", m_geometryDebugging);
+	settings.setValue("window/state-debugging",    m_stateDebugging);
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -965,13 +973,12 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	debugResumeAct ->setVisible( m_debuggers.empty() );
 	debugStopAct   ->setVisible( m_debuggers.empty() );
 
-	m_debuggers.insert(debugger);
-
-	// 最初のデバッガの場合のみクリア
-	if( 1 == m_debuggers.size() ) {
-		sysInfoDock->clear();
-		sysInfoDock->setEnable(true);
+	if( m_debuggers.empty() ) {
+		// デバッグ開始
+		beginDebugging();
 	}
+
+	m_debuggers.insert(debugger);
 }
 
 void MainWindow::dettachedDebugger()
@@ -987,8 +994,37 @@ void MainWindow::dettachedDebugger()
 	debugStopAct   ->setVisible( !m_debuggers.empty() );
 
 	if( m_debuggers.empty() ) {
-		sysInfoDock->setEnable(false);
+		// デバッグ終了
+		endDebugging();
 	}
+}
+
+void MainWindow::beginDebugging()
+{
+	// 最初のデバッガの場合のみクリア
+	sysInfoDock->clear();
+	sysInfoDock->setEnable(true);
+
+	// デバッグ用のレイアウトに変更
+	m_geometryDefault = saveGeometry();
+	m_stateDefault    = saveState();
+	sysInfoDock->parentWidget()->setVisible(true);
+	varInfoDock->parentWidget()->setVisible(true);
+	restoreGeometry(m_geometryDebugging);
+	restoreState(m_stateDebugging);
+}
+
+void MainWindow::endDebugging()
+{
+	sysInfoDock->setEnable(false);
+
+	// 通常のレイアウトに変更
+	m_geometryDebugging = saveGeometry();
+	m_stateDebugging    = saveState();
+	sysInfoDock->parentWidget()->setVisible(false);
+	varInfoDock->parentWidget()->setVisible(false);
+	restoreGeometry(m_geometryDefault);
+	restoreState(m_stateDefault);
 }
 
 // 編集された

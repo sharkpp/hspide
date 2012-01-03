@@ -68,6 +68,12 @@ class MainWindow : public QMainWindow
 
 	QSet<CDebugger*> m_debuggers;
 
+	QByteArray m_geometryDefault;
+	QByteArray m_stateDefault;
+
+	QByteArray m_geometryDebugging;
+	QByteArray m_stateDebugging;
+
 public:
 	MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	virtual ~MainWindow();
@@ -120,4 +126,8 @@ private:
 
 	void loadSettings();
 	void saveSettings();
+
+	void beginDebugging();
+	void endDebugging();
+
 };
