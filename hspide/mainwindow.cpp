@@ -408,11 +408,9 @@ void MainWindow::loadSettings()
 	m_compiler->setHspCommonPath(settings.value("path/hsp-common", m_compiler->hspPath() + "/common/").toString());
 
 	// ウインドウ位置などを取得
-	m_geometryDefault   = settings.value("window/geometry").toByteArray();
 	m_stateDefault      = settings.value("window/state").toByteArray();
-	m_geometryDebugging = settings.value("window/geometry-debugging").toByteArray();
 	m_stateDebugging    = settings.value("window/state-debugging").toByteArray();
-	restoreGeometry(m_geometryDefault);
+	restoreGeometry(settings.value("window/geometry").toByteArray());
 	restoreState(m_stateDefault);
 }
 
@@ -433,9 +431,8 @@ void MainWindow::saveSettings()
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
-	settings.setValue("window/state",    saveState());
-	settings.setValue("window/geometry-debugging", m_geometryDebugging);
-	settings.setValue("window/state-debugging",    m_stateDebugging);
+	settings.setValue("window/state",           saveState());
+	settings.setValue("window/state-debugging", m_stateDebugging);
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -1006,11 +1003,9 @@ void MainWindow::beginDebugging()
 	sysInfoDock->setEnable(true);
 
 	// デバッグ用のレイアウトに変更
-	m_geometryDefault = saveGeometry();
-	m_stateDefault    = saveState();
+	m_stateDefault = saveState();
 	sysInfoDock->parentWidget()->setVisible(true);
 	varInfoDock->parentWidget()->setVisible(true);
-	restoreGeometry(m_geometryDebugging);
 	restoreState(m_stateDebugging);
 }
 
@@ -1019,11 +1014,9 @@ void MainWindow::endDebugging()
 	sysInfoDock->setEnable(false);
 
 	// 通常のレイアウトに変更
-	m_geometryDebugging = saveGeometry();
-	m_stateDebugging    = saveState();
+	m_stateDebugging = saveState();
 	sysInfoDock->parentWidget()->setVisible(false);
 	varInfoDock->parentWidget()->setVisible(false);
-	restoreGeometry(m_geometryDefault);
 	restoreState(m_stateDefault);
 }
 

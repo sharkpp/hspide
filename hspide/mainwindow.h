@@ -68,10 +68,7 @@ class MainWindow : public QMainWindow
 
 	QSet<CDebugger*> m_debuggers;
 
-	QByteArray m_geometryDefault;
 	QByteArray m_stateDefault;
-
-	QByteArray m_geometryDebugging;
 	QByteArray m_stateDebugging;
 
 public:
