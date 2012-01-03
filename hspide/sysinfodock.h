@@ -1,9 +1,13 @@
 #include <QTextEdit>
 #include <QTreeView>
+#include <QMap>
+#include <QVector>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
+
+class QStandardItem;
 
 class CSystemInfoDock
 	: public QWidget
@@ -12,16 +16,26 @@ class CSystemInfoDock
 
 	QTreeView * listWidget;
 
+	typedef struct INFO_TYPE {
+		QString typeName;
+	};
+
+	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
+
 public:
 
 	CSystemInfoDock(QWidget *parent = 0);
+
+	void setVariable(const QString & valueName, const QString & typeName, const QString & description);
+
+protected:
+
+	QStandardItem* getItem(const QString & valueName);
 
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
 
 public slots:
-
-private:
 
 };

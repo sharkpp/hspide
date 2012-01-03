@@ -10,35 +10,66 @@ CSystemInfoDock::CSystemInfoDock(QWidget *parent)
 	listWidget->setRootIsDecorated(false);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
-//	model->invisibleRootItem()->insertColumns(0, 2);
 	model->invisibleRootItem()->setColumnCount(2);
 	model->setHeaderData(0, Qt::Horizontal, tr("Name"));
 	model->setHeaderData(1, Qt::Horizontal, tr("Description"));
 //	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
-	int row = 0;
-	QStandardItem *root = model->invisibleRootItem();
-	QStandardItem *item, *item2;
-	item = root;
-	for (int i = 0; i < 4; ++i) {
-		root->setColumnCount(2);
-		root->appendRow(item = new QStandardItem(QString("item %0").arg(i)));
-		model->setData(model->index(item->index().row(), 1, root->index()), QString(">>%0").arg(i));
-	//	root->takeChild(item->index().row(), 1, root->index()), QString(">>%0").arg(i));
-	//	QList<QStandardItem*> items;
-	//	items << new QStandardItem(QString(">>%0").arg(i));
-	//	root->appendColumn(items);
-		root = item;
-	}	
-//    model->insertRow(row);
-//	model->setData(model->index(row, 0), "a");
-//	model->setData(model->index(row, 1), "b");
-//	model->insertRow(1, model->index(row, 0));
-//	model->setData(model->index(1, 0), "b");
-//	model->setData(model->index(1, 1), "c");
+
+	getItem("test/hoge");
+	getItem("test/fuga");
+	getItem("test");
+	getItem("fuga");
 }
 
 void CSystemInfoDock::resizeEvent(QResizeEvent * event)
 {
 	listWidget->resize(event->size());
+}
+
+void CSystemInfoDock::setVariable(const QString & valueName, const QString & typeName, const QString & description)
+{
+}
+
+QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
+{
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItem* parent = model->invisibleRootItem();
+	QStandardItem* item;
+	QStringList key = valueName.split("/");
+	QList<QStandardItem*> itemPath;
+
+	itemPath.push_back(parent);
+
+	for(int row = 0; row < parent->rowCount(); row++)
+	{
+		item = parent->child(row);
+		if( key.front() == item->text() )
+		{
+			itemPath.push_back(item);
+			key.pop_front();
+			// 全てたどれた？
+			if( key.empty() ) {
+				return item;
+			}
+			// 一つもぐる
+			parent = item;
+			row    = -1;
+			continue;
+		}
+	}
+
+	for(; !key.empty() ;)
+	{
+		item   = new QStandardItem(key.front());
+		parent = itemPath.back();
+		// アイテム追加
+		parent->setColumnCount(2);
+		parent->appendRow(item);
+		// 下のレベルに移動
+		itemPath.push_back(item);
+		key.pop_front();
+	}
+
+	return item;
 }
 
