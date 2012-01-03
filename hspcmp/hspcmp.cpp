@@ -16,36 +16,37 @@
 
 static
 struct option {
-	bool		version;
-	bool		help;
-	const char * exename;
-	const char * filename;
+	bool		version;			// バージョン表示のみ
+	bool		help;				// ヘルプの表示のみ
+	const char * exename;			// 実行ファイル名
+	const char * filename;			// 処理ファイル名
 	packfile_manager
-				packfile;
-	int			wx, wy;
-	bool		hidden_window;
-	bool		debug;
-	bool		debug_window;
-	bool		debug_window_set;
-	bool		preprocess_only;
-	bool		auto_make;
-	bool		make;
-	bool		execute;
-	bool		symbol_put;
-	const char * refname;
-	const char * objname;
-	const char * common_path;
-	const char * hsp_path;
-	const char * work_path;
-	const char * cmdline;
-	const char * attach;
+				packfile;			// パックファイル処理
+	int			wx, wy;				// ウインドウサイズ(wx=幅,wy=高さ)
+	bool		hidden_window;		// 生成した実行ファイルで起動時にウインドウを非表示にしておくか
+	bool		debug;				// デバッグモード
+	bool		debug_window;		// デバッグウインドウ
+	bool		preprocess_only;	// プリプロセス処理のみ行う
+	bool		auto_make;			// 自動EXE生成を行う
+	bool		make;				// EXE生成処理を行う
+	bool		execute;			// コンパイルが正常終了した場合、実行
+	bool		symbol_put;			// 定義済みシンボルの表示
+	bool		redirect;			// オブジェクトファイルなどをファイルに書き込まず標準エラー出力にリダイレクト
+	const char * refname;			// コンパイル結果などに表示するファイル名
+	const char * objname;			// オブジェクトファイル名
+	const char * common_path;		// commonフォルダのパス
+	const char * hsp_path;			// HSPフォルダのパス
+	const char * work_path;			// 作業ディレクトリのパス
+	const char * cmdline;			// EXE実行時にコマンドラインへ渡す内容
+	const char * attach;			// デバッガとの関連付けの情報
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
 		, wx(0), wy(0), hidden_window(false)
-		, debug(false), debug_window(false), debug_window_set(false), preprocess_only(false)
+		, debug(false), debug_window(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
 		, symbol_put(false)
+		, redirect(false)
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 		, cmdline(NULL)
 		, attach(NULL)
@@ -62,7 +63,6 @@ struct option {
 		printf("option.hidden_window = %s\n", hidden_window ? "true" : "false");
 		printf("option.debug = %s\n", debug ? "true" : "false");
 		printf("option.debug_window = %s\n", debug_window ? "true" : "false");
-		printf("option.debug_window_set = %s\n", debug_window_set ? "true" : "false");
 		printf("option.preprocess_only = %s\n", preprocess_only ? "true" : "false");
 		printf("option.auto_make = %s\n", auto_make ? "true" : "false");
 		printf("option.make = %s\n", make ? "true" : "false");
@@ -74,10 +74,15 @@ struct option {
 		printf("option.work_path = \"%s\"\n", work_path);
 		printf("option.cmdline = \"%s\"\n", cmdline);
 		printf("option.symbol_put = %s\n", symbol_put ? "true" : "false");
+		printf("option.redirect = %s\n", redirect ? "true" : "false");
+		printf("option.attach = \"%s\"\n", attach);
 		packfile.dump();
 	}
 #endif
 } option;
+
+void InstallAPIHook();
+void UninstallAPIHook();
 
 void usage()
 {
@@ -122,6 +127,8 @@ void usage()
 
 bool read_args(int argc, char * argv[])
 {
+	bool debug_window_set = false; // デバッグウインドウ表示が指示されているか？
+
 	for(int i = 1; i < argc; i++)
 	{
 		if( '-' == *argv[i] ) {
@@ -145,13 +152,13 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug") ) {
 				// デバッグ
 				option.debug = true;
-				if( !option.debug_window_set ) {
+				if( !debug_window_set ) {
 					option.debug_window = true;
 				}
 			} else if(  !strcmp(argv[i], "-D") || !strcmp(argv[i], "--debug-window") ) {
 				// デバッグウインドウ
 				option.debug_window = true;
-				option.debug_window_set = true;
+				debug_window_set = true;
 			} else if(  !strcmp(argv[i], "-P") || !strcmp(argv[i], "--preprocess-only") ) {
 				// プリプロセス処理のみ
 				option.preprocess_only = true;
@@ -185,6 +192,9 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "--attach") ) {
 				// デバッガ用
 				option.attach = argv[++i];
+			} else if(  !strcmp(argv[i], "--redirect") ) {
+				// オブジェクトファイルなどをファイルに書き込まず標準エラー出力にリダイレクト
+				option.redirect = true;
 			} else if(  !strcmp(argv[i], "-v") || !strcmp(argv[i], "--version") ) {
 				// バージョンの表示
 				option.version = true;
@@ -302,6 +312,7 @@ int main(int argc, char * argv[])
 {
 	setvbuf(stdout, NULL, _IONBF, 0); // 出力バッファリング無効
 
+	// 引数解析
 	if( !read_args(argc, argv) ||
 		((!option.filename || option.help) && !option.version && !option.symbol_put) )
 	{
@@ -310,6 +321,10 @@ int main(int argc, char * argv[])
 #endif
 		usage();
 		return -1;
+	}
+
+	if( option.redirect ) {
+		InstallAPIHook();
 	}
 
 	hspcmp cmp;
@@ -324,6 +339,7 @@ int main(int argc, char * argv[])
 	std::string tmp2;
 	
 	if( option.attach ) {
+		// デバッガとの関連付け用の情報を渡す
 		static const char KEY[] = "hspide#attach=";
 		static const size_t KEY_LEN = sizeof(KEY) - 1;
 		tmp.assign(KEY, KEY + KEY_LEN);
@@ -332,16 +348,20 @@ int main(int argc, char * argv[])
 	}
 
 	if( option.version ) {
+		// バージョンのみを表示
 		tmp.resize(1024*1024);
 		cmp.hsc_ver(&tmp[0]);
 		print_message("hspcmp.dll : %s\n", &tmp[0]);
+		UninstallAPIHook();
 		return 0;
 	}
 
 	if( option.symbol_put ) {
+		// 定義済みシンボルを表示
 		tmp.resize(1024*1024);
 		cmp.hsc3_getsym();
 		print_compiler_message(cmp);
+		UninstallAPIHook();
 		return 0;
 	}
 
@@ -362,6 +382,7 @@ int main(int argc, char * argv[])
 		normalize_directory(common_path);
 		if( (result = cmp.hsc_compath(common_path.c_str())) != 0 ) {
 			print_message("can't set common path!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 #ifdef _DEBUG
@@ -370,6 +391,7 @@ int main(int argc, char * argv[])
 	}
 
 	if( !option.hsp_path ) {
+		// HSPのディレクトリが指定されていなかったらカレントとする
 		hsp_path = ".";
 		option.hsp_path = hsp_path.c_str();
 	}
@@ -377,6 +399,7 @@ int main(int argc, char * argv[])
 	// コンパイル対象を指定
 	if( (result = cmp.hsc_ini(option.filename)) != 0 ) {
 		print_message("can't set target name!\n"); // 現状、常に正常処理になるので処理を通らない
+		UninstallAPIHook();
 		return -1;
 	}
 
@@ -384,6 +407,7 @@ int main(int argc, char * argv[])
 	if( option.refname ) {
 		if( (result = cmp.hsc_refname(option.refname)) != 0 ) {
 			print_message("can't set reference name!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 	}
@@ -396,6 +420,7 @@ int main(int argc, char * argv[])
 		}
 		if( (result = cmp.hsc_objname(option.objname)) != 0 ) {
 			print_message("can't set object name!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 	} else {
@@ -418,6 +443,7 @@ int main(int argc, char * argv[])
 	print_compiler_message(cmp);
 	// エラーの場合は終了
 	if( result != 0 ) {
+		UninstallAPIHook();
 		return -1;
 	}
 
@@ -427,6 +453,7 @@ int main(int argc, char * argv[])
 		tmp.resize(MAX_PATH*2+1);
 		if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) != 0 ) {
 			print_message("can't get runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 		static const char DEFAULT_RELEASE_RUNTIME[] = "hsprt";
@@ -455,12 +482,14 @@ int main(int argc, char * argv[])
 
 		if( (result = cmp.pack_ini(option.exename)) != 0 ) {
 			print_message("can't set pack name!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 
 		if( (result = cmp.pack_make(CREATE_DPM_EXE, ENCRYPTE_KEY_DEFAULT)) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
+			UninstallAPIHook();
 			return -1;
 		}
 
@@ -470,6 +499,7 @@ int main(int argc, char * argv[])
 						)) != 0 )
 		{
 			print_message("can't set pack option!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 
@@ -478,12 +508,14 @@ int main(int argc, char * argv[])
 		tmp2 += runtime;
 		if( (result = cmp.pack_rt(tmp2.c_str())) != 0 ) {
 			print_message("can't set runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
+			UninstallAPIHook();
 			return -1;
 		}
 
 		if( (result = cmp.pack_exe(EXE_TYPE_DEFAULT)) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
+			UninstallAPIHook();
 			return -1;
 		}
 	}
@@ -510,10 +542,12 @@ int main(int argc, char * argv[])
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
 			print_message("can't execute!\n");
+			UninstallAPIHook();
 			return -1;
 		}
 	}
 
+	UninstallAPIHook();
 	return 0;
 }
 
