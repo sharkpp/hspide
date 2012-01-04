@@ -1,4 +1,39 @@
+#include <QVector>
+#include <QString>
+#include <QDebug>
+
 #pragma once
+
+typedef struct {
+	QString name;
+	QString typeName;
+} VARIABLE_INFO_TYPE;
+
+inline
+QDataStream& operator<<(QDataStream& stream, const VARIABLE_INFO_TYPE& info)
+{
+    stream << info.name;
+    stream << info.typeName;
+    return stream;
+}
+
+inline
+QDataStream& operator>>(QDataStream& stream, VARIABLE_INFO_TYPE& info)
+{
+    stream >> info.name;
+    stream >> info.typeName;
+    return stream;
+}
+
+inline
+QDebug& operator<<(QDebug &debug, const VARIABLE_INFO_TYPE& info)
+{
+    debug << "[" << info.name
+          << "/" << info.typeName << "]";
+    return debug;
+}
+
+
 
 class CDebuggerCommand
 {

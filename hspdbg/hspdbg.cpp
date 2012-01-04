@@ -24,6 +24,8 @@ EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
 	// メイン処理ルーティンを生成
 	CDbgMain::create();
 
+	g_app->initialize(p1);
+
 	g_hsp3dbg = p1;
 
 	return FALSE;
@@ -51,21 +53,7 @@ int runmode = hspctx->runmode;
 
 	if( breaked )
 	{
-		char* p;
-		// デバッグ情報更新
-		p = p1->get_value(DEBUGINFO_GENERAL);
-		g_app->updateDebugInfo(p);
-		p1->dbg_close(p);
-
-		//		変数情報取得
-		//		option
-		//			bit0 : sort ( 受け側で処理 )
-		//			bit1 : module
-		//			bit2 : array
-		//			bit3 : dump
-		p = p1->get_varinf(NULL, 2|4);
-		g_app->updateVarInfo(p);
-		p1->dbg_close(p);
+		g_app->updateInfo(p1);
 
 		hspctx->runmode = RUNMODE_STOP;
 	}

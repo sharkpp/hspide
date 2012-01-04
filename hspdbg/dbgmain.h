@@ -12,6 +12,9 @@
 typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
 typedef QMap<QString, QUuid> CUuidLookupInfo;
 
+struct HSP3DEBUG;
+struct HSPCTX;
+
 class CDbgMain
 	: public QCoreApplication
 {
@@ -32,15 +35,18 @@ class CDbgMain
 
 	CDebuggerCommand m_cmdQueue;
 
+	QVector<QString> m_varNames;
+
 public:
 	CDbgMain();
 	virtual ~CDbgMain();
 
+	void initialize(HSP3DEBUG* dbg);
+
 	void connectToDebugger();
 	void putLog(const char* text, int len);
 
-	void updateDebugInfo(const char* ptr);
-	void updateVarInfo(const char* ptr);
+	void updateInfo(HSP3DEBUG* dbg);
 
 	bool isBreak(const char* filename, int lineNo);
 
@@ -52,6 +58,14 @@ protected:
 	static unsigned __stdcall runStatic(void* this_);
 
 	void run();
+
+	void updateDebugInfo(HSP3DEBUG* dbg);
+	void updateVarInfo(HSP3DEBUG* dbg);
+
+	void initializeVariableNames(HSP3DEBUG* dbg);
+	QString getVariableName(int index);
+
+	QString loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx);
 
 public slots:
 

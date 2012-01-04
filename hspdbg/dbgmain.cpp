@@ -1,12 +1,21 @@
 #include <QTextCodec>
 #include <process.h>
 #include "dbgmain.h"
+#include "hspsdk/hsp3debug.h"
+#include "hspsdk/hsp3struct.h"
 
 extern CDbgMain* g_app;
 
 // dummy argument for QCoreApplication
 static int argc_ = 1;
 static char *argv_[] = {""};
+
+typedef enum {
+	DINFO_TYPE_DATA_END = 255,			// データ列の終端
+	DINFO_TYPE_SOURCE_FILE_NAME = 254,	// ソースファイル指定
+	DINFO_TYPE_VARIABLE = 253,			// 変数名データ指定
+	DINFO_TYPE_OFFSET = 252,			// 次の16bit値が、次行までのCSオフセット
+} DINFO_TYPE;
 
 HANDLE	CDbgMain::m_handle = NULL;
 HANDLE	CDbgMain::m_waitThread = NULL;
@@ -143,9 +152,127 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 	return false;
 }
 
-void CDbgMain::updateDebugInfo(const char* ptr)
+// data seg から 文字列を読み込み
+QString CDbgMain::loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx)
 {
 	QTextCodec* codec = QTextCodec::codecForLocale();
+	QString r;
+
+	size_t         ds_len = hspctx->hsphed->max_ds;
+	unsigned char* ds_ptr = (unsigned char*)hspctx->mem_mds;
+	unsigned char* ds_last= ds_ptr + ds_len;
+
+// 制御文字を\つき文字に置換する処理を入れる
+	if( allow_minus_idx && -1 == offset ) {
+		r = "";
+	} else if( offset < 0 || (int)ds_len <= offset ) {
+		r = "<NULL>";
+	} else {
+		char * pStart = (char *)( ds_ptr + offset );
+		char * pEnd   = pStart;
+		char * pLast  = (char *)::memchr(pStart, 0, ds_len - offset);
+		if( pLast ) {
+			for(; pEnd < pLast ; pEnd++)
+			{
+				if( IsDBCSLeadByteEx(CP_ACP, (BYTE)*pEnd) ) {
+					pEnd ++; // SJIS全角の1バイト目
+				} else {
+					QString tmp;
+					switch( *pEnd ) {
+					case '\t': tmp = "\\t";		break;
+					case '\\': tmp = "\\\\";	break;
+					case '\"': tmp = "\\\"";	break;
+					case 0x0d:
+						if( 0x0a == *(pEnd + 1) ) {
+							tmp = "\\n";
+							r += codec->toUnicode(pStart, int(pEnd - pStart));
+							r += tmp;
+							pEnd++;
+							pStart = pEnd + 1;
+							continue;
+						} else {
+							tmp = "\\r";
+						}
+						break;
+					default: continue;
+					}
+					r += codec->toUnicode(pStart, int(pEnd - pStart));
+					r += tmp;
+					pStart = pEnd + 1;
+				}
+			}
+			// 残りを追加
+			r += codec->toUnicode(pStart, int(pEnd - pStart));
+		}
+	}
+	return r;
+}
+
+void CDbgMain::initializeVariableNames(HSP3DEBUG* dbg)
+{
+	HSPCTX* hspctx = (HSPCTX*)dbg->hspctx;
+
+	size_t         di_len = hspctx->hsphed->max_dinfo;
+	unsigned char* di_ptr = hspctx->mem_di;
+	unsigned char* di_last= di_ptr + di_len;
+
+	size_t         ds_len = hspctx->hsphed->max_ds;
+	unsigned char* ds_ptr = (unsigned char*)hspctx->mem_mds;
+	unsigned char* ds_last= ds_ptr + ds_len;
+
+	for(;di_ptr < di_last ; ) {
+		switch( *di_ptr ) {
+		case DINFO_TYPE_DATA_END:
+			di_ptr++;
+			break;
+		case DINFO_TYPE_SOURCE_FILE_NAME:
+			di_ptr += 4 + 2; // ファイル名 + 行番号
+			break;
+		case DINFO_TYPE_VARIABLE: {
+			int offset = (int)((di_ptr[3] << 16) | (di_ptr[2] << 8) | di_ptr[1]);
+			if( offset < ds_len ) {
+				m_varNames.push_back(loadString(hspctx, offset, false));
+			}
+			di_ptr += 4;
+			break; }
+		case DINFO_TYPE_OFFSET:
+			di_ptr += 4;
+			break;
+		default:
+			di_ptr++;
+		}
+	}
+}
+
+QString CDbgMain::getVariableName(int index)
+{
+	if( 0 <= index &&
+		index < m_varNames.size() )
+	{
+		return m_varNames[index];
+	}
+	return QString("v%1").arg(index);
+}
+
+void CDbgMain::initialize(HSP3DEBUG* dbg)
+{
+	initializeVariableNames(dbg);
+}
+
+void CDbgMain::updateInfo(HSP3DEBUG* dbg)
+{
+	// デバッグ情報更新
+	updateDebugInfo(dbg);
+
+	// 変数情報取得
+	updateVarInfo(dbg);
+}
+
+void CDbgMain::updateDebugInfo(HSP3DEBUG* dbg)
+{
+	QTextCodec* codec = QTextCodec::codecForLocale();
+
+	char* ptr = dbg->get_value(DEBUGINFO_GENERAL);
 
 	QVector<QPair<QString,QString> > debugInfo;
 
@@ -153,7 +280,7 @@ void CDbgMain::updateDebugInfo(const char* ptr)
 	{
 		const char* key = p;
 		const char* value = p;
-		for(;    *p && 0x0D != p[0] && 0x0A != p[1]; ++value, ++p);
+		for(; *p && 0x0D != p[0] && 0x0A != p[1]; ++value, ++p);
 		if( 0x0D != *p ) { break; }
 		value += 2;
 		p += 2;
@@ -174,25 +301,72 @@ void CDbgMain::updateDebugInfo(const char* ptr)
 	out << debugInfo;
 	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_DEBUG_INFO, data.data(), data.size());
 	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+
+	dbg->dbg_close(ptr);
 }
 
-void CDbgMain::updateVarInfo(const char* ptr)
+void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
 {
 	QTextCodec* codec = QTextCodec::codecForLocale();
 
-	QVector<QString> varInfo;
+	//		変数情報取得
+	//		option
+	//			bit0 : sort ( 受け側で処理 )
+	//			bit1 : module
+	//			bit2 : array
+	//			bit3 : dump
+//	char* ptr = dbg->get_varinf(NULL, 2|4);
 
-	for(const char* p = ptr; *p;)
+	HSPCTX* hspctx = (HSPCTX*)dbg->hspctx;
+
+	QVector<VARIABLE_INFO_TYPE> varInfo;
+
+	//for(const char* p = ptr; *p;)
+	//{
+	//	const char* key = p;
+	//	for(; *p && 0x0D != p[0] && 0x0A != p[1]; ++p);
+	//	if( 0x0D != *p ) { break; }
+	//	p += 2;
+
+	//	QString key_str = codec->toUnicode(key, int(p - 2 - key));
+
+	//	varInfo.append(key_str);
+	//}
+
+	for(int i = 0, num = m_varNames.size();
+		i < num; i++)
 	{
-		const char* key = p;
-		for(;    *p && 0x0D != p[0] && 0x0A != p[1]; ++p);
-		if( 0x0D != *p ) { break; }
-		p += 2;
-
-		QString key_str = codec->toUnicode(key, int(p - 2 - key));
-
-		varInfo.append(key_str);
+		PVal* pval = &hspctx->mem_var[i];
+		varInfo.push_back(VARIABLE_INFO_TYPE());
+		VARIABLE_INFO_TYPE & info = varInfo.back();
+		info.name =
+				QString("%1/%2,%3,%4,[%5,%6,%7,%8,%9]")
+					.arg(m_varNames[i])
+					.arg(pval->flag)
+					.arg(pval->mode)
+					.arg(pval->size)
+					.arg(pval->len[0])
+					.arg(pval->len[1])
+					.arg(pval->len[2])
+					.arg(pval->len[3])
+					.arg(pval->len[4]);
+		switch(pval->flag) {
+		case HSPVAR_FLAG_NONE:		info.typeName = "?"; break;
+		case HSPVAR_FLAG_LABEL:		info.typeName = "label"; break;
+		case HSPVAR_FLAG_STR:		info.typeName = "string"; break;
+		case HSPVAR_FLAG_DOUBLE:	info.typeName = "double"; break;
+		case HSPVAR_FLAG_INT:		info.typeName = "int"; break;
+		case HSPVAR_FLAG_STRUCT:	info.typeName = "struct"; break;
+		case HSPVAR_FLAG_COMSTRUCT:	info.typeName = "com"; break;
+		default:
+			if( HSPVAR_FLAG_USERDEF <= pval->flag ) {
+				info.typeName = QString("userdef-%1").arg(pval->flag - HSPVAR_FLAG_USERDEF + 1);
+			}
+		}
+		
 	}
+
+//	varInfo = m_varNames;
 
 	CDebuggerCommand cmd;
 	QByteArray data;
@@ -201,6 +375,8 @@ void CDbgMain::updateVarInfo(const char* ptr)
 	out << varInfo;
 	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_VAR_INFO, data.data(), data.size());
 	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+
+//	dbg->dbg_close(ptr);
 }
 
 void CDbgMain::connected()
