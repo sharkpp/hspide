@@ -12,31 +12,31 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	connect(m_clientConnection, SIGNAL(destroyed()), this, SLOT(deleteLater()));
 }
 
-void CDebugger::parseCommand()
+void CDebugger::recvCommand()
 {
-	quint64 id;
-	quint8  cmd_id;
-	quint32 length;
+	CMD_ID cmd_id;
+	QByteArray param;
 
-	for(;;)
+	while( IpcRecv(*m_clientConnection, cmd_id, param) )
 	{
-		CDebuggerCommand::scoped_ptr ptr = m_cmdQueue.read(id, cmd_id, length);
-		if( !ptr.valid() )
-		{
-			break;
-		}
-
 		switch(cmd_id)
 		{
-		case CDebuggerCommand::CMD_CONNECT: { // デバッガに接続
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id;
+		case CMD_CONNECT: { // デバッガに接続
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id;
 			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
 			if( compiler )
 			{
+				// id取得
+				QDataStream in(param);
+				in.setVersion(QDataStream::Qt_4_4);
+				qint64 id;
+				in >> id;
+				// ブレークポイント取得
 				CBreakPointInfo bp;
 				CUuidLookupInfo lookup;
 				compiler->getBreakPoint(id, bp, lookup);
-				QByteArray data;
+				// ブレークポイントをDLL側へ送信
+				QByteArray  data;
 				QDataStream out(&data, QIODevice::WriteOnly);
 				out.setVersion(QDataStream::Qt_4_4);
 				out << lookup << bp;
@@ -45,75 +45,57 @@ void CDebugger::parseCommand()
 						qDebug() << "bp" << key << lineNo;
 					}
 				}
-				CDebuggerCommand cmd;
-				cmd.write(id, CDebuggerCommand::CMD_SET_BREAK_POINT, data.data(), data.size());
-				m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+				IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
 			}
 			break; }
-		case CDebuggerCommand::CMD_PUT_LOG: { // ログを出力
+		case CMD_PUT_LOG: { // ログを出力
 			QTextCodec* codec = QTextCodec::codecForLocale();
-			QString s = codec->toUnicode(QByteArray((const char*)ptr.data(), ptr.size()));
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << length << s;
+			QString s = codec->toUnicode(param);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << s;
 			break; }
-		case CDebuggerCommand::CMD_STOP_RUNNING: { // 実行の停止
-			QByteArray data((char*)ptr.data(), ptr.size());
-			QDataStream in(data);
+		case CMD_STOP_RUNNING: { // 実行の停止
+			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			QUuid uuid;
-			int lineNo;
+			int   lineNo;
 			in >> uuid >> lineNo;
 			emit stopAtBreakPoint(uuid, lineNo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << uuid << lineNo;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << uuid << lineNo;
 			break; }
-		case CDebuggerCommand::CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
-			QByteArray data((char*)ptr.data(), ptr.size());
-			QDataStream in(data);
+		case CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
+			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			in >> m_debugInfo;
 			emit updateDebugInfo(m_debugInfo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << m_debugInfo;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << m_debugInfo;
 			break; }
-		case CDebuggerCommand::CMD_UPDATE_VAR_INFO: { // 変数名情報を更新
-			QByteArray data((char*)ptr.data(), ptr.size());
-			QDataStream in(data);
+		case CMD_UPDATE_VAR_INFO: { // 変数名情報を更新
+			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			QVector<VARIABLE_INFO_TYPE> varInfo;
 			in >> varInfo;
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << id << cmd_id << varInfo;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << varInfo;
 			break; }
 		default:
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection<< id << cmd_id;
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id;
 		}
 	}
-}
-
-void CDebugger::recvCommand()
-{
-	QByteArray data = m_clientConnection->readAll();
-	m_cmdQueue.push(data.data(), data.size());
-	parseCommand();
 }
 
 // デバッグを中断
 void CDebugger::suspendDebugging()
 {
-	CDebuggerCommand cmd;
-	cmd.write(0, CDebuggerCommand::CMD_SUSPEND_DEBUG);
-	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+	IpcSend(*m_clientConnection, CMD_SUSPEND_DEBUG);
 }
 
 // デバッグを再開
 void CDebugger::resumeDebugging()
 {
-	CDebuggerCommand cmd;
-	cmd.write(0, CDebuggerCommand::CMD_RESUME_DEBUG);
-	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+	IpcSend(*m_clientConnection, CMD_RESUME_DEBUG);
 }
 
 // デバッグを停止
 void CDebugger::stopDebugging()
 {
-	CDebuggerCommand cmd;
-	cmd.write(0, CDebuggerCommand::CMD_STOP_DEBUG);
-	m_clientConnection->write(QByteArray((char*)cmd.data(), cmd.size()));
+	IpcSend(*m_clientConnection, CMD_STOP_DEBUG);
 }

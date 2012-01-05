@@ -4,7 +4,7 @@
 #include <QProcess>
 #include <QLocalSocket>
 #include <QUuid>
-#include "debuggercommand.hpp"
+#include "ipc_common.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -18,8 +18,6 @@ class CDebugger
 	QLocalSocket*	m_clientConnection;
 
 	bool			m_waitAttach;
-
-	CDebuggerCommand m_cmdQueue;
 
 	QVector<QPair<QString,QString> >	m_debugInfo;
 
@@ -37,8 +35,6 @@ public:
 	void stopDebugging();
 
 protected:
-
-	void parseCommand();
 
 public slots:
 

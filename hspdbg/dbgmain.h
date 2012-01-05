@@ -7,7 +7,7 @@
 #include <QMap>
 #include <QSet>
 #include <QUuid>
-#include "../hspide/debuggercommand.hpp"
+#include "../hspide/ipc_common.h"
 
 typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
 typedef QMap<QString, QUuid> CUuidLookupInfo;
@@ -24,7 +24,7 @@ class CDbgMain
 	static HANDLE	m_waitThread;
 
 	QLocalSocket*	m_socket;
-	long long		m_id;
+	qint64			m_id;
 
 	QMutex			m_lock;
 
@@ -33,7 +33,7 @@ class CDbgMain
 	CBreakPointInfo	m_bp;
 	CUuidLookupInfo	m_lookup;
 
-	CDebuggerCommand m_cmdQueue;
+	QByteArray		m_cmdBuff;
 
 	QVector<QString> m_varNames;
 

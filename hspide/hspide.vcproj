@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath="ipc_common.cpp"
+				>
+			</File>
+			<File
 				RelativePath="jumpdialog.cpp"
 				>
 			</File>
@@ -360,10 +364,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debuggercommand.hpp"
-				>
-			</File>
-			<File
 				RelativePath="documentpane.h"
 				>
 				<FileConfiguration
@@ -388,6 +388,10 @@
 						Outputs="release\moc_documentpane.cpp"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="ipc_common.h"
+				>
 			</File>
 			<File
 				RelativePath="jumpdialog.h"

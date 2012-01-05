@@ -36,6 +36,7 @@ HEADERS += hspdbg.h \
            hspsdk/hsp3debug.h \
            hspsdk/hsp3struct.h \
            hspsdk/hspvar_core.h \
-           ../hspide/debuggercommand.hpp
+           ../hspide/ipc_common.h
 SOURCES += dllmain.cpp hspdbg.cpp stdafx.cpp \
-           dbgmain.cpp
+           dbgmain.cpp \
+           ../hspide/ipc_common.cpp

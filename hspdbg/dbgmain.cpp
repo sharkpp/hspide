@@ -87,16 +87,17 @@ unsigned CDbgMain::runStatic(void* p)
 
 void CDbgMain::connectToDebugger()
 {
-	CDebuggerCommand cmd;
-	cmd.write(m_id, CDebuggerCommand::CMD_CONNECT, NULL, 0);
-	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+	QByteArray  data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << m_id;
+	IpcSend(*m_socket, CMD_CONNECT, data);
 }
 
 void CDbgMain::putLog(const char *text, int len)
 {
-	CDebuggerCommand cmd;
-	cmd.write(m_id, CDebuggerCommand::CMD_PUT_LOG, text, len);
-	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+	QByteArray  data(text, len);
+	IpcSend(*m_socket, CMD_PUT_LOG, data);
 }
 
 bool CDbgMain::isBreak(const char* filename, int lineNo)
@@ -139,13 +140,11 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 
 	if( breaked )
 	{
-		CDebuggerCommand cmd;
-		QByteArray data;
+		QByteArray  data;
 		QDataStream out(&data, QIODevice::WriteOnly);
 		out.setVersion(QDataStream::Qt_4_4);
 		out << uuid << lineNo;
-		cmd.write(m_id, CDebuggerCommand::CMD_STOP_RUNNING, data.data(), data.size());
-		m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+		IpcSend(*m_socket, CMD_STOP_RUNNING, data);
 		return true;
 	}
 
@@ -294,13 +293,11 @@ void CDbgMain::updateDebugInfo(HSP3DEBUG* dbg)
 		debugInfo.append(qMakePair(key_str, value_str));
 	}
 
-	CDebuggerCommand cmd;
-	QByteArray data;
+	QByteArray  data;
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << debugInfo;
-	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_DEBUG_INFO, data.data(), data.size());
-	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+	IpcSend(*m_socket, CMD_UPDATE_DEBUG_INFO, data);
 
 	dbg->dbg_close(ptr);
 }
@@ -368,13 +365,11 @@ void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
 
 //	varInfo = m_varNames;
 
-	CDebuggerCommand cmd;
 	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << varInfo;
-	cmd.write(m_id, CDebuggerCommand::CMD_UPDATE_VAR_INFO, data.data(), data.size());
-	m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
+	IpcSend(*m_socket, CMD_UPDATE_VAR_INFO, data);
 
 //	dbg->dbg_close(ptr);
 }
@@ -386,47 +381,33 @@ void CDbgMain::connected()
 
 void CDbgMain::recvCommand()
 {
-	QByteArray data = m_socket->readAll();
-	m_cmdQueue.push(data.data(), data.size());
+	CMD_ID     cmd_id;
+	QByteArray param;
 
-	quint64 id;
-	quint8  cmd_id;
-	quint32 length;
-
-	for(;;)
+	while( IpcRecv(*m_socket, cmd_id, param) )
 	{
-		CDebuggerCommand::scoped_ptr ptr = m_cmdQueue.read(id, cmd_id, length);
-		if( !ptr.valid() )
-		{
-			break;
-		}
-
 		switch(cmd_id)
 		{
-		case CDebuggerCommand::CMD_SET_BREAK_POINT: { // ブレークポイントを設定
+		case CMD_SET_BREAK_POINT: { // ブレークポイントを設定
 			QMutexLocker lck(&m_lock);
-			QByteArray data((char*)ptr.data(), ptr.size());
-			QDataStream in(data);
+			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			in >> m_lookup >> m_bp;
 			// 初期化完了を通知
 			::SetEvent(m_waitThread);
 			break; }
-		case CDebuggerCommand::CMD_SUSPEND_DEBUG: { // デバッグを停止
+		case CMD_SUSPEND_DEBUG: { // デバッグを停止
 			QMutexLocker lck(&m_lock);
 			m_breaked = true;
 			break; }
-		case CDebuggerCommand::CMD_RESUME_DEBUG: { // デバッグを再開
+		case CMD_RESUME_DEBUG: { // デバッグを再開
 			QMutexLocker lck(&m_lock);
 			m_breaked = false;
 			break; }
-		case CDebuggerCommand::CMD_STOP_DEBUG: { // デバッグを中止
+		case CMD_STOP_DEBUG: { // デバッグを中止
 			break; }
 		default: {
-//			CDebuggerCommand cmd;
-//			cmd.write(m_id, 0x02, "", 0);
-//			m_socket->write(QByteArray((char*)cmd.data(), cmd.size()));
-			qDebug() <<"CDbgMain::recvCommand"<< (void*)m_socket<< id << cmd_id;
+			qDebug() <<"CDbgMain::recvCommand"<< (void*)m_socket<< cmd_id;
 			}
 		}
 	}

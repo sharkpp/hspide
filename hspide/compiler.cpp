@@ -153,6 +153,7 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 		          << QString("%1").arg(id, 0, 16);
 	}
 	arguments << filename;
+qDebug() << arguments;
 
 	// ˆ—Š®—¹Žž‚Ì’Ê’m‚ð“o˜^
 	connect(proccess, SIGNAL(error(QProcess::ProcessError)),      this, SLOT(buildError(QProcess::ProcessError)));

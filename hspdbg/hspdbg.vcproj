@@ -222,6 +222,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\hspide\ipc_common.cpp"
+				>
+			</File>
+			<File
 				RelativePath="stdafx.cpp"
 				>
 			</File>
@@ -258,10 +262,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\hspide\debuggercommand.hpp"
-				>
-			</File>
-			<File
 				RelativePath="hspsdk\hsp3debug.h"
 				>
 			</File>
@@ -275,6 +275,10 @@
 			</File>
 			<File
 				RelativePath="hspsdk\hspvar_core.h"
+				>
+			</File>
+			<File
+				RelativePath="..\hspide\ipc_common.h"
 				>
 			</File>
 			<File
