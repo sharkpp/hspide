@@ -65,24 +65,26 @@ bool IpcSend(QLocalSocket& socket, CMD_ID cmd, const QByteArray& param)
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << cmd
-		<< quint32(param.size())
+		<< qint64(0)
 		<< param;
+	out.device()->seek(sizeof(qint16));
+	out << qint64(data.size() - sizeof(qint16) - sizeof(qint64));
 	socket.write(data);
 	return true;
 }
 
 bool IpcRecv(QLocalSocket& socket, CMD_ID& cmd, QByteArray& param)
 {
-	quint32 param_len = 0;
-	qint64  len = sizeof(cmd) + sizeof(param_len);
-	qint64  bytesAvailable = socket.bytesAvailable();
+	qint64 param_len = 0;
+	qint64 len = sizeof(qint16) + sizeof(param_len);
+	qint64 bytesAvailable = socket.bytesAvailable();
 
 	if( bytesAvailable < len )
 	{
 		return false;
 	}
 
-	// コマンドIDとパラメータサイズを取得
+	// コマンドIDとパラメータを取得
 	QDataStream in_(socket.peek(len));
 	in_.setVersion(QDataStream::Qt_4_4);
 	in_ >> cmd >> param_len;
@@ -94,6 +96,7 @@ bool IpcRecv(QLocalSocket& socket, CMD_ID& cmd, QByteArray& param)
 	}
 
 	QDataStream in(socket.read(len));
+	in.setVersion(QDataStream::Qt_4_4);
 	in >> cmd >> param_len >> param;
 
 	return true;
