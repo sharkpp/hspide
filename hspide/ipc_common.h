@@ -10,9 +10,10 @@
 // VARIABLE_INFO_TYPE型、専用operator定義
 
 typedef struct {
-	QString name;
-	QString typeName;
-	QString description;
+	QString	name;
+	QString	typeName;
+	QString	description;
+	int		lengthOf; // 配列の要素数
 } VARIABLE_INFO_TYPE;
 
 QDebug&      operator<<(QDebug&      debug,  const VARIABLE_INFO_TYPE& info);

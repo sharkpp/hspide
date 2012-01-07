@@ -28,7 +28,9 @@ class CVariableInfoDock
 
 	QTreeView * listWidget;
 
-//	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
+	QMap<qlonglong, VARIABLE_INFO_TYPE> m_varInfo;
+
+	qlonglong m_keyBase;
 
 public:
 
@@ -46,10 +48,17 @@ protected:
 
 	void setItem(QStandardItem* item, ColumnType type, const QString & value);
 
+	QString toPath(const QString& varName);
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
 
 public slots:
 
+	void onTreeExpanded(const QModelIndex& index);
+
+signals:
+
+	void requestVariableInfo(const QString& varName, int index[]);
 };

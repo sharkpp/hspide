@@ -34,6 +34,9 @@ public:
 	// デバッグを停止
 	void stopDebugging();
 
+	// 変数情報を要求
+	void reqVariableInfo(const QString& varName, int info[]);
+
 protected:
 
 public slots:

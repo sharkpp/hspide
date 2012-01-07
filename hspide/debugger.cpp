@@ -108,3 +108,15 @@ void CDebugger::stopDebugging()
 {
 	IpcSend(*m_clientConnection, CMD_STOP_DEBUG);
 }
+
+// •Ï”î•ñ‚ğ—v‹
+void CDebugger::reqVariableInfo(const QString& varName, int info[])
+{
+	QByteArray  data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << varName
+		<< info[0] << info[1]
+		<< info[2] << info[3];
+	IpcSend(*m_clientConnection, CMD_REQ_VAR_INFO, data);
+}

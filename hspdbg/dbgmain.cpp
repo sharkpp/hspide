@@ -371,7 +371,14 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 	PVal* pval = &hspctx->mem_var[indexOfVariable];
 
 	// 変数名
-	varInfo.name = m_varNames[indexOfVariable];
+	varInfo.name
+		= QString("%1(%2,%3,%4,%5)")
+			.arg(m_varNames[indexOfVariable])
+			.arg(indexOf[0])
+			.arg(indexOf[1])
+			.arg(indexOf[2])
+			.arg(indexOf[3])
+			;
 
 	// 変数種別
 	switch(pval->flag) {
@@ -398,11 +405,13 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 			pval->offset = offset; // オフセットを復帰
 			return true;
 		}
-
+		// 実データまでのオフセットを計算
 		if( 0 < i ) {
 			pval->offset *= pval->len[i];
 		}
 		pval->offset += indexOf[i];
+		// 配列の要素数
+		varInfo.lengthOf = indexOf[i];
 	}
 
 	HspVarProc* varproc = hspctx->exinfo.HspFunc_getproc(pval->flag);
