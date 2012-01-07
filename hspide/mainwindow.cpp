@@ -661,8 +661,15 @@ void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
 void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info)
 {
 	typedef QPair<QString,QString> string_pair; // 直接だとマクロの展開エラーになるので...
-	foreach(const string_pair & val, info) {
+	foreach(const string_pair& val, info) {
 		sysInfoDock->update(val.first, val.second);
+	}
+}
+
+void MainWindow::onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> & info)
+{
+	foreach(const VARIABLE_INFO_TYPE& var, info) {
+		varInfoDock->update(var);
 	}
 }
 
@@ -962,6 +969,7 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 {
 	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(onGoToLine(const QUuid &,int)));
 	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> > &)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
+	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
 
 	debugRunAct    ->setVisible( !m_debuggers.empty() );

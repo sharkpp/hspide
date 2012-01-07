@@ -28,6 +28,8 @@ class CDbgMain
 
 	QMutex			m_lock;
 
+	HSP3DEBUG*		m_dbg;
+
 	bool			m_breaked;
 
 	CBreakPointInfo	m_bp;
@@ -46,7 +48,7 @@ public:
 	void connectToDebugger();
 	void putLog(const char* text, int len);
 
-	void updateInfo(HSP3DEBUG* dbg);
+	void updateInfo();
 
 	bool isBreak(const char* filename, int lineNo);
 
@@ -59,10 +61,15 @@ protected:
 
 	void run();
 
-	void updateDebugInfo(HSP3DEBUG* dbg);
-	void updateVarInfo(HSP3DEBUG* dbg);
+	void updateDebugInfo();
+	void updateVarInfo();
 
-	void initializeVariableNames(HSP3DEBUG* dbg);
+	bool GetVariableInfo(const QString& varName, int indexOf[], VARIABLE_INFO_TYPE& varInfo);
+	bool GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO_TYPE& varInfo);
+
+	void ReqestVariableInfo(const QString& varName, int indexOf[]);
+
+	void initializeVariableNames();
 	QString getVariableName(int index);
 
 	QString loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx);

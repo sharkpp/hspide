@@ -6,7 +6,9 @@
 QDebug& operator<<(QDebug& debug, const VARIABLE_INFO_TYPE& info)
 {
 	debug << "[" << info.name
-	      << "/" << info.typeName << "]";
+	      << "/" << info.typeName
+	      << "/" << info.description
+		  << "]";
 	return debug;
 }
 
@@ -14,6 +16,7 @@ QDataStream& operator<<(QDataStream& stream, const VARIABLE_INFO_TYPE& info)
 {
 	stream << info.name;
 	stream << info.typeName;
+	stream << info.description;
 	return stream;
 }
 
@@ -21,6 +24,7 @@ QDataStream& operator>>(QDataStream& stream, VARIABLE_INFO_TYPE& info)
 {
 	stream >> info.name;
 	stream >> info.typeName;
+	stream >> info.description;
 	return stream;
 }
 
@@ -38,7 +42,9 @@ QDebug& operator<<(QDebug& debug, const CMD_ID& v)
 	case CMD_RESUME_DEBUG:		debug << "CMD_RESUME_DEBUG"; break;
 	case CMD_STOP_DEBUG:		debug << "CMD_STOP_DEBUG"; break;
 	case CMD_UPDATE_DEBUG_INFO:	debug << "CMD_UPDATE_DEBUG_INFO"; break;
-	case CMD_UPDATE_VAR_INFO:	debug << "CMD_UPDATE_VAR_INFO"; break;
+	case CMD_PUT_VAR_DIGEST:	debug << "CMD_PUT_VAR_DIGEST"; break;
+	case CMD_REQ_VAR_INFO:		debug << "CMD_REQ_VAR_INFO"; break;
+	case CMD_RES_VAR_INFO:		debug << "CMD_RES_VAR_INFO"; break;
 	}
 	return debug;
 }

@@ -24,6 +24,7 @@ CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
 	, m_socket(new QLocalSocket(this))
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
+	, m_dbg(NULL)
 	, m_breaked(false)
 {
 	// 受信通知などのシグナルと接続
@@ -207,9 +208,9 @@ QString CDbgMain::loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx)
 	return r;
 }
 
-void CDbgMain::initializeVariableNames(HSP3DEBUG* dbg)
+void CDbgMain::initializeVariableNames()
 {
-	HSPCTX* hspctx = (HSPCTX*)dbg->hspctx;
+	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
 
 	size_t         di_len = hspctx->hsphed->max_dinfo;
 	unsigned char* di_ptr = hspctx->mem_di;
@@ -255,23 +256,25 @@ QString CDbgMain::getVariableName(int index)
 
 void CDbgMain::initialize(HSP3DEBUG* dbg)
 {
-	initializeVariableNames(dbg);
+	m_dbg = dbg;
+
+	initializeVariableNames();
 }
 
-void CDbgMain::updateInfo(HSP3DEBUG* dbg)
+void CDbgMain::updateInfo()
 {
 	// デバッグ情報更新
-	updateDebugInfo(dbg);
+	updateDebugInfo();
 
 	// 変数情報取得
-	updateVarInfo(dbg);
+	updateVarInfo();
 }
 
-void CDbgMain::updateDebugInfo(HSP3DEBUG* dbg)
+void CDbgMain::updateDebugInfo()
 {
 	QTextCodec* codec = QTextCodec::codecForLocale();
 
-	char* ptr = dbg->get_value(DEBUGINFO_GENERAL);
+	char* ptr = m_dbg->get_value(DEBUGINFO_GENERAL);
 
 	QVector<QPair<QString,QString> > debugInfo;
 
@@ -299,10 +302,10 @@ void CDbgMain::updateDebugInfo(HSP3DEBUG* dbg)
 	out << debugInfo;
 	IpcSend(*m_socket, CMD_UPDATE_DEBUG_INFO, data);
 
-	dbg->dbg_close(ptr);
+	m_dbg->dbg_close(ptr);
 }
 
-void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
+void CDbgMain::updateVarInfo()
 {
 	QTextCodec* codec = QTextCodec::codecForLocale();
 
@@ -312,23 +315,11 @@ void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
 	//			bit1 : module
 	//			bit2 : array
 	//			bit3 : dump
-//	char* ptr = dbg->get_varinf(NULL, 2|4);
+//	char* ptr = m_dbg->get_varinf(NULL, 2|4);
 
-	HSPCTX* hspctx = (HSPCTX*)dbg->hspctx;
+	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
 
 	QVector<VARIABLE_INFO_TYPE> varInfo;
-
-	//for(const char* p = ptr; *p;)
-	//{
-	//	const char* key = p;
-	//	for(; *p && 0x0D != p[0] && 0x0A != p[1]; ++p);
-	//	if( 0x0D != *p ) { break; }
-	//	p += 2;
-
-	//	QString key_str = codec->toUnicode(key, int(p - 2 - key));
-
-	//	varInfo.append(key_str);
-	//}
 
 	for(int i = 0, num = m_varNames.size();
 		i < num; i++)
@@ -336,31 +327,9 @@ void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
 		PVal* pval = &hspctx->mem_var[i];
 		varInfo.push_back(VARIABLE_INFO_TYPE());
 		VARIABLE_INFO_TYPE & info = varInfo.back();
-		info.name =
-				QString("%1/%2,%3,%4,[%5,%6,%7,%8,%9]")
-					.arg(m_varNames[i])
-					.arg(pval->flag)
-					.arg(pval->mode)
-					.arg(pval->size)
-					.arg(pval->len[0])
-					.arg(pval->len[1])
-					.arg(pval->len[2])
-					.arg(pval->len[3])
-					.arg(pval->len[4]);
-		switch(pval->flag) {
-		case HSPVAR_FLAG_NONE:		info.typeName = "?"; break;
-		case HSPVAR_FLAG_LABEL:		info.typeName = "label"; break;
-		case HSPVAR_FLAG_STR:		info.typeName = "string"; break;
-		case HSPVAR_FLAG_DOUBLE:	info.typeName = "double"; break;
-		case HSPVAR_FLAG_INT:		info.typeName = "int"; break;
-		case HSPVAR_FLAG_STRUCT:	info.typeName = "struct"; break;
-		case HSPVAR_FLAG_COMSTRUCT:	info.typeName = "com"; break;
-		default:
-			if( HSPVAR_FLAG_USERDEF <= pval->flag ) {
-				info.typeName = QString("userdef-%1").arg(pval->flag - HSPVAR_FLAG_USERDEF + 1);
-			}
-		}
-		
+		// 変数情報取得
+		int indexOf[4] = {0,-1,-1,-1};
+		GetVariableInfo(i, indexOf, info);
 	}
 
 //	varInfo = m_varNames;
@@ -369,9 +338,133 @@ void CDbgMain::updateVarInfo(HSP3DEBUG* dbg)
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << varInfo;
-	IpcSend(*m_socket, CMD_UPDATE_VAR_INFO, data);
+	IpcSend(*m_socket, CMD_PUT_VAR_DIGEST, data);
 
-//	dbg->dbg_close(ptr);
+//	m_dbg->dbg_close(ptr);
+}
+
+bool CDbgMain::GetVariableInfo(const QString& varName, int indexOf[], VARIABLE_INFO_TYPE& varInfo)
+{
+	int indexOfVar = -1;
+
+	for(int i = 0, num = m_varNames.size();
+		i < num; i++)
+	{
+		if( varName == m_varNames[i] ) {
+			indexOfVar = i;
+			break;
+		}
+	}
+	if( indexOfVar < 0 ) {
+		return false;
+	}
+
+	return GetVariableInfo(indexOfVar, indexOf, varInfo);
+}
+
+bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO_TYPE& varInfo)
+{
+	QTextCodec* codec = QTextCodec::codecForLocale();
+
+	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+
+	PVal* pval = &hspctx->mem_var[indexOfVariable];
+
+	// 変数名
+	varInfo.name = m_varNames[indexOfVariable];
+
+	// 変数種別
+	switch(pval->flag) {
+	case HSPVAR_FLAG_NONE:		varInfo.typeName = "?";			break;
+	case HSPVAR_FLAG_LABEL:		varInfo.typeName = "label";		break;
+	case HSPVAR_FLAG_STR:		varInfo.typeName = "string";	break;
+	case HSPVAR_FLAG_DOUBLE:	varInfo.typeName = "double";	break;
+	case HSPVAR_FLAG_INT:		varInfo.typeName = "int";		break;
+	case HSPVAR_FLAG_STRUCT:	varInfo.typeName = "struct";	break;
+	case HSPVAR_FLAG_COMSTRUCT:	varInfo.typeName = "COM";		break;
+	default:
+		if( HSPVAR_FLAG_USERDEF <= pval->flag ) {
+			varInfo.typeName = QString("userdef-%1").arg(pval->flag - HSPVAR_FLAG_USERDEF + 1);
+		}
+	}
+
+	// 配列範囲チェック
+	int offset = pval->offset; // オフセットを保存
+	for(int i = 0; i < 4 && 0 <= indexOf[i]; i++)
+	{
+		if( pval->len[i+1] <= indexOf[i] )
+		{
+			varInfo.description = "out of range";
+			pval->offset = offset; // オフセットを復帰
+			return true;
+		}
+
+		if( 0 < i ) {
+			pval->offset *= pval->len[i];
+		}
+		pval->offset += indexOf[i];
+	}
+
+	HspVarProc* varproc = hspctx->exinfo.HspFunc_getproc(pval->flag);
+	PDAT* pd  = varproc->GetPtr(pval);
+	int   len = varproc->GetSize(pd);
+	pval->offset = offset; // オフセットを復帰
+
+	// 変数概要
+	switch(pval->flag) {
+	case HSPVAR_FLAG_LABEL:
+		break;
+	case HSPVAR_FLAG_STR:
+		varInfo.description = QString("\"%1\"").arg(codec->toUnicode((char*)pd, len));
+		break;
+	case HSPVAR_FLAG_DOUBLE:
+		varInfo.description = QString("%1").arg(*(double*)pd);
+		break;
+	case HSPVAR_FLAG_INT:
+		varInfo.description = QString("%1").arg(*(int*)pd);
+		break;
+	case HSPVAR_FLAG_STRUCT:
+		break;
+	case HSPVAR_FLAG_COMSTRUCT:
+		break;
+	default:
+		if( HSPVAR_FLAG_USERDEF <= pval->flag ) {
+		}
+		break;
+	case HSPVAR_FLAG_NONE:
+		break;
+	}
+
+	varInfo.description +=
+			QString("|%1,%2,%3,[%5,%6,%7,%8,%9]")
+				.arg(pval->flag)
+				.arg(pval->mode)
+				.arg(pval->size)
+				.arg(pval->len[0])
+				.arg(pval->len[1])
+				.arg(pval->len[2])
+				.arg(pval->len[3])
+				.arg(pval->len[4]);
+
+	return true;
+}
+
+void CDbgMain::ReqestVariableInfo(const QString& varName, int indexOf[])
+{
+	VARIABLE_INFO_TYPE info;
+
+	if( !GetVariableInfo(varName, indexOf, info) )
+	{
+	}
+	else
+	{
+		QByteArray data;
+		QDataStream out(&data, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_4);
+		out << info;
+		IpcSend(*m_socket, CMD_RES_VAR_INFO, data);
+	}
+
 }
 
 void CDbgMain::connected()
@@ -405,6 +498,17 @@ void CDbgMain::recvCommand()
 			m_breaked = false;
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
+			break; }
+		case CMD_REQ_VAR_INFO: { // 変数情報を要求
+			QMutexLocker lck(&m_lock);
+			QDataStream in(param);
+			in.setVersion(QDataStream::Qt_4_4);
+			QString varName;
+			int indexOf[4];
+			in	>> varName
+				>> indexOf[0] >> indexOf[1]
+				>> indexOf[2] >> indexOf[3];
+			ReqestVariableInfo(varName, indexOf);
 			break; }
 		default: {
 			qDebug() <<"CDbgMain::recvCommand"<< (void*)m_socket<< cmd_id;

@@ -12,6 +12,7 @@
 typedef struct {
 	QString name;
 	QString typeName;
+	QString description;
 } VARIABLE_INFO_TYPE;
 
 QDebug&      operator<<(QDebug&      debug,  const VARIABLE_INFO_TYPE& info);
@@ -30,7 +31,9 @@ typedef enum {
 	CMD_RESUME_DEBUG,		// デバッグを再開
 	CMD_STOP_DEBUG,			// デバッグを中止
 	CMD_UPDATE_DEBUG_INFO,	// デバッグ情報を更新
-	CMD_UPDATE_VAR_INFO,	// 変数名情報を更新
+	CMD_PUT_VAR_DIGEST,		// 変数情報の概要を通知
+	CMD_REQ_VAR_INFO,		// 変数情報を要求
+	CMD_RES_VAR_INFO,		// 変数情報を返答
 } CMD_ID;
 
 QDebug&      operator<<(QDebug&      debug,  const CMD_ID& v);

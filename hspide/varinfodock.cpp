@@ -37,11 +37,11 @@ void CVariableInfoDock::clear()
 	}
 }
 
-void CVariableInfoDock::update(const QString & valueName, const QString & typeName, const QString & description)
+void CVariableInfoDock::update(const VARIABLE_INFO_TYPE & varInfo)
 {
-	QStandardItem* item = getItem(valueName);
-	setItem(item, TypeColumn,        typeName);
-	setItem(item, DescriptionColumn, description);
+	QStandardItem* item = getItem(varInfo.name);
+	setItem(item, TypeColumn,        varInfo.typeName);
+	setItem(item, DescriptionColumn, varInfo.description);
 }
 
 // 指定したパスのアイテムを取得

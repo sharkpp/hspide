@@ -26,6 +26,8 @@ EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
 
 	g_app->initialize(p1);
 
+	g_app->updateInfo();
+
 	g_hsp3dbg = p1;
 
 	return FALSE;
@@ -53,7 +55,7 @@ int runmode = hspctx->runmode;
 
 	if( breaked )
 	{
-		g_app->updateInfo(p1);
+		g_app->updateInfo();
 
 		hspctx->runmode = RUNMODE_STOP;
 	}

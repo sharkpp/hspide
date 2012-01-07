@@ -2,6 +2,7 @@
 #include <QTreeView>
 #include <QMap>
 #include <QVector>
+#include "ipc_common.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -27,7 +28,7 @@ class CVariableInfoDock
 
 	QTreeView * listWidget;
 
-	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
+//	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
 
 public:
 
@@ -37,7 +38,7 @@ public:
 
 	void clear();
 
-	void update(const QString & valueName, const QString & typeName, const QString & description);
+	void update(const VARIABLE_INFO_TYPE & varInfo);
 
 protected:
 

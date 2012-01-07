@@ -69,11 +69,20 @@ void CDebugger::recvCommand()
 			emit updateDebugInfo(m_debugInfo);
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << m_debugInfo;
 			break; }
-		case CMD_UPDATE_VAR_INFO: { // 変数名情報を更新
+		case CMD_PUT_VAR_DIGEST: { // 変数情報の概要を通知
 			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			QVector<VARIABLE_INFO_TYPE> varInfo;
 			in >> varInfo;
+			emit updateVarInfo(varInfo);
+			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << varInfo;
+			break; }
+		case CMD_RES_VAR_INFO: { // 変数情報を返答
+			QDataStream in(param);
+			in.setVersion(QDataStream::Qt_4_4);
+			QVector<VARIABLE_INFO_TYPE> varInfo(1);
+			in >> varInfo.back();
+			emit updateVarInfo(varInfo);
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << varInfo;
 			break; }
 		default:
