@@ -120,11 +120,13 @@ void MainWindow::setupDockWindows()
 	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
 	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
+	sysInfoDockWidget->setVisible(false);
 
 	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
 	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
 	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
+	varInfoDockWidget->setVisible(false);
 }
 
 void MainWindow::setupStatusBar()
@@ -1045,6 +1047,8 @@ void MainWindow::beginDebugging()
 	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
 	tabifyDockWidget(outputDockWidget, sysInfoDockWidget);
 	tabifyDockWidget(outputDockWidget, varInfoDockWidget);
+	sysInfoDockWidget->setVisible(true);
+	varInfoDockWidget->setVisible(true);
 	// デバッグ用のレイアウトに変更
 	restoreState(m_stateDebugging);
 }
@@ -1061,6 +1065,8 @@ void MainWindow::endDebugging()
 	QDockWidget* varInfoDockWidget = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
 	removeDockWidget(sysInfoDockWidget);
 	removeDockWidget(varInfoDockWidget);
+	sysInfoDockWidget->setVisible(false);
+	varInfoDockWidget->setVisible(false);
 	// 通常のレイアウトに変更
 	restoreState(m_stateDefault);
 }
