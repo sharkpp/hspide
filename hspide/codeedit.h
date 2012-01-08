@@ -31,6 +31,8 @@ class CCodeEdit
 	QSize					m_lineIconSize;
 	QMap<int, QIcon>        m_lineIconMap;
 
+	int						m_tabStopCharWidth;
+
 public:
 
 	CCodeEdit(QWidget *parent = 0);
@@ -59,6 +61,9 @@ public:
 	void clearLineIcon(const QIcon & icon);
 	void clearLineIcon(int lineNo);
 	void clearLineIcon(int lineNo, const QIcon & icon);
+
+	void setTabStopCharWidth(int width);
+	int  tabStopCharWidth() const;
 
 protected:
 
@@ -111,6 +116,10 @@ inline const QColor & CCodeEdit::lineNumberTextColor() const {
 
 inline bool CCodeEdit::isLineNumberVisible() const {
 	return m_visibleLineNumber;
+}
+
+inline int CCodeEdit::tabStopCharWidth() const {
+	return m_tabStopCharWidth;
 }
 
 #endif // !defined(INCLUDE_GUARD_3ED30DA5_1A87_433A_9ED9_FCEC987B4EAA)

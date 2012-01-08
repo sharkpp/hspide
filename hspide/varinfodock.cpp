@@ -9,6 +9,7 @@ CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	QStandardItemModel* model;
 	listWidget = new QTreeView(this);
 //	listWidget->setRootIsDecorated(false);
+	listWidget->setIndentation(10);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
 	model->invisibleRootItem()->setColumnCount(ColumnCount);

@@ -190,14 +190,24 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	, m_lineNumberTextColor(QColor(255, 0, 0, 0))
 	, m_visibleLineNumber(true)
 	, m_lineIconSize(16, 16)
+	, m_tabStopCharWidth(4)
 {
-	m_lineNumberWidget  = new CLineNumberArea(this);
-	m_highlighter = new CHighlighter(document());
+	m_lineNumberWidget = new CLineNumberArea(this);
+	m_highlighter      = new CHighlighter(document());
 
 	connect(this, SIGNAL(blockCountChanged(int)),   this, SLOT(updateLineNumberWidth(int)));
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
 
 	updateLineNumberWidth(0);
+
+	QFont font_ = font();
+	font_.setFamily("MS Gothic");
+	font_.setFixedPitch(true);
+//	font_.setPixelSize(16);
+	setFont(font_);
+
+	// タブストップを設定
+	setTabStopCharWidth(m_tabStopCharWidth);
 }
 
 // シンボル一覧を指定
@@ -320,6 +330,12 @@ void CCodeEdit::clearLineIcon(int lineNo)
 		m_lineIconMap.erase(ite);
 	}
 	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
+}
+
+void CCodeEdit::setTabStopCharWidth(int width)
+{
+	m_tabStopCharWidth = width;
+	setTabStopWidth(fontMetrics().width(QLatin1Char(' ')) * width);
 }
 
 //////////////////////////////////////////////////////////////////////
