@@ -126,6 +126,7 @@ private:
 	void loadSettings();
 	void saveSettings();
 
+	bool isDebugging() const;
 	void beginDebugging();
 	void endDebugging();
 

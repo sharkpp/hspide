@@ -91,20 +91,6 @@ void MainWindow::setupDockWindows()
 	outputDockWidget->setObjectName("Output"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, outputDockWidget);
 
-	QDockWidget* sysInfoDockWidget = new QDockWidget(tr("SystemInfo"), this);
-	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
-	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
-	sysInfoDockWidget->setVisible(false);
-	addDockWidget(Qt::BottomDockWidgetArea, sysInfoDockWidget);
-
-	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
-	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
-	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
-	varInfoDockWidget->setVisible(false);
-	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
-
 	QDockWidget* searchDockWidget = new QDockWidget(tr("Search result"), this);
 	searchDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	searchDockWidget->setWidget(searchDock = new CSearchDock(searchDockWidget));
@@ -117,9 +103,8 @@ void MainWindow::setupDockWindows()
 	messageDockWidget->setObjectName("Messages"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, messageDockWidget);
 
+	// ドックタブに結合
 	tabifyDockWidget(projectDockWidget, symbolDockWidget);
-	tabifyDockWidget(outputDockWidget, sysInfoDockWidget);
-	tabifyDockWidget(outputDockWidget, varInfoDockWidget);
 	tabifyDockWidget(outputDockWidget, searchDockWidget);
 	tabifyDockWidget(outputDockWidget, messageDockWidget);
 
@@ -128,6 +113,18 @@ void MainWindow::setupDockWindows()
 
 //	outputDockWidget->setFocus();
 	outputDockWidget->raise();
+
+ // デバッグ時のみ有効なドック
+
+	QDockWidget* sysInfoDockWidget = new QDockWidget(tr("SystemInfo"), this);
+	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
+	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
+
+	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
+	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
+	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
 }
 
 void MainWindow::setupStatusBar()
@@ -450,6 +447,13 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+	// デバッグ中の場合はドックを標準状態に戻す
+	if( isDebugging() &&
+		Qt::NoDockWidgetArea
+			!= dockWidgetArea(qobject_cast<QDockWidget*>(sysInfoDock->parentWidget())) )
+	{
+		endDebugging();
+	}
 	saveSettings();
 	QMainWindow::closeEvent(event);
 }
@@ -1018,6 +1022,11 @@ void MainWindow::dettachedDebugger()
 	}
 }
 
+bool MainWindow::isDebugging() const
+{
+	return !m_debuggers.empty();
+}
+
 void MainWindow::beginDebugging()
 {
 	// 最初のデバッガの場合のみクリア
@@ -1026,10 +1035,17 @@ void MainWindow::beginDebugging()
 	varInfoDock->clear();
 	varInfoDock->setEnable(true);
 
-	// デバッグ用のレイアウトに変更
+	// 現在のレイアウトを保存
 	m_stateDefault = saveState();
-	sysInfoDock->parentWidget()->setVisible(true);
-	varInfoDock->parentWidget()->setVisible(true);
+	// デバッグ時にしか存在しないドックを追加
+	QDockWidget* sysInfoDockWidget = qobject_cast<QDockWidget*>(sysInfoDock->parentWidget());
+	QDockWidget* varInfoDockWidget = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
+	QDockWidget* outputDockWidget  = qobject_cast<QDockWidget*>(outputDock->parentWidget());
+	addDockWidget(Qt::BottomDockWidgetArea, sysInfoDockWidget);
+	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
+	tabifyDockWidget(outputDockWidget, sysInfoDockWidget);
+	tabifyDockWidget(outputDockWidget, varInfoDockWidget);
+	// デバッグ用のレイアウトに変更
 	restoreState(m_stateDebugging);
 }
 
@@ -1038,10 +1054,14 @@ void MainWindow::endDebugging()
 	sysInfoDock->setEnable(false);
 	varInfoDock->setEnable(false);
 
-	// 通常のレイアウトに変更
+	// 現在のレイアウトを保存
 	m_stateDebugging = saveState();
-	sysInfoDock->parentWidget()->setVisible(false);
-	varInfoDock->parentWidget()->setVisible(false);
+	// デバッグ時にしか存在しないドックを取り除く
+	QDockWidget* sysInfoDockWidget = qobject_cast<QDockWidget*>(sysInfoDock->parentWidget());
+	QDockWidget* varInfoDockWidget = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
+	removeDockWidget(sysInfoDockWidget);
+	removeDockWidget(varInfoDockWidget);
+	// 通常のレイアウトに変更
 	restoreState(m_stateDefault);
 }
 
