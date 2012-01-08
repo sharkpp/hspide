@@ -8,26 +8,40 @@ QDebug& operator<<(QDebug& debug, const VARIABLE_INFO_TYPE& info)
 	debug << "[" << info.name
 	      << "/" << info.typeName
 	      << "/" << info.description
-	      << "/" << info.lengthOf
+	      << "/"
+	      << "(" << info.index[0] << "," << info.index[1]
+	      << "," << info.index[2] << "," << info.index[3]
+		  << ")/"
+	      << "(" << info.length[0] << "," << info.length[1]
+	      << "," << info.length[2] << "," << info.length[3]
+		  << ")"
 		  << "]";
 	return debug;
 }
 
 QDataStream& operator<<(QDataStream& stream, const VARIABLE_INFO_TYPE& info)
 {
-	stream << info.name;
-	stream << info.typeName;
-	stream << info.description;
-	stream << info.lengthOf;
+	stream	<< info.name
+			<< info.typeName
+			<< info.description
+			<< info.index[0] << info.index[1]
+			<< info.index[2] << info.index[3]
+			<< info.length[0] << info.length[1]
+			<< info.length[2] << info.length[3]
+			;
 	return stream;
 }
 
 QDataStream& operator>>(QDataStream& stream, VARIABLE_INFO_TYPE& info)
 {
-	stream >> info.name;
-	stream >> info.typeName;
-	stream >> info.description;
-	stream >> info.lengthOf;
+	stream	>> info.name
+			>> info.typeName
+			>> info.description
+			>> info.index[0] >> info.index[1]
+			>> info.index[2] >> info.index[3]
+			>> info.length[0] >> info.length[1]
+			>> info.length[2] >> info.length[3]
+			;
 	return stream;
 }
 

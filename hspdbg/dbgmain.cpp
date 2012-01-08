@@ -371,14 +371,7 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 	PVal* pval = &hspctx->mem_var[indexOfVariable];
 
 	// 変数名
-	varInfo.name
-		= QString("%1(%2,%3,%4,%5)")
-			.arg(m_varNames[indexOfVariable])
-			.arg(indexOf[0])
-			.arg(indexOf[1])
-			.arg(indexOf[2])
-			.arg(indexOf[3])
-			;
+	varInfo.name = m_varNames[indexOfVariable];
 
 	// 変数種別
 	switch(pval->flag) {
@@ -393,6 +386,12 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 		if( HSPVAR_FLAG_USERDEF <= pval->flag ) {
 			varInfo.typeName = QString("userdef-%1").arg(pval->flag - HSPVAR_FLAG_USERDEF + 1);
 		}
+	}
+
+	for(int i = 0; i < 4; i++)
+	{
+		varInfo.index[i] = indexOf[i];
+		varInfo.length[i]= pval->len[i + 1];
 	}
 
 	// 配列範囲チェック
@@ -410,8 +409,6 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 			pval->offset *= pval->len[i];
 		}
 		pval->offset += indexOf[i];
-		// 配列の要素数
-		varInfo.lengthOf = indexOf[i];
 	}
 
 	HspVarProc* varproc = hspctx->exinfo.HspFunc_getproc(pval->flag);

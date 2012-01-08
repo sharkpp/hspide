@@ -40,21 +40,42 @@ void CVariableInfoDock::clear()
 
 void CVariableInfoDock::update(const VARIABLE_INFO_TYPE & varInfo)
 {
-	QString path = toPath(varInfo.name);
+	QString path = toPath(varInfo);
 	QStandardItem* item = getItem(path);
 	setItem(item, TypeColumn,        varInfo.typeName);
 	setItem(item, DescriptionColumn, varInfo.description);
-	if( varInfo.lengthOf != item->rowCount() ) {
+	// 現在の階層の項目数を取得
+	int lengthOf = -1;
+	for(int i = 0; i < 4; i++) {
+		if( 0 <= varInfo.index[i] ) {
+			lengthOf = varInfo.length[i];
+		}
+	}
+	if( lengthOf != item->rowCount() ) {
 	//	while( item->rowCount() ) {
 	//		item->removeRow(0);
 	//	}
 		// 子要素を追加
-		for(int i = 0; i < varInfo.lengthOf; i++) {
-			QString newPath = QString("%1/%2").arg(path).arg(i);
-			QStandardItem* item_ = getItem(newPath);
-		}
+		//for(int i = 0; i < lengthOf; i++) {
+		//	QString newPath = QString("%1/%2").arg(path).arg(i);
+		//	QStandardItem* item_ = getItem(newPath);
+		//	setItem(item_, DescriptionColumn, tr("loading..."));
+		//}
 	}
 	m_varInfo[item->data().toLongLong()] = varInfo;
+	// 添え字が(0,-1,-1,-1)の時だけ特別扱い
+	if(  0 == varInfo.index[0] && 
+		-1 == varInfo.index[1] && 
+		-1 == varInfo.index[2] && 
+		-1 == varInfo.index[3] )
+	{
+		VARIABLE_INFO_TYPE varInfo_ = varInfo;
+		varInfo_.index[0] = -1;
+		item = item->parent();
+		setItem(item, TypeColumn,        varInfo.typeName);
+		setItem(item, DescriptionColumn, varInfo.description);
+		m_varInfo[item->data().toLongLong()] = varInfo_;
+	}
 }
 
 // 指定したパスのアイテムを取得
@@ -110,23 +131,19 @@ void CVariableInfoDock::setItem(QStandardItem* item, ColumnType type, const QStr
 }
 
 // 変数名からパスに変換
-QString CVariableInfoDock::toPath(const QString& varName)
+QString CVariableInfoDock::toPath(const VARIABLE_INFO_TYPE& varInfo)
 {
-	QRegExp re("([^@]+)(@(.*))?\\((.+),(.+),(.+),(.+)\\)");
+	QRegExp re("([^@]+)(@(.*))?");
 	QString path;
 
-	if( 0 <= re.indexIn(varName) )
+	if( 0 <= re.indexIn(varInfo.name) )
 	{
 		int index[4];
 		QString varName = re.cap(1); // 変数名
 		QString modName = re.cap(3); // モジュール名
-		index[0]        = re.cap(4).toInt(); // 配列1
-		index[1]        = re.cap(5).toInt(); // 配列2
-		index[2]        = re.cap(6).toInt(); // 配列3
-		index[3]        = re.cap(7).toInt(); // 配列4
 		path = QString("%1/%2").arg(modName.isEmpty()?"@":modName).arg(varName);
-		for(int i = 0; i < 4 && 0 <= index[i]; i++) {
-			path += QString("/%1").arg(index[i]);
+		for(int i = 0; i < 4 && 0 <= varInfo.index[i]; i++) {
+			path += QString("/%1").arg(varInfo.index[i]);
 		}
 	}
 	return path;
@@ -138,22 +155,55 @@ void CVariableInfoDock::onTreeExpanded(const QModelIndex& index)
 	               item = item->child(index.row());
 qlonglong x = item->data().toLongLong();
 qDebug() << x << m_varInfo;
-	QString varName = m_varInfo[item->data().toLongLong()].name;
 
-	QRegExp re("([^@]+)(@(.*))?\\((.+),(.+),(.+),(.+)\\)");
-
-	if( 0 <= re.indexIn(varName) )
+	QMap<qlonglong, VARIABLE_INFO_TYPE>::iterator
+		ite = m_varInfo.find(item->data().toLongLong());
+	if( ite != m_varInfo.end() )
 	{
-		int index[4];
-		QString varName = re.cap(1); // 変数名
-		QString modName = re.cap(3); // モジュール名
-		index[0]        = re.cap(4).toInt(); // 配列1
-		index[1]        = re.cap(5).toInt(); // 配列2
-		index[2]        = re.cap(6).toInt(); // 配列3
-		index[3]        = re.cap(7).toInt(); // 配列4
+		VARIABLE_INFO_TYPE& info = *ite;
+		QString path = toPath(info);
 
-		varName = modName.isEmpty() ? "" : "@" + modName;
+		// 現在の階層の項目数を取得
+		int lengthOf = -1;
+		int indexOf  = -1;
+		for(int i = 0; i < 4; i++) {
+			indexOf  = i;
+			lengthOf = info.length[i];
+			if( info.index[i] < 0 ) {
+				break;
+			}
+		}
 
-		emit requestVariableInfo(varName, index);
+		for(int i = 0; i < lengthOf; i++) {
+			int idx[4];
+			for(int j = 0; j < 4; j++) {
+				idx[j] = info.index[j];
+			}
+			idx[indexOf] = i;
+			emit requestVariableInfo(info.name, idx);
+			// 子要素を追加
+			QString newPath = QString("%1/%2").arg(path).arg(i);
+			QStandardItem* item_ = getItem(newPath);
+			setItem(item_, DescriptionColumn, tr("loading..."));
+			// 孫要素を追加
+			if( indexOf + 1 < 4 &&
+				0 < info.length[indexOf + 1] )
+			{
+				QString newPath2 = QString("%1/%2").arg(newPath).arg(i);
+				item_ = getItem(newPath2);
+				setItem(item_, DescriptionColumn, tr("loading..."));
+			}
+		}
+
+		//QRegExp re("([^@]+)(@(.*))?");
+		//if( 0 <= re.indexIn(info.name) )
+		//{
+		//	QString varName = re.cap(1); // 変数名
+		//	QString modName = re.cap(3); // モジュール名
+
+		//	varName = modName.isEmpty() ? "" : "@" + modName;
+
+		//	emit requestVariableInfo(varName, index);
+		//}
 	}
 }

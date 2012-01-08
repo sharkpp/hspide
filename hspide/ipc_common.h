@@ -13,7 +13,8 @@ typedef struct {
 	QString	name;
 	QString	typeName;
 	QString	description;
-	int		lengthOf; // îzóÒÇÃóvëfêî
+	int		index[4];
+	int		length[4];
 } VARIABLE_INFO_TYPE;
 
 QDebug&      operator<<(QDebug&      debug,  const VARIABLE_INFO_TYPE& info);

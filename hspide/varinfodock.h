@@ -48,7 +48,7 @@ protected:
 
 	void setItem(QStandardItem* item, ColumnType type, const QString & value);
 
-	QString toPath(const QString& varName);
+	QString toPath(const VARIABLE_INFO_TYPE& varInfo);
 
 protected:
 
@@ -60,5 +60,5 @@ public slots:
 
 signals:
 
-	void requestVariableInfo(const QString& varName, int index[]);
+	void requestVariableInfo(const QString& varName, int* index);
 };

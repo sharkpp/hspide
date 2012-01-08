@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTabList()));
 	connect(tabCloseAct, SIGNAL(triggered()), this, SLOT(onTabClose()));
 	connect(messageDock, SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
-	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int [])), this, SLOT(onReqVarInfo(const QString& , int [])));
+	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
 
 	loadSettings();
 
@@ -674,7 +674,7 @@ void MainWindow::onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> & info)
 	}
 }
 
-void MainWindow::onReqVarInfo(const QString& varName, int info[])
+void MainWindow::onReqVarInfo(const QString& varName, int* info)
 {
 	CDebugger* debugger = NULL;
 	// ‚Æ‚è‚ ‚¦‚¸...
