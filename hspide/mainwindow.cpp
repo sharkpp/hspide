@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	tabButton->setStyleSheet("QToolBar{border:none}");
 	tabWidget->setCornerWidget(tabButton, Qt::TopRightCorner);
 
+	m_tabListMenu = new QMenu(tr("Popup Submenu"));
+	connect(m_tabListMenu, SIGNAL(aboutToShow()), this, SLOT(onTabListShow()));
+
 	setupDockWindows();
 	setupStatusBar();
 	setupActions();
@@ -812,8 +815,68 @@ void MainWindow::onDebugStop()
 	}
 }
 
+void MainWindow::onTabListShow()
+{
+    m_tabListMenu->clear();
+
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document &&
+			document->assignItem())
+		{
+			CWorkSpaceItem* item = document->assignItem();
+			QAction* action = new QAction(item->text(), this);
+			// クリック時にタブをアクティブに出来るように
+			// 情報を保持
+			action->setData(item->uuid().toString());
+			// アクティブなタブを強調
+			if( index == tabWidget->currentIndex() )
+			{
+				QFont font = action->font();
+				font.setBold(true);
+				action->setFont(font);
+			}
+			// クリック時にタブをアクティブに出来るように
+			connect(action, SIGNAL(triggered()), this, SLOT(onTabListClicked()));
+			// メニューに追加
+			m_tabListMenu->addAction(action);
+		}
+	}
+}
+
+void MainWindow::onTabListClicked()
+{
+	QAction* action = qobject_cast<QAction*>(sender());
+	QUuid uuid(action->data().toString());
+
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document &&
+			document->assignItem() &&
+			uuid == document->assignItem()->uuid() )
+		{
+			tabWidget->setCurrentIndex(index);
+			break;
+		}
+	}
+}
+
 void MainWindow::onTabList()
 {
+	// メニューの表示位置を取得
+	QWidget* tabButton = tabWidget->cornerWidget(Qt::TopRightCorner);
+	QPoint pt;
+	for(QWidget* p = tabButton; p; p = p->parentWidget()) {
+		pt.setX(pt.x() + p->geometry().x());
+		pt.setY(pt.y() + p->geometry().y());
+	}
+	pt.setY(pt.y() + tabButton->height());
+	// メニュー表示
+	m_tabListMenu->popup(pt);
 }
 
 // タブを閉じる

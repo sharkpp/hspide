@@ -59,7 +59,9 @@ class MainWindow : public QMainWindow
 	CSearchDock*       searchDock;
 	CMessageDock*      messageDock;
 
-	QWidget* m_lastActivatedDocument;
+	QWidget*			m_lastActivatedDocument;
+
+	QMenu*				m_tabListMenu;
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CWorkSpaceModel* m_workSpace;
@@ -111,6 +113,8 @@ public slots:
 	void onDebugSuspend();
 	void onDebugResume();
 	void onDebugStop();
+	void onTabListShow();
+	void onTabListClicked();
 	void onTabList();
 	void onTabClose();
 	void clipboardDataChanged();
