@@ -76,6 +76,7 @@ public:
 protected:
 
 	virtual void resizeEvent(QResizeEvent * event);
+	virtual void keyPressEvent(QKeyEvent* event);
 
 	void paintLineNumEvent(QPaintEvent * event);
 	void paintRulerEvent(QPaintEvent * event);

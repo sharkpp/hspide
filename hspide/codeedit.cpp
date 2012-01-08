@@ -371,6 +371,68 @@ void CCodeEdit::del()
 	cursor.deleteChar();
 }
 
+void CCodeEdit::keyPressEvent(QKeyEvent* event)
+{
+	QString text = event->text();
+
+	if( !text.isEmpty() &&
+		"\t" == text ) 
+	{
+		QTextCursor cursor = textCursor();
+		int startSel = cursor.selectionStart();
+		int endSel   = cursor.selectionEnd();
+	//	cursor.setPosition(startSel, QTextCursor::KeepAnchor);
+	//	int startLine = cursor.blockNumber();
+	//	cursor.setPosition(endSel, QTextCursor::KeepAnchor);
+	//	int startEnd  = cursor.blockNumber();
+		cursor.setPosition(startSel);
+		cursor.movePosition(QTextCursor::StartOfLine);
+		cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
+		cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+
+		startSel = cursor.selectionStart();
+		endSel   = cursor.selectionEnd();
+
+		QStringList lines(cursor.selectedText().split(QChar::ParagraphSeparator));
+		if( !lines.isEmpty() )
+		{
+			bool skipLastLine = lines[lines.size() - 1].isEmpty();
+			if( skipLastLine ) {
+				lines.removeLast();
+			}
+			for(int i = 0, num = lines.size(); i < num; i++, endSel++) {
+				lines[i].insert(0, "\t");
+			}
+			if( skipLastLine ) {
+				lines.append("");
+			}
+		}
+		QString text = lines.join(QString(QChar::ParagraphSeparator));
+
+		cursor.beginEditBlock();
+		cursor.insertText(text);
+		cursor.endEditBlock();
+
+		cursor.setPosition(startSel);
+		cursor.movePosition(QTextCursor::StartOfLine);
+		cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
+		cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+
+		setTextCursor(cursor);
+//		event->ignore();
+	//QTextCursor cursor = textCursor();
+	//QTextBlockFormat blockFormat;
+	//blockFormat.setAlignment(Qt::AlignCenter);
+	//cursor.insertBlock(blockFormat);
+	//cursor.insertText(QString("xx\nxx\nxx\nxx\n"));
+
+		return;
+	}
+
+	QPlainTextEdit::keyPressEvent(event);
+}
+
 void CCodeEdit::resizeEvent(QResizeEvent * event)
 {
 	QPlainTextEdit::resizeEvent(event);
