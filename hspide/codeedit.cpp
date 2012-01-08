@@ -184,8 +184,10 @@ private:
 
 CCodeEdit::CCodeEdit(QWidget *parent)
 	: QPlainTextEdit(parent)
-	, m_lineNumberBackgroundColorRole(QPalette::Window)
+	, m_lineIconBackgroundColorRole(QPalette::Window)
+	, m_lineNumberBackgroundColorRole(QPalette::Light)
 	, m_lineNumberTextColorRole(QPalette::Text)
+	, m_lineIconBackgroundColor(QColor(255, 255, 255, 255))
 	, m_lineNumberBackgroundColor(QColor(255, 255, 255, 255))
 	, m_lineNumberTextColor(QColor(255, 0, 0, 0))
 	, m_visibleLineNumber(true)
@@ -242,6 +244,11 @@ int CCodeEdit::lineNumberWidth()
 // プロパティ
 //////////////////////////////////////////////////////////////////////
 
+void CCodeEdit::setLineIconBackgroundColorRole(const QPalette::ColorRole & role)
+{
+	m_lineIconBackgroundColorRole = role;
+}
+
 void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole & role)
 {
 	m_lineNumberBackgroundColorRole = role;
@@ -250,6 +257,12 @@ void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole & rol
 void CCodeEdit::setLineNumberTextColorRole(const QPalette::ColorRole & role)
 {
 	m_lineNumberTextColorRole = role;
+}
+
+void CCodeEdit::setLineIconBackgroundColor(const QColor & color)
+{
+	m_lineIconBackgroundColor = color;
+	m_lineIconBackgroundColorRole = QPalette::NoRole;
 }
 
 void CCodeEdit::setLineNumberBackgroundColor(const QColor & color)
@@ -376,7 +389,22 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 	}
 
 	// 行番号エリアをベタ塗り
-	painter.fillRect(event->rect(), lineNumberBackgroundColor());
+	const QRect & rc = event->rect();
+	painter.fillRect(rc, lineNumberBackgroundColor());
+	painter.fillRect(QRect(	rc.left(), rc.top(),
+							rc.left() + m_lineIconSize.width(),
+							rc.height()), lineIconBackgroundColor());
+
+	// 行番号との区切りを描画
+	const QRect & rcWnd = contentsRect();
+	QPen pen;
+	pen.setColor(lineNumberTextColor());
+	pen.setStyle(Qt::DotLine);
+	painter.setPen(pen);
+	// ※クリックしたりするとごみが描画されるので毎回、上から下までを描画する
+	painter.fillRect(QRect(	rc.right(), rcWnd.top(), rc.right(), rcWnd.height()),
+					 lineIconBackgroundColor());
+	painter.drawLine(rc.right(), rcWnd.top(), rc.right(), rcWnd.bottom());
 
 	// 行番号を描画
 	painter.setPen(lineNumberTextColor());

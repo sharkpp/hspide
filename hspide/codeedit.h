@@ -20,9 +20,11 @@ class CCodeEdit
 	QWidget *               m_lineNumberWidget;
 	QSyntaxHighlighter *    m_highlighter;
 
+	QPalette::ColorRole     m_lineIconBackgroundColorRole;
 	QPalette::ColorRole     m_lineNumberBackgroundColorRole;
 	QPalette::ColorRole     m_lineNumberTextColorRole;
 
+	QColor                  m_lineIconBackgroundColor;
 	QColor                  m_lineNumberBackgroundColor;
 	QColor                  m_lineNumberTextColor;
 
@@ -40,11 +42,17 @@ public:
 	// ƒVƒ“ƒ{ƒ‹ˆê——‚ðŽw’è
 	void setSymbols(const QVector<QStringList> & symbols);
 
+	void setLineIconBackgroundColorRole(const QPalette::ColorRole & role);
+	const QPalette::ColorRole & lineIconBackgroundColorRole() const;
+
 	void setLineNumberBackgroundColorRole(const QPalette::ColorRole & role);
 	const QPalette::ColorRole & lineNumberBackgroundColorRole() const;
 
 	void setLineNumberTextColorRole(const QPalette::ColorRole & role);
 	const QPalette::ColorRole & lineNumberTextColorRole() const;
+
+	void setLineIconBackgroundColor(const QColor & color);
+	const QColor & lineIconBackgroundColor() const;
 
 	void setLineNumberBackgroundColor(const QColor & color);
 	const QColor & lineNumberBackgroundColor() const;
@@ -92,12 +100,23 @@ private:
 
 };
 
+inline const QPalette::ColorRole & CCodeEdit::lineIconBackgroundColorRole() const {
+	return m_lineIconBackgroundColorRole;
+}
+
 inline const QPalette::ColorRole & CCodeEdit::lineNumberBackgroundColorRole() const {
 	return m_lineNumberBackgroundColorRole;
 }
 
 inline const QPalette::ColorRole & CCodeEdit::lineNumberTextColorRole() const {
 	return m_lineNumberTextColorRole;
+}
+
+inline const QColor & CCodeEdit::lineIconBackgroundColor() const {
+	return
+		QPalette::NoRole == m_lineIconBackgroundColorRole
+			? m_lineIconBackgroundColor
+			: palette().color(m_lineIconBackgroundColorRole);
 }
 
 inline const QColor & CCodeEdit::lineNumberBackgroundColor() const {
