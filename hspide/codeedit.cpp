@@ -1,4 +1,5 @@
 #include <QtGui>
+#include <QDebug>
 #include "codeedit.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -89,7 +90,46 @@ public:
 		QTextCharFormat macroFormat;
 		macroFormat.setForeground(Qt::blue);
 
+		QMap<int, QString> categories;
+
 		foreach(const QStringList & symbol, symbols)
+		//{
+		//	const QString & category1 = symbol[1];
+		//	const QString & category2 = symbol[2];
+		//	QString pattern = "(\\b" + symbol[0] + "\\b)";
+		//	QTextCharFormat format;
+		//	int category = -1;
+		//	if( !category2.compare("macro") ) {
+		//		// 定義済みマクロ
+		//	//	format = macroFormat;
+		//		category = 0;
+		//	} else if( !category2.compare("func") ) {
+		//		if( !category1.compare("pre") ) {
+		//			// プリプロセッサ
+		//			pattern = symbol[0];
+		//			pattern = "((^|\\s)#\\s*" + pattern.remove("#") + "\\b)";
+		//		//	format = preprocesserFormat;
+		//			category = 1;
+		//		} else {
+		//			// 関数/命令
+		//		//	format = functionFormat;
+		//			category = 2;
+		//		}
+		//	}
+		//	categories[category] += (categories[category].isEmpty() ? "" : "|") + pattern;
+		//}
+		//foreach(int category, categories.keys())
+		//{
+		//	QTextCharFormat format;
+		//	switch(category) {
+		//	case 0: format = macroFormat; break;
+		//	case 1: format = preprocesserFormat; break;
+		//	case 2: format = functionFormat; break;
+		//	}
+		//	rule.pattern = QRegExp(categories[category]);
+		//	rule.format  = format;
+		//	highlightingRules.append(rule);
+		//}
 		{
 			const QString & category1 = symbol[1];
 			const QString & category2 = symbol[2];
@@ -114,67 +154,259 @@ public:
 			highlightingRules.append(rule);
 		}
 
-		// ラベル
-		QTextCharFormat labelFormat;
-		labelFormat.setForeground(Qt::darkYellow);
-		rule.pattern = QRegExp("\\*[^\\s,.:;\\/()=0-9][^\\s,.:;\\/]*");
-		rule.format = labelFormat;
-		highlightingRules.append(rule);
+		//// ラベル
+		//QTextCharFormat labelFormat;
+		//labelFormat.setForeground(Qt::darkYellow);
+		//rule.pattern = QRegExp("\\*[^\\s,.:;\\/()=0-9][^\\s,.:;\\/]*");
+		//rule.format = labelFormat;
+		//highlightingRules.append(rule);
 
-		// コメント(一行)
-		QTextCharFormat singleLineCommentFormat;
-		singleLineCommentFormat.setForeground(Qt::darkGreen);
-		rule.pattern = QRegExp("//[^\n]*");
-		rule.format = singleLineCommentFormat;
-		highlightingRules.append(rule);
-		rule.pattern = QRegExp(";[^\n]*");
-		rule.format = singleLineCommentFormat;
-		highlightingRules.append(rule);
+		//// コメント(一行)
+		//QTextCharFormat singleLineCommentFormat;
+		//singleLineCommentFormat.setForeground(Qt::darkGreen);
+		//rule.pattern = QRegExp("//[^\n]*");
+		//rule.format = singleLineCommentFormat;
+		//highlightingRules.append(rule);
+		//rule.pattern = QRegExp(";[^\n]*");
+		//rule.format = singleLineCommentFormat;
+		//highlightingRules.append(rule);
 
-		// コメント(複数行)
-		multiLineCommentFormat.setForeground(Qt::darkGreen);
+		//// コメント(複数行)
+		//multiLineCommentFormat.setForeground(Qt::darkGreen);
 
-		// 文字列
-		QTextCharFormat quotationFormat;
-		quotationFormat.setForeground(Qt::darkRed);
-		rule.pattern = QRegExp("\".*\"");
-		rule.format = quotationFormat;
-		highlightingRules.append(rule);
+		//// 文字列
+		//QTextCharFormat quotationFormat;
+		//quotationFormat.setForeground(Qt::darkRed);
+		//rule.pattern = QRegExp("\".*\"");
+		//rule.format = quotationFormat;
+		//highlightingRules.append(rule);
 
 	}
 
 private:
 
-	virtual void highlightBlock(const QString &text)
+	typedef struct TOKEN {
+		QStringRef text;
+		int start;
+		int length;
+	} TOKEN;
+
+	virtual void highlightBlock(const QString& text)
 	{
-		foreach (const HighlightingRule &rule, highlightingRules) {
-			QRegExp expression(rule.pattern);
-			int index = expression.indexIn(text);
-			while (index >= 0) {
-				int length = expression.matchedLength();
-				setFormat(index, length, rule.format);
-				index = expression.indexIn(text, index + length);
-			}
-		}
-		setCurrentBlockState(0);
+		//QRegExp expression("\\b.+\\b");
+		//QTextCharFormat preprocesserFormat;
+		//preprocesserFormat.setForeground(Qt::blue);
+		//int index = expression.indexIn(text);
+		//while (index >= 0) {
+		//	int length = expression.matchedLength();
+		//	setFormat(index, length, preprocesserFormat);
+		//	index = expression.indexIn(text, index + length);
+		//}
 
-		int startIndex = 0;
-		if (previousBlockState() != 1)
-			startIndex = commentStartExpression.indexIn(text);
-
-		while (startIndex >= 0) {
-			int endIndex = commentEndExpression.indexIn(text, startIndex);
-			int commentLength;
-			if (endIndex == -1) {
-				setCurrentBlockState(1);
-				commentLength = text.length() - startIndex;
-			} else {
-				commentLength = endIndex - startIndex
-								+ commentEndExpression.matchedLength();
-			}
-			setFormat(startIndex, commentLength, multiLineCommentFormat);
-			startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
+#define LABEL_RESET() \
+		if( inLabel ) { \
+			inLabel = false; \
+			READ_TOKEN(); \
+			tokenStart = pos; \
 		}
+#define READ_TOKEN() \
+		if( 0 <= tokenStart ) { \
+			if( 0 < (pos - tokenStart) ) { \
+				TOKEN token; \
+				token.start  = tokenStart; \
+				token.length = pos - tokenStart; \
+				token.text   = text.midRef(token.start, token.length); \
+				tokens.push_back(token); \
+			} \
+			tokenStart = -1; \
+		}
+
+		QVector<TOKEN> tokens;
+
+		bool inComment = false;
+		bool inString = false;
+		bool inLabel = false;
+		bool prevEscape = false;
+		int tokenStart = -1;
+		int pos = 0;
+		for(int len = text.size();
+			pos < len; )
+		{
+			const QChar c = text.at(pos);
+
+			if( !c.isSpace() &&
+				tokenStart < 0 ) {
+				tokenStart = pos;
+			}
+
+			switch( c.unicode() )
+			{
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+			case '|':
+			case '&':
+			case '^':
+			case '=':
+				LABEL_RESET();
+				if( inComment || inString ) {
+					break;
+				}
+				READ_TOKEN();
+				tokenStart = pos;
+				if( len <= pos + 1 ) {
+					pos--;
+					READ_TOKEN();
+					tokenStart = pos;
+					pos++;
+					READ_TOKEN();
+					break;
+				} else {
+					const QChar cc = text.at(pos + 1);
+					if( '=' == cc ) { // "+=" or "-=" or "*=" or "/=" or "|=" or "&=" or "^=" or "=="
+						tokenStart = pos;
+						pos += 2;
+						READ_TOKEN();
+						pos--;
+						break;
+					} else if( c == cc ) {
+						switch( c.unicode() )
+						{
+						case '-':
+							// ↑こいつは厄介
+							// a=b--1 だと a = b - (-1) になる
+						case '+':
+						case '|':
+						case '&':
+							// "++" or "--" or "||" or "&&" "||" or "=="
+							tokenStart = pos;
+							pos += 2;
+							READ_TOKEN();
+							pos--;
+							break;
+						case '/':
+							// "//"
+							inComment = true;
+							break;
+						default:
+							pos++;
+							READ_TOKEN();
+							pos--;
+							break;
+						}
+					} else if( '*' == c ) {
+						inLabel = true;
+					} else {
+						pos++;
+						READ_TOKEN();
+						pos--;
+					}
+				}
+				break;
+			case '{':
+			case '}':
+			case '(':
+			case ')':
+			case ',':
+			case ':':
+				LABEL_RESET();
+				if( inComment || inString ) {
+					break;
+				}
+				READ_TOKEN();
+				tokenStart = pos;
+				pos++;
+				READ_TOKEN();
+				pos--;
+				break;
+			case '\\':
+				LABEL_RESET();
+				if( inComment || inString ) {
+					break;
+				}
+				prevEscape = !prevEscape;
+				pos++;
+				continue;
+			case '"':
+				LABEL_RESET();
+				if( inComment ) {
+					break;
+				}
+				if( !prevEscape ) {
+					inString = !inString;
+					if( !inString ) { // 文字列から復帰
+						pos++;
+						READ_TOKEN();
+						pos--;
+					}
+				}
+				break;
+			case ';':
+				LABEL_RESET();
+				if( inComment || inString ) {
+					break;
+				}
+				inComment = true;
+				READ_TOKEN();
+				tokenStart = pos;
+				break;
+			default:
+				if( QChar::LineSeparator == c && inComment ) {
+					READ_TOKEN();
+					inComment = false;
+				} else if( c.isSpace() ) {
+					if( !inString && !inComment ) {
+						inLabel = false;
+						READ_TOKEN();
+						//
+						for(; pos < len && text.at(pos).isSpace();
+							pos++);
+						pos--;
+					}
+				}
+				break;
+			}
+
+			prevEscape = false;
+			pos++;
+		}
+		READ_TOKEN();
+
+
+//qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz") << text;
+//	//	foreach (const HighlightingRule &rule, highlightingRules) {
+//		for(int i = 0, num = highlightingRules.size(); i < num; i++) {
+//			HighlightingRule& rule = highlightingRules[i];
+//			QRegExp & expression = rule.pattern;
+//		//	QRegExp expression(rule.pattern);
+//			int index = expression.indexIn(text);
+//			while (index >= 0) {
+//				int length = expression.matchedLength();
+//				setFormat(index, length, rule.format);
+//				index = expression.indexIn(text, index + length);
+//			}
+//		}
+//qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
+	//	setCurrentBlockState(0);
+    //
+	//	int startIndex = 0;
+	//	if (previousBlockState() != 1)
+	//		startIndex = commentStartExpression.indexIn(text);
+    //
+	//	while (startIndex >= 0) {
+	//		int endIndex = commentEndExpression.indexIn(text, startIndex);
+	//		int commentLength;
+	//		if (endIndex == -1) {
+	//			setCurrentBlockState(1);
+	//			commentLength = text.length() - startIndex;
+	//		} else {
+	//			commentLength = endIndex - startIndex
+	//							+ commentEndExpression.matchedLength();
+	//		}
+	//		setFormat(startIndex, commentLength, multiLineCommentFormat);
+	//		startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
+	//	}
 	}
 
 };
@@ -299,13 +531,14 @@ void CCodeEdit::setLineIcon(int lineNo, const QIcon & icon)
 
 const QIcon & CCodeEdit::lineIcon(int lineNo)
 {
+	static QIcon tmp;
 	QMap<int, QIcon>::iterator
 		ite = m_lineIconMap.find(lineNo);
 	if( m_lineIconMap.end() != ite )
 	{
 		return ite.value();
 	}
-	return QIcon();
+	return tmp;
 }
 
 void CCodeEdit::clearLineIcon()
@@ -409,9 +642,11 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 		}
 		QString text = lines.join(QString(QChar::ParagraphSeparator));
 
+qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
 		cursor.beginEditBlock();
 		cursor.insertText(text);
 		cursor.endEditBlock();
+qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
 
 		cursor.setPosition(startSel);
 		cursor.movePosition(QTextCursor::StartOfLine);
@@ -420,12 +655,6 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
 
 		setTextCursor(cursor);
-//		event->ignore();
-	//QTextCursor cursor = textCursor();
-	//QTextBlockFormat blockFormat;
-	//blockFormat.setAlignment(Qt::AlignCenter);
-	//cursor.insertBlock(blockFormat);
-	//cursor.insertText(QString("xx\nxx\nxx\nxx\n"));
 
 		return;
 	}
