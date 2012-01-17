@@ -185,11 +185,19 @@ public:
 
 private:
 
-	typedef struct TOKEN {
+	typedef enum {
+		HSP3_TOKEN_NORMAL = 0,
+		HSP3_TOKEN_STRING,
+		HSP3_TOKEN_LABEL,
+		HSP3_TOKEN_COMMENT,
+	} HSP3_TOKEN_TYPE;
+
+	typedef struct HSP3_TOKEN {
 		QStringRef text;
-		int start;
-		int length;
-	} TOKEN;
+		int        start;
+		int        length;
+		HSP3_TOKEN_TYPE type;
+	} HSP3_TOKEN;
 
 	virtual void highlightBlock(const QString& text)
 	{
@@ -212,21 +220,31 @@ private:
 #define READ_TOKEN() \
 		if( 0 <= tokenStart ) { \
 			if( 0 < (pos - tokenStart) ) { \
-				TOKEN token; \
+				HSP3_TOKEN token; \
 				token.start  = tokenStart; \
 				token.length = pos - tokenStart; \
 				token.text   = text.midRef(token.start, token.length); \
+				     if( inComment ) { token.type = HSP3_TOKEN_COMMENT; } \
+				else if( inLabel   ) { token.type = HSP3_TOKEN_LABEL;   } \
+				else if( inString  ) { token.type = HSP3_TOKEN_STRING;  } \
+				else                 { token.type = HSP3_TOKEN_NORMAL;  } \
 				tokens.push_back(token); \
 			} \
 			tokenStart = -1; \
 		}
 
-		QVector<TOKEN> tokens;
+		QVector<HSP3_TOKEN> tokens;
 
-		bool inComment = false;
-		bool inString = false;
-		bool inLabel = false;
-		bool prevEscape = false;
+		bool inComment      = (previousBlockState() &  1) != 0;
+		bool isBlockComment = (previousBlockState() &  2) != 0;
+		bool inString       = (previousBlockState() &  4) != 0;
+		bool inLabel        = (previousBlockState() &  8) != 0;
+		bool prevEscape     = (previousBlockState() & 16) != 0;
+	//	bool inComment = false;
+	//	bool isBlockComment = false;
+	//	bool inString = false;
+	//	bool inLabel = false;
+	//	bool prevEscape = false;
 		int tokenStart = -1;
 		int pos = 0;
 		for(int len = text.size();
@@ -250,7 +268,20 @@ private:
 			case '^':
 			case '=':
 				LABEL_RESET();
-				if( inComment || inString ) {
+				if( inComment ) {
+					if( isBlockComment &&
+						pos + 1 < len &&
+						'*' == c &&
+						'/' == text.at(pos + 1) )
+					{
+						pos += 2;
+						READ_TOKEN();
+						pos--;
+						inComment = false;
+					}
+					break;
+				}
+				if( inString ) {
 					break;
 				}
 				READ_TOKEN();
@@ -288,6 +319,7 @@ private:
 						case '/':
 							// "//"
 							inComment = true;
+							isBlockComment = false;
 							break;
 						default:
 							pos++;
@@ -295,6 +327,10 @@ private:
 							pos--;
 							break;
 						}
+					} else if( '/' == c && '*' == cc ) {
+						inComment = true;
+						isBlockComment = true;
+						pos++;
 					} else if( '*' == c ) {
 						inLabel = true;
 					} else {
@@ -334,12 +370,12 @@ private:
 					break;
 				}
 				if( !prevEscape ) {
-					inString = !inString;
-					if( !inString ) { // •¶Žš—ñ‚©‚ç•œ‹A
+					if( inString ) { // •¶Žš—ñ‚©‚ç•œ‹A
 						pos++;
 						READ_TOKEN();
 						pos--;
 					}
+					inString = !inString;
 				}
 				break;
 			case ';':
@@ -347,18 +383,19 @@ private:
 				if( inComment || inString ) {
 					break;
 				}
-				inComment = true;
 				READ_TOKEN();
 				tokenStart = pos;
+				inComment = true;
+				isBlockComment = false;
 				break;
 			default:
-				if( QChar::LineSeparator == c && inComment ) {
+				if( QChar::LineSeparator == c && inComment && !isBlockComment ) {
 					READ_TOKEN();
 					inComment = false;
 				} else if( c.isSpace() ) {
 					if( !inString && !inComment ) {
-						inLabel = false;
 						READ_TOKEN();
+						inLabel = false;
 						//
 						for(; pos < len && text.at(pos).isSpace();
 							pos++);
@@ -373,6 +410,27 @@ private:
 		}
 		READ_TOKEN();
 
+		setCurrentBlockState(
+				(inComment      ?  1 : 0) |
+				(isBlockComment ?  2 : 0) |
+				(inString       ?  4 : 0) |
+				(inLabel        ?  8 : 0) |
+				(prevEscape     ? 16 : 0)
+			);
+
+		QTextCharFormat functionFormat;
+		functionFormat.setForeground(Qt::blue);
+		functionFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		QTextCharFormat preprocesserFormat;
+		preprocesserFormat.setForeground(Qt::blue);
+
+		QTextCharFormat macroFormat;
+		macroFormat.setForeground(Qt::blue);
+
+		foreach(const HSP3_TOKEN& token, tokens) {
+			setFormat(token.start, token.length - 1, functionFormat);
+		}
 
 //qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz") << text;
 //	//	foreach (const HighlightingRule &rule, highlightingRules) {
