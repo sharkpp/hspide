@@ -166,6 +166,7 @@ bool Hsp3Lexer::scan()
 	bool inString       = m_inString;
 	bool inLabel        = m_inLabel;
 	bool inPreProcess   = false;
+	bool skipPreProcessSpace = false; // プリプロセッサの場合に初回のみスペースを無視するため
 	bool prevEscape     = m_prevEscape;
 	int tokenStart = -1;
 	int pos = m_pos;
@@ -322,14 +323,16 @@ bool Hsp3Lexer::scan()
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
 			inPreProcess = true;
+			skipPreProcessSpace = true;
 			break;
 		default:
 			if( QChar::LineSeparator == c && inComment/* && !isBlockComment*/ ) {
 				READ_TOKEN((inComment = isBlockComment, pos++));
 				inComment = isBlockComment;
 			} else if( c.isSpace() ) {
-				if( inPreProcess && (pos - tokenStart) <= 1 ) {
-				} else if( !inString && !inComment ) {
+				if( !skipPreProcessSpace &&
+					!inString && !inComment )
+				{
 					READ_TOKEN((inLabel = false, pos++));
 					inLabel = false;
 					//
@@ -337,6 +340,8 @@ bool Hsp3Lexer::scan()
 				//		pos++);
 				//	pos--;
 				}
+			} else {
+				skipPreProcessSpace = false;
 			}
 			break;
 		}

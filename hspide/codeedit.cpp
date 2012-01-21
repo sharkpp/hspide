@@ -322,7 +322,7 @@ void CCodeEdit::setTabStopCharWidth(int width)
 // イベント
 //////////////////////////////////////////////////////////////////////
 
-void CCodeEdit::updateLineNumberWidth(int newBlockCount)
+void CCodeEdit::updateLineNumberWidth(int /*newBlockCount*/)
 {
 	setViewportMargins(lineNumberWidth(), 0, 0, 0);
 }
@@ -343,54 +343,104 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 	QString text = event->text();
 
 	if( !text.isEmpty() &&
-		"\t" == text ) 
+		("\t" == text || " " == text) ) 
 	{
+		QChar c = text[0];
 		QTextCursor cursor = textCursor();
+		// 現在位置を取得
 		int startSel = cursor.selectionStart();
 		int endSel   = cursor.selectionEnd();
-	//	cursor.setPosition(startSel, QTextCursor::KeepAnchor);
-	//	int startLine = cursor.blockNumber();
-	//	cursor.setPosition(endSel, QTextCursor::KeepAnchor);
-	//	int startEnd  = cursor.blockNumber();
-		cursor.setPosition(startSel);
-		cursor.movePosition(QTextCursor::StartOfLine);
-		cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
-		cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+		// 選択行数を取得しインデントするかどうかを判断
+		cursor.setPosition(startSel, QTextCursor::KeepAnchor);
+		int startLine = cursor.blockNumber();
+		cursor.setPosition(endSel, QTextCursor::KeepAnchor);
+		int endLine   = cursor.blockNumber();
 
-		startSel = cursor.selectionStart();
-		endSel   = cursor.selectionEnd();
-
-		QStringList lines(cursor.selectedText().split(QChar::ParagraphSeparator));
-		if( !lines.isEmpty() )
+QTime time; time.start();
+		if( startLine < endLine ) 
 		{
-			bool skipLastLine = lines[lines.size() - 1].isEmpty();
-			if( skipLastLine ) {
-				lines.removeLast();
+			// 選択し直す
+			cursor.setPosition(startSel);
+			cursor.movePosition(QTextCursor::StartOfLine);
+			cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+
+			startSel = cursor.selectionStart();
+			endSel   = cursor.selectionEnd();
+
+			QStringList lines(cursor.selectedText().split(QChar::ParagraphSeparator));
+			if( !lines.isEmpty() )
+			{
+				bool skipLastLine = lines[lines.size() - 1].isEmpty();
+				if( skipLastLine ) {
+					lines.removeLast();
+				}
+				if( !(event->modifiers() & Qt::ShiftModifier) )
+				{
+					// TAB or スペースでインデント
+					for(int i = 0, num = lines.size(); i < num; i++)
+					{
+						// 空行ではなければインデント処理
+						if( !lines[i].isEmpty() )
+						{
+							lines[i].insert(0, c);
+							endSel++;
+						}
+					}
+				}
+				else
+				{
+					if( ' ' == c ) {
+						// スペースで逆インデント
+						for(int i = 0, num = lines.size(); i < num; i++)
+						{
+							if( c == lines[i][0] ) {
+								lines[i].remove(0, 1);
+								endSel--;
+							}
+						}
+					} else {
+						// TAB or スペースで逆インデント
+						for(int i = 0, num = lines.size(); i < num; i++)
+						{
+							if( c == lines[i][0] ) {
+								lines[i].remove(0, 1);
+								endSel--;
+							} else {
+								// スペースの場合、最大TAB文字の幅分逆インデント
+								int j = 0;
+								for(; j < m_tabStopCharWidth &&
+									' ' == lines[i][j]; j++) {
+								}
+								lines[i].remove(0, j);
+								endSel -= j;
+							}
+						}
+					}
+				}
+				if( skipLastLine ) {
+					lines.append("");
+				}
 			}
-			for(int i = 0, num = lines.size(); i < num; i++, endSel++) {
-				lines[i].insert(0, "\t");
-			}
-			if( skipLastLine ) {
-				lines.append("");
-			}
+			QString text = lines.join(QString(QChar::ParagraphSeparator));
+qDebug() << __LINE__ << time.elapsed();
+time.start();
+
+			cursor.beginEditBlock();
+			cursor.insertText(text);
+			cursor.endEditBlock();
+qDebug() << __LINE__ << time.elapsed();
+
+			cursor.setPosition(startSel);
+			cursor.movePosition(QTextCursor::StartOfLine);
+			cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+			cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+
+			setTextCursor(cursor);
+
+			return;
 		}
-		QString text = lines.join(QString(QChar::ParagraphSeparator));
-
-qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
-		cursor.beginEditBlock();
-		cursor.insertText(text);
-		cursor.endEditBlock();
-qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
-
-		cursor.setPosition(startSel);
-		cursor.movePosition(QTextCursor::StartOfLine);
-		cursor.setPosition(endSel - 1, QTextCursor::KeepAnchor);
-		cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
-		cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
-
-		setTextCursor(cursor);
-
-		return;
 	}
 
 	QPlainTextEdit::keyPressEvent(event);
