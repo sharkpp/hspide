@@ -390,6 +390,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="hsp3lexer.h"
+				>
+			</File>
+			<File
 				RelativePath="ipc_common.h"
 				>
 			</File>

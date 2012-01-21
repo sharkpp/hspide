@@ -1,6 +1,7 @@
 #include <QtGui>
 #include <QDebug>
 #include "codeedit.h"
+#include "hsp3lexer.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -211,226 +212,58 @@ private:
 		//	index = expression.indexIn(text, index + length);
 		//}
 
-#define LABEL_RESET() \
-		if( inLabel ) { \
-			inLabel = false; \
-			READ_TOKEN(); \
-			tokenStart = pos; \
-		}
-#define READ_TOKEN() \
-		if( 0 <= tokenStart ) { \
-			if( 0 < (pos - tokenStart) ) { \
-				HSP3_TOKEN token; \
-				token.start  = tokenStart; \
-				token.length = pos - tokenStart; \
-				token.text   = text.midRef(token.start, token.length); \
-				     if( inComment ) { token.type = HSP3_TOKEN_COMMENT; } \
-				else if( inLabel   ) { token.type = HSP3_TOKEN_LABEL;   } \
-				else if( inString  ) { token.type = HSP3_TOKEN_STRING;  } \
-				else                 { token.type = HSP3_TOKEN_NORMAL;  } \
-				tokens.push_back(token); \
-			} \
-			tokenStart = -1; \
-		}
+		Hsp3Lexer lexer;
 
-		QVector<HSP3_TOKEN> tokens;
+		lexer.reset(QString(text).append(QChar::LineSeparator), previousBlockState());
 
-		bool inComment      = (previousBlockState() &  1) != 0;
-		bool isBlockComment = (previousBlockState() &  2) != 0;
-		bool inString       = (previousBlockState() &  4) != 0;
-		bool inLabel        = (previousBlockState() &  8) != 0;
-		bool prevEscape     = (previousBlockState() & 16) != 0;
-	//	bool inComment = false;
-	//	bool isBlockComment = false;
-	//	bool inString = false;
-	//	bool inLabel = false;
-	//	bool prevEscape = false;
-		int tokenStart = -1;
-		int pos = 0;
-		for(int len = text.size();
-			pos < len; )
+		QTextCharFormat testFormat;
+		testFormat.setForeground(Qt::red);
+		testFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		QTextCharFormat format[Hsp3Lexer::TypeNum];
+
+	//	// プリプロセッサ
+	//	QTextCharFormat preprocesserFormat;
+	//	preprocesserFormat.setForeground(Qt::blue);
+	//	preprocesserFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		// ラベル
+		QTextCharFormat &labelFormat = format[Hsp3Lexer::TypeLabel];
+		labelFormat.setForeground(Qt::darkYellow);
+	//	labelFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		// コメント
+		QTextCharFormat &commentFormat = format[Hsp3Lexer::TypeComment];
+		commentFormat.setForeground(Qt::darkGreen);
+	//	commentFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		// 文字列
+		QTextCharFormat &stringFormat = format[Hsp3Lexer::TypeString];
+		stringFormat.setForeground(Qt::darkRed);
+	//	stringFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		format[Hsp3Lexer::TypeNormal].setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		while( lexer.scan() )
 		{
-			const QChar c = text.at(pos);
-
-			if( !c.isSpace() &&
-				tokenStart < 0 ) {
-				tokenStart = pos;
-			}
-
-			switch( c.unicode() )
-			{
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-			case '|':
-			case '&':
-			case '^':
-			case '=':
-				LABEL_RESET();
-				if( inComment ) {
-					if( isBlockComment &&
-						pos + 1 < len &&
-						'*' == c &&
-						'/' == text.at(pos + 1) )
-					{
-						pos += 2;
-						READ_TOKEN();
-						pos--;
-						inComment = false;
-					}
-					break;
-				}
-				if( inString ) {
-					break;
-				}
-				READ_TOKEN();
-				tokenStart = pos;
-				if( len <= pos + 1 ) {
-					pos--;
-					READ_TOKEN();
-					tokenStart = pos;
-					pos++;
-					READ_TOKEN();
-					break;
-				} else {
-					const QChar cc = text.at(pos + 1);
-					if( '=' == cc ) { // "+=" or "-=" or "*=" or "/=" or "|=" or "&=" or "^=" or "=="
-						tokenStart = pos;
-						pos += 2;
-						READ_TOKEN();
-						pos--;
-						break;
-					} else if( c == cc ) {
-						switch( c.unicode() )
-						{
-						case '-':
-							// ↑こいつは厄介
-							// a=b--1 だと a = b - (-1) になる
-						case '+':
-						case '|':
-						case '&':
-							// "++" or "--" or "||" or "&&" "||" or "=="
-							tokenStart = pos;
-							pos += 2;
-							READ_TOKEN();
-							pos--;
-							break;
-						case '/':
-							// "//"
-							inComment = true;
-							isBlockComment = false;
-							break;
-						default:
-							pos++;
-							READ_TOKEN();
-							pos--;
-							break;
-						}
-					} else if( '/' == c && '*' == cc ) {
-						inComment = true;
-						isBlockComment = true;
-						pos++;
-					} else if( '*' == c ) {
-						inLabel = true;
-					} else {
-						pos++;
-						READ_TOKEN();
-						pos--;
-					}
-				}
-				break;
-			case '{':
-			case '}':
-			case '(':
-			case ')':
-			case ',':
-			case ':':
-				LABEL_RESET();
-				if( inComment || inString ) {
-					break;
-				}
-				READ_TOKEN();
-				tokenStart = pos;
-				pos++;
-				READ_TOKEN();
-				pos--;
-				break;
-			case '\\':
-				LABEL_RESET();
-				if( inComment || inString ) {
-					break;
-				}
-				prevEscape = !prevEscape;
-				pos++;
-				continue;
-			case '"':
-				LABEL_RESET();
-				if( inComment ) {
-					break;
-				}
-				if( !prevEscape ) {
-					if( inString ) { // 文字列から復帰
-						pos++;
-						READ_TOKEN();
-						pos--;
-					}
-					inString = !inString;
-				}
-				break;
-			case ';':
-				LABEL_RESET();
-				if( inComment || inString ) {
-					break;
-				}
-				READ_TOKEN();
-				tokenStart = pos;
-				inComment = true;
-				isBlockComment = false;
-				break;
-			default:
-				if( QChar::LineSeparator == c && inComment && !isBlockComment ) {
-					READ_TOKEN();
-					inComment = false;
-				} else if( c.isSpace() ) {
-					if( !inString && !inComment ) {
-						READ_TOKEN();
-						inLabel = false;
-						//
-						for(; pos < len && text.at(pos).isSpace();
-							pos++);
-						pos--;
-					}
-				}
-				break;
-			}
-
-			prevEscape = false;
-			pos++;
+			setFormat(lexer.start(), lexer.length(), format[lexer.type()]);
 		}
-		READ_TOKEN();
 
-		setCurrentBlockState(
-				(inComment      ?  1 : 0) |
-				(isBlockComment ?  2 : 0) |
-				(inString       ?  4 : 0) |
-				(inLabel        ?  8 : 0) |
-				(prevEscape     ? 16 : 0)
-			);
+		setCurrentBlockState( lexer.state() );
 
-		QTextCharFormat functionFormat;
-		functionFormat.setForeground(Qt::blue);
-		functionFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		QTextCharFormat preprocesserFormat;
-		preprocesserFormat.setForeground(Qt::blue);
-
-		QTextCharFormat macroFormat;
-		macroFormat.setForeground(Qt::blue);
-
-		foreach(const HSP3_TOKEN& token, tokens) {
-			setFormat(token.start, token.length - 1, functionFormat);
-		}
+	//	QTextCharFormat functionFormat;
+	//	functionFormat.setForeground(Qt::blue);
+	//	functionFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+    //
+	//	QTextCharFormat preprocesserFormat;
+	//	preprocesserFormat.setForeground(Qt::blue);
+    //
+	//	QTextCharFormat macroFormat;
+	//	macroFormat.setForeground(Qt::blue);
+    //
+	//	foreach(const HSP3_TOKEN& token, tokens) {
+	//		setFormat(token.start, token.length - 1, functionFormat);
+	//	}
 
 //qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz") << text;
 //	//	foreach (const HighlightingRule &rule, highlightingRules) {
