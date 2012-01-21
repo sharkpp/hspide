@@ -148,6 +148,7 @@ bool Hsp3Lexer::scan()
 			else if( inLabel   ) { m_type = TypeLabel;   } \
 			else if( inString  ) { m_type = TypeString;  } \
 			else                 { m_type = TypeNormal;  } \
+			if( inPreProcess )   { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
 			code; \
 			m_pos            = pos; \
 			m_inComment      = inComment; \
@@ -164,6 +165,7 @@ bool Hsp3Lexer::scan()
 	bool isBlockComment = m_isBlockComment;
 	bool inString       = m_inString;
 	bool inLabel        = m_inLabel;
+	bool inPreProcess   = false;
 	bool prevEscape     = m_prevEscape;
 	int tokenStart = -1;
 	int pos = m_pos;
@@ -312,12 +314,22 @@ bool Hsp3Lexer::scan()
 			inComment = true;
 			isBlockComment = false;
 			break;
+		case '#':
+			LABEL_RESET();
+			if( inComment || inString ) {
+				break;
+			}
+			READ_TOKEN(NOOP);
+			tokenStart = pos;
+			inPreProcess = true;
+			break;
 		default:
 			if( QChar::LineSeparator == c && inComment/* && !isBlockComment*/ ) {
 				READ_TOKEN((inComment = isBlockComment, pos++));
 				inComment = isBlockComment;
 			} else if( c.isSpace() ) {
-				if( !inString && !inComment ) {
+				if( inPreProcess && (pos - tokenStart) <= 1 ) {
+				} else if( !inString && !inComment ) {
 					READ_TOKEN((inLabel = false, pos++));
 					inLabel = false;
 					//
