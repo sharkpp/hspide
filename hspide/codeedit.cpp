@@ -94,7 +94,7 @@ public:
 
 		// 定義済みマクロ
 		QTextCharFormat macroFormat;
-		macroFormat.setForeground(Qt::cyan);
+		macroFormat.setForeground(QBrush(QColor(0,128,255)));
 
 		foreach(const QStringList &symbol, symbols)
 		{
@@ -106,7 +106,7 @@ public:
 			} else if( !category2.compare("func") ) {
 				if( !category1.compare("pre") ) {
 					// プリプロセッサ
-					m_keywords[QString(symbol[0]).remove("#")] = preprocesserFormat;
+					m_keywords[symbol[0]] = preprocesserFormat;
 				} else {
 					// 関数/命令
 					m_keywords[symbol[0]] = functionFormat;
@@ -127,9 +127,10 @@ private:
 		{
 			if( Hsp3Lexer::TypeNormal == lexer.type() )
 			{
-				if( m_keywords.contains(lexer.text()) )
+				QString token = lexer.text().toLower();
+				if( m_keywords.contains(token) )
 				{
-					setFormat(lexer.start(), lexer.length(), m_keywords[lexer.text()]);
+					setFormat(lexer.start(), lexer.length(), m_keywords[token]);
 				}
 			}
 			else
