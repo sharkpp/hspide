@@ -50,25 +50,29 @@ class CHighlighter
 {
 private:
 
-	struct HighlightingRule
-	{
-		QRegExp pattern;
-		QTextCharFormat format;
-	};
-	QVector<HighlightingRule> highlightingRules;
+	QHash<QString, QTextCharFormat> m_keywords;
 
-	QRegExp commentStartExpression;
-	QRegExp commentEndExpression;
-
-	QTextCharFormat multiLineCommentFormat;
+	QTextCharFormat m_format[Hsp3Lexer::TypeNum];
 
 public:
 
 	CHighlighter(QTextDocument *parent)
 		: QSyntaxHighlighter(parent)
 	{
-		commentStartExpression = QRegExp("/\\*");
-		commentEndExpression = QRegExp("\\*/");
+		// ラベル
+		QTextCharFormat &labelFormat = m_format[Hsp3Lexer::TypeLabel];
+		labelFormat.setForeground(Qt::darkYellow);
+	//	labelFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		// コメント
+		QTextCharFormat &commentFormat = m_format[Hsp3Lexer::TypeComment];
+		commentFormat.setForeground(Qt::darkGreen);
+	//	commentFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
+
+		// 文字列
+		QTextCharFormat &stringFormat = m_format[Hsp3Lexer::TypeString];
+		stringFormat.setForeground(Qt::darkRed);
+	//	stringFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
 	}
 
 	virtual ~CHighlighter()
@@ -76,228 +80,66 @@ public:
 	}
 
 	// シンボル一覧を指定
-	void setSymbols(const QVector<QStringList> & symbols)
+	void setSymbols(const QVector<QStringList> &symbols)
 	{
-		HighlightingRule rule;
+		m_keywords.clear();
 
-		highlightingRules.clear();
-
+		// 関数
 		QTextCharFormat functionFormat;
 		functionFormat.setForeground(Qt::blue);
 
+		// プリプロセッサ
 		QTextCharFormat preprocesserFormat;
 		preprocesserFormat.setForeground(Qt::blue);
 
+		// 定義済みマクロ
 		QTextCharFormat macroFormat;
-		macroFormat.setForeground(Qt::blue);
+		macroFormat.setForeground(Qt::cyan);
 
-		QMap<int, QString> categories;
-
-		foreach(const QStringList & symbol, symbols)
-		//{
-		//	const QString & category1 = symbol[1];
-		//	const QString & category2 = symbol[2];
-		//	QString pattern = "(\\b" + symbol[0] + "\\b)";
-		//	QTextCharFormat format;
-		//	int category = -1;
-		//	if( !category2.compare("macro") ) {
-		//		// 定義済みマクロ
-		//	//	format = macroFormat;
-		//		category = 0;
-		//	} else if( !category2.compare("func") ) {
-		//		if( !category1.compare("pre") ) {
-		//			// プリプロセッサ
-		//			pattern = symbol[0];
-		//			pattern = "((^|\\s)#\\s*" + pattern.remove("#") + "\\b)";
-		//		//	format = preprocesserFormat;
-		//			category = 1;
-		//		} else {
-		//			// 関数/命令
-		//		//	format = functionFormat;
-		//			category = 2;
-		//		}
-		//	}
-		//	categories[category] += (categories[category].isEmpty() ? "" : "|") + pattern;
-		//}
-		//foreach(int category, categories.keys())
-		//{
-		//	QTextCharFormat format;
-		//	switch(category) {
-		//	case 0: format = macroFormat; break;
-		//	case 1: format = preprocesserFormat; break;
-		//	case 2: format = functionFormat; break;
-		//	}
-		//	rule.pattern = QRegExp(categories[category]);
-		//	rule.format  = format;
-		//	highlightingRules.append(rule);
-		//}
+		foreach(const QStringList &symbol, symbols)
 		{
-			const QString & category1 = symbol[1];
-			const QString & category2 = symbol[2];
-			QString pattern = "\\b" + symbol[0] + "\\b";
-			QTextCharFormat format;
+			const QString &category1 = symbol[1];
+			const QString &category2 = symbol[2];
 			if( !category2.compare("macro") ) {
 				// 定義済みマクロ
-				format = macroFormat;
+				m_keywords[symbol[0]] = macroFormat;
 			} else if( !category2.compare("func") ) {
 				if( !category1.compare("pre") ) {
 					// プリプロセッサ
-					pattern = symbol[0];
-					pattern = "(^|\\s)#\\s*" + pattern.remove("#") + "\\b";
-					format = preprocesserFormat;
+					m_keywords[QString(symbol[0]).remove("#")] = preprocesserFormat;
 				} else {
 					// 関数/命令
-					format = functionFormat;
+					m_keywords[symbol[0]] = functionFormat;
 				}
 			}
-			rule.pattern = QRegExp(pattern);
-			rule.format  = format;
-			highlightingRules.append(rule);
 		}
-
-		//// ラベル
-		//QTextCharFormat labelFormat;
-		//labelFormat.setForeground(Qt::darkYellow);
-		//rule.pattern = QRegExp("\\*[^\\s,.:;\\/()=0-9][^\\s,.:;\\/]*");
-		//rule.format = labelFormat;
-		//highlightingRules.append(rule);
-
-		//// コメント(一行)
-		//QTextCharFormat singleLineCommentFormat;
-		//singleLineCommentFormat.setForeground(Qt::darkGreen);
-		//rule.pattern = QRegExp("//[^\n]*");
-		//rule.format = singleLineCommentFormat;
-		//highlightingRules.append(rule);
-		//rule.pattern = QRegExp(";[^\n]*");
-		//rule.format = singleLineCommentFormat;
-		//highlightingRules.append(rule);
-
-		//// コメント(複数行)
-		//multiLineCommentFormat.setForeground(Qt::darkGreen);
-
-		//// 文字列
-		//QTextCharFormat quotationFormat;
-		//quotationFormat.setForeground(Qt::darkRed);
-		//rule.pattern = QRegExp("\".*\"");
-		//rule.format = quotationFormat;
-		//highlightingRules.append(rule);
-
 	}
 
 private:
 
-	typedef enum {
-		HSP3_TOKEN_NORMAL = 0,
-		HSP3_TOKEN_STRING,
-		HSP3_TOKEN_LABEL,
-		HSP3_TOKEN_COMMENT,
-	} HSP3_TOKEN_TYPE;
-
-	typedef struct HSP3_TOKEN {
-		QStringRef text;
-		int        start;
-		int        length;
-		HSP3_TOKEN_TYPE type;
-	} HSP3_TOKEN;
-
 	virtual void highlightBlock(const QString& text)
 	{
-		//QRegExp expression("\\b.+\\b");
-		//QTextCharFormat preprocesserFormat;
-		//preprocesserFormat.setForeground(Qt::blue);
-		//int index = expression.indexIn(text);
-		//while (index >= 0) {
-		//	int length = expression.matchedLength();
-		//	setFormat(index, length, preprocesserFormat);
-		//	index = expression.indexIn(text, index + length);
-		//}
-
 		Hsp3Lexer lexer;
 
 		lexer.reset(QString(text).append(QChar::LineSeparator), previousBlockState());
 
-		QTextCharFormat testFormat;
-		testFormat.setForeground(Qt::red);
-		testFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		QTextCharFormat format[Hsp3Lexer::TypeNum];
-
-	//	// プリプロセッサ
-	//	QTextCharFormat preprocesserFormat;
-	//	preprocesserFormat.setForeground(Qt::blue);
-	//	preprocesserFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		// ラベル
-		QTextCharFormat &labelFormat = format[Hsp3Lexer::TypeLabel];
-		labelFormat.setForeground(Qt::darkYellow);
-	//	labelFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		// コメント
-		QTextCharFormat &commentFormat = format[Hsp3Lexer::TypeComment];
-		commentFormat.setForeground(Qt::darkGreen);
-	//	commentFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		// 文字列
-		QTextCharFormat &stringFormat = format[Hsp3Lexer::TypeString];
-		stringFormat.setForeground(Qt::darkRed);
-	//	stringFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		format[Hsp3Lexer::TypeNormal].setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
 		while( lexer.scan() )
 		{
-			setFormat(lexer.start(), lexer.length(), format[lexer.type()]);
+			if( Hsp3Lexer::TypeNormal == lexer.type() )
+			{
+				if( m_keywords.contains(lexer.text()) )
+				{
+					setFormat(lexer.start(), lexer.length(), m_keywords[lexer.text()]);
+				}
+			}
+			else
+			{
+				setFormat(lexer.start(), lexer.length(), m_format[lexer.type()]);
+			}
 		}
 
 		setCurrentBlockState( lexer.state() );
 
-	//	QTextCharFormat functionFormat;
-	//	functionFormat.setForeground(Qt::blue);
-	//	functionFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-    //
-	//	QTextCharFormat preprocesserFormat;
-	//	preprocesserFormat.setForeground(Qt::blue);
-    //
-	//	QTextCharFormat macroFormat;
-	//	macroFormat.setForeground(Qt::blue);
-    //
-	//	foreach(const HSP3_TOKEN& token, tokens) {
-	//		setFormat(token.start, token.length - 1, functionFormat);
-	//	}
-
-//qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz") << text;
-//	//	foreach (const HighlightingRule &rule, highlightingRules) {
-//		for(int i = 0, num = highlightingRules.size(); i < num; i++) {
-//			HighlightingRule& rule = highlightingRules[i];
-//			QRegExp & expression = rule.pattern;
-//		//	QRegExp expression(rule.pattern);
-//			int index = expression.indexIn(text);
-//			while (index >= 0) {
-//				int length = expression.matchedLength();
-//				setFormat(index, length, rule.format);
-//				index = expression.indexIn(text, index + length);
-//			}
-//		}
-//qDebug() << __LINE__ << QTime::currentTime().toString("hh:mm:ss.zzz");
-	//	setCurrentBlockState(0);
-    //
-	//	int startIndex = 0;
-	//	if (previousBlockState() != 1)
-	//		startIndex = commentStartExpression.indexIn(text);
-    //
-	//	while (startIndex >= 0) {
-	//		int endIndex = commentEndExpression.indexIn(text, startIndex);
-	//		int commentLength;
-	//		if (endIndex == -1) {
-	//			setCurrentBlockState(1);
-	//			commentLength = text.length() - startIndex;
-	//		} else {
-	//			commentLength = endIndex - startIndex
-	//							+ commentEndExpression.matchedLength();
-	//		}
-	//		setFormat(startIndex, commentLength, multiLineCommentFormat);
-	//		startIndex = commentStartExpression.indexIn(text, startIndex + commentLength);
-	//	}
 	}
 
 };
