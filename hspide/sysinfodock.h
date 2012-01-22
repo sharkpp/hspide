@@ -1,4 +1,3 @@
-#include <QTextEdit>
 #include <QTreeView>
 #include <QMap>
 #include <QVector>

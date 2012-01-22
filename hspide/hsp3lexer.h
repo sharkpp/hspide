@@ -24,10 +24,12 @@ private:
 
 	QString m_text;
 	int     m_pos;
+	int     m_line;
 	QString m_token;
 	int     m_start;
 	int     m_length;
 	Type    m_type;
+	int     m_lineNo;
 
 public:
 
@@ -41,12 +43,14 @@ public:
 	int state() const;
 
 	const QString& text() const;
-	int start() const;
-	int length() const;
+	int  start() const;
+	int  length() const;
 	Type type() const;
+	int  lineNo() const;
 };
 
-
+#ifdef QDEBUG_H
+inline
 QDebug& operator<<(QDebug& debug, const Hsp3Lexer::Type& type)
 {
 	switch(type) {
@@ -68,6 +72,7 @@ QDebug& operator<<(QDebug& debug, const Hsp3Lexer::Type& type)
 	}
 	return debug;
 }
+#endif
 
 inline
 Hsp3Lexer::Hsp3Lexer()
@@ -84,6 +89,12 @@ inline
 const QString& Hsp3Lexer::text() const
 {
 	return m_token;
+}
+
+inline
+int Hsp3Lexer::lineNo() const
+{
+	return m_lineNo;
 }
 
 inline
@@ -121,6 +132,8 @@ void Hsp3Lexer::reset(const QString& text, int state)
 {
 	m_text           = text;
 	m_pos            = 0;
+	m_line           = 1;
+	m_lineNo         = -1;
 	m_prevEscape     = 0 <= state ? (0 != (state &  1)) : false;
 	m_inComment      = 0 <= state ? (0 != (state &  2)) : false;
 	m_isBlockComment = 0 <= state ? (0 != (state &  4)) : false;
@@ -144,12 +157,13 @@ bool Hsp3Lexer::scan()
 			m_start  = tokenStart; \
 			m_length = pos - tokenStart; \
 			m_token  = m_text.mid(m_start, m_length); \
-			     if( inComment ) { m_type = TypeComment; } \
-			else if( inLabel   ) { m_type = TypeLabel;   } \
-			else if( inString  ) { m_type = TypeString;  } \
-			else                 { m_type = TypeNormal;  } \
-			if( inPreProcess )   { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
+			     if( inComment               ) { m_type = TypeComment; } \
+			else if( inLabel && 1 < m_length ) { m_type = TypeLabel;   } \
+			else if( inString                ) { m_type = TypeString;  } \
+			else                               { m_type = TypeNormal;  } \
+			     if( inPreProcess )            { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
 			code; \
+			m_lineNo         = lineNo; \
 			m_pos            = pos; \
 			m_inComment      = inComment; \
 			m_isBlockComment = isBlockComment; \
@@ -170,6 +184,7 @@ bool Hsp3Lexer::scan()
 	bool prevEscape     = m_prevEscape;
 	int tokenStart = -1;
 	int pos = m_pos;
+	int lineNo = -1;
 	for(int len = m_text.size();
 		pos < len; )
 	{
@@ -177,6 +192,7 @@ bool Hsp3Lexer::scan()
 
 		if( tokenStart < 0 ) {
 			tokenStart = pos;
+			lineNo     = m_line;
 		}
 
 		switch( c.unicode() )
@@ -208,10 +224,12 @@ bool Hsp3Lexer::scan()
 			}
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
+			lineNo     = m_line;
 			if( len <= pos + 1 ) {
 				pos--;
 				READ_TOKEN(NOOP);
 				tokenStart = pos;
+				lineNo     = m_line;
 				pos++;
 				READ_TOKEN(NOOP);
 				break;
@@ -219,6 +237,7 @@ bool Hsp3Lexer::scan()
 				const QChar cc = m_text.at(pos + 1);
 				if( '=' == cc ) { // "+=" or "-=" or "*=" or "/=" or "|=" or "&=" or "^=" or "=="
 					tokenStart = pos;
+					lineNo     = m_line;
 					pos += 2;
 					READ_TOKEN(NOOP);
 					pos--;
@@ -234,6 +253,7 @@ bool Hsp3Lexer::scan()
 					case '&':
 						// "++" or "--" or "||" or "&&" "||" or "=="
 						tokenStart = pos;
+						lineNo     = m_line;
 						pos += 2;
 						READ_TOKEN(NOOP);
 						pos--;
@@ -258,6 +278,7 @@ bool Hsp3Lexer::scan()
 				} else {
 					if( '-' == c && (cc.isNumber() || '$' == cc) ) { // -0 or -0x1 or -$1
 						tokenStart = pos;
+						lineNo     = m_line;
 						break;
 					} else {
 						pos++;
@@ -279,6 +300,7 @@ bool Hsp3Lexer::scan()
 			}
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
+			lineNo     = m_line;
 			pos++;
 			READ_TOKEN(NOOP);
 			pos--;
@@ -312,6 +334,7 @@ bool Hsp3Lexer::scan()
 			}
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
+			lineNo     = m_line;
 			inComment = true;
 			isBlockComment = false;
 			break;
@@ -322,26 +345,26 @@ bool Hsp3Lexer::scan()
 			}
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
+			lineNo     = m_line;
 			inPreProcess = true;
 			skipPreProcessSpace = true;
 			break;
 		default:
-			if( QChar::LineSeparator == c && inComment/* && !isBlockComment*/ ) {
-				READ_TOKEN((inComment = isBlockComment, pos++));
+			if( QChar::LineSeparator == c && inComment ) {
+				READ_TOKEN((inComment = isBlockComment, pos++, m_line++));
 				inComment = isBlockComment;
 			} else if( c.isSpace() ) {
 				if( !skipPreProcessSpace &&
 					!inString && !inComment )
 				{
-					READ_TOKEN((inLabel = false, pos++));
+					READ_TOKEN((inLabel = false, pos++, m_line += QChar::LineSeparator == c));
 					inLabel = false;
-					//
-				//	for(; pos < len && m_text.at(pos).isSpace();
-				//		pos++);
-				//	pos--;
 				}
 			} else {
 				skipPreProcessSpace = false;
+			}
+			if( QChar::LineSeparator == c ) {
+				m_line++;
 			}
 			break;
 		}

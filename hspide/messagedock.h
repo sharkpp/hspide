@@ -49,7 +49,6 @@ protected slots:
 
 signals:
 
-//	void oepnItem(CWorkSpaceItem * item);
 	void gotoLine(const QUuid & uuid, int lineNo);
 
 };

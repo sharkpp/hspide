@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTabList()));
 	connect(tabCloseAct, SIGNAL(triggered()), this, SLOT(onTabClose()));
 	connect(messageDock, SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
+	connect(symbolDock,  SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
 	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
 
 	loadSettings();
@@ -1195,6 +1196,8 @@ void MainWindow::currentTabChanged(int index)
 
 		document->setFocus();
 
+		symbolDock->analyze(document);
+
 		projectDock->selectItem(document->assignItem());
 	}
 
@@ -1216,3 +1219,4 @@ void MainWindow::clipboardDataChanged()
 
 	editPasteAct->setEnabled(document && md && md->hasText());
 }
+
