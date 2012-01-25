@@ -9,8 +9,13 @@
 CSymbolDock::CSymbolDock(QWidget *parent)
 	: QWidget(parent)
 {
+	QVBoxLayout* layout = new QVBoxLayout(this);
+	layout->setContentsMargins(0, 0, 0, 0);
+	layout->setSpacing(0);
+	layout->addWidget(m_toolBar = new QToolBar(this));
+	layout->addWidget(listWidget = new QTreeView(this));
+
 	QStandardItemModel* model;
-	listWidget = new QTreeView(this);
 	listWidget->setRootIsDecorated(false);
 	listWidget->setSortingEnabled(true);
 	listWidget->setAlternatingRowColors(true);
@@ -25,11 +30,15 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	listWidget->setColumnWidth(LineNoColumn,   listWidget->fontMetrics().width(QLatin1Char('9')) * 4);
 	listWidget->setColumnWidth(TypeColumn,     listWidget->fontMetrics().width(QLatin1Char('9')) * 8);
 	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
+
+	m_toolBar->setStyleSheet("QToolBar{border:none}");
+	m_toolBar->setIconSize(QSize(16, 16));
+	QAction * tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("Tab list"));
 }
 
 void CSymbolDock::resizeEvent(QResizeEvent * event)
 {
-	listWidget->resize(event->size());
+//	listWidget->resize(event->size());
 }
 
 bool CSymbolDock::analyze(CDocumentPane* document)

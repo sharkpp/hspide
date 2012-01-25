@@ -1,4 +1,5 @@
 #include <QTreeView>
+#include <QToolBar>
 #include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -39,7 +40,9 @@ private:
 		QString    description;
 	} SymbolInfoType;
 
-	QTreeView * listWidget;
+	QTreeView* listWidget;
+
+	QToolBar* m_toolBar;
 
 	QVector<SymbolInfoType> m_symbolInfo;
 
