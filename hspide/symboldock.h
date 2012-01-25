@@ -25,8 +25,7 @@ private:
 	Q_OBJECT
 
 	typedef enum {
-		FileNameColumn = 0,
-		LineNoColumn,
+		LineNoColumn = 0,
 		TypeColumn,
 		DescriptionColumn,
 		ColumnCount,
@@ -40,8 +39,7 @@ private:
 		QString    description;
 	} SymbolInfoType;
 
-	QTreeView* listWidget;
-
+	QTreeView* m_listWidget;
 	QToolBar* m_toolBar;
 
 	QVector<SymbolInfoType> m_symbolInfo;
@@ -56,8 +54,6 @@ public:
 	bool analyze(CDocumentPane* document);
 
 protected:
-
-	virtual void resizeEvent(QResizeEvent * event);
 
 protected slots:
 

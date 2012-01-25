@@ -13,32 +13,25 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	layout->setContentsMargins(0, 0, 0, 0);
 	layout->setSpacing(0);
 	layout->addWidget(m_toolBar = new QToolBar(this));
-	layout->addWidget(listWidget = new QTreeView(this));
+	layout->addWidget(m_listWidget = new QTreeView(this));
 
 	QStandardItemModel* model;
-	listWidget->setRootIsDecorated(false);
-	listWidget->setSortingEnabled(true);
-	listWidget->setAlternatingRowColors(true);
-	listWidget->setModel(model = new QStandardItemModel());
-	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
+	m_listWidget->setRootIsDecorated(false);
+	m_listWidget->setSortingEnabled(true);
+	m_listWidget->setAlternatingRowColors(true);
+	m_listWidget->setModel(model = new QStandardItemModel());
+	m_listWidget->setEditTriggers(QTreeView::NoEditTriggers);
 	model->invisibleRootItem()->setColumnCount(ColumnCount);
-	model->setHeaderData(FileNameColumn,    Qt::Horizontal, tr("FileName"));
 	model->setHeaderData(LineNoColumn,      Qt::Horizontal, tr("LineNo"));
 	model->setHeaderData(TypeColumn,        Qt::Horizontal, tr("Type"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
-	listWidget->setColumnWidth(FileNameColumn, listWidget->fontMetrics().width(QLatin1Char('9')) * 16);
-	listWidget->setColumnWidth(LineNoColumn,   listWidget->fontMetrics().width(QLatin1Char('9')) * 4);
-	listWidget->setColumnWidth(TypeColumn,     listWidget->fontMetrics().width(QLatin1Char('9')) * 8);
-	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
+	m_listWidget->setColumnWidth(LineNoColumn,   m_listWidget->fontMetrics().width(QLatin1Char('9')) * 5);
+	m_listWidget->setColumnWidth(TypeColumn,     m_listWidget->fontMetrics().width(QLatin1Char('9')) * 8);
+	connect(m_listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
 	QAction * tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("Tab list"));
-}
-
-void CSymbolDock::resizeEvent(QResizeEvent * event)
-{
-//	listWidget->resize(event->size());
 }
 
 bool CSymbolDock::analyze(CDocumentPane* document)
@@ -72,11 +65,12 @@ bool CSymbolDock::analyze(CDocumentPane* document)
 
 bool CSymbolDock::clear()
 {
-	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* root = model->invisibleRootItem();
 	while( root->rowCount() ) {
 		root->removeRow(0);
 	}
+	m_symbolInfo.clear();
 	return true;
 }
 
@@ -91,14 +85,21 @@ bool CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo,
 	}
 
 	QStandardItemModel* model
-		= static_cast<QStandardItemModel*>(listWidget->model());
+		= static_cast<QStandardItemModel*>(m_listWidget->model());
 	int row = model->rowCount();
 	model->insertRow(row);
-	model->setData(model->index(row, FileNameColumn),    uuid.toString(), Qt::UserRole + 1);
-	model->setData(model->index(row, FileNameColumn),    fileName);
+	model->setData(model->index(row, LineNoColumn),      m_symbolInfo.size(), Qt::UserRole + 1);
 	model->setData(model->index(row, LineNoColumn),      QString("%1").arg(lineNo));
 	model->setData(model->index(row, TypeColumn),        typeName);
 	model->setData(model->index(row, DescriptionColumn), description);
+
+	SymbolInfoType info;
+	info.uuid		= uuid;
+	info.fileName	= fileName;
+	info.lineNo		= lineNo;
+	info.type		= type;
+	info.description = description;
+	m_symbolInfo.push_back(info);
 
 	return true;
 }
@@ -106,8 +107,7 @@ bool CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo,
 void CSymbolDock::doubleClickedList(const QModelIndex & index)
 {
 	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());
-//	QString fileName(item->child(index.row(), FileNameColumn)->text());
-	QUuid   uuid(    item->child(index.row(), FileNameColumn)->data(Qt::UserRole + 1).toString());
-	int     lineNo(  item->child(index.row(), LineNoColumn  )->text().toInt());
-	emit gotoLine(uuid, lineNo);
+	int indexOfInfo = item->child(index.row(), LineNoColumn)->data(Qt::UserRole + 1).toInt();
+	SymbolInfoType& info = m_symbolInfo[indexOfInfo];
+	emit gotoLine(info.uuid, info.lineNo);
 }
