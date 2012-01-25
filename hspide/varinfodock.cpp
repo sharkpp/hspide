@@ -12,6 +12,29 @@ CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	listWidget->setIndentation(10);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
+	listWidget->setStyleSheet(
+			"QTreeView {"
+			"    show-decoration-selected: 1;"
+			"}"
+			"QTreeView::item {"
+			"     border: 1px solid #d9d9d9;"
+			"    border-top-color: transparent;"
+			"    border-bottom-color: transparent;"
+			"}"
+			"QTreeView::item:hover {"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);"
+			"    border: 1px solid #bfcde4;"
+			"}"
+			"QTreeView::item:selected {"
+			"    border: 1px solid #567dbc;"
+			"}"
+			"QTreeView::item:selected:active{"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);"
+			"}"
+			"QTreeView::item:selected:!active {"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);"
+			"}"
+		);
 	model->invisibleRootItem()->setColumnCount(ColumnCount);
 	model->setHeaderData(NameColumn,        Qt::Horizontal, tr("Name"));
 	model->setHeaderData(TypeColumn,        Qt::Horizontal, tr("Type"));

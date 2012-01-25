@@ -8,8 +8,32 @@ CMessageDock::CMessageDock(QWidget *parent)
 	QStandardItemModel* model;
 	listWidget = new QTreeView(this);
 	listWidget->setRootIsDecorated(false);
+	listWidget->setSortingEnabled(true);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
+	listWidget->setStyleSheet(
+			"QTreeView {"
+			"    show-decoration-selected: 1;"
+			"}"
+			"QTreeView::item {"
+			"     border: 1px solid #d9d9d9;"
+			"    border-top-color: transparent;"
+			"    border-bottom-color: transparent;"
+			"}"
+			"QTreeView::item:hover {"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #e7effd, stop: 1 #cbdaf1);"
+			"    border: 1px solid #bfcde4;"
+			"}"
+			"QTreeView::item:selected {"
+			"    border: 1px solid #567dbc;"
+			"}"
+			"QTreeView::item:selected:active{"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6ea1f1, stop: 1 #567dbc);"
+			"}"
+			"QTreeView::item:selected:!active {"
+			"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6b9be8, stop: 1 #577fbf);"
+			"}"
+		);
 	model->invisibleRootItem()->insertColumns(0, ColumnCount);
 	model->setHeaderData(CategoryColumn,    Qt::Horizontal, tr("Category"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
@@ -38,11 +62,11 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 	QStandardItemModel* model
 		= static_cast<QStandardItemModel*>(listWidget->model());
 	int row = model->rowCount();
-    model->insertRow(row);
-    model->setData(model->index(row, CategoryColumn   ), "");
-    model->setData(model->index(row, DescriptionColumn), description);
-    model->setData(model->index(row, FileColumn       ), fileName);
-    model->setData(model->index(row, LineColumn       ), QString("%1").arg(lineNo));
+	model->insertRow(row);
+	model->setData(model->index(row, CategoryColumn   ), "");
+	model->setData(model->index(row, DescriptionColumn), description);
+	model->setData(model->index(row, FileColumn       ), fileName);
+	model->setData(model->index(row, LineColumn       ), QString("%1").arg(lineNo));
 	//
 	MessageInfoType info;
 	info.description= description;

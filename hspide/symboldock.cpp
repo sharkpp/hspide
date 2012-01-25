@@ -21,6 +21,9 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	model->setHeaderData(LineNoColumn,      Qt::Horizontal, tr("LineNo"));
 	model->setHeaderData(TypeColumn,        Qt::Horizontal, tr("Type"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
+	listWidget->setColumnWidth(FileNameColumn, listWidget->fontMetrics().width(QLatin1Char('9')) * 16);
+	listWidget->setColumnWidth(LineNoColumn,   listWidget->fontMetrics().width(QLatin1Char('9')) * 4);
+	listWidget->setColumnWidth(TypeColumn,     listWidget->fontMetrics().width(QLatin1Char('9')) * 8);
 	connect(listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 }
 
@@ -41,12 +44,18 @@ bool CSymbolDock::analyze(CDocumentPane* document)
 	Hsp3Lexer lexer;
 	lexer.reset(text);
 
+	int  lineNo = -1;
+	bool prevColon = false;
+
 	while( lexer.scan() )
 	{
-		if( Hsp3Lexer::TypeLabel == lexer.type() )
+		if( Hsp3Lexer::TypeLabel == lexer.type() &&
+			(lineNo != lexer.lineNo() || prevColon))
 		{
 			append(item->uuid(), item->path(), lexer.lineNo(), TypeLabel, lexer.text());
 		}
+		prevColon = ":" == lexer.text();
+		lineNo    = lexer.lineNo();
 	}
 
 	return true;
