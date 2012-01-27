@@ -14,6 +14,7 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	layout->setSpacing(0);
 	layout->addWidget(m_toolBar = new QToolBar(this));
 	layout->addWidget(m_listWidget = new QTreeView(this));
+	layout->addWidget(m_treeWidget = new QTreeView(this));
 
 	QStandardItemModel* model;
 	m_listWidget->setRootIsDecorated(false);
@@ -29,9 +30,12 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	m_listWidget->setColumnWidth(TypeColumn,     m_listWidget->fontMetrics().width(QLatin1Char('9')) * 8);
 	connect(m_listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
 
+	m_treeWidget->setVisible(false);
+
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
 	QAction * tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("Tab list"));
+	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTabList()));
 }
 
 bool CSymbolDock::analyze(CDocumentPane* document)
@@ -110,4 +114,11 @@ void CSymbolDock::doubleClickedList(const QModelIndex & index)
 	int indexOfInfo = item->child(index.row(), LineNoColumn)->data(Qt::UserRole + 1).toInt();
 	SymbolInfoType& info = m_symbolInfo[indexOfInfo];
 	emit gotoLine(info.uuid, info.lineNo);
+}
+
+void CSymbolDock::onTabList()
+{
+	bool mode = m_treeWidget->isVisible();
+	m_treeWidget->setVisible(!mode);
+	m_listWidget->setVisible( mode);
 }

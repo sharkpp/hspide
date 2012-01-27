@@ -40,6 +40,7 @@ private:
 	} SymbolInfoType;
 
 	QTreeView* m_listWidget;
+	QTreeView* m_treeWidget;
 	QToolBar* m_toolBar;
 
 	QVector<SymbolInfoType> m_symbolInfo;
@@ -58,6 +59,7 @@ protected:
 protected slots:
 
 	void doubleClickedList(const QModelIndex & inde);
+	void onTabList();
 
 signals:
 
