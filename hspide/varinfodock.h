@@ -26,7 +26,7 @@ class CVariableInfoDock
 		QString typeName;
 	};
 
-	QTreeView * listWidget;
+	QTreeView * m_listWidget;
 
 	QMap<qlonglong, VARIABLE_INFO_TYPE> m_varInfo;
 

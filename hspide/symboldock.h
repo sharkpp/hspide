@@ -15,6 +15,7 @@ public:
 
 	typedef enum {
 		TypeUnknown = 0,
+		TypeModule, // モジュール開始位置
 		TypeUserSub, // 命令
 		TypeUserFunction, // 関数
 		TypeLabel,
@@ -25,10 +26,12 @@ private:
 	Q_OBJECT
 
 	typedef enum {
-		LineNoColumn = 0,
+		NameColumn = 0,
 		TypeColumn,
-		DescriptionColumn,
+		LineNoColumn,
+		FileNameColumn,
 		ColumnCount,
+		RefIndexColumn = NameColumn,
 	} ColumnType;
 
 	typedef struct {
@@ -36,11 +39,11 @@ private:
 		QString    fileName;
 		int        lineNo;
 		SymbolType type;
-		QString    description;
+		QString    name;
+		QString    scope;
 	} SymbolInfoType;
 
 	QTreeView* m_listWidget;
-	QTreeView* m_treeWidget;
 	QToolBar* m_toolBar;
 
 	QVector<SymbolInfoType> m_symbolInfo;
@@ -50,7 +53,7 @@ public:
 	CSymbolDock(QWidget *parent = 0);
 
 	bool clear();
-	bool append(const QUuid& uuid, const QString& fileName, int lineNo, SymbolType type, const QString& description);
+	bool append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type);
 
 	bool analyze(CDocumentPane* document);
 
@@ -58,8 +61,8 @@ protected:
 
 protected slots:
 
-	void doubleClickedList(const QModelIndex & inde);
-	void onTabList();
+	void onTreeDoubleClicked(const QModelIndex & inde);
+	void onTest();
 
 signals:
 

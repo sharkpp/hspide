@@ -7,12 +7,12 @@ CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	, m_keyBase(1)
 {
 	QStandardItemModel* model;
-	listWidget = new QTreeView(this);
-//	listWidget->setRootIsDecorated(false);
-	listWidget->setIndentation(10);
-	listWidget->setModel(model = new QStandardItemModel());
-	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
-	listWidget->setStyleSheet(
+	m_listWidget = new QTreeView(this);
+//	m_listWidget->setRootIsDecorated(false);
+	m_listWidget->setIndentation(10);
+	m_listWidget->setModel(model = new QStandardItemModel());
+	m_listWidget->setEditTriggers(QTreeView::NoEditTriggers);
+	m_listWidget->setStyleSheet(
 			"QTreeView {"
 			"    show-decoration-selected: 1;"
 			"}"
@@ -39,23 +39,23 @@ CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	model->setHeaderData(NameColumn,        Qt::Horizontal, tr("Name"));
 	model->setHeaderData(TypeColumn,        Qt::Horizontal, tr("Type"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));
-	connect(listWidget, SIGNAL(expanded(const QModelIndex &)), this, SLOT(onTreeExpanded(const QModelIndex &)));
+	connect(m_listWidget, SIGNAL(expanded(const QModelIndex &)), this, SLOT(onTreeExpanded(const QModelIndex &)));
 	setEnable(false);
 }
 
 void CVariableInfoDock::resizeEvent(QResizeEvent * event)
 {
-	listWidget->resize(event->size());
+	m_listWidget->resize(event->size());
 }
 
 void CVariableInfoDock::setEnable(bool enable)
 {
-	listWidget->setEnabled(enable);
+	m_listWidget->setEnabled(enable);
 }
 
 void CVariableInfoDock::clear()
 {
-	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* root = model->invisibleRootItem();
 	while( root->rowCount() ) {
 		root->removeRow(0);
@@ -105,7 +105,7 @@ void CVariableInfoDock::update(const VARIABLE_INFO_TYPE & varInfo)
 // 指定したパスのアイテムを取得
 QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
 {
-	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* parent = model->invisibleRootItem();
 	QStandardItem* item;
 	QStringList key = valueName.split("/");
@@ -150,7 +150,7 @@ QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
 // アイテムの指定のカラムに値をセット
 void CVariableInfoDock::setItem(QStandardItem* item, ColumnType type, const QString & value)
 {
-	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
+	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	model->setData(model->index(item->index().row(), int(type), item->index().parent()), value);
 }
 
