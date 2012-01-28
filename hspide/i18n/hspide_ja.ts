@@ -51,6 +51,45 @@
     </message>
 </context>
 <context>
+    <name>CSymbolDock</name>
+    <message>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>種別</translation>
+    </message>
+    <message>
+        <source>LineNo</source>
+        <translation>行</translation>
+    </message>
+    <message>
+        <source>FileName</source>
+        <translation>ファイル名</translation>
+    </message>
+    <message>
+        <source>onTest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Module</source>
+        <translation>モジュール</translation>
+    </message>
+    <message>
+        <source>Sub</source>
+        <translation>命令</translation>
+    </message>
+    <message>
+        <source>Func</source>
+        <translation>関数</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ラベル</translation>
+    </message>
+</context>
+<context>
     <name>CSystemInfoDock</name>
     <message>
         <source>Name</source>
@@ -59,6 +98,25 @@
     <message>
         <source>Description</source>
         <translation>説明</translation>
+    </message>
+</context>
+<context>
+    <name>CVariableInfoDock</name>
+    <message>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation>種別</translation>
+    </message>
+    <message>
+        <source>Description</source>
+        <translation>説明</translation>
+    </message>
+    <message>
+        <source>loading...</source>
+        <translation>読み込み中...</translation>
     </message>
 </context>
 <context>

@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	tabButton->setStyleSheet("QToolBar{border:none}");
 	tabWidget->setCornerWidget(tabButton, Qt::TopRightCorner);
 
-	m_tabListMenu = new QMenu(tr("Popup Submenu"));
+	m_tabListMenu = new QMenu(this);
 	connect(m_tabListMenu, SIGNAL(aboutToShow()), this, SLOT(onTabListShow()));
 
 	setupDockWindows();
@@ -1175,6 +1175,8 @@ void MainWindow::currentTabChanged(int index)
 		disconnect(editCutAct,                         SIGNAL(triggered()));
 		disconnect(editClearAct,                       SIGNAL(triggered()));
 		disconnect(selectAllAct,                       SIGNAL(triggered()));
+
+		symbolDock->clear();
 	}
 
 	if( document )
