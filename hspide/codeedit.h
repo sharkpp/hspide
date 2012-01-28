@@ -17,23 +17,23 @@ class CCodeEdit
 	friend class CLineNumberArea;
 	friend class CRulerArea;
 
-	QWidget *               m_lineNumberWidget;
-	QSyntaxHighlighter *    m_highlighter;
+	QWidget *           m_lineNumberWidget;
+	QSyntaxHighlighter *m_highlighter;
 
-	QPalette::ColorRole     m_lineIconBackgroundColorRole;
-	QPalette::ColorRole     m_lineNumberBackgroundColorRole;
-	QPalette::ColorRole     m_lineNumberTextColorRole;
+	QPalette::ColorRole m_lineIconBackgroundColorRole;
+	QPalette::ColorRole m_lineNumberBackgroundColorRole;
+	QPalette::ColorRole m_lineNumberTextColorRole;
 
-	QColor                  m_lineIconBackgroundColor;
-	QColor                  m_lineNumberBackgroundColor;
-	QColor                  m_lineNumberTextColor;
+	QColor              m_lineIconBackgroundColor;
+	QColor              m_lineNumberBackgroundColor;
+	QColor              m_lineNumberTextColor;
 
-	bool                    m_visibleLineNumber;
+	bool                m_visibleLineNumber;
 
-	QSize					m_lineIconSize;
-	QMap<int, QIcon>        m_lineIconMap;
+	QSize               m_lineIconSize;
+	QMap<int, QIcon>    m_lineIconMap;
 
-	int						m_tabStopCharWidth;
+	int                 m_tabStopCharWidth;
 
 public:
 

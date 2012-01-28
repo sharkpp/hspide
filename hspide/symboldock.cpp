@@ -8,6 +8,7 @@
 
 CSymbolDock::CSymbolDock(QWidget *parent)
 	: QWidget(parent)
+	, m_document(NULL)
 {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -37,9 +38,51 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 	m_toolBar->setIconSize(QSize(16, 16));
 	QAction * tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("onTest"));
 	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTest()));
+
+	// ドキュメント内容の変更に遅延してシンボル一覧を更新
+	m_lazyUpdateTimer = new QTimer(this);
+	m_lazyUpdateTimer->setInterval(500);
+	connect(m_lazyUpdateTimer, SIGNAL(timeout()), this,              SLOT(onDocumentUpdate()));
+	connect(m_lazyUpdateTimer, SIGNAL(timeout()), m_lazyUpdateTimer, SLOT(stop()));
 }
 
-bool CSymbolDock::analyze(CDocumentPane* document)
+// ドキュメントと関連付け
+void CSymbolDock::setAssignDocument(CDocumentPane* document)
+{
+	// 以前のドキュメントの内容変更通知を解除
+	if( m_document )
+	{
+		disconnect(m_document->editor()->document(), SIGNAL(contentsChanged()));
+		// 念のため
+		m_lazyUpdateTimer->stop();
+	}
+
+	if( document )
+	{
+		// ドキュメントの変更でシンボル一覧更新遅延処理を開始
+		connect(document->editor()->document(), SIGNAL(contentsChanged()), m_lazyUpdateTimer, SLOT(start()));
+
+		analyze(document);
+	}
+	else
+	{
+		clear();
+	}
+
+	m_document = document;
+}
+
+// 更新
+void CSymbolDock::update()
+{
+	if( m_document )
+	{
+		analyze(m_document);
+	}
+}
+
+// シンボルを解析
+void CSymbolDock::analyze(CDocumentPane* document)
 {
 	CWorkSpaceItem* item = document->assignItem();
 	QString text = document->editor()->toPlainText();
@@ -66,11 +109,10 @@ bool CSymbolDock::analyze(CDocumentPane* document)
 		prevColon = ":" == lexer.text();
 		lineNo    = lexer.lineNo();
 	}
-
-	return true;
 }
 
-bool CSymbolDock::clear()
+// シンボル一覧をクリア
+void CSymbolDock::clear()
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* root = model->invisibleRootItem();
@@ -78,10 +120,10 @@ bool CSymbolDock::clear()
 		root->removeRow(0);
 	}
 	m_symbolInfo.clear();
-	return true;
 }
 
-bool CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type)
+// シンボルを追加
+void CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type)
 {
 	QString typeName;
 	switch(type) {
@@ -145,8 +187,6 @@ bool CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo,
 	m_symbolInfo.push_back(info);
 
 	m_listWidget->expand(scopeItem->index());
-
-	return true;
 }
 
 void CSymbolDock::onTreeDoubleClicked(const QModelIndex & index)
@@ -162,3 +202,10 @@ void CSymbolDock::onTreeDoubleClicked(const QModelIndex & index)
 void CSymbolDock::onTest()
 {
 }
+
+// シンボル一覧の更新遅延処理
+void CSymbolDock::onDocumentUpdate()
+{
+	update();
+}
+

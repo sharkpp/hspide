@@ -58,13 +58,15 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setupToolBars();
 	setupMenus();
 
-	connect(tabWidget,   SIGNAL(currentChanged(int)), this, SLOT(currentTabChanged(int)));
-	connect(projectDock, SIGNAL(oepnItem(CWorkSpaceItem*)), this, SLOT(onOpenFile(CWorkSpaceItem *)));
-	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTabList()));
-	connect(tabCloseAct, SIGNAL(triggered()), this, SLOT(onTabClose()));
-	connect(messageDock, SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
-	connect(symbolDock,  SIGNAL(gotoLine(const QUuid &, int)), this, SLOT(onGoToLine(const QUuid &, int)));
+	connect(tabWidget,   SIGNAL(currentChanged(int)),                        this, SLOT(currentTabChanged(int)));
+	connect(projectDock, SIGNAL(oepnItem(CWorkSpaceItem*)),                  this, SLOT(onOpenFile(CWorkSpaceItem *)));
+	connect(tabListAct,  SIGNAL(triggered()),                                this, SLOT(onTabList()));
+	connect(tabCloseAct, SIGNAL(triggered()),                                this, SLOT(onTabClose()));
+	connect(messageDock, SIGNAL(gotoLine(const QUuid &, int)),               this, SLOT(onGoToLine(const QUuid &, int)));
+	connect(symbolDock,  SIGNAL(gotoLine(const QUuid &, int)),               this, SLOT(onGoToLine(const QUuid &, int)));
 	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
+	connect(qobject_cast<QDockWidget*>(symbolDock->parentWidget()),
+	                     SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
 
 	loadSettings();
 
@@ -1176,7 +1178,7 @@ void MainWindow::currentTabChanged(int index)
 		disconnect(editClearAct,                       SIGNAL(triggered()));
 		disconnect(selectAllAct,                       SIGNAL(triggered()));
 
-		symbolDock->clear();
+		symbolDock->setAssignDocument(NULL);
 	}
 
 	if( document )
@@ -1198,7 +1200,7 @@ void MainWindow::currentTabChanged(int index)
 
 		document->setFocus();
 
-		symbolDock->analyze(document);
+		symbolDock->setAssignDocument(document);
 
 		projectDock->selectItem(document->assignItem());
 	}
@@ -1220,5 +1222,13 @@ void MainWindow::clipboardDataChanged()
 	const QMimeData *md = QApplication::clipboard()->mimeData();
 
 	editPasteAct->setEnabled(document && md && md->hasText());
+}
+
+void MainWindow::onSymbolDockVisibilityChanged(bool visible)
+{
+	if( visible )
+	{
+		symbolDock->update();
+	}
 }
 

@@ -1,5 +1,6 @@
 #include <QTreeView>
 #include <QToolBar>
+#include <QTimer>
 #include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -43,19 +44,33 @@ private:
 		QString    scope;
 	} SymbolInfoType;
 
-	QTreeView* m_listWidget;
-	QToolBar* m_toolBar;
-
 	QVector<SymbolInfoType> m_symbolInfo;
+
+	QTreeView*     m_listWidget;
+	QToolBar*      m_toolBar;
+
+	CDocumentPane* m_document;
+
+	QTimer*        m_lazyUpdateTimer;
 
 public:
 
 	CSymbolDock(QWidget *parent = 0);
 
-	bool clear();
-	bool append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type);
+	// シンボル一覧をクリア
+	void clear();
 
-	bool analyze(CDocumentPane* document);
+	// 更新
+	void update();
+
+	// シンボルを追加
+	void append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type);
+
+	// シンボルを解析
+	void analyze(CDocumentPane* document);
+
+	// ドキュメントと関連付け
+	void setAssignDocument(CDocumentPane* document);
 
 protected:
 
@@ -63,6 +78,8 @@ protected slots:
 
 	void onTreeDoubleClicked(const QModelIndex & inde);
 	void onTest();
+
+	void onDocumentUpdate();
 
 signals:
 

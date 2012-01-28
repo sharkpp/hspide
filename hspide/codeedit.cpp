@@ -168,6 +168,8 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 
 	updateLineNumberWidth(0);
 
+	// フォントを変更
+	// ※取り敢えずのテスト
 	QFont font_ = font();
 	font_.setFamily("MS Gothic");
 	font_.setFixedPitch(true);
