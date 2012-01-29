@@ -45,6 +45,7 @@ protected:
 
 public slots:
 
+	void onClearLog();
 	void onLogTypeChanged(int index);
 
 private:

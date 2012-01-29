@@ -20,14 +20,20 @@ COutputDock::COutputDock(QWidget *parent)
 	m_toolBar->setIconSize(QSize(16, 16));
 	                                    m_toolBar->addWidget(m_typeSelect = new QComboBox(this));
 	                                    m_toolBar->addSeparator();
-	QAction* visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "clear");
-	QAction* visibledErrorActio2      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "wordwrap");
+	QAction* clearLogAction           = m_toolBar->addAction(QIcon(":/images/tango/small/edit-clear.png"), tr("Clear"));
+//	QAction* wordWrapAction           = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), tr("wordwrap"));
+	connect(clearLogAction, SIGNAL(triggered()), this, SLOT(onClearLog()));
 
 	m_typeSelect->addItem(tr("Build results"));
 	m_typeSelect->addItem(tr("Debug log"));
 	connect(m_typeSelect, SIGNAL(currentIndexChanged(int)), this, SLOT(onLogTypeChanged(int)));
 
 	onLogTypeChanged(BuildOutput);
+}
+
+void COutputDock::onClearLog()
+{
+	clear(OutputType(m_typeSelect->currentIndex()));
 }
 
 void COutputDock::onLogTypeChanged(int index)

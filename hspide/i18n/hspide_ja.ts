@@ -84,6 +84,10 @@
         <source>Debug log</source>
         <translation>デバッグログ</translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation>クリア</translation>
+    </message>
 </context>
 <context>
     <name>CSymbolDock</name>
@@ -237,18 +241,6 @@
     <message>
         <source>Create a new file</source>
         <translation>ファイルを新規作成します</translation>
-    </message>
-    <message>
-        <source>Open the file</source>
-        <translation type="obsolete">ファイルを開きます</translation>
-    </message>
-    <message>
-        <source>Save the file</source>
-        <translation type="obsolete">ファイルを保存します</translation>
-    </message>
-    <message>
-        <source>Save the file with a name</source>
-        <translation type="obsolete">名前を付けてファイルを保存します</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -421,10 +413,6 @@
     <message>
         <source>Output</source>
         <translation>出力</translation>
-    </message>
-    <message>
-        <source>Debugger</source>
-        <translation type="obsolete">デバッガ</translation>
     </message>
     <message>
         <source>Search result</source>
