@@ -23,6 +23,8 @@
 	<file>images/tango/middle/media-playback-stop.png</file>
 	<file>images/tango/middle/system-log-out.png</file>
 	<file>images/tango/small/dialog-error.png</file>
+	<file>images/tango/small/dialog-information.png</file>
+	<file>images/tango/small/dialog-warning.png</file>
 	<file>images/tango/small/document-new.png</file>
 	<file>images/tango/small/document-open.png</file>
 	<file>images/tango/small/document-print-preview.png</file>

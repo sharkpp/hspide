@@ -171,11 +171,14 @@ void CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo,
 		scopeItem->appendRow(item);
 	}
 
-	model->setData(model->index(item->index().row(), RefIndexColumn, item->index().parent()), m_symbolInfo.size(), Qt::UserRole + 1);
-	model->setData(model->index(item->index().row(), NameColumn,     item->index().parent()), TypeModule != type ? name : scope);
-	model->setData(model->index(item->index().row(), TypeColumn,     item->index().parent()), typeName);
-	model->setData(model->index(item->index().row(), LineNoColumn,   item->index().parent()), QString("%1").arg(lineNo));
-	model->setData(model->index(item->index().row(), FileNameColumn, item->index().parent()), fileName);
+	int         row    = item->index().row();
+	QModelIndex parent = item->index().parent();
+	model->setData(model->index(row, RefIndexColumn, parent), m_symbolInfo.size(), Qt::UserRole + 1);
+	model->setData(model->index(row, NameColumn,     parent), TypeModule != type ? name : scope);
+	model->setData(model->index(row, TypeColumn,     parent), typeName);
+	model->setData(model->index(row, LineNoColumn,   parent), QString("%1").arg(lineNo));
+	model->setData(model->index(row, LineNoColumn,   parent), Qt::AlignRight, Qt::TextAlignmentRole);
+	model->setData(model->index(row, FileNameColumn, parent), fileName);
 
 	SymbolInfoType info;
 	info.uuid		= uuid;

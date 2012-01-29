@@ -38,6 +38,18 @@
         <source>Line</source>
         <translation>行</translation>
     </message>
+    <message>
+        <source>Information</source>
+        <translation>情報</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
 </context>
 <context>
     <name>CNewFileDialog</name>

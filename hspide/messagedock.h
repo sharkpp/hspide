@@ -24,9 +24,9 @@ private:
 
 	typedef enum {
 		CategoryColumn = 0,
+		FileNameColumn,
+		LineNoColumn,
 		DescriptionColumn,
-		FileColumn,
-		LineColumn,
 		ColumnCount,
 	};
 
@@ -38,9 +38,9 @@ private:
 		int		lineNo;
 	} MessageInfoType;
 
-	QTreeView * listWidget;
-
 	QVector<MessageInfoType> m_messages;
+
+	QTreeView * m_listWidget;
 
 public:
 
