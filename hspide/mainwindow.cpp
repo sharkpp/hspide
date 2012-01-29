@@ -912,7 +912,7 @@ void MainWindow::buildStart(const QString & filePath)
 {
 	// ビルド処理開始
 
-	outputDock->outputCrLf(tr("Build start"));
+	outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build start"));
 
 	CWorkSpaceItem* targetProjectItem
 		= projectDock->currentSolution()->search(filePath);
@@ -941,7 +941,7 @@ void MainWindow::buildStart(const QString & filePath)
 	taskProgress->setVisible(true);
 
 	// 出力をクリア
-	outputDock->clear();
+	outputDock->clear(COutputDock::BuildOutput);
 	messageDock->clear();
 }
 
@@ -955,11 +955,11 @@ void MainWindow::buildFinished(bool successed)
 	{
 	//	QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
 
-		outputDock->outputCrLf(tr("Build failed"));
+		outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build failed"));
 	}
 	else
 	{
-		outputDock->outputCrLf(tr("Build complete"));
+		outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build complete"));
 	}
 }
 
@@ -986,7 +986,7 @@ void MainWindow::buildOutput(const QString & output)
 	}
 
 	// 出力ドックに内容を送信
-	outputDock->output(outputContents);
+	outputDock->output(COutputDock::BuildOutput, outputContents);
 
 	// メッセージドックに出力する内容を生成
 
@@ -1132,6 +1132,8 @@ bool MainWindow::isDebugging() const
 
 void MainWindow::beginDebugging()
 {
+	outputDock->clear(COutputDock::DebugOutput);
+
 	// 最初のデバッガの場合のみクリア
 	sysInfoDock->clear();
 	sysInfoDock->setEnable(true);

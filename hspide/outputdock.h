@@ -1,4 +1,5 @@
 #include <QTextEdit>
+#include <QToolBar>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -7,26 +8,39 @@
 class COutputDock
 	: public QWidget
 {
+public:
+
+	typedef enum {
+		BuildOutput = 0,
+		DebugOutput,
+		AllOutput,
+	} OutputType;
+
+private:
+
 	Q_OBJECT
 
-	QTextEdit * editorWidget;
+	QToolBar*  m_toolBar;
+	QTextEdit* m_buildLog;
+	QTextEdit* m_debugLog;
 
 public:
 
 	COutputDock(QWidget *parent = 0);
 
 	// 出力をクリア
-	void clear();
+	void clear(OutputType type = AllOutput);
 
 	// 出力に文字列を追記
-	void output(const QString & text);
-	void outputCrLf(const QString & text);
+	void output(OutputType type, const QString & text);
+	// 出力に文字列を追記(改行付き)
+	void outputCrLf(OutputType type, const QString & text);
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
-
 public slots:
+
+	void onLogTypeChanged(int index);
 
 private:
 
