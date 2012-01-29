@@ -148,6 +148,15 @@ void MainWindow::setupStatusBar()
 		statusBar->addWidget(lable, 1);
 		statusBar->addWidget(taskProgress);
 	statusBar->showMessage(tr("Ready"));
+	statusBar->setStyleSheet(
+			"QStatusBar {"
+				"background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+				                            "stop: 0   #999999,"
+				                            "stop: 0.1 #CCCCCC,"
+				                            "stop: 0.2 transparent,"
+				                            "stop: 1.0 transparent);"
+			"}"
+		);
 }
 
 void MainWindow::setupToolBars()
