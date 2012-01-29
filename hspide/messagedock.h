@@ -29,6 +29,7 @@ private:
 		LineNoColumn,
 		DescriptionColumn,
 		ColumnCount,
+		RefIndexColumn = CategoryColumn,
 	};
 
 	typedef struct {
@@ -44,6 +45,14 @@ private:
 	QTreeView* m_listWidget;
 	QToolBar*  m_toolBar;
 
+	QAction*   m_visibledErrorAction;
+	QAction*   m_visibledWarningAction;
+	QAction*   m_visibledInfomationAction;
+
+	int        m_countOfErrorMessages;
+	int        m_countOfWarningMessages;
+	int        m_countOfInfomationMessages;
+
 public:
 
 	CMessageDock(QWidget *parent = 0);
@@ -53,6 +62,7 @@ public:
 
 protected:
 
+	void updateMessagesCount();
 
 private:
 
@@ -60,9 +70,7 @@ protected slots:
 
 	void doubleClickedList(const QModelIndex & inde);
 
-	void onVisibledError();
-	void onVisibledWarning();
-	void onVisibledInfomation();
+	void onUpdateCategoryVisibled();
 
 signals:
 

@@ -1,9 +1,11 @@
 #include "messagedock.h"
-#include <QResizeEvent>
 #include <QtGui>
 
 CMessageDock::CMessageDock(QWidget *parent)
 	: QWidget(parent)
+	, m_countOfErrorMessages(0)
+	, m_countOfWarningMessages(0)
+	, m_countOfInfomationMessages(0)
 {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setContentsMargins(0, 0, 0, 0);
@@ -11,10 +13,14 @@ CMessageDock::CMessageDock(QWidget *parent)
 	layout->addWidget(m_toolBar = new QToolBar(this));
 	layout->addWidget(m_listWidget = new QTreeView(this));
 
-	QStandardItemModel* model;
+	QStandardItemModel*    model = new QStandardItemModel();
+	QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel();
+	proxyModel->setSourceModel(model);
+	proxyModel->setDynamicSortFilter(true);
+    proxyModel->setFilterKeyColumn(CategoryColumn);
 	m_listWidget->setRootIsDecorated(false);
 	m_listWidget->setSortingEnabled(true);
-	m_listWidget->setModel(model = new QStandardItemModel());
+	m_listWidget->setModel(proxyModel);
 	m_listWidget->setEditTriggers(QTreeView::NoEditTriggers);
 	m_listWidget->setIndentation(0);
 	m_listWidget->setStyleSheet(
@@ -53,30 +59,45 @@ CMessageDock::CMessageDock(QWidget *parent)
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
 	m_toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-	QAction * visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"),       QString(tr("Error: %1 messages")).arg(0));
-	                                     m_toolBar->addSeparator();
-	QAction * visibledWarningAction    = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-warning.png"),     QString(tr("Warning: %1 messages")).arg(0));
-	                                     m_toolBar->addSeparator();
-	QAction * visibledInfomationAction = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-information.png"), QString(tr("Information: %1 messages")).arg(0));
-	visibledErrorAction->setCheckable(true);
-	visibledErrorAction->setChecked(true);
-	visibledWarningAction->setCheckable(true);
-	visibledWarningAction->setChecked(true);
-	visibledInfomationAction->setCheckable(true);
-	visibledInfomationAction->setChecked(true);
-	connect(visibledErrorAction,      SIGNAL(triggered()), this, SLOT(onVisibledError()));
-	connect(visibledWarningAction,    SIGNAL(triggered()), this, SLOT(onVisibledWarning()));
-	connect(visibledInfomationAction, SIGNAL(triggered()), this, SLOT(onVisibledInfomation()));
+	m_visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "");
+	                             m_toolBar->addSeparator();
+	m_visibledWarningAction    = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-warning.png"), "");
+	                             m_toolBar->addSeparator();
+	m_visibledInfomationAction = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-information.png"), "");
+	m_visibledErrorAction->setCheckable(true);
+	m_visibledErrorAction->setChecked(true);
+	m_visibledWarningAction->setCheckable(true);
+	m_visibledWarningAction->setChecked(true);
+	m_visibledInfomationAction->setCheckable(true);
+	m_visibledInfomationAction->setChecked(true);
+	connect(m_visibledErrorAction,      SIGNAL(triggered()), this, SLOT(onUpdateCategoryVisibled()));
+	connect(m_visibledWarningAction,    SIGNAL(triggered()), this, SLOT(onUpdateCategoryVisibled()));
+	connect(m_visibledInfomationAction, SIGNAL(triggered()), this, SLOT(onUpdateCategoryVisibled()));
+	updateMessagesCount();
+}
+
+void CMessageDock::updateMessagesCount()
+{
+	m_visibledErrorAction     ->setText(QString(tr("Error: %1 messages")).arg(m_countOfErrorMessages));
+	m_visibledWarningAction   ->setText(QString(tr("Warning: %1 messages")).arg(m_countOfWarningMessages));
+	m_visibledInfomationAction->setText(QString(tr("Information: %1 messages")).arg(m_countOfInfomationMessages));
 }
 
 void CMessageDock::clear()
 {
 	QStandardItemModel* model
-		= static_cast<QStandardItemModel*>(m_listWidget->model());
+		= static_cast<QStandardItemModel*>(
+			static_cast<QSortFilterProxyModel*>(m_listWidget->model())->sourceModel()) ;
 	if( model->rowCount() ) {
 		model->removeRows(0, model->rowCount());
 	}
+
 	m_messages.clear();
+
+	m_countOfErrorMessages = 0;
+	m_countOfWarningMessages = 0;
+	m_countOfInfomationMessages = 0;
+	updateMessagesCount();
 }
 
 void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int lineNo, CategoryType category, const QString & description)
@@ -87,27 +108,32 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 	case InfomationCategory:
 		iconPath     = ":images/tango/small/dialog-information.png";
 		categoryName = tr("Information");
+		m_countOfInfomationMessages++;
 		break;
 	case WarningCategory:
 		iconPath     = ":images/tango/small/dialog-warning.png";
 		categoryName = tr("Warning");
+		m_countOfWarningMessages++;
 		break;
 	case ErrorCategory:
 		iconPath     = ":images/tango/small/dialog-error.png";
 		categoryName = tr("Error");
+		m_countOfErrorMessages++;
 		break;
 	default:
 		break;
 	}
 
 	QStandardItemModel* model
-		= static_cast<QStandardItemModel*>(m_listWidget->model());
+		= static_cast<QStandardItemModel*>(
+			static_cast<QSortFilterProxyModel*>(m_listWidget->model())->sourceModel()) ;
 	int row = model->rowCount();
 	model->insertRow(row);
 	if( !iconPath.isEmpty() ) {
 		model->setData(model->index(row, CategoryColumn   ), QIcon(iconPath), Qt::DecorationRole);
 		model->setData(model->index(row, CategoryColumn   ), categoryName);
 	}
+	model->setData(model->index(row, RefIndexColumn   ), m_messages.size(), Qt::UserRole + 1);
 	model->setData(model->index(row, DescriptionColumn), description);
 	model->setData(model->index(row, FileNameColumn   ), fileName);
 	model->setData(model->index(row, LineNoColumn     ), 0 < lineNo ? QString("%1").arg(lineNo) : "");
@@ -120,26 +146,37 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 	info.fileName	= fileName;
 	info.lineNo		= lineNo;
 	m_messages.push_back(info);
+
+	updateMessagesCount();
 }
 
 void CMessageDock::doubleClickedList(const QModelIndex & index)
 {
-//	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());
-	MessageInfoType & info = m_messages[index.row()];
+	QSortFilterProxyModel* model
+		= static_cast<QSortFilterProxyModel*>(m_listWidget->model()) ;
+	QModelIndex sourceIndex = model->mapToSource(index);
+	QStandardItem* item = static_cast<QStandardItem*>(sourceIndex.internalPointer());
+	int indexOfInfo = item->child(sourceIndex.row(), RefIndexColumn)->data(Qt::UserRole + 1).toInt();
+	MessageInfoType & info = m_messages[indexOfInfo];
+
 	if( 0 < info.lineNo ) {
 		emit gotoLine(info.uuid, info.lineNo);
 	}
 }
 
-void CMessageDock::onVisibledError()
+void CMessageDock::onUpdateCategoryVisibled()
 {
-}
+	QSortFilterProxyModel* model
+		= static_cast<QSortFilterProxyModel*>(m_listWidget->model()) ;
 
-void CMessageDock::onVisibledWarning()
-{
-}
+	QString re;
 
-void CMessageDock::onVisibledInfomation()
-{
+	if( m_visibledErrorAction->isChecked()      ) { re += "|" + tr("Error"); }
+	if( m_visibledWarningAction->isChecked()    ) { re += "|" + tr("Warning"); }
+	if( m_visibledInfomationAction->isChecked() ) { re += "|" + tr("Information"); }
+
+	re = "^(" + re.mid(1) + ")$";
+
+	model->setFilterRegExp(QRegExp(re));
 }
 
