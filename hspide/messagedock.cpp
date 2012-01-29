@@ -61,7 +61,7 @@ CMessageDock::CMessageDock(QWidget *parent)
 	m_toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
 	m_visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "");
 	                             m_toolBar->addSeparator();
-	m_visibledWarningAction    = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-warning.png"), "");
+	m_visibledWarningAction    = m_toolBar->addAction(QIcon(":/images/icons/small/software-update-urgent-yellow.png"), "");
 	                             m_toolBar->addSeparator();
 	m_visibledInfomationAction = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-information.png"), "");
 	m_visibledErrorAction->setCheckable(true);
@@ -106,17 +106,17 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 	switch(category)
 	{
 	case InfomationCategory:
-		iconPath     = ":images/tango/small/dialog-information.png";
+		iconPath     = ":/images/tango/small/dialog-information.png";
 		categoryName = tr("Information");
 		m_countOfInfomationMessages++;
 		break;
 	case WarningCategory:
-		iconPath     = ":images/tango/small/dialog-warning.png";
+		iconPath     = ":/images/icons/small/software-update-urgent-yellow.png";
 		categoryName = tr("Warning");
 		m_countOfWarningMessages++;
 		break;
 	case ErrorCategory:
-		iconPath     = ":images/tango/small/dialog-error.png";
+		iconPath     = ":/images/tango/small/dialog-error.png";
 		categoryName = tr("Error");
 		m_countOfErrorMessages++;
 		break;
