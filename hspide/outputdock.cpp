@@ -18,13 +18,14 @@ COutputDock::COutputDock(QWidget *parent)
 	QComboBox* combobox;
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
-	m_toolBar->addWidget(combobox = new QComboBox(this));
+	                                    m_toolBar->addWidget(m_typeSelect = new QComboBox(this));
+	                                    m_toolBar->addSeparator();
 	QAction* visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "clear");
 	QAction* visibledErrorActio2      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"), "wordwrap");
 
-	combobox->addItem(tr("Build results"));
-	combobox->addItem(tr("Debug log"));
-	connect(combobox, SIGNAL(currentIndexChanged(int)), this, SLOT(onLogTypeChanged(int)));
+	m_typeSelect->addItem(tr("Build results"));
+	m_typeSelect->addItem(tr("Debug log"));
+	connect(m_typeSelect, SIGNAL(currentIndexChanged(int)), this, SLOT(onLogTypeChanged(int)));
 
 	onLogTypeChanged(BuildOutput);
 }
@@ -41,6 +42,12 @@ void COutputDock::onLogTypeChanged(int index)
 		m_debugLog->setVisible(true);
 		break;
 	}
+}
+
+// 出力内容を切り替え
+void COutputDock::select(OutputType type)
+{
+	m_typeSelect->setCurrentIndex(int(type));
 }
 
 // 出力をクリア

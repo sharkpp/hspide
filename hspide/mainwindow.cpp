@@ -912,6 +912,7 @@ void MainWindow::buildStart(const QString & filePath)
 {
 	// ビルド処理開始
 
+	outputDock->select(COutputDock::BuildOutput);
 	outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build start"));
 
 	CWorkSpaceItem* targetProjectItem
@@ -1021,6 +1022,7 @@ void MainWindow::buildOutput(const QString & output)
 				lineNo   = compileError.cap(3);
 				desc     = compileError.cap(4);
 				type     = CMessageDock::ErrorCategory;
+				raiseDock= true;
 				break;
 			case 1: // プリプロセスエラー
 				if( preProcessorError.indexIn(line) < 0 ) {
@@ -1030,6 +1032,7 @@ void MainWindow::buildOutput(const QString & output)
 				lineNo   = preProcessorError.cap(2);
 				desc     = preProcessorError.cap(1);
 				type     = CMessageDock::ErrorCategory;
+				raiseDock= true;
 				break;
 //			case 2: // 警告
 //				if( warning.indexIn(line) < 0 ) {
@@ -1073,7 +1076,6 @@ void MainWindow::buildOutput(const QString & output)
 			}
 			// メッセージを追加
 			messageDock->addMessage(uuid, fileName, lineNo.toInt(), type, desc);
-			raiseDock = true;
 			accepted  = true;
 		}
 	}
@@ -1132,6 +1134,7 @@ bool MainWindow::isDebugging() const
 
 void MainWindow::beginDebugging()
 {
+	outputDock->select(COutputDock::DebugOutput);
 	outputDock->clear(COutputDock::DebugOutput);
 
 	// 最初のデバッガの場合のみクリア

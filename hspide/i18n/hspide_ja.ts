@@ -75,6 +75,17 @@
     </message>
 </context>
 <context>
+    <name>COutputDock</name>
+    <message>
+        <source>Build results</source>
+        <translation>ビルド結果</translation>
+    </message>
+    <message>
+        <source>Debug log</source>
+        <translation>デバッグログ</translation>
+    </message>
+</context>
+<context>
     <name>CSymbolDock</name>
     <message>
         <source>Name</source>

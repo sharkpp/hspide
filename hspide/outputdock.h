@@ -1,5 +1,6 @@
 #include <QTextEdit>
 #include <QToolBar>
+#include <QComboBox>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -23,10 +24,14 @@ private:
 	QToolBar*  m_toolBar;
 	QTextEdit* m_buildLog;
 	QTextEdit* m_debugLog;
+	QComboBox* m_typeSelect;
 
 public:
 
 	COutputDock(QWidget *parent = 0);
+
+	// 出力内容を切り替え
+	void select(OutputType type);
 
 	// 出力をクリア
 	void clear(OutputType type = AllOutput);
