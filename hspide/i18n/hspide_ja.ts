@@ -50,6 +50,18 @@
         <source>Error</source>
         <translation>エラー</translation>
     </message>
+    <message>
+        <source>Error: %1 messages</source>
+        <translation>エラー: %1 件</translation>
+    </message>
+    <message>
+        <source>Warning: %1 messages</source>
+        <translation>警告: %1 件</translation>
+    </message>
+    <message>
+        <source>Information: %1 messages</source>
+        <translation>情報: %1 件</translation>
+    </message>
 </context>
 <context>
     <name>CNewFileDialog</name>

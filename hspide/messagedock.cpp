@@ -5,8 +5,13 @@
 CMessageDock::CMessageDock(QWidget *parent)
 	: QWidget(parent)
 {
+	QVBoxLayout* layout = new QVBoxLayout(this);
+	layout->setContentsMargins(0, 0, 0, 0);
+	layout->setSpacing(0);
+	layout->addWidget(m_toolBar = new QToolBar(this));
+	layout->addWidget(m_listWidget = new QTreeView(this));
+
 	QStandardItemModel* model;
-	m_listWidget = new QTreeView(this);
 	m_listWidget->setRootIsDecorated(false);
 	m_listWidget->setSortingEnabled(true);
 	m_listWidget->setModel(model = new QStandardItemModel());
@@ -43,17 +48,25 @@ CMessageDock::CMessageDock(QWidget *parent)
 	m_listWidget->setColumnWidth(CategoryColumn, 16 + 10/*‰½‚Ì’l‚¾‚ë‚¤H*/);
 	m_listWidget->setColumnWidth(FileNameColumn, m_listWidget->fontMetrics().width(QLatin1Char('9')) * 20);
 	m_listWidget->setColumnWidth(LineNoColumn,   m_listWidget->fontMetrics().width(QLatin1Char('9')) * 5);
-//	m_listWidget->header()->setResizeMode(DescriptionColumn, QHeaderView::Stretch);
-//	m_listWidget->header()->setResizeMode(FileNameColumn,    QHeaderView::ResizeToContents);
-//	m_listWidget->header()->setResizeMode(LineNoColumn,      QHeaderView::ResizeToContents);
-//	m_listWidget->header()->setResizeMode(FileNameColumn,    QHeaderView::Fixed);
-//	m_listWidget->header()->setResizeMode(LineNoColumn,      QHeaderView::Fixed);
 	connect(m_listWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedList(const QModelIndex &)));
-}
 
-void CMessageDock::resizeEvent(QResizeEvent * event)
-{
-	m_listWidget->resize(event->size());
+	m_toolBar->setStyleSheet("QToolBar{border:none}");
+	m_toolBar->setIconSize(QSize(16, 16));
+	m_toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+	QAction * visibledErrorAction      = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-error.png"),       QString(tr("Error: %1 messages")).arg(0));
+	                                     m_toolBar->addSeparator();
+	QAction * visibledWarningAction    = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-warning.png"),     QString(tr("Warning: %1 messages")).arg(0));
+	                                     m_toolBar->addSeparator();
+	QAction * visibledInfomationAction = m_toolBar->addAction(QIcon(":/images/tango/small/dialog-information.png"), QString(tr("Information: %1 messages")).arg(0));
+	visibledErrorAction->setCheckable(true);
+	visibledErrorAction->setChecked(true);
+	visibledWarningAction->setCheckable(true);
+	visibledWarningAction->setChecked(true);
+	visibledInfomationAction->setCheckable(true);
+	visibledInfomationAction->setChecked(true);
+	connect(visibledErrorAction,      SIGNAL(triggered()), this, SLOT(onVisibledError()));
+	connect(visibledWarningAction,    SIGNAL(triggered()), this, SLOT(onVisibledWarning()));
+	connect(visibledInfomationAction, SIGNAL(triggered()), this, SLOT(onVisibledInfomation()));
 }
 
 void CMessageDock::clear()
@@ -117,3 +130,16 @@ void CMessageDock::doubleClickedList(const QModelIndex & index)
 		emit gotoLine(info.uuid, info.lineNo);
 	}
 }
+
+void CMessageDock::onVisibledError()
+{
+}
+
+void CMessageDock::onVisibledWarning()
+{
+}
+
+void CMessageDock::onVisibledInfomation()
+{
+}
+

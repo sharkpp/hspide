@@ -1,4 +1,5 @@
 #include <QTreeView>
+#include <QToolBar>
 #include <QVector>
 #include <QUuid>
 
@@ -40,7 +41,8 @@ private:
 
 	QVector<MessageInfoType> m_messages;
 
-	QTreeView * m_listWidget;
+	QTreeView* m_listWidget;
+	QToolBar*  m_toolBar;
 
 public:
 
@@ -51,13 +53,16 @@ public:
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
 
 private:
 
 protected slots:
 
 	void doubleClickedList(const QModelIndex & inde);
+
+	void onVisibledError();
+	void onVisibledWarning();
+	void onVisibledInfomation();
 
 signals:
 
