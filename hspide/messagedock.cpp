@@ -57,19 +57,20 @@ void CMessageDock::clear()
 	m_messages.clear();
 }
 
-void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int lineNo, const QString & description)
+void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int lineNo, CategoryType category, const QString & description)
 {
 	QStandardItemModel* model
 		= static_cast<QStandardItemModel*>(listWidget->model());
 	int row = model->rowCount();
 	model->insertRow(row);
-	model->setData(model->index(row, CategoryColumn   ), "");
+	model->setData(model->index(row, CategoryColumn   ), QString(">%1<").arg(category));
 	model->setData(model->index(row, DescriptionColumn), description);
 	model->setData(model->index(row, FileColumn       ), fileName);
-	model->setData(model->index(row, LineColumn       ), QString("%1").arg(lineNo));
+	model->setData(model->index(row, LineColumn       ), 0 < lineNo ? QString("%1").arg(lineNo) : "");
 	//
 	MessageInfoType info;
 	info.description= description;
+	info.category	= category;
 	info.uuid		= uuid;
 	info.fileName	= fileName;
 	info.lineNo		= lineNo;
@@ -80,5 +81,7 @@ void CMessageDock::doubleClickedList(const QModelIndex & index)
 {
 //	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());
 	MessageInfoType & info = m_messages[index.row()];
-	emit gotoLine(info.uuid, info.lineNo);
+	if( 0 < info.lineNo ) {
+		emit gotoLine(info.uuid, info.lineNo);
+	}
 }

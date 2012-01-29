@@ -53,29 +53,29 @@ struct option {
 	{}
 #ifdef _DEBUG
 	void dump() {
-		printf("------------------------------------\n");
-		printf("option.version = %s\n", version ? "true" : "false");
-		printf("option.help = %s\n", help ? "true" : "false");
-		printf("option.exename = \"%s\"\n", exename);
-		printf("option.filename = \"%s\"\n", filename);
-		printf("option.wx = %d\n", wx);
-		printf("option.wy = %d\n", wy);
-		printf("option.hidden_window = %s\n", hidden_window ? "true" : "false");
-		printf("option.debug = %s\n", debug ? "true" : "false");
-		printf("option.debug_window = %s\n", debug_window ? "true" : "false");
-		printf("option.preprocess_only = %s\n", preprocess_only ? "true" : "false");
-		printf("option.auto_make = %s\n", auto_make ? "true" : "false");
-		printf("option.make = %s\n", make ? "true" : "false");
-		printf("option.refname = \"%s\"\n", refname);
-		printf("option.objname = \"%s\"\n", objname);
-		printf("option.execute = %s\n", execute ? "true" : "false");
-		printf("option.common_path = \"%s\"\n", common_path);
-		printf("option.hsp_path = \"%s\"\n", hsp_path);
-		printf("option.work_path = \"%s\"\n", work_path);
-		printf("option.cmdline = \"%s\"\n", cmdline);
-		printf("option.symbol_put = %s\n", symbol_put ? "true" : "false");
-		printf("option.redirect = %s\n", redirect ? "true" : "false");
-		printf("option.attach = \"%s\"\n", attach);
+		printf("!!! ------------------------------------\n");
+		printf("!!! option.version = %s\n", version ? "true" : "false");
+		printf("!!! option.help = %s\n", help ? "true" : "false");
+		printf("!!! option.exename = \"%s\"\n", exename);
+		printf("!!! option.filename = \"%s\"\n", filename);
+		printf("!!! option.wx = %d\n", wx);
+		printf("!!! option.wy = %d\n", wy);
+		printf("!!! option.hidden_window = %s\n", hidden_window ? "true" : "false");
+		printf("!!! option.debug = %s\n", debug ? "true" : "false");
+		printf("!!! option.debug_window = %s\n", debug_window ? "true" : "false");
+		printf("!!! option.preprocess_only = %s\n", preprocess_only ? "true" : "false");
+		printf("!!! option.auto_make = %s\n", auto_make ? "true" : "false");
+		printf("!!! option.make = %s\n", make ? "true" : "false");
+		printf("!!! option.refname = \"%s\"\n", refname);
+		printf("!!! option.objname = \"%s\"\n", objname);
+		printf("!!! option.execute = %s\n", execute ? "true" : "false");
+		printf("!!! option.common_path = \"%s\"\n", common_path);
+		printf("!!! option.hsp_path = \"%s\"\n", hsp_path);
+		printf("!!! option.work_path = \"%s\"\n", work_path);
+		printf("!!! option.cmdline = \"%s\"\n", cmdline);
+		printf("!!! option.symbol_put = %s\n", symbol_put ? "true" : "false");
+		printf("!!! option.redirect = %s\n", redirect ? "true" : "false");
+		printf("!!! option.attach = \"%s\"\n", attach);
 		packfile.dump();
 	}
 #endif

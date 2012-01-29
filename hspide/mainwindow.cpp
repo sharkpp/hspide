@@ -970,25 +970,32 @@ void MainWindow::buildOutput(const QString & output)
 
 	QString tmp = QString(output).replace("\r\n", "\n");
 
-	QRegExp reFileName("\\?(\\{[0-9a-fA-F-]+\\})");
+	QString outputContents = tmp;
 
 	// uuidをファイル名に変換
-	if( 0 <= reFileName.indexIn(tmp) ) {
+
+	QRegExp reFileName("\\?(\\{[0-9a-fA-F-]+\\})");
+
+	// uuidをファイル名に置換
+	if( 0 <= reFileName.indexIn(outputContents) ) {
 		QString uuid = reFileName.cap(1);
 		CWorkSpaceItem* item = solutionItem ? solutionItem->search(QUuid(uuid)) : NULL;
 		if( item ) {
-			tmp.replace(reFileName, item->text());
+			outputContents.replace(reFileName, item->text());
 		}
 	}
 
-	outputDock->output(tmp);
+	// 出力ドックに内容を送信
+	outputDock->output(outputContents);
+
+	// メッセージドックに出力する内容を生成
 
 	bool raiseDock = false;
 
-	tmp = QString(output).replace("\r\n", "\n");
-
-	QRegExp reCompiler("^((.+)\\(([0-9]+)\\) : (.+))$");
-	QRegExp rePreProcessor("^#Error:(.+) in line ([0-9]+) \\[(.*)\\]$");
+	QRegExp compileError("^((.+)\\(([0-9]+)\\) : (.+))$");
+	QRegExp preProcessorError("^#Error:(.+) in line ([0-9]+) \\[(.*)\\]$");
+//	QRegExp warning("^(.+):(.+)( 行|at )([0-9]+)\\(.\\[.+\\])$");
+	QRegExp excludeInfo("^#(HSP script preprocessor|HSP code generator)");
 
 	for(QStringListIterator ite(tmp.split("\n"));
 		ite.hasNext(); )
@@ -996,28 +1003,55 @@ void MainWindow::buildOutput(const QString & output)
 		QString line = ite.next();
 		line.replace("\r", "");
 
-		for(int i = 0; i < 2; i++)
+		bool accepted = false;
+
+		for(int i = 0; i < 3 && !accepted; i++)
 		{
+			CMessageDock::CategoryType type;
 			QString fileName, lineNo, desc;
 			QUuid uuid;
 
 			switch(i)
 			{
 			case 0: // コンパイルエラー
-				if( reCompiler.indexIn(line) < 0 ) {
+				if( compileError.indexIn(line) < 0 ) {
 					continue;
 				}
-				fileName = reCompiler.cap(2);
-				lineNo   = reCompiler.cap(3);
-				desc     = reCompiler.cap(4);
+				fileName = compileError.cap(2);
+				lineNo   = compileError.cap(3);
+				desc     = compileError.cap(4);
+				type     = CMessageDock::ErrorCategory;
 				break;
 			case 1: // プリプロセスエラー
-				if( rePreProcessor.indexIn(line) < 0 ) {
+				if( preProcessorError.indexIn(line) < 0 ) {
 					continue;
 				}
-				fileName = rePreProcessor.cap(3);
-				lineNo   = rePreProcessor.cap(2);
-				desc     = rePreProcessor.cap(1);
+				fileName = preProcessorError.cap(3);
+				lineNo   = preProcessorError.cap(2);
+				desc     = preProcessorError.cap(1);
+				type     = CMessageDock::ErrorCategory;
+				break;
+//			case 2: // 警告
+//				if( warning.indexIn(line) < 0 ) {
+//					continue;
+//				}
+//				fileName = "";
+//				lineNo   = warning.cap(4);
+//				desc     = warning.cap(2) + warning.cap(5);
+//				type     = CMessageDock::WarningCategory;
+//				break;
+			case 2:
+				if( 0 <= excludeInfo.indexIn(line) ||
+#ifdef _DEBUG
+					"!!! " == line.left(4) ||
+#endif
+					"#" != line.left(1) ) {
+					continue;
+				}
+				fileName = "";
+				lineNo   = "-1";
+				desc     = line;
+				type     = CMessageDock::InfomationCategory;
 				break;
 			}
 			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
@@ -1038,8 +1072,9 @@ void MainWindow::buildOutput(const QString & output)
 				}
 			}
 			// メッセージを追加
-			messageDock->addMessage(uuid, fileName, lineNo.toInt(), desc);
+			messageDock->addMessage(uuid, fileName, lineNo.toInt(), type, desc);
 			raiseDock = true;
+			accepted  = true;
 		}
 	}
 

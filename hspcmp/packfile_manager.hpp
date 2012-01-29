@@ -179,11 +179,11 @@ bool packfile_manager::append(const char * filename, PACK_OPTION option)
 inline
 void packfile_manager::dump()
 {
-	printf("packfile_manager::m_filename = \"%s\"\n", m_filename.c_str());
-	printf("packfile_manager::m_modify = %s\n", m_modify ? "true" : false);
-	printf("packfile_manager::m_packlist.size() = %d\n", m_packlist.size());
+	printf("!!! packfile_manager::m_filename = \"%s\"\n", m_filename.c_str());
+	printf("!!! packfile_manager::m_modify = %s\n", m_modify ? "true" : false);
+	printf("!!! packfile_manager::m_packlist.size() = %d\n", m_packlist.size());
 	for(size_t i = 0; i < m_packlist.size(); i++) {
-		printf("packfile_manager::m_packlist[%d] = %s\"%s\"\n"
+		printf("!!! packfile_manager::m_packlist[%d] = %s\"%s\"\n"
 			, i, PACK_OPTION_ENCRYPT == m_packlist[i].first ? "+" : " ", m_packlist[i].second.c_str());
 	}
 }

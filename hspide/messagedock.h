@@ -9,6 +9,17 @@
 class CMessageDock
 	: public QWidget
 {
+public:
+
+	typedef enum {
+		NoneCategory = 0,
+		InfomationCategory,
+		WarningCategory,
+		ErrorCategory,
+	} CategoryType;
+
+private:
+
 	Q_OBJECT
 
 	typedef enum {
@@ -20,6 +31,7 @@ class CMessageDock
 	};
 
 	typedef struct {
+		CategoryType category;
 		QString	description;
 		QUuid	uuid;
 		QString	fileName;
@@ -35,7 +47,7 @@ public:
 	CMessageDock(QWidget *parent = 0);
 
 	void clear();
-	void addMessage(const QUuid & uuid, const QString & fileName, int lineNo, const QString & description);
+	void addMessage(const QUuid & uuid, const QString & fileName, int lineNo, CategoryType category, const QString & description);
 
 protected:
 
