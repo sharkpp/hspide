@@ -368,13 +368,12 @@ void CCodeEdit::insertCompletion(const QString& completion)
 
 	if( completionPrefix == completion.left(len) )
 	{
-		cursor.movePosition(QTextCursor::Left);
 		cursor.movePosition(QTextCursor::EndOfWord);
 		cursor.insertText(completion.right(extra));
 	}
 	else
 	{
-		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, len);
+		cursor.movePosition(QTextCursor::StartOfWord);
 		cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
 		cursor.removeSelectedText();
 		cursor.insertText(completion);
