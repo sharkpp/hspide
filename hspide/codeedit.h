@@ -1,5 +1,6 @@
 #include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
+#include <QCompleter>
 #include <QString>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -19,6 +20,7 @@ class CCodeEdit
 
 	QWidget *           m_lineNumberWidget;
 	QSyntaxHighlighter *m_highlighter;
+	QCompleter*         m_completer;
 
 	QPalette::ColorRole m_lineIconBackgroundColorRole;
 	QPalette::ColorRole m_lineNumberBackgroundColorRole;
@@ -94,6 +96,10 @@ public slots:
 	void updateLineNumber(const QRect & rect ,int dy);
 
 	void del();
+
+protected slots:
+
+	void insertCompletion(const QString& completion);
 
 private:
 

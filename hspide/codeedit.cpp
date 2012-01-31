@@ -162,9 +162,17 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 {
 	m_lineNumberWidget = new CLineNumberArea(this);
 	m_highlighter      = new CHighlighter(document());
+	m_completer        = new QCompleter(this);
+
+	m_completer->setWidget(this);
+	m_completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+	m_completer->setCaseSensitivity(Qt::CaseInsensitive);
+	m_completer->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+	m_completer->setWrapAround(false);
 
 	connect(this, SIGNAL(blockCountChanged(int)),   this, SLOT(updateLineNumberWidth(int)));
 	connect(this, SIGNAL(updateRequest(QRect,int)), this, SLOT(updateLineNumber(QRect,int)));
+	connect(m_completer, SIGNAL(activated(QString)), this, SLOT(insertCompletion(QString)));
 
 	updateLineNumberWidth(0);
 
@@ -184,6 +192,19 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
 {
 	static_cast<CHighlighter*>(m_highlighter)->setSymbols(symbols);
+
+//	QStandardItemModel* model = new QStandardItemModel(this);
+
+	QStringList keywords;
+
+	foreach(const QStringList &symbol, symbols)
+	{
+		keywords << symbol[0];
+	}
+	keywords.sort();
+
+qDebug()<<keywords;
+	m_completer->setModel(new QStringListModel(keywords, m_completer));
 }
 
 int CCodeEdit::lineNumberWidth()
@@ -334,6 +355,33 @@ void CCodeEdit::updateLineNumber(const QRect & rect ,int dy)
 	m_lineNumberWidget->update(0, rect.y(), m_lineNumberWidget->width(), rect.height());
 }
 
+void CCodeEdit::insertCompletion(const QString& completion)
+{
+	if( m_completer->widget() != this ) {
+		return;
+	}
+
+	QTextCursor cursor = textCursor();
+	QString completionPrefix = m_completer->completionPrefix();
+	int len = completionPrefix.length();
+	int extra = completion.length() - len;
+
+	if( completionPrefix == completion.left(len) )
+	{
+		cursor.movePosition(QTextCursor::Left);
+		cursor.movePosition(QTextCursor::EndOfWord);
+		cursor.insertText(completion.right(extra));
+	}
+	else
+	{
+		cursor.movePosition(QTextCursor::Left, QTextCursor::MoveAnchor, len);
+		cursor.movePosition(QTextCursor::EndOfWord, QTextCursor::KeepAnchor);
+		cursor.removeSelectedText();
+		cursor.insertText(completion);
+	}
+	setTextCursor(cursor);
+}
+
 void CCodeEdit::del()
 {
 	QTextCursor cursor = textCursor();
@@ -344,8 +392,66 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 {
 	QString text = event->text();
 
-	if( !text.isEmpty() &&
-		("\t" == text || " " == text) ) 
+	bool shiftModifier = 0 != (event->modifiers() & Qt::ShiftModifier);
+	bool ctrlModifier  = 0 != (event->modifiers() & Qt::ControlModifier);
+	bool pressTab      = Qt::Key_Tab   == event->key();
+	bool pressSpace    = Qt::Key_Space == event->key();
+	bool complitePopup = m_completer && m_completer->popup()->isVisible();
+
+	// 入力補間中
+	if( complitePopup )
+	{
+		switch( event->key() )
+		{
+		case Qt::Key_Enter:
+		case Qt::Key_Return:
+		case Qt::Key_Escape:
+		case Qt::Key_Tab:
+		case Qt::Key_Backtab:
+			event->ignore();
+			return;
+		default:
+			break;
+		}
+	}
+
+	// CTRL+SPACE → 入力補間開始 or 入力補間中
+	if( complitePopup ||
+		(!text.isEmpty() && ctrlModifier && !shiftModifier && pressSpace) )
+	{
+		if( complitePopup )
+		{
+			QPlainTextEdit::keyPressEvent(event);
+		}
+
+		QTextCursor cursor = textCursor();
+		cursor.select(QTextCursor::WordUnderCursor);
+		QString completionPrefix = cursor.selectedText();
+		if( completionPrefix != m_completer->completionPrefix())
+		{
+			m_completer->setCompletionPrefix(completionPrefix);
+			m_completer->popup()->setCurrentIndex(m_completer->completionModel()->index(0, 0));
+		}
+
+		if( complitePopup && completionPrefix.isEmpty() )
+		{
+			m_completer->popup()->hide();
+		}
+		else
+		{
+			// ポップアップを表示
+			QRect rc = cursorRect();
+			rc.moveLeft(lineNumberWidth());
+			rc.setWidth(m_completer->popup()->sizeHintForColumn(0)
+						+ m_completer->popup()->verticalScrollBar()->sizeHint().width());
+			m_completer->complete(rc);
+		}
+
+		return;
+	}
+
+	// SPACE or SHIFT+SPACE or TAB or SHIFT+TAB
+	if( !text.isEmpty() && !ctrlModifier && (pressTab || pressSpace) ) 
 	{
 		QChar c = text[0];
 		QTextCursor cursor = textCursor();
@@ -377,7 +483,7 @@ QTime time; time.start();
 				if( skipLastLine ) {
 					lines.removeLast();
 				}
-				if( !(event->modifiers() & Qt::ShiftModifier) )
+				if( !shiftModifier )
 				{
 					// TAB or スペースでインデント
 					for(int i = 0, num = lines.size(); i < num; i++)
