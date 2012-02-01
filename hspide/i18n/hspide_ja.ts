@@ -530,6 +530,14 @@
         <source>VariableInfo</source>
         <translation>変数情報</translation>
     </message>
+    <message>
+        <source>&amp;Setting</source>
+        <translation>設定(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Application settings</source>
+        <translation>アプリケーションの設定</translation>
+    </message>
 </context>
 <context>
     <name>NewFileDialog</name>

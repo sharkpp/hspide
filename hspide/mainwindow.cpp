@@ -235,6 +235,8 @@ void MainWindow::setupMenus()
 		debugMenu->addAction(debugStopAct);
 
 	QMenu * toolsMenu = menuBar()->addMenu(tr("&Tools"));
+		toolsMenu->addSeparator();
+		toolsMenu->addAction(settingAct);
 
 	QMenu * helpMenu = menuBar()->addMenu(tr("&Help"));
 //		debugMenu->addAction(debugRunAct);
@@ -385,6 +387,12 @@ void MainWindow::setupActions()
 //	debugStopAct->setShortcuts(QKeySequence::Replace);
 	debugStopAct->setStatusTip(tr("Run program without debug"));
 	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
+
+	settingAct = new QAction(QMultiIcon(":/images/tango/middle/preferences-system.png",
+	                                   ":/images/tango/small/preferences-system.png"), tr("&Setting"), this);
+//	settingAct->setShortcuts(QKeySequence::Replace);
+	settingAct->setStatusTip(tr("Application settings"));
+	connect(settingAct, SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -825,6 +833,10 @@ void MainWindow::onDebugStop()
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->stopDebugging();
 	}
+}
+
+void MainWindow::onOpenSettingDialog()
+{
 }
 
 void MainWindow::onTabListShow()

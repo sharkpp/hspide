@@ -50,6 +50,7 @@ class MainWindow : public QMainWindow
 	QAction* debugSuspendAct;
 	QAction* debugResumeAct;
 	QAction* debugStopAct;
+	QAction* settingAct;
 
 	CProjectDock*      projectDock;
 	CSymbolDock*       symbolDock;
@@ -113,6 +114,7 @@ public slots:
 	void onDebugSuspend();
 	void onDebugResume();
 	void onDebugStop();
+	void onOpenSettingDialog();
 	void onTabListShow();
 	void onTabListClicked();
 	void onTabList();

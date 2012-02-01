@@ -21,6 +21,7 @@
 	<file>images/tango/middle/media-playback-pause.png</file>
 	<file>images/tango/middle/media-playback-start.png</file>
 	<file>images/tango/middle/media-playback-stop.png</file>
+	<file>images/tango/middle/preferences-system.png</file>
 	<file>images/tango/middle/system-log-out.png</file>
 	<file>images/tango/small/dialog-error.png</file>
 	<file>images/tango/small/dialog-information.png</file>
@@ -47,6 +48,7 @@
 	<file>images/tango/small/media-playback-pause.png</file>
 	<file>images/tango/small/media-playback-start.png</file>
 	<file>images/tango/small/media-playback-stop.png</file>
+	<file>images/tango/small/preferences-system.png</file>
 	<file>images/tango/small/system-log-out.png</file>
 	<file>images/tango/small/text-x-generic.png</file>
 	<file>images/icons/middle/document-save-all.png</file>
