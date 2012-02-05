@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigDialog</class>
+ <widget class="QDialog" name="ConfigDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ConfigDialog</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <widget class="QTreeView" name="category">
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="stackedWidget">
+       <property name="currentIndex">
+        <number>2</number>
+       </property>
+       <widget class="QWidget" name="directoryPage">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="directoryPageTitle">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Directory</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="directoryPageHLine">
+           <property name="frameShape">
+            <enum>QFrame::HLine</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="hspDirectoryGroup">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>HSP directory</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="spacing">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="installDirectory">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Install directory</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="installDirectoryHLayout">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetDefaultConstraint</enum>
+              </property>
+              <item>
+               <widget class="QLineEdit" name="installDirectoryPath">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="installDirectoryRef">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string notr="true">...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="commonDirectory">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Common directory</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="commonDirectoryHLayout">
+              <item>
+               <widget class="QLineEdit" name="commonDirectoryPath"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="commonDirectoryRef">
+                <property name="text">
+                 <string notr="true">...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>198</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="editorGeneralPage">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="editorGeneralPageTitle">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Editor general</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="editorGeneralPageHLine">
+           <property name="frameShape">
+            <enum>QFrame::HLine</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="editorTabWidthHLayout">
+           <item>
+            <widget class="QLabel" name="editorTabWidthLabel">
+             <property name="text">
+              <string>Tab width:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="editorTabWidth"/>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="editorEnableLineNumberHLayout">
+           <item>
+            <widget class="QCheckBox" name="editorEnableLineNumber">
+             <property name="text">
+              <string>Enable line number</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="editorFontGroup">
+           <property name="title">
+            <string>Fonts</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="editorLineNumberFontHLayout">
+              <item>
+               <widget class="QLabel" name="editorLineNumberLabel">
+                <property name="text">
+                 <string>Line number font</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFontComboBox" name="editorLineNumberFont"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="editorFontHLayout">
+              <item>
+               <widget class="QLabel" name="editorFontLabel">
+                <property name="text">
+                 <string>Editor font</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFontComboBox" name="editorFont"/>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>197</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="editorColorPage">
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="editorColorPageTitle">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Editor color</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="editorColorPageHLine">
+           <property name="frameShape">
+            <enum>QFrame::HLine</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTreeView" name="editorColorList"/>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QCheckBox" name="editorColorItemEnable">
+             <property name="text">
+              <string>Enable</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="editorColorItemBold">
+             <property name="text">
+              <string>Bold</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="editorColorItemBgcolorLabel">
+             <property name="text">
+              <string>Background color:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="editorColorItemBgcolor">
+             <property name="text">
+              <string notr="true">...</string>
+             </property>
+             <property name="popupMode">
+              <enum>QToolButton::MenuButtonPopup</enum>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonIconOnly</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="editorColorItemFgcolorLabel">
+             <property name="text">
+              <string>Foreground color:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="editorColorItemFgcolor">
+             <property name="text">
+              <string notr="true">...</string>
+             </property>
+             <property name="popupMode">
+              <enum>QToolButton::MenuButtonPopup</enum>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonIconOnly</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>53</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="toolsPage">
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="toolsPageTitle">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Tool</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="toolsPageHLine">
+           <property name="frameShape">
+            <enum>QFrame::HLine</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Sunken</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="toolsHLayout">
+           <item>
+            <widget class="QTreeView" name="treeView"/>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="toolsButtonVLayout">
+             <item>
+              <widget class="QToolButton" name="toolsAdd">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Add</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/small/dialog-error.png</normaloff>:/images/tango/small/dialog-error.png</iconset>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextBesideIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolsEdit">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Edit</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/small/dialog-information.png</normaloff>:/images/tango/small/dialog-information.png</iconset>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextBesideIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolsRemove">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Remove</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/small/dialog-warning.png</normaloff>:/images/tango/small/dialog-warning.png</iconset>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextBesideIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolsUpOrder">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Up</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/small/edit-redo.png</normaloff>:/images/tango/small/edit-redo.png</iconset>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextBesideIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QToolButton" name="toolsDownOrder">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Down</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/small/go-next.png</normaloff>:/images/tango/small/go-next.png</iconset>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextBesideIcon</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="shortcutKeyPage">
+        <widget class="QFrame" name="editorGeneralPageHLine_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>32</y>
+           <width>324</width>
+           <height>3</height>
+          </rect>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::HLine</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Sunken</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="editorGeneralPageTitle_4">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>10</y>
+           <width>324</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Editor general</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>category</tabstop>
+  <tabstop>installDirectoryPath</tabstop>
+  <tabstop>installDirectoryRef</tabstop>
+  <tabstop>commonDirectoryPath</tabstop>
+  <tabstop>commonDirectoryRef</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
+ <resources>
+  <include location="hspide.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>category</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onPageChanged(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>194</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>397</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>category</sender>
+   <signal>collapsed(QModelIndex)</signal>
+   <receiver>category</receiver>
+   <slot>expand(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>166</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>91</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onPageChanged(QModelIndex)</slot>
+ </slots>
+</ui>

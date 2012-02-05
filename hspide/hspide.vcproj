@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath="configdialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="debugger.cpp"
 				>
 			</File>
@@ -334,6 +338,32 @@
 						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o release\moc_compiler.cpp&#x0D;&#x0A;"
 						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compiler.h"
 						Outputs="release\moc_compiler.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="configdialog.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC configdialog.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o debug\moc_configdialog.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configdialog.h"
+						Outputs="debug\moc_configdialog.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC configdialog.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o release\moc_configdialog.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configdialog.h"
+						Outputs="release\moc_configdialog.cpp"
 					/>
 				</FileConfiguration>
 			</File>
@@ -764,6 +794,30 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="release\moc_configdialog.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_configdialog.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="release\moc_debugger.cpp"
 				>
 				<FileConfiguration
@@ -788,18 +842,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_documentpane.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="debug\moc_documentpane.cpp"
 				>
 				<FileConfiguration
@@ -812,10 +854,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_jumpdialog.cpp"
+				RelativePath="release\moc_documentpane.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -828,6 +870,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_jumpdialog.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -908,18 +962,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_outputdock.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="debug\moc_outputdock.cpp"
 				>
 				<FileConfiguration
@@ -932,10 +974,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_projectdock.cpp"
+				RelativePath="release\moc_outputdock.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -948,6 +990,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_projectdock.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1028,18 +1082,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="release\moc_varinfodock.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="debug\moc_varinfodock.cpp"
 				>
 				<FileConfiguration
@@ -1052,10 +1094,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\moc_workspaceitem.cpp"
+				RelativePath="release\moc_varinfodock.cpp"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1068,6 +1110,18 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_workspaceitem.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
 					ExcludedFromBuild="true"
 					>
 					<Tool
@@ -1100,6 +1154,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="debug\qrc_hspide.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="release\qrc_hspide.cpp"
 				>
 				<FileConfiguration
@@ -1112,16 +1178,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debug\qrc_hspide.cpp"
+				RelativePath="ui_configdialog.h"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="ui_jumpdialog.h"
@@ -1149,6 +1207,32 @@
 			UniqueIdentifier="{99349809-55BA-4b9d-BF79-8FDBB0286EB3}"
 			ParseFiles="false"
 			>
+			<File
+				RelativePath="configdialog.ui"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="UIC configdialog.ui"
+						CommandLine="C:\Qt\4.7.3\bin\uic.exe configdialog.ui -o ui_configdialog.h&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;configdialog.ui"
+						Outputs="ui_configdialog.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="UIC configdialog.ui"
+						CommandLine="C:\Qt\4.7.3\bin\uic.exe configdialog.ui -o ui_configdialog.h&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;configdialog.ui"
+						Outputs="ui_configdialog.h"
+					/>
+				</FileConfiguration>
+			</File>
 			<File
 				RelativePath="jumpdialog.ui"
 				>

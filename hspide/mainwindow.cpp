@@ -3,6 +3,7 @@
 #include "documentpane.h"
 #include "newfiledialog.h"
 #include "jumpdialog.h"
+#include "configdialog.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -837,6 +838,11 @@ void MainWindow::onDebugStop()
 
 void MainWindow::onOpenSettingDialog()
 {
+	CConfigDialog dlg(this);
+
+	if( QDialog::Accepted == dlg.exec() )
+	{
+	}
 }
 
 void MainWindow::onTabListShow()
