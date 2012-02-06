@@ -23,6 +23,12 @@
 	<file>images/tango/middle/media-playback-stop.png</file>
 	<file>images/tango/middle/preferences-system.png</file>
 	<file>images/tango/middle/system-log-out.png</file>
+	<file>images/tango/middle/accessories-text-editor.png</file>
+	<file>images/tango/middle/go-up.png</file>
+	<file>images/tango/middle/list-add.png</file>
+	<file>images/tango/middle/list-remove.png</file>
+	<file>images/tango/middle/go-down.png</file>
+	<file>images/tango/small/accessories-text-editor.png</file>
 	<file>images/tango/small/dialog-error.png</file>
 	<file>images/tango/small/dialog-information.png</file>
 	<file>images/tango/small/dialog-warning.png</file>
@@ -43,8 +49,12 @@
 	<file>images/tango/small/edit-select-all.png</file>
 	<file>images/tango/small/edit-undo.png</file>
 	<file>images/tango/small/folder.png</file>
+	<file>images/tango/small/go-down.png</file>
 	<file>images/tango/small/go-jump.png</file>
 	<file>images/tango/small/go-next.png</file>
+	<file>images/tango/small/go-up.png</file>
+	<file>images/tango/small/list-add.png</file>
+	<file>images/tango/small/list-remove.png</file>
 	<file>images/tango/small/media-playback-pause.png</file>
 	<file>images/tango/small/media-playback-start.png</file>
 	<file>images/tango/small/media-playback-stop.png</file>

@@ -35,7 +35,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -113,7 +113,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="installDirectoryRef">
+               <widget class="QToolButton" name="installDirectoryRef">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -122,6 +122,9 @@
                 </property>
                 <property name="text">
                  <string notr="true">...</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextOnly</enum>
                 </property>
                </widget>
               </item>
@@ -146,9 +149,12 @@
                <widget class="QLineEdit" name="commonDirectoryPath"/>
               </item>
               <item>
-               <widget class="QPushButton" name="commonDirectoryRef">
+               <widget class="QToolButton" name="commonDirectoryRef">
                 <property name="text">
                  <string notr="true">...</string>
+                </property>
+                <property name="toolButtonStyle">
+                 <enum>Qt::ToolButtonTextOnly</enum>
                 </property>
                </widget>
               </item>
@@ -498,12 +504,9 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="toolsHLayout">
+          <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <widget class="QTreeView" name="treeView"/>
-           </item>
-           <item>
-            <layout class="QVBoxLayout" name="toolsButtonVLayout">
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
              <item>
               <widget class="QToolButton" name="toolsAdd">
                <property name="sizePolicy">
@@ -517,30 +520,16 @@
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/small/dialog-error.png</normaloff>:/images/tango/small/dialog-error.png</iconset>
+                 <normaloff>:/images/tango/middle/list-add.png</normaloff>:/images/tango/middle/list-add.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QToolButton" name="toolsEdit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Edit</string>
-               </property>
-               <property name="icon">
-                <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/small/dialog-information.png</normaloff>:/images/tango/small/dialog-information.png</iconset>
-               </property>
-               <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
               </widget>
              </item>
@@ -557,15 +546,21 @@
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/small/dialog-warning.png</normaloff>:/images/tango/small/dialog-warning.png</iconset>
+                 <normaloff>:/images/tango/middle/list-remove.png</normaloff>:/images/tango/middle/list-remove.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolsUpOrder">
+              <widget class="QToolButton" name="toolsEdit">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -573,14 +568,20 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Up</string>
+                <string>Edit</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/small/edit-redo.png</normaloff>:/images/tango/small/edit-redo.png</iconset>
+                 <normaloff>:/images/tango/middle/accessories-text-editor.png</normaloff>:/images/tango/middle/accessories-text-editor.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
               </widget>
              </item>
@@ -597,27 +598,62 @@
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/small/go-next.png</normaloff>:/images/tango/small/go-next.png</iconset>
+                 <normaloff>:/images/tango/middle/go-down.png</normaloff>:/images/tango/middle/go-down.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonIconOnly</enum>
                </property>
               </widget>
              </item>
              <item>
-              <spacer name="verticalSpacer_3">
+              <widget class="QToolButton" name="toolsUpOrder">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Up</string>
+               </property>
+               <property name="icon">
+                <iconset resource="hspide.qrc">
+                 <normaloff>:/images/tango/middle/go-up.png</normaloff>:/images/tango/middle/go-up.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>24</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonIconOnly</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_6">
                <property name="orientation">
-                <enum>Qt::Vertical</enum>
+                <enum>Qt::Horizontal</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>20</width>
-                 <height>40</height>
+                 <width>40</width>
+                 <height>20</height>
                 </size>
                </property>
               </spacer>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QTreeView" name="treeView"/>
            </item>
           </layout>
          </item>
@@ -750,6 +786,22 @@
     <hint type="destinationlabel">
      <x>91</x>
      <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>category</sender>
+   <signal>entered(QModelIndex)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onPageChanged(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>105</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>154</x>
+     <y>243</y>
     </hint>
    </hints>
   </connection>
