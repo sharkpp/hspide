@@ -30,8 +30,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	resize(800, 600);
 
 	m_compiler = new CCompiler(this);
+	m_compiler->setConfiguration(m_configuration);
 
 	m_workSpace = new CWorkSpaceModel(this);
+//	m_workSpace->setConfiguration(m_configuration);
 
 	// 処理完了時の通知を登録
 	connect(m_compiler, SIGNAL(buildStart(const QString &)),  this, SLOT(buildStart(const QString &)));
@@ -422,14 +424,17 @@ void MainWindow::loadSettings()
 	QSettings settings("hspide.ini", QSettings::IniFormat);
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
+	Configuration conf = m_configuration;
 	QVariant tmp;
 
 	// コンパイラパスを取得
-	m_compiler->setCompilerPath(settings.value("path/compiler", QDir::currentPath()).toString());
+	conf.setCompilerPath(settings.value("path/compiler", QDir::currentPath()).toString());
 	// HSPディレクトリの取得
-	m_compiler->setHspPath(settings.value("path/hsp", QDir::currentPath()).toString());
+	conf.setHspPath(settings.value("path/hsp", QDir::currentPath()).toString());
 	// Commonディレクトリの取得
-	m_compiler->setHspCommonPath(settings.value("path/hsp-common", m_compiler->hspPath() + "/common/").toString());
+	conf.setHspCommonPath(settings.value("path/hsp-common", conf.hspPath() + "/common/").toString());
+
+	m_configuration = conf;
 
 	// ウインドウ位置などを取得
 	m_stateDefault      = settings.value("window/state").toByteArray();
@@ -447,11 +452,11 @@ void MainWindow::saveSettings()
 	QString tmp;
 
 	// コンパイラパスを保存
-	settings.setValue("path/compiler", m_compiler->compilerPath());
+	settings.setValue("path/compiler", m_configuration.compilerPath());
 	// HSPディレクトリの保存
-	settings.setValue("path/hsp", m_compiler->hspPath());
+	settings.setValue("path/hsp", m_configuration.hspPath());
 	// Commonディレクトリの保存
-	settings.setValue("path/hsp-common", m_compiler->hspCommonPath());
+	settings.setValue("path/hsp-common", m_configuration.hspCommonPath());
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
@@ -840,8 +845,11 @@ void MainWindow::onOpenSettingDialog()
 {
 	CConfigDialog dlg(this);
 
+	dlg.setConfiguration(m_configuration);
+
 	if( QDialog::Accepted == dlg.exec() )
 	{
+		m_configuration = dlg.configuration();
 	}
 }
 

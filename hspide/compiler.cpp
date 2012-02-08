@@ -21,41 +21,29 @@ CCompiler::CCompiler(QObject *parent)
 	connect(m_server, SIGNAL(newConnection()), this, SLOT(attachDebugger()));
 }
 
-// コンパイラのパスを取得
-const QString &  CCompiler::compilerPath() const
+// 設定更新
+void CCompiler::setConfiguration(const Configuration& info)
 {
-	return m_hspCompPath;
+	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(info);
 }
 
-// コンパイラのパスを指定
-void CCompiler::setCompilerPath(const QString & path)
+void CCompiler::updateConfiguration(const Configuration& info)
 {
-	m_hspCompPath = QDir::toNativeSeparators(path);
-	updateCompilerPath();
-}
-
-// HSPディレクトリのパスを取得
-const QString &  CCompiler::hspPath() const
-{
-	return m_hspPath;
-}
-
-// HSPディレクトリのパスを指定
-void CCompiler::setHspPath(const QString & path)
-{
-	m_hspPath = QDir::toNativeSeparators(path);
-}
-
-// HSPディレクトリのパスを取得
-const QString &  CCompiler::hspCommonPath() const
-{
-	return m_hspCommonPath;
-}
-
-// HSP commonディレクトリのパスを指定
-void CCompiler::setHspCommonPath(const QString & path)
-{
-	m_hspCommonPath = QDir::toNativeSeparators(path);
+	bool update = false;
+	QString hspPath       = QDir::toNativeSeparators(info.hspPath());
+	QString hspCompPath   = QDir::toNativeSeparators(info.compilerPath());
+	QString hspCommonPath = QDir::toNativeSeparators(info.hspCommonPath());
+	update |= m_hspPath       != hspPath;
+	update |= m_hspCompPath   != hspCompPath;
+	update |= m_hspCommonPath != hspCommonPath;
+	m_hspCompPath   = hspPath;
+	m_hspPath       = hspCompPath;
+	m_hspCommonPath = hspCommonPath;
+	if( update ) {
+		updateCompilerPath();
+	}
 }
 
 bool CCompiler::getBreakPoint(qint64 id, CBreakPointInfo & bp, CUuidLookupInfo & lookup)
@@ -67,9 +55,14 @@ bool CCompiler::getBreakPoint(qint64 id, CBreakPointInfo & bp, CUuidLookupInfo &
 
 void CCompiler::updateCompilerPath()
 {
-	QString program = m_hspCompPath + "hspcmp";
+	QString program = m_hspCompPath + "hspcmp.exe";
 	QStringList arguments;
 	arguments << "--symbol-put";
+
+	if( !QFileInfo(program).exists() )
+	{
+		return;
+	}
 
 	delete m_listingSymbolsProcess;
 	m_listingSymbolsProcess = new QProcess(this);

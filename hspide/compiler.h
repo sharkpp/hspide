@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QLocalServer>
 #include <QUuid>
+#include "configuration.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -47,20 +48,8 @@ public:
 	// シンボル一覧を取得
 	const QVector<QStringList> & symbols() const;
 
-	// コンパイラのパスを取得
-	const QString &  compilerPath() const;
-	// コンパイラのパスを指定
-	void setCompilerPath(const QString & path);
-
-	// HSPディレクトリのパスを取得
-	const QString &  hspPath() const;
-	// HSPディレクトリのパスを指定
-	void setHspPath(const QString & path);
-
-	// HSPディレクトリのパスを取得
-	const QString &  hspCommonPath() const;
-	// HSP commonディレクトリのパスを指定
-	void setHspCommonPath(const QString & path);
+	// 設定更新
+	void setConfiguration(const Configuration& info);
 
 	// ビルド
 	bool build(CWorkSpaceItem * targetItem, bool debugMode);
@@ -80,6 +69,8 @@ protected:
 	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bool debugMode);
 
 public slots:
+
+	void updateConfiguration(const Configuration& info);
 
 	// シンボルの取得完了
 	void listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus);

@@ -35,7 +35,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -280,7 +280,23 @@
                </widget>
               </item>
               <item>
+               <spacer name="horizontalSpacer_8">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QFontComboBox" name="editorLineNumberFont"/>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="editorLineNumberFontSize"/>
               </item>
              </layout>
             </item>
@@ -294,7 +310,23 @@
                </widget>
               </item>
               <item>
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QFontComboBox" name="editorFont"/>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="editorFontSize"/>
               </item>
              </layout>
             </item>
@@ -707,7 +739,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -729,7 +761,7 @@
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>accept()</slot>
+   <slot>onOk()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>257</x>
@@ -808,5 +840,6 @@
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
+  <slot>onOk()</slot>
  </slots>
 </ui>

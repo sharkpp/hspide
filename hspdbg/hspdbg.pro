@@ -12,7 +12,7 @@ CONFIG -= embed_manifest_dll
 CONFIG += dll thread
 DEFINES += HSPDBG_EXPORTS QT_NODLL
 DEFINES -= QT_DLL
-QMAKE_POST_LINK += copy $(TargetPath) $(ProjectDir)\..\\$(ConfigurationName)\hsp3debug.dll
+QMAKE_POST_LINK += copy $(TargetPath) $(ProjectDir)\\..\\$(ConfigurationName)\\hsp3debug.dll
 #contains(CONFIG, static):DEFINES += QT_NODLL
 
 # ランタイムライブラリを静的リンク 

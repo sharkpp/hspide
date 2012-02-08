@@ -31,6 +31,27 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.stackedWidget->setCurrentIndex(0);
 }
 
+void CConfigDialog::setConfiguration(const Configuration& info)
+{
+	m_configuration = info;
+
+	ui.installDirectoryPath->setText(m_configuration.hspPath());
+	ui.commonDirectoryPath->setText(m_configuration.hspCommonPath());
+}
+
+const Configuration& CConfigDialog::configuration() const
+{
+	return m_configuration;
+}
+
+void CConfigDialog::onOk()
+{
+	m_configuration.setHspPath(ui.installDirectoryPath->text());
+	m_configuration.setHspCommonPath(ui.commonDirectoryPath->text());
+
+	accept();
+}
+
 void CConfigDialog::onPageChanged(const QModelIndex & index)
 {
 	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());

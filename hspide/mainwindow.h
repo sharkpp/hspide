@@ -12,6 +12,7 @@
 #include "searchdock.h"
 #include "symboldock.h"
 #include "messagedock.h"
+#include "configuration.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -20,6 +21,8 @@
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
+
+	Configuration m_configuration;
 
 	QTabWidget *   tabWidget;
 	QProgressBar * taskProgress;
