@@ -1,6 +1,16 @@
 #include "configuration.h"
+#include <QtGui>
 
 Configuration::Configuration()
+	: m_hspPath("./")
+	, m_hspCommonPath("./common/")
+	, m_compilerPath("./")
+	, m_editorTabWidth(4)
+	, m_editorLineNumberVisibled(true)
+	, m_editorLineNumberFontName(QApplication::font().family())
+	, m_editorLineNumberFontSize(16)
+	, m_editorFontName(QApplication::font().family())
+	, m_editorFontSize(16)
 {
 }
 

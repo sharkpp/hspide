@@ -27,6 +27,8 @@ public slots:
 
 	void onOk();
 	void onPageChanged(const QModelIndex & index);
+	void onClickedInstallDirectoryRef();
+	void onClickedCommonDirectoryRef();
 
 private:
 

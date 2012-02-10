@@ -220,7 +220,17 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="editorTabWidth"/>
+            <widget class="QSpinBox" name="editorTabWidth">
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>120</number>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer">
@@ -296,7 +306,17 @@
                <widget class="QFontComboBox" name="editorLineNumberFont"/>
               </item>
               <item>
-               <widget class="QSpinBox" name="editorLineNumberFontSize"/>
+               <widget class="QSpinBox" name="editorLineNumberFontSize">
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>128</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -326,7 +346,17 @@
                <widget class="QFontComboBox" name="editorFont"/>
               </item>
               <item>
-               <widget class="QSpinBox" name="editorFontSize"/>
+               <widget class="QSpinBox" name="editorFontSize">
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>128</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -837,9 +867,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>installDirectoryRef</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onClickedInstallDirectoryRef()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>471</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>498</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commonDirectoryRef</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onClickedCommonDirectoryRef()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>469</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>495</x>
+     <y>257</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
   <slot>onOk()</slot>
+  <slot>onClickedInstallDirectoryRef()</slot>
+  <slot>onClickedCommonDirectoryRef()</slot>
  </slots>
 </ui>
