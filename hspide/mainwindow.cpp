@@ -434,6 +434,14 @@ void MainWindow::loadSettings()
 	// Commonディレクトリの取得
 	conf.setHspCommonPath(settings.value("path/hsp-common", conf.hspPath() + "/common/").toString());
 
+	// エディタ関連の設定を取得
+	conf.setEditorTabWidth(settings.value("editor/tab-width", conf.editorTabWidth()).toInt());
+	conf.setEditorLineNumberVisible(settings.value("editor/line-number-visible", conf.editorLineNumberVisibled()).toBool());
+	conf.setEditorLineNumberFontName(settings.value("editor/line-number-font-name", conf.editorLineNumberFontName()).toString());
+	conf.setEditorLineNumberFontSize(settings.value("editor/line-number-font-size", conf.editorLineNumberFontSize()).toInt());
+	conf.setEditorFontName(settings.value("editor/font-name", conf.editorFontName()).toString());
+	conf.setEditorFontSize(settings.value("editor/font-size", conf.editorFontSize()).toInt());
+
 	m_configuration = conf;
 
 	// ウインドウ位置などを取得
@@ -457,6 +465,14 @@ void MainWindow::saveSettings()
 	settings.setValue("path/hsp", m_configuration.hspPath());
 	// Commonディレクトリの保存
 	settings.setValue("path/hsp-common", m_configuration.hspCommonPath());
+
+	// エディタ関連の設定を保存
+	settings.setValue("editor/tab-width", m_configuration.editorTabWidth());
+	settings.setValue("editor/line-number-visible", m_configuration.editorLineNumberVisibled());
+	settings.setValue("editor/line-number-font-name", m_configuration.editorLineNumberFontName());
+	settings.setValue("editor/line-number-font-size", m_configuration.editorLineNumberFontSize());
+	settings.setValue("editor/font-name", m_configuration.editorFontName());
+	settings.setValue("editor/font-size", m_configuration.editorFontSize());
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
