@@ -562,6 +562,7 @@ void MainWindow::onNewFile()
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = m_workSpace->appendProject();
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
+	document->setConfiguration(m_configuration);
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
@@ -629,6 +630,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 
 	// 新たに開く
 	CDocumentPane * document = new CDocumentPane(tabWidget);
+	document->setConfiguration(m_configuration);
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(item);
 	document->load(item->path());
@@ -1145,6 +1147,8 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> > &)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
 	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
+
+	debugger->setConfiguration(m_configuration);
 
 	debugRunAct    ->setVisible( !m_debuggers.empty() );
 	noDebugRunAct  ->setVisible( !m_debuggers.empty() );

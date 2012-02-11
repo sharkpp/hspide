@@ -3,6 +3,7 @@
 #include <QString>
 #include "codeedit.h"
 #include "workspaceitem.h"
+#include "configuration.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -27,6 +28,9 @@ public:
 	CDocumentPane(QWidget *parent = 0);
 
 	CCodeEdit * editor();
+
+	// 設定更新
+	void setConfiguration(const Configuration& info);
 
 	// シンボル一覧を指定
 	void setSymbols(const QVector<QStringList> & symbols);
@@ -71,6 +75,9 @@ protected:
 	void mousePressLineNumEvent(QMouseEvent * event);
 
 public slots:
+
+	void updateConfiguration(const Configuration& info);
+
 	void onModificationChanged(bool changed);
 	void onPressEditorIconArea(int lineNo);
 

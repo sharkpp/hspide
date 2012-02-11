@@ -12,6 +12,18 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	connect(m_clientConnection, SIGNAL(destroyed()), this, SLOT(deleteLater()));
 }
 
+// ê›íËçXêV
+void CDebugger::setConfiguration(const Configuration& info)
+{
+	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(info);
+}
+
+void CDebugger::updateConfiguration(const Configuration& info)
+{
+}
+
 void CDebugger::recvCommand()
 {
 	CMD_ID cmd_id;

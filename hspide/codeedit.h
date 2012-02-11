@@ -44,6 +44,9 @@ public:
 	// ƒVƒ“ƒ{ƒ‹ˆê——‚ðŽw’è
 	void setSymbols(const QVector<QStringList> & symbols);
 
+	void setLineNumberFont(const QFont & font);
+	const QFont& lineNumberFont() const;
+
 	void setLineIconBackgroundColorRole(const QPalette::ColorRole & role);
 	const QPalette::ColorRole & lineIconBackgroundColorRole() const;
 

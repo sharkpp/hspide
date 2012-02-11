@@ -49,6 +49,33 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 
 }
 
+// 設定更新
+void CDocumentPane::setConfiguration(const Configuration& info)
+{
+	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(info);
+}
+
+void CDocumentPane::updateConfiguration(const Configuration& info)
+{
+	QFont editorFont;
+
+	editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
+	editorWidget->setTabStopCharWidth(info.editorTabWidth());
+
+	// フォントを変更
+	editorFont.setFamily(info.editorFontName());
+	editorFont.setPixelSize(info.editorFontSize());
+	editorFont.setFixedPitch(true);
+	editorWidget->setFont(editorFont);
+	// フォントを変更
+	editorFont.setFamily(info.editorLineNumberFontName());
+	editorFont.setPixelSize(info.editorLineNumberFontSize());
+	editorFont.setFixedPitch(true);
+	editorWidget->setLineNumberFont(editorFont);
+}
+
 // シンボル一覧を指定
 void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 {

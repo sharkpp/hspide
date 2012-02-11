@@ -176,14 +176,6 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 
 	updateLineNumberWidth(0);
 
-	// フォントを変更
-	// ※取り敢えずのテスト
-	QFont font_ = font();
-	font_.setFamily("MS Gothic");
-	font_.setFixedPitch(true);
-//	font_.setPixelSize(16);
-	setFont(font_);
-
 	// タブストップを設定
 	setTabStopCharWidth(m_tabStopCharWidth);
 }
@@ -233,6 +225,17 @@ int CCodeEdit::lineNumberWidth()
 // プロパティ
 //////////////////////////////////////////////////////////////////////
 
+void CCodeEdit::setLineNumberFont(const QFont & font)
+{
+	m_lineNumberWidget->setFont(font);
+	updateLineNumberWidth(0);
+}
+
+const QFont& CCodeEdit::lineNumberFont() const
+{
+	return m_lineNumberWidget->font();
+}
+
 void CCodeEdit::setLineIconBackgroundColorRole(const QPalette::ColorRole & role)
 {
 	m_lineIconBackgroundColorRole = role;
@@ -260,24 +263,15 @@ void CCodeEdit::setLineNumberBackgroundColor(const QColor & color)
 	m_lineNumberBackgroundColorRole = QPalette::NoRole;
 }
 
-inline void CCodeEdit::setLineNumberTextColor(const QColor & color)
+void CCodeEdit::setLineNumberTextColor(const QColor & color)
 {
 	m_lineNumberTextColor = color;
 	m_lineNumberTextColorRole = QPalette::NoRole;
 }
 
-inline void CCodeEdit::setLineNumberVisible(bool visible)
+void CCodeEdit::setLineNumberVisible(bool visible)
 {
 	m_visibleLineNumber = visible;
-
-	if( visible != m_lineNumberWidget->isVisible() )
-	{
-		if( visible ) {
-			m_lineNumberWidget->show();
-		} else {
-			m_lineNumberWidget->hide();
-		}
-	}
 }
 
 void CCodeEdit::setLineIcon(int lineNo, const QIcon & icon)
@@ -565,11 +559,6 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 {
 	QPainter painter(m_lineNumberWidget);
 
-	if( !m_visibleLineNumber )
-	{
-		return;
-	}
-
 	// 行番号エリアをベタ塗り
 	const QRect & rc = event->rect();
 	painter.fillRect(rc, lineNumberBackgroundColor());
@@ -577,16 +566,19 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 							rc.left() + m_lineIconSize.width(),
 							rc.height()), lineIconBackgroundColor());
 
-	// 行番号との区切りを描画
-	const QRect & rcWnd = contentsRect();
-	QPen pen;
-	pen.setColor(lineNumberTextColor());
-	pen.setStyle(Qt::DotLine);
-	painter.setPen(pen);
-	// ※クリックしたりするとごみが描画されるので毎回、上から下までを描画する
-	painter.fillRect(QRect(	rc.right(), rcWnd.top(), rc.right(), rcWnd.height()),
-					 lineIconBackgroundColor());
-	painter.drawLine(rc.right(), rcWnd.top(), rc.right(), rcWnd.bottom());
+	if( m_visibleLineNumber )
+	{
+		// 行番号との区切りを描画
+		const QRect & rcWnd = contentsRect();
+		QPen pen;
+		pen.setColor(lineNumberTextColor());
+		pen.setStyle(Qt::DotLine);
+		painter.setPen(pen);
+		// ※クリックしたりするとごみが描画されるので毎回、上から下までを描画する
+		painter.fillRect(QRect(	rc.right(), rcWnd.top(), rc.right(), rcWnd.height()),
+						 lineIconBackgroundColor());
+		painter.drawLine(rc.right(), rcWnd.top(), rc.right(), rcWnd.bottom());
+	}
 
 	// 行番号を描画
 	painter.setPen(lineNumberTextColor());
@@ -599,12 +591,15 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 		block.isValid() && y <= event->rect().bottom();
 		lineNo++, block = block.next())
 	{
-		// 行番号を描画
 		QRectF rect = blockBoundingGeometry(block).translated(contentOffset());
 		y = (int)rect.top();
-		painter.drawText(0, y,
-		                 lineNumWidth - lineNumSpace, lineHeight,
-		                 Qt::AlignRight, QString::number(lineNo + 1));
+		// 行番号を描画
+		if( m_visibleLineNumber )
+		{
+			painter.drawText(0, y,
+							 lineNumWidth - lineNumSpace, lineHeight,
+							 Qt::AlignRight, QString::number(lineNo + 1));
+		}
 		// アイコンを描画
 		QMap<int, QIcon>::iterator
 			ite = m_lineIconMap.find(lineNo);
