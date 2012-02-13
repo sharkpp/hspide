@@ -17,7 +17,7 @@ CMessageDock::CMessageDock(QWidget *parent)
 	QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel();
 	proxyModel->setSourceModel(model);
 	proxyModel->setDynamicSortFilter(true);
-    proxyModel->setFilterKeyColumn(CategoryColumn);
+	proxyModel->setFilterKeyColumn(CategoryColumn);
 	m_listWidget->setRootIsDecorated(false);
 	m_listWidget->setSortingEnabled(true);
 	m_listWidget->setModel(proxyModel);

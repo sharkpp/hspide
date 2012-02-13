@@ -10,6 +10,15 @@ class CConfigDialog
 {
 	Q_OBJECT
 
+	typedef enum {
+		EnableColumn = 0,
+		CategoryColumn,
+		FontBoldColumn,
+		BackgroundColorColumn,
+		ForegroundColorCount,
+		ColumnNum,
+	};
+
 	Ui::ConfigDialog ui;
 
 	Configuration m_configuration;

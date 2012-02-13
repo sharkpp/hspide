@@ -6,14 +6,15 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	QStandardItemModel* model;
+	QStandardItem* rootItem;
+	QStandardItem* item, *item2;
 	// 設定画面のページ一覧を登録
-	QStandardItemModel* model = new QStandardItemModel();
 	ui.category->setRootIsDecorated(false);
 	ui.category->setHeaderHidden(true);
-	ui.category->setModel(model);
+	ui.category->setModel(model = new QStandardItemModel());
 	ui.category->setEditTriggers(QTreeView::NoEditTriggers);
-	QStandardItem* rootItem = model->invisibleRootItem();
-	QStandardItem* item, *item2;
+	rootItem = model->invisibleRootItem();
 	rootItem->appendRow(item = new QStandardItem(tr("Directory")));
 		item->setData(ui.stackedWidget->indexOf(ui.directoryPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Editor")));
@@ -25,8 +26,49 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 		item->setData(ui.stackedWidget->indexOf(ui.toolsPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Shortcut key")));
 		item->setData(ui.stackedWidget->indexOf(ui.shortcutKeyPage));
-
 	ui.category->expandAll();
+
+	// 設定画面のページ一覧を登録
+	QStringList categoryList;
+	categoryList<< tr("Line number")
+				<< tr("Function")
+				<< tr("Sub routine")
+				<< tr("Preprocessor")
+				<< tr("Macro")
+				<< tr("Line feed char")
+				<< tr("Tab char")
+				<< tr("End of file")
+				;
+	ui.editorColorList->setRowCount(categoryList.size());
+	ui.editorColorList->setColumnCount(ColumnNum);
+	ui.editorColorList->setColumnWidth(EnableColumn,   20);
+	ui.editorColorList->setColumnWidth(FontBoldColumn, 20);
+	ui.editorColorList->setHorizontalHeaderLabels(
+			QStringList()
+				<< tr("Enable")
+				<< tr("Category")
+				<< tr("FontBold")
+				<< tr("BackgroundColor")
+				<< tr("ForegroundColor")
+		);
+    ui.editorColorList->horizontalHeader()->setStretchLastSection(true);
+    ui.editorColorList->verticalHeader()->setVisible(false);
+	for(int i = 0; i < categoryList.size(); i++)
+	{
+		QString category = categoryList.at(i);
+		QTableWidgetItem *enableItem, *categoryItem, *fontBoldItem, *backgroundColorItem, *foregroundColorItem;
+		ui.editorColorList->setItem(i, EnableColumn,          enableItem          = new QTableWidgetItem());
+		ui.editorColorList->setItem(i, CategoryColumn,        categoryItem        = new QTableWidgetItem(category));
+		ui.editorColorList->setItem(i, FontBoldColumn,        fontBoldItem        = new QTableWidgetItem());
+		ui.editorColorList->setItem(i, BackgroundColorColumn, backgroundColorItem = new QTableWidgetItem());
+		ui.editorColorList->setItem(i, ForegroundColorCount,  foregroundColorItem = new QTableWidgetItem());
+		enableItem->setCheckState(Qt::Checked);
+		fontBoldItem->setCheckState(Qt::Checked);
+		backgroundColorItem->setBackground(QBrush(Qt::red));
+		foregroundColorItem->setBackground(QBrush(Qt::cyan));
+	}
+    ui.editorColorList->resizeColumnsToContents();
+    ui.editorColorList->resizeRowsToContents();
 
 	ui.category->selectionModel()->clear();
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);

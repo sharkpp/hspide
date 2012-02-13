@@ -35,7 +35,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -411,7 +411,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QTreeView" name="editorColorList"/>
+          <widget class="QTableWidget" name="editorColorList"/>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
