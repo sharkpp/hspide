@@ -12,6 +12,12 @@ Configuration::Configuration()
 	, m_editorFontName(QApplication::font().family())
 	, m_editorFontSize(16)
 {
+	for(int i = 0; i < MetricsNum; i++) {
+		m_metrics[i].enable = false;
+		m_metrics[i].useBoldFont = false;
+		m_metrics[i].backgroundColor = Qt::white;
+		m_metrics[i].foregroundColor = Qt::black;
+	}
 }
 
 Configuration::Configuration(const Configuration& info)

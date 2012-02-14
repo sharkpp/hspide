@@ -28,47 +28,76 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 		item->setData(ui.stackedWidget->indexOf(ui.shortcutKeyPage));
 	ui.category->expandAll();
 
-	// 設定画面のページ一覧を登録
-	QStringList categoryList;
-	categoryList<< tr("Line number")
-				<< tr("Function")
-				<< tr("Sub routine")
-				<< tr("Preprocessor")
-				<< tr("Macro")
-				<< tr("Line feed char")
-				<< tr("Tab char")
-				<< tr("End of file")
+	QStringList colorNames;
+	colorNames	<< tr("White")
+				<< tr("Black")
+				<< tr("Red")
+				<< tr("Dark red")
+				<< tr("Green")
+				<< tr("Dark green")
+				<< tr("Blue")
+				<< tr("Dark blue")
+				<< tr("Cyan")
+				<< tr("Dark cyan")
+				<< tr("Magenta")
+				<< tr("Dark magenta")
+				<< tr("Yellow")
+				<< tr("Dark yellow")
+				<< tr("Gray")
+				<< tr("Dark gray")
+				<< tr("Light gray")
 				;
-	ui.editorColorList->setRowCount(categoryList.size());
+	QList<Qt::GlobalColor> colorValues;
+	colorValues	<< Qt::white
+				<< Qt::black
+				<< Qt::red
+				<< Qt::darkRed
+				<< Qt::green
+				<< Qt::darkGreen
+				<< Qt::blue
+				<< Qt::darkBlue
+				<< Qt::cyan
+				<< Qt::darkCyan
+				<< Qt::magenta
+				<< Qt::darkMagenta
+				<< Qt::yellow
+				<< Qt::darkYellow
+				<< Qt::gray
+				<< Qt::darkGray
+				<< Qt::lightGray
+				;
+	QMenu* menu1 = new QMenu(this);
+	QMenu* menu2 = new QMenu(this);
+	QAction* action1, *action2;
+		for(int i = 0; i < colorNames.size(); i++)
+		{
+			QPixmap bmp(16, 16);
+			bmp.fill(colorValues.at(i));
+			action1 = menu1->addAction(QIcon(bmp), colorNames.at(i));
+			action2 = menu2->addAction(QIcon(bmp), colorNames.at(i));
+			action1->setData(int(colorValues.at(i)));
+			action2->setData(int(colorValues.at(i)));
+			connect(action1, SIGNAL(triggered()), this, SLOT(onChangeMetricsBgcolor()));
+			connect(action2, SIGNAL(triggered()), this, SLOT(onChangeMetricsFgcolor()));
+		}
+		action1 = menu1->addAction(tr("Custom ..."));
+		action2 = menu2->addAction(tr("Custom ..."));
+		action1->setData(-1);
+		action2->setData(-1);
+		connect(action1, SIGNAL(triggered()), this, SLOT(onChangeMetricsBgcolor()));
+		connect(action2, SIGNAL(triggered()), this, SLOT(onChangeMetricsFgcolor()));
+	ui.editorColorItemBgcolor->setMenu(menu1);
+	ui.editorColorItemFgcolor->setMenu(menu2);
+
+	// 設定画面のページ一覧を登録
+	ui.editorColorList->setEditTriggers(QTreeView::NoEditTriggers);
+	ui.editorColorList->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.editorColorList->setColumnCount(ColumnNum);
-	ui.editorColorList->setColumnWidth(EnableColumn,   20);
-	ui.editorColorList->setColumnWidth(FontBoldColumn, 20);
-	ui.editorColorList->setHorizontalHeaderLabels(
-			QStringList()
-				<< tr("Enable")
-				<< tr("Category")
-				<< tr("FontBold")
-				<< tr("BackgroundColor")
-				<< tr("ForegroundColor")
-		);
-    ui.editorColorList->horizontalHeader()->setStretchLastSection(true);
-    ui.editorColorList->verticalHeader()->setVisible(false);
-	for(int i = 0; i < categoryList.size(); i++)
-	{
-		QString category = categoryList.at(i);
-		QTableWidgetItem *enableItem, *categoryItem, *fontBoldItem, *backgroundColorItem, *foregroundColorItem;
-		ui.editorColorList->setItem(i, EnableColumn,          enableItem          = new QTableWidgetItem());
-		ui.editorColorList->setItem(i, CategoryColumn,        categoryItem        = new QTableWidgetItem(category));
-		ui.editorColorList->setItem(i, FontBoldColumn,        fontBoldItem        = new QTableWidgetItem());
-		ui.editorColorList->setItem(i, BackgroundColorColumn, backgroundColorItem = new QTableWidgetItem());
-		ui.editorColorList->setItem(i, ForegroundColorCount,  foregroundColorItem = new QTableWidgetItem());
-		enableItem->setCheckState(Qt::Checked);
-		fontBoldItem->setCheckState(Qt::Checked);
-		backgroundColorItem->setBackground(QBrush(Qt::red));
-		foregroundColorItem->setBackground(QBrush(Qt::cyan));
-	}
-    ui.editorColorList->resizeColumnsToContents();
-    ui.editorColorList->resizeRowsToContents();
+	ui.editorColorList->header()->setResizeMode(CategoryColumn,        QHeaderView::Stretch);
+	ui.editorColorList->header()->setResizeMode(EnableColumn,          QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(FontBoldColumn,        QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(BackgroundColorColumn, QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(ForegroundColorCount,  QHeaderView::ResizeToContents);
 
 	ui.category->selectionModel()->clear();
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
@@ -88,6 +117,32 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	ui.editorLineNumberFontSize->setValue(m_configuration.editorLineNumberFontSize());
 	ui.editorFont->setCurrentFont(QFont(m_configuration.editorFontName()));
 	ui.editorFontSize->setValue(m_configuration.editorFontSize());
+
+	QStringList categoryList;
+	categoryList<< tr("Text")
+				<< tr("Line number")
+				<< tr("Function")
+				<< tr("Sub routine")
+				<< tr("Preprocessor")
+				<< tr("Macro")
+				<< tr("Line feed char")
+				<< tr("Tab char")
+				<< tr("End of file")
+				;
+	ui.editorColorList->clear();
+	for(int i = 0; i < categoryList.size(); i++)
+	{
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui.editorColorList);
+		const Configuration::MetricsInfoType& metricsInfo = m_configuration.metrics(Configuration::MetricsEnum(i));
+		item->setText(CategoryColumn,                   categoryList.at(i));
+		item->setCheckState(EnableColumn,               metricsInfo.enable ? Qt::Checked : Qt::Unchecked);
+		item->setCheckState(FontBoldColumn,             metricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+		item->setBackgroundColor(BackgroundColorColumn, metricsInfo.backgroundColor);
+		item->setBackgroundColor(ForegroundColorCount,  metricsInfo.foregroundColor);
+	}
+	ui.editorColorList->resizeColumnToContents(EnableColumn);
+	ui.editorColorList->resizeColumnToContents(FontBoldColumn);
+	ui.editorColorList->setCurrentItem(ui.editorColorList->topLevelItem(0));
 }
 
 const Configuration& CConfigDialog::configuration() const
@@ -146,3 +201,63 @@ void CConfigDialog::onClickedCommonDirectoryRef()
 	}
 }
 
+void CConfigDialog::onCurrentMetricsChanged()
+{
+	QTreeWidgetItem* item = ui.editorColorList->currentItem();
+	if( !item ) {
+		return;
+	}
+
+	int index = ui.editorColorList->indexOfTopLevelItem(item);
+	Configuration::MetricsEnum metrics = Configuration::MetricsEnum(index);
+	const Configuration::MetricsInfoType& metricsInfo = m_configuration.metrics(metrics);
+
+	ui.editorColorItemEnable->setCheckState( item->checkState(EnableColumn) );
+	ui.editorColorItemBold->setCheckState( item->checkState(FontBoldColumn) );
+
+	QPixmap bmp(16, 16);
+	bmp.fill(metricsInfo.backgroundColor);
+	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+
+	bmp.fill(metricsInfo.foregroundColor);
+	ui.editorColorItemFgcolor->setIcon(QIcon(bmp));
+
+	onMetricsChanged(item);
+}
+
+void CConfigDialog::onMetricsChanged(QTreeWidgetItem* item)
+{
+	if( !item ) {
+		item = ui.editorColorList->currentItem();
+		if( !item ) {
+			return;
+		}
+	}
+
+	int index = ui.editorColorList->indexOfTopLevelItem(item);
+	Configuration::MetricsEnum metrics = Configuration::MetricsEnum(index);
+	Configuration::MetricsInfoType metricsInfo = m_configuration.metrics(metrics);
+
+	metricsInfo.enable      = item->checkState(EnableColumn) == Qt::Checked;
+	metricsInfo.useBoldFont = item->checkState(FontBoldColumn) == Qt::Checked;
+
+	m_configuration.setMetrics(metrics, metricsInfo);
+}
+
+void CConfigDialog::onChangeMetricsBgcolor()
+{
+	QAction* action = qobject_cast<QAction*>(sender());
+	Qt::GlobalColor cr = Qt::GlobalColor(action->data().toInt());
+	QPixmap bmp(16, 16);
+	bmp.fill(cr);
+	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+}
+
+void CConfigDialog::onChangeMetricsFgcolor()
+{
+	QAction* action = qobject_cast<QAction*>(sender());
+	Qt::GlobalColor cr = Qt::GlobalColor(action->data().toInt());
+	QPixmap bmp(16, 16);
+	bmp.fill(cr);
+	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+}

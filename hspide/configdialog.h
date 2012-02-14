@@ -11,8 +11,8 @@ class CConfigDialog
 	Q_OBJECT
 
 	typedef enum {
-		EnableColumn = 0,
-		CategoryColumn,
+		CategoryColumn = 0,
+		EnableColumn,
 		FontBoldColumn,
 		BackgroundColorColumn,
 		ForegroundColorCount,
@@ -38,6 +38,10 @@ public slots:
 	void onPageChanged(const QModelIndex & index);
 	void onClickedInstallDirectoryRef();
 	void onClickedCommonDirectoryRef();
+	void onCurrentMetricsChanged();
+	void onMetricsChanged(QTreeWidgetItem* item);
+	void onChangeMetricsBgcolor();
+	void onChangeMetricsFgcolor();
 
 private:
 

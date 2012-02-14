@@ -411,7 +411,25 @@
           </widget>
          </item>
          <item>
-          <widget class="QTableWidget" name="editorColorList"/>
+          <widget class="QTreeWidget" name="editorColorList">
+           <property name="rootIsDecorated">
+            <bool>false</bool>
+           </property>
+           <property name="columnCount">
+            <number>1</number>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="headerStretchLastSection">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
          </item>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -899,11 +917,45 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>editorColorList</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onCurrentMetricsChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>396</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>496</x>
+     <y>287</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editorColorList</sender>
+   <signal>itemChanged(QTreeWidgetItem*,int)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>460</x>
+     <y>176</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>497</x>
+     <y>195</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
   <slot>onOk()</slot>
   <slot>onClickedInstallDirectoryRef()</slot>
   <slot>onClickedCommonDirectoryRef()</slot>
+  <slot>onCurrentMetricsChanged()</slot>
+  <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
  </slots>
 </ui>
