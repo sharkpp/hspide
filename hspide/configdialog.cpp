@@ -3,6 +3,7 @@
 
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
+	, m_lastIndexOfColorMetrics(Configuration::MetricsNum)
 {
 	ui.setupUi(this);
 
@@ -77,15 +78,15 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 			action2 = menu2->addAction(QIcon(bmp), colorNames.at(i));
 			action1->setData(int(colorValues.at(i)));
 			action2->setData(int(colorValues.at(i)));
-			connect(action1, SIGNAL(triggered()), this, SLOT(onChangeMetricsBgcolor()));
-			connect(action2, SIGNAL(triggered()), this, SLOT(onChangeMetricsFgcolor()));
+			connect(action1, SIGNAL(triggered()), this, SLOT(onChangedMetricsBgcolor()));
+			connect(action2, SIGNAL(triggered()), this, SLOT(onChangedMetricsFgcolor()));
 		}
 		action1 = menu1->addAction(tr("Custom ..."));
 		action2 = menu2->addAction(tr("Custom ..."));
 		action1->setData(-1);
 		action2->setData(-1);
-		connect(action1, SIGNAL(triggered()), this, SLOT(onChangeMetricsBgcolor()));
-		connect(action2, SIGNAL(triggered()), this, SLOT(onChangeMetricsFgcolor()));
+		connect(action1, SIGNAL(triggered()), this, SLOT(onChangedMetricsBgcolor()));
+		connect(action2, SIGNAL(triggered()), this, SLOT(onChangedMetricsFgcolor()));
 	ui.editorColorItemBgcolor->setMenu(menu1);
 	ui.editorColorItemFgcolor->setMenu(menu2);
 
@@ -118,6 +119,8 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	ui.editorFont->setCurrentFont(QFont(m_configuration.editorFontName()));
 	ui.editorFontSize->setValue(m_configuration.editorFontSize());
 
+	m_lastIndexOfColorMetrics = Configuration::MetricsNum;
+	QPixmap bmp(12, 12);
 	QStringList categoryList;
 	categoryList<< tr("Text")
 				<< tr("Line number")
@@ -135,10 +138,12 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		QTreeWidgetItem *item = new QTreeWidgetItem(ui.editorColorList);
 		const Configuration::MetricsInfoType& metricsInfo = m_configuration.metrics(Configuration::MetricsEnum(i));
 		item->setText(CategoryColumn,                   categoryList.at(i));
-		item->setCheckState(EnableColumn,               metricsInfo.enable ? Qt::Checked : Qt::Unchecked);
+		item->setCheckState(EnableColumn,               metricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
 		item->setCheckState(FontBoldColumn,             metricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
-		item->setBackgroundColor(BackgroundColorColumn, metricsInfo.backgroundColor);
-		item->setBackgroundColor(ForegroundColorCount,  metricsInfo.foregroundColor);
+//		item->setBackgroundColor(BackgroundColorColumn, metricsInfo.backgroundColor);
+//		item->setBackgroundColor(ForegroundColorCount,  metricsInfo.foregroundColor);
+		item->setIcon(BackgroundColorColumn, (bmp.fill(metricsInfo.backgroundColor), QIcon(bmp)));
+		item->setIcon(ForegroundColorCount,  (bmp.fill(metricsInfo.foregroundColor), QIcon(bmp)));
 	}
 	ui.editorColorList->resizeColumnToContents(EnableColumn);
 	ui.editorColorList->resizeColumnToContents(FontBoldColumn);
@@ -210,19 +215,31 @@ void CConfigDialog::onCurrentMetricsChanged()
 
 	int index = ui.editorColorList->indexOfTopLevelItem(item);
 	Configuration::MetricsEnum metrics = Configuration::MetricsEnum(index);
-	const Configuration::MetricsInfoType& metricsInfo = m_configuration.metrics(metrics);
 
-	ui.editorColorItemEnable->setCheckState( item->checkState(EnableColumn) );
-	ui.editorColorItemBold->setCheckState( item->checkState(FontBoldColumn) );
+	if( Configuration::MetricsNum != m_lastIndexOfColorMetrics )
+	{
+		m_configuration.setMetrics(m_lastIndexOfColorMetrics, m_currentColorMetricsInfo);
+	}
 
-	QPixmap bmp(16, 16);
-	bmp.fill(metricsInfo.backgroundColor);
-	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+	m_lastIndexOfColorMetrics = metrics;
+	m_currentColorMetricsInfo = m_configuration.metrics(metrics);
 
-	bmp.fill(metricsInfo.foregroundColor);
-	ui.editorColorItemFgcolor->setIcon(QIcon(bmp));
+	QPixmap bmp(12, 12);
 
-	onMetricsChanged(item);
+	item->setCheckState(EnableColumn,               m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
+	item->setCheckState(FontBoldColumn,             m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+//	item->setBackgroundColor(BackgroundColorColumn, m_currentColorMetricsInfo.backgroundColor);
+//	item->setBackgroundColor(ForegroundColorCount,  m_currentColorMetricsInfo.foregroundColor);
+	item->setIcon(BackgroundColorColumn, (bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
+	item->setIcon(ForegroundColorCount,  (bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
+
+	ui.editorColorItemEnable->setCheckState(m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
+	ui.editorColorItemBold->setCheckState(  m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+
+	bmp = QPixmap(16, 16);
+
+	ui.editorColorItemBgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
+	ui.editorColorItemFgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
 }
 
 void CConfigDialog::onMetricsChanged(QTreeWidgetItem* item)
@@ -234,30 +251,72 @@ void CConfigDialog::onMetricsChanged(QTreeWidgetItem* item)
 		}
 	}
 
-	int index = ui.editorColorList->indexOfTopLevelItem(item);
-	Configuration::MetricsEnum metrics = Configuration::MetricsEnum(index);
-	Configuration::MetricsInfoType metricsInfo = m_configuration.metrics(metrics);
+	bool update = false;
 
-	metricsInfo.enable      = item->checkState(EnableColumn) == Qt::Checked;
-	metricsInfo.useBoldFont = item->checkState(FontBoldColumn) == Qt::Checked;
+	update |= m_currentColorMetricsInfo.enable      != (item->checkState(EnableColumn)   == Qt::Checked);
+	update |= m_currentColorMetricsInfo.useBoldFont != (item->checkState(FontBoldColumn) == Qt::Checked);
+	m_currentColorMetricsInfo.enable      = item->checkState(EnableColumn)   == Qt::Checked;
+	m_currentColorMetricsInfo.useBoldFont = item->checkState(FontBoldColumn) == Qt::Checked;
 
-	m_configuration.setMetrics(metrics, metricsInfo);
+	if( update ) {
+		onCurrentMetricsChanged();
+	}
 }
 
-void CConfigDialog::onChangeMetricsBgcolor()
+void CConfigDialog::onChangedMetricsEnable(int state)
 {
-	QAction* action = qobject_cast<QAction*>(sender());
-	Qt::GlobalColor cr = Qt::GlobalColor(action->data().toInt());
-	QPixmap bmp(16, 16);
-	bmp.fill(cr);
-	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+	m_currentColorMetricsInfo.enable = state == Qt::Checked;
+
+	onCurrentMetricsChanged();
 }
 
-void CConfigDialog::onChangeMetricsFgcolor()
+void CConfigDialog::onChangedMetricsFontBold(int state)
+{
+	m_currentColorMetricsInfo.useBoldFont = state == Qt::Checked;
+
+	onCurrentMetricsChanged();
+}
+
+void CConfigDialog::onChangedMetricsBgcolor()
 {
 	QAction* action = qobject_cast<QAction*>(sender());
-	Qt::GlobalColor cr = Qt::GlobalColor(action->data().toInt());
-	QPixmap bmp(16, 16);
-	bmp.fill(cr);
-	ui.editorColorItemBgcolor->setIcon(QIcon(bmp));
+	int index = action->data().toInt();
+
+	if( 0 <= index )
+	{
+		m_currentColorMetricsInfo.backgroundColor = Qt::GlobalColor(index);
+	}
+	else
+	{
+		QColorDialog dlg;
+
+		if( QDialog::Accepted == dlg.exec() )
+		{
+			m_currentColorMetricsInfo.backgroundColor = dlg.selectedColor();
+		}
+	}
+
+	onCurrentMetricsChanged();
+}
+
+void CConfigDialog::onChangedMetricsFgcolor()
+{
+	QAction* action = qobject_cast<QAction*>(sender());
+	int index = action->data().toInt();
+
+	if( 0 <= index )
+	{
+		m_currentColorMetricsInfo.foregroundColor = Qt::GlobalColor(index);
+	}
+	else
+	{
+		QColorDialog dlg;
+
+		if( QDialog::Accepted == dlg.exec() )
+		{
+			m_currentColorMetricsInfo.foregroundColor = dlg.selectedColor();
+		}
+	}
+
+	onCurrentMetricsChanged();
 }

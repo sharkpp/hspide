@@ -949,6 +949,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>editorColorItemEnable</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onChangedMetricsEnable(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>153</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>497</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editorColorItemBold</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onChangedMetricsFontBold(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>214</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>497</x>
+     <y>350</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
@@ -957,5 +989,7 @@
   <slot>onClickedCommonDirectoryRef()</slot>
   <slot>onCurrentMetricsChanged()</slot>
   <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
+  <slot>onChangedMetricsEnable(int)</slot>
+  <slot>onChangedMetricsFontBold(int)</slot>
  </slots>
 </ui>

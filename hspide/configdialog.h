@@ -23,6 +23,9 @@ class CConfigDialog
 
 	Configuration m_configuration;
 
+	Configuration::MetricsEnum     m_lastIndexOfColorMetrics;
+	Configuration::MetricsInfoType m_currentColorMetricsInfo;
+
 public:
 
 	CConfigDialog(QWidget *parent = 0);
@@ -40,8 +43,10 @@ public slots:
 	void onClickedCommonDirectoryRef();
 	void onCurrentMetricsChanged();
 	void onMetricsChanged(QTreeWidgetItem* item);
-	void onChangeMetricsBgcolor();
-	void onChangeMetricsFgcolor();
+	void onChangedMetricsEnable(int);
+	void onChangedMetricsFontBold(int);
+	void onChangedMetricsBgcolor();
+	void onChangedMetricsFgcolor();
 
 private:
 
