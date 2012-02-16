@@ -12,12 +12,22 @@ Configuration::Configuration()
 	, m_editorFontName(QApplication::font().family())
 	, m_editorFontSize(16)
 {
-	for(int i = 0; i < MetricsNum; i++) {
-		m_metrics[i].enable = false;
-		m_metrics[i].useBoldFont = false;
-		m_metrics[i].backgroundColor = Qt::white;
-		m_metrics[i].foregroundColor = Qt::black;
+	for(int i = 0; i < ColorMetricsNum; i++) {
+		m_colorMetrics[i].enable = false;
+		m_colorMetrics[i].useBoldFont = false;
+		m_colorMetrics[i].foregroundColor = Qt::black;
+		m_colorMetrics[i].backgroundColor = QColor(255,250,240);
 	}
+
+	m_colorMetrics[LabelMetrics].foregroundColor        = Qt::darkYellow;
+	m_colorMetrics[CommentMetrics].foregroundColor      = Qt::darkGreen;
+	m_colorMetrics[StringMetrics].foregroundColor       = Qt::darkRed;
+	m_colorMetrics[FunctionMetrics].foregroundColor     = Qt::blue;
+	m_colorMetrics[PreprocessorMetrics].foregroundColor = Qt::blue;
+	m_colorMetrics[MacroMetrics].foregroundColor        = QColor(0,128,255);
+	m_colorMetrics[TabCharMetrics].foregroundColor      = Qt::lightGray;
+	m_colorMetrics[EofMetrics].foregroundColor          = Qt::white;
+	m_colorMetrics[EofMetrics].backgroundColor          = Qt::black;
 }
 
 Configuration::Configuration(const Configuration& info)
@@ -39,8 +49,8 @@ Configuration& Configuration::operator = (const Configuration& info)
 	m_editorFontName = info.m_editorFontName;
 	m_editorFontSize = info.m_editorFontSize;
 
-	for(int i = 0; i < MetricsNum; i++) {
-		m_metrics[i] = info.m_metrics[i];
+	for(int i = 0; i < ColorMetricsNum; i++) {
+		m_colorMetrics[i] = info.m_colorMetrics[i];
 	}
 
 	m_tools = info.m_tools;

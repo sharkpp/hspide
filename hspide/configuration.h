@@ -19,18 +19,21 @@ public:
 		SubroutineMetrics,		// 命令
 		PreprocessorMetrics,	// プリプロセッサ
 		MacroMetrics,			// マクロ
+		LabelMetrics,			// ラベル
+		CommentMetrics,			// コメント
+		StringMetrics,			// 文字列
 		LineFeedCharMetrics,	// 改行文字
 		TabCharMetrics,			// TAB文字
 		EofMetrics,				// EOF
-		MetricsNum,
-	} MetricsEnum;
+		ColorMetricsNum,
+	} ColorMetricsEnum;
 
 	typedef struct {
 		bool   enable;
 		bool   useBoldFont;
 		QColor backgroundColor;
 		QColor foregroundColor;
-	} MetricsInfoType;
+	} ColorMetricsInfoType;
 
 	typedef struct {
 		bool    enable;
@@ -56,7 +59,7 @@ private:
 	QString m_editorFontName;
 	int     m_editorFontSize;
 
-	MetricsInfoType m_metrics[MetricsNum];
+	ColorMetricsInfoType m_colorMetrics[ColorMetricsNum];
 
 	QVector<ToolInfoType> m_tools;
 
@@ -114,10 +117,10 @@ public:
 		{ return m_editorFontSize; }
 
 
-	void setMetrics(MetricsEnum type, const MetricsInfoType& info)
-		{ m_metrics[type] = info; }
-	const MetricsInfoType& metrics(MetricsEnum type) const
-		{ return m_metrics[type]; }
+	void setColorMetrics(ColorMetricsEnum type, const ColorMetricsInfoType& info)
+		{ m_colorMetrics[type] = info; }
+	const ColorMetricsInfoType& colorMetrics(ColorMetricsEnum type) const
+		{ return m_colorMetrics[type]; }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)

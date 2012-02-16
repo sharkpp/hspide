@@ -14,8 +14,8 @@ class CConfigDialog
 		CategoryColumn = 0,
 		EnableColumn,
 		FontBoldColumn,
-		BackgroundColorColumn,
 		ForegroundColorCount,
+		BackgroundColorColumn,
 		ColumnNum,
 	};
 
@@ -23,8 +23,8 @@ class CConfigDialog
 
 	Configuration m_configuration;
 
-	Configuration::MetricsEnum     m_lastIndexOfColorMetrics;
-	Configuration::MetricsInfoType m_currentColorMetricsInfo;
+	Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
+	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
 
 public:
 

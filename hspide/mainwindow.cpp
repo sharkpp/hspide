@@ -442,6 +442,31 @@ void MainWindow::loadSettings()
 	conf.setEditorFontName(settings.value("editor/font-name", conf.editorFontName()).toString());
 	conf.setEditorFontSize(settings.value("editor/font-size", conf.editorFontSize()).toInt());
 
+	// 色設定
+	QStringList listItems;
+	listItems	<< "text"
+				<< "line-number"
+				<< "function"
+				<< "subroutine"
+				<< "preprocessor"
+				<< "macro"
+				<< "label"
+				<< "comment"
+				<< "string"
+				<< "line-feed-char"
+				<< "tab-char"
+				<< "eof"
+				;
+	for(int i = 0; i < listItems.size(); i++)
+	{
+		Configuration::ColorMetricsInfoType metrics = conf.colorMetrics(Configuration::ColorMetricsEnum(i));
+		metrics.enable          = settings.value(       QString("editor-color/%1-enable"          ).arg(listItems.at(i)), metrics.enable).toBool();
+		metrics.useBoldFont     = settings.value(       QString("editor-color/%1-use-bold-font"   ).arg(listItems.at(i)), metrics.useBoldFont).toBool();
+		metrics.backgroundColor = QColor(settings.value(QString("editor-color/%1-foreground-color").arg(listItems.at(i)), metrics.backgroundColor.name()).toString());
+		metrics.foregroundColor = QColor(settings.value(QString("editor-color/%1-background-color").arg(listItems.at(i)), metrics.foregroundColor.name()).toString());
+		conf.setColorMetrics(Configuration::ColorMetricsEnum(i), metrics);
+	}
+
 	m_configuration = conf;
 
 	// ウインドウ位置などを取得
@@ -473,6 +498,30 @@ void MainWindow::saveSettings()
 	settings.setValue("editor/line-number-font-size", m_configuration.editorLineNumberFontSize());
 	settings.setValue("editor/font-name", m_configuration.editorFontName());
 	settings.setValue("editor/font-size", m_configuration.editorFontSize());
+
+	// 色設定
+	QStringList listItems;
+	listItems	<< "text"
+				<< "line-number"
+				<< "function"
+				<< "subroutine"
+				<< "preprocessor"
+				<< "macro"
+				<< "label"
+				<< "comment"
+				<< "string"
+				<< "line-feed-char"
+				<< "tab-char"
+				<< "eof"
+				;
+	for(int i = 0; i < listItems.size(); i++)
+	{
+		const Configuration::ColorMetricsInfoType& metrics = m_configuration.colorMetrics(Configuration::ColorMetricsEnum(i));
+		settings.setValue(QString("editor-color/%1-enable"          ).arg(listItems.at(i)), metrics.enable);
+		settings.setValue(QString("editor-color/%1-use-bold-font"   ).arg(listItems.at(i)), metrics.useBoldFont);
+		settings.setValue(QString("editor-color/%1-foreground-color").arg(listItems.at(i)), metrics.backgroundColor);
+		settings.setValue(QString("editor-color/%1-background-color").arg(listItems.at(i)), metrics.foregroundColor);
+	}
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry", saveGeometry());
