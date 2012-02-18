@@ -232,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath="hsp3highlighter.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ipc_common.cpp"
 				>
 			</File>
@@ -448,6 +452,10 @@
 						Outputs="release\moc_documentpane.cpp"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="hsp3highlighter.h"
+				>
 			</File>
 			<File
 				RelativePath="hsp3lexer.h"

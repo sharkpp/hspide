@@ -45,109 +45,6 @@ public:
 
 //////////////////////////////////////////////////////////////////////
 
-class CHighlighter
-	: public QSyntaxHighlighter
-{
-private:
-
-	QHash<QString, QTextCharFormat> m_keywords;
-
-	QTextCharFormat m_format[Hsp3Lexer::TypeNum];
-
-public:
-
-	CHighlighter(QTextDocument *parent)
-		: QSyntaxHighlighter(parent)
-	{
-		// ラベル
-		QTextCharFormat &labelFormat = m_format[Hsp3Lexer::TypeLabel];
-		labelFormat.setForeground(Qt::darkYellow);
-	//	labelFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		// コメント
-		QTextCharFormat &commentFormat = m_format[Hsp3Lexer::TypeComment];
-		commentFormat.setForeground(Qt::darkGreen);
-	//	commentFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-
-		// 文字列
-		QTextCharFormat &stringFormat = m_format[Hsp3Lexer::TypeString];
-		stringFormat.setForeground(Qt::darkRed);
-	//	stringFormat.setUnderlineStyle(QTextCharFormat::SingleUnderline);
-	}
-
-	virtual ~CHighlighter()
-	{
-	}
-
-	// シンボル一覧を指定
-	void setSymbols(const QVector<QStringList> &symbols)
-	{
-		m_keywords.clear();
-
-		// 関数
-		QTextCharFormat functionFormat;
-		functionFormat.setForeground(Qt::blue);
-
-		// プリプロセッサ
-		QTextCharFormat preprocesserFormat;
-		preprocesserFormat.setForeground(Qt::blue);
-
-		// 定義済みマクロ
-		QTextCharFormat macroFormat;
-		macroFormat.setForeground(QBrush(QColor(0,128,255)));
-
-		foreach(const QStringList &symbol, symbols)
-		{
-			const QString &category1 = symbol[1];
-			const QString &category2 = symbol[2];
-			if( !category2.compare("macro") ) {
-				// 定義済みマクロ
-				m_keywords[symbol[0]] = macroFormat;
-			} else if( !category2.compare("func") ) {
-				if( !category1.compare("pre") ) {
-					// プリプロセッサ
-					m_keywords[symbol[0]] = preprocesserFormat;
-				} else {
-					// 関数/命令
-					m_keywords[symbol[0]] = functionFormat;
-				}
-			}
-		}
-	}
-
-private:
-
-	virtual void highlightBlock(const QString& text)
-	{
-		Hsp3Lexer lexer;
-
-		lexer.reset(QString(text).append(QChar::LineSeparator), previousBlockState());
-
-		while( lexer.scan() )
-		{
-			if( Hsp3Lexer::TypeNormal == lexer.type() )
-			{
-				QString token = lexer.text().toLower();
-				if( m_keywords.contains(token) )
-				{
-					setFormat(lexer.start(), lexer.length(), m_keywords[token]);
-				}
-			}
-			else
-			{
-				setFormat(lexer.start(), lexer.length(), m_format[lexer.type()]);
-			}
-		}
-
-		setCurrentBlockState( lexer.state() );
-
-	}
-
-};
-
-//////////////////////////////////////////////////////////////////////
-
-
 CCodeEdit::CCodeEdit(QWidget *parent)
 	: QPlainTextEdit(parent)
 	, m_lineIconBackgroundColorRole(QPalette::Window)
@@ -161,7 +58,6 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 	, m_tabStopCharWidth(4)
 {
 	m_lineNumberWidget = new CLineNumberArea(this);
-	m_highlighter      = new CHighlighter(document());
 	m_completer        = new QCompleter(this);
 
 	m_completer->setWidget(this);
@@ -183,8 +79,6 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 // シンボル一覧を指定
 void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
 {
-	static_cast<CHighlighter*>(m_highlighter)->setSymbols(symbols);
-
 //	QStandardItemModel* model = new QStandardItemModel(this);
 
 	QStringList keywords;

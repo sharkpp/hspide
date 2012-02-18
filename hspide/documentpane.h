@@ -4,6 +4,7 @@
 #include "codeedit.h"
 #include "workspaceitem.h"
 #include "configuration.h"
+#include "hsp3highlighter.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -17,11 +18,12 @@ class CDocumentPane
 {
 	Q_OBJECT
 
-	CCodeEdit *		editorWidget;
+	CCodeEdit *			m_editorWidget;
+	CHsp3Highlighter*	m_highlighter;
 
-	QString			m_filePath;
+	QString				m_filePath;
 
-	CWorkSpaceItem*	m_assignItem;
+	CWorkSpaceItem*		m_assignItem;
 
 public:
 
@@ -91,7 +93,7 @@ private:
 inline
 CCodeEdit * CDocumentPane::editor()
 {
-	return editorWidget;
+	return m_editorWidget;
 }
 
 #endif // !defined(INCLUDE_GUARD_CD203A69_4221_4557_9FC3_4F30394A99DA)

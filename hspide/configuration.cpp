@@ -23,6 +23,7 @@ Configuration::Configuration()
 	m_colorMetrics[CommentMetrics].foregroundColor      = Qt::darkGreen;
 	m_colorMetrics[StringMetrics].foregroundColor       = Qt::darkRed;
 	m_colorMetrics[FunctionMetrics].foregroundColor     = Qt::blue;
+	m_colorMetrics[SubroutineMetrics].foregroundColor   = Qt::blue;
 	m_colorMetrics[PreprocessorMetrics].foregroundColor = Qt::blue;
 	m_colorMetrics[MacroMetrics].foregroundColor        = QColor(0,128,255);
 	m_colorMetrics[TabCharMetrics].foregroundColor      = Qt::lightGray;

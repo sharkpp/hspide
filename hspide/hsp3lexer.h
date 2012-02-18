@@ -11,6 +11,10 @@ public:
 		TypeString,
 		TypeLabel,
 		TypeComment,
+		TypeFunction,
+		TypeSubroutine,
+		TypePreprocesser,
+		TypeMacro,
 		TypeNum,
 	} Type;
 

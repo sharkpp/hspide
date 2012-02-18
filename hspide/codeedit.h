@@ -19,7 +19,6 @@ class CCodeEdit
 	friend class CRulerArea;
 
 	QWidget *           m_lineNumberWidget;
-	QSyntaxHighlighter *m_highlighter;
 	QCompleter*         m_completer;
 
 	QPalette::ColorRole m_lineIconBackgroundColorRole;

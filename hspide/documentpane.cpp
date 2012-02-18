@@ -5,20 +5,21 @@
 
 CDocumentPane::CDocumentPane(QWidget *parent)
 	: QWidget(parent)
-	, editorWidget(new CCodeEdit(this))
+	, m_editorWidget(new CCodeEdit(this))
+	, m_highlighter(new CHsp3Highlighter(m_editorWidget->document()))
 	, m_assignItem(NULL)
 {
-	connect(editorWidget, SIGNAL(pressIconArea(int)), this, SLOT(onPressEditorIconArea(int)));
+	connect(m_editorWidget, SIGNAL(pressIconArea(int)), this, SLOT(onPressEditorIconArea(int)));
 }
 
 void CDocumentPane::resizeEvent(QResizeEvent * event)
 {
-	editorWidget->resize(event->size());
+	m_editorWidget->resize(event->size());
 }
 
 void CDocumentPane::focusInEvent(QFocusEvent * event)
 {
-	editorWidget->setFocus();
+	m_editorWidget->setFocus();
 }
 
 void CDocumentPane::onModificationChanged(bool changed)
@@ -28,9 +29,9 @@ void CDocumentPane::onModificationChanged(bool changed)
 
 void CDocumentPane::onPressEditorIconArea(int lineNo)
 {
-	if( editorWidget->lineIcon(lineNo).isNull() )
+	if( m_editorWidget->lineIcon(lineNo).isNull() )
 	{
-		editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
+		m_editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
 		// ブレークポイントをセット
 		if( m_assignItem )
 		{
@@ -39,7 +40,7 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 	}
 	else
 	{
-		editorWidget->clearLineIcon(lineNo);
+		m_editorWidget->clearLineIcon(lineNo);
 		// ブレークポイントをリセット
 		if( m_assignItem )
 		{
@@ -60,26 +61,54 @@ void CDocumentPane::setConfiguration(const Configuration& info)
 void CDocumentPane::updateConfiguration(const Configuration& info)
 {
 	QFont editorFont;
+	Configuration::ColorMetricsInfoType metrics;
 
-	editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
-	editorWidget->setTabStopCharWidth(info.editorTabWidth());
+	m_editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
+	m_editorWidget->setTabStopCharWidth(info.editorTabWidth());
 
 	// フォントを変更
 	editorFont.setFamily(info.editorFontName());
 	editorFont.setPixelSize(info.editorFontSize());
 	editorFont.setFixedPitch(true);
-	editorWidget->setFont(editorFont);
-	// フォントを変更
+	m_editorWidget->setFont(editorFont);
+	// 行番号フォントを変更
 	editorFont.setFamily(info.editorLineNumberFontName());
 	editorFont.setPixelSize(info.editorLineNumberFontSize());
 	editorFont.setFixedPitch(true);
-	editorWidget->setLineNumberFont(editorFont);
+	m_editorWidget->setLineNumberFont(editorFont);
+	// 色を変更
+	metrics = info.colorMetrics(Configuration::LineNumberMetrics);
+	m_editorWidget->setLineNumberTextColor(metrics.foregroundColor);
+	m_editorWidget->setLineNumberBackgroundColor(metrics.backgroundColor);
+	// キーワードの色を変更
+	QVector<QPair<Configuration::ColorMetricsEnum, Hsp3Lexer::Type> > keywordFormat;
+	keywordFormat	<< qMakePair(Configuration::FunctionMetrics,     Hsp3Lexer::TypeFunction)
+					<< qMakePair(Configuration::SubroutineMetrics,   Hsp3Lexer::TypeSubroutine)
+					<< qMakePair(Configuration::PreprocessorMetrics, Hsp3Lexer::TypePreprocesser)
+					<< qMakePair(Configuration::MacroMetrics,        Hsp3Lexer::TypeMacro)
+					<< qMakePair(Configuration::LabelMetrics,        Hsp3Lexer::TypeLabel)
+					<< qMakePair(Configuration::CommentMetrics,      Hsp3Lexer::TypeComment)
+					<< qMakePair(Configuration::StringMetrics,       Hsp3Lexer::TypeString)
+					;
+	for(int i = 0; i < keywordFormat.size(); i++)
+	{
+		QTextCharFormat format;
+		Hsp3Lexer::Type type = keywordFormat[i].second;
+		metrics = info.colorMetrics(keywordFormat[i].first);
+		format.setForeground(metrics.foregroundColor);
+		format.setBackground(metrics.backgroundColor);
+		format.setFontWeight(metrics.useBoldFont ? QFont::Bold : QFont::Normal);
+		m_highlighter->setFormat(type, format);
+	}
+
+	m_editorWidget->update();
 }
 
 // シンボル一覧を指定
 void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
 {
-	editorWidget->setSymbols(symbols);
+	m_editorWidget->setSymbols(symbols);
+	m_highlighter->setSymbols(symbols);
 }
 
 // ファイルから読み込み
@@ -94,10 +123,10 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 
 	m_filePath = filepath;
 
-	editorWidget->setPlainText(file.readAll());
+	m_editorWidget->setPlainText(file.readAll());
 
 	// 変更通知シグナルに接続
-	connect(editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
+	connect(m_editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
 	return true;
 }
@@ -145,7 +174,7 @@ bool CDocumentPane::save(const QString & filePath)
 	}
 
 	QTextStream out(&file);
-	out << editorWidget->toPlainText();
+	out << m_editorWidget->toPlainText();
 
 	return true;
 }
@@ -153,11 +182,11 @@ bool CDocumentPane::save(const QString & filePath)
 // 行に移動
 bool CDocumentPane::jump(int lineNo)
 {
-	QTextCursor cursor = editorWidget->textCursor();
+	QTextCursor cursor = m_editorWidget->textCursor();
 	cursor.setPosition(0, QTextCursor::MoveAnchor);
 	cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNo - 1);
 	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
-	editorWidget->setTextCursor(cursor);
+	m_editorWidget->setTextCursor(cursor);
 	return true;
 }
 
@@ -202,5 +231,5 @@ bool CDocumentPane::isModified() const
 {
 	return
 		isUntitled() ||
-		editorWidget->document()->isModified();
+		m_editorWidget->document()->isModified();
 }
