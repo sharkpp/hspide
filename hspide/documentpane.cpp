@@ -63,23 +63,33 @@ void CDocumentPane::updateConfiguration(const Configuration& info)
 	QFont editorFont;
 	Configuration::ColorMetricsInfoType metrics;
 
-	m_editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
-	m_editorWidget->setTabStopCharWidth(info.editorTabWidth());
-
 	// フォントを変更
 	editorFont.setFamily(info.editorFontName());
 	editorFont.setPixelSize(info.editorFontSize());
 	editorFont.setFixedPitch(true);
 	m_editorWidget->setFont(editorFont);
+
 	// 行番号フォントを変更
 	editorFont.setFamily(info.editorLineNumberFontName());
 	editorFont.setPixelSize(info.editorLineNumberFontSize());
 	editorFont.setFixedPitch(true);
 	m_editorWidget->setLineNumberFont(editorFont);
+
+	m_editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
+	m_editorWidget->setTabStopCharWidth(info.editorTabWidth());
+
 	// 色を変更
 	metrics = info.colorMetrics(Configuration::LineNumberMetrics);
 	m_editorWidget->setLineNumberTextColor(metrics.foregroundColor);
 	m_editorWidget->setLineNumberBackgroundColor(metrics.backgroundColor);
+
+	QPalette palette = m_editorWidget->palette();
+	palette.setColor(QPalette::Window, metrics.backgroundColor);
+	metrics = info.colorMetrics(Configuration::TextMetrics);
+	palette.setColor(QPalette::Text, metrics.foregroundColor);
+	palette.setColor(QPalette::Base, metrics.backgroundColor);
+	m_editorWidget->setPalette(palette);
+
 	// キーワードの色を変更
 	QVector<QPair<Configuration::ColorMetricsEnum, Hsp3Lexer::Type> > keywordFormat;
 	keywordFormat	<< qMakePair(Configuration::FunctionMetrics,     Hsp3Lexer::TypeFunction)
@@ -101,7 +111,8 @@ void CDocumentPane::updateConfiguration(const Configuration& info)
 		m_highlighter->setFormat(type, format);
 	}
 
-	m_editorWidget->update();
+	// キーワードハイライトを再描画
+	m_highlighter->rehighlight();
 }
 
 // シンボル一覧を指定
