@@ -71,6 +71,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
 	connect(qobject_cast<QDockWidget*>(symbolDock->parentWidget()),
 	                     SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
+	connect(&m_configuration,
+	                     SIGNAL(updateConfiguration(const Configuration&)),  this,  SLOT(updateConfiguration(const Configuration&)));
 
 	loadSettings();
 
@@ -255,99 +257,81 @@ void MainWindow::setupActions()
 
 	newDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-new.png",
 	                                        ":/images/tango/small/document-new.png"), tr("&New"), this);
-	newDocumentAct->setShortcuts(QKeySequence::New);
 	newDocumentAct->setStatusTip(tr("Create a new file"));
 	connect(newDocumentAct, SIGNAL(triggered()), this, SLOT(onNewFile()));
 
 	openDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-open.png",
 	                                        ":/images/tango/small/document-open.png"), tr("&Open"), this);
-	openDocumentAct->setShortcuts(QKeySequence::Open);
 	openDocumentAct->setStatusTip(tr("Open file"));
 	connect(openDocumentAct, SIGNAL(triggered()), this, SLOT(onOpenFile()));
 
 	saveDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-save.png",
 	                                         ":/images/tango/small/document-save.png"), tr("&Save"), this);
-	saveDocumentAct->setShortcuts(QKeySequence::Save);
 	saveDocumentAct->setStatusTip(tr("Save file"));
 	connect(saveDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveFile()));
 
 	saveAsDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-save-as.png",
 	                                           ":/images/tango/small/document-save-as.png"), tr("S&ave as"), this);
-	saveAsDocumentAct->setShortcuts(QKeySequence::SaveAs);
 	saveAsDocumentAct->setStatusTip(tr("Save file with a name"));
 	connect(saveAsDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
 
 	saveAllDocumentAct = new QAction(QMultiIcon(":/images/icons/middle/document-save-all.png",
 	                                            ":/images/icons/small/document-save-all.png"), tr("Save all"), this);
-	saveAllDocumentAct->setShortcuts(QKeySequence::SaveAs);
 	saveAllDocumentAct->setStatusTip(tr("Save all file"));
 	connect(saveAllDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAllFile()));
 
 	quitApplicationAct = new QAction(QMultiIcon(":/images/tango/middle/system-log-out.png",
 	                                            ":/images/tango/small/system-log-out.png"), tr("&Quit"), this);
-	quitApplicationAct->setShortcuts(QKeySequence::Quit);
 	quitApplicationAct->setStatusTip(tr("Quit application"));
 	connect(quitApplicationAct, SIGNAL(triggered()), this, SLOT(onQuit()));
 
 	editUndoAct = new QAction(QMultiIcon(":/images/tango/middle/edit-undo.png",
 	                                     ":/images/tango/small/edit-undo.png"), tr("&Undo"), this);
-	editUndoAct->setShortcuts(QKeySequence::Undo);
 	editUndoAct->setStatusTip(tr("Undo"));
 
 	editRedoAct = new QAction(QMultiIcon(":/images/tango/middle/edit-redo.png",
 	                                     ":/images/tango/small/edit-redo.png"), tr("&Redo"), this);
-	editRedoAct->setShortcuts(QKeySequence::Redo);
 	editRedoAct->setStatusTip(tr("Redo"));
 	connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
 
 	editCutAct = new QAction(QMultiIcon(":/images/tango/middle/edit-cut.png",
 	                                    ":/images/tango/small/edit-cut.png"), tr("Cu&t"), this);
-	editCutAct->setShortcuts(QKeySequence::Cut);
 	editCutAct->setStatusTip(tr("Cut selected text"));
 
 	editCopyAct = new QAction(QMultiIcon(":/images/tango/middle/edit-copy.png",
 	                                     ":/images/tango/small/edit-copy.png"), tr("&Copy"), this);
-	editCopyAct->setShortcuts(QKeySequence::Copy);
 	editCopyAct->setStatusTip(tr("Copy selected text"));
 
 	editPasteAct = new QAction(QMultiIcon(":/images/tango/middle/edit-paste.png",
 	                                      ":/images/tango/small/edit-paste.png"), tr("&Paste"), this);
-	editPasteAct->setShortcuts(QKeySequence::Paste);
 	editPasteAct->setStatusTip(tr("Paste text"));
 
 	editClearAct = new QAction(QMultiIcon(":/images/tango/middle/edit-clear.png",
 	                                      ":/images/tango/small/edit-clear.png"), tr("&Delete"), this);
-	editClearAct->setShortcuts(QKeySequence::Delete);
 	editClearAct->setStatusTip(tr("Delete selected text"));
 
 	selectAllAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
 	                                      ":/images/tango/small/edit-select-all.png"), tr("&Select All"), this);
-	selectAllAct->setShortcuts(QKeySequence::SelectAll);
 	selectAllAct->setStatusTip(tr("Select all text"));
 
 	findTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-find.png",
 	                                     ":/images/tango/small/edit-find.png"), tr("&Find"), this);
-	findTextAct->setShortcuts(QKeySequence::Find);
 	findTextAct->setStatusTip(tr("Find text"));
 
 	findPrevTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
 	                                         ":/images/tango/small/edit-select-all.png"), tr("Find &next"), this);
-	findPrevTextAct->setShortcuts(QKeySequence::FindNext);
 	findPrevTextAct->setStatusTip(tr("Find next text"));
 
 	findNextTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
 	                                         ":/images/tango/small/edit-select-all.png"), tr("Find &previous"), this);
-	findNextTextAct->setShortcuts(QKeySequence::FindPrevious);
 	findNextTextAct->setStatusTip(tr("Find previous text"));
 
 	replaceTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-find-replace.png",
 	                                        ":/images/tango/small/edit-find-replace.png"), tr("&Replace"), this);
-	replaceTextAct->setShortcuts(QKeySequence::Replace);
 	replaceTextAct->setStatusTip(tr("Replace text"));
 
 	gotoLineAct = new QAction(QMultiIcon(":/images/tango/middle/go-jump.png",
 	                                     ":/images/tango/small/go-jump.png"), tr("&Go to line"), this);
-	gotoLineAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_J));
 	gotoLineAct->setStatusTip(tr("Go to line"));
 	connect(gotoLineAct, SIGNAL(triggered()), this, SLOT(onGoToLine()));
 
@@ -471,6 +455,37 @@ void MainWindow::loadSettings()
 		conf.setColorMetrics(Configuration::ColorMetricsEnum(i), metrics);
 	}
 
+	// キー割り当て
+	QStringList listShortcutItems;
+	listShortcutItems
+				<< "new"
+				<< "open"
+				<< "save"
+				<< "save-as"
+				<< "save-all"
+				<< "quit"
+				<< "undo"
+				<< "redo"
+				<< "cut"
+				<< "copy"
+				<< "paste"
+				<< "clear"
+				<< "select-all"
+				<< "find"
+				<< "find-next"
+				<< "find-prev"
+				<< "replace"
+				<< "jump"
+				<< "debug-run"
+				<< "config"
+				;
+	for(int i = 0; i < listShortcutItems.size(); i++)
+	{
+		Configuration::ShortcutInfoType info = conf.shortcut(Configuration::ShortcutEnum(i));
+		info.keys = QKeySequence(settings.value(QString("key-assign/%1").arg(listShortcutItems.at(i)), info.keys.toString()).toString());
+		conf.setShortcut(Configuration::ShortcutEnum(i), info);
+	}
+
 	m_configuration = conf;
 
 	// ウインドウ位置などを取得
@@ -525,6 +540,36 @@ void MainWindow::saveSettings()
 		settings.setValue(QString("editor-color/%1-use-bold-font"   ).arg(listItems.at(i)), metrics.useBoldFont);
 		settings.setValue(QString("editor-color/%1-foreground-color").arg(listItems.at(i)), metrics.backgroundColor);
 		settings.setValue(QString("editor-color/%1-background-color").arg(listItems.at(i)), metrics.foregroundColor);
+	}
+
+	// キー割り当て
+	QStringList listShortcutItems;
+	listShortcutItems
+				<< "new"
+				<< "open"
+				<< "save"
+				<< "save-as"
+				<< "save-all"
+				<< "quit"
+				<< "undo"
+				<< "redo"
+				<< "cut"
+				<< "copy"
+				<< "paste"
+				<< "clear"
+				<< "select-all"
+				<< "find"
+				<< "find-next"
+				<< "find-prev"
+				<< "replace"
+				<< "jump"
+				<< "debug-run"
+				<< "config"
+				;
+	for(int i = 0; i < listShortcutItems.size(); i++)
+	{
+		const Configuration::ShortcutInfoType& info = m_configuration.shortcut(Configuration::ShortcutEnum(i));
+		settings.setValue(QString("key-assign/%1").arg(listShortcutItems.at(i)), info.keys.toString());
 	}
 
 	// ウインドウ位置などを保存
@@ -598,6 +643,30 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::actionTriggered(QAction *action)
 {
 	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
+}
+
+void MainWindow::updateConfiguration(const Configuration& info)
+{
+	m_configuration.applyShortcut(Configuration::ShortcutNew,       newDocumentAct);
+	m_configuration.applyShortcut(Configuration::ShortcutOpen,      openDocumentAct);
+	m_configuration.applyShortcut(Configuration::ShortcutSave,      saveDocumentAct);
+	m_configuration.applyShortcut(Configuration::ShortcutSaveAs,    saveAsDocumentAct);
+	m_configuration.applyShortcut(Configuration::ShortcutSaveAll,   saveAllDocumentAct);
+	m_configuration.applyShortcut(Configuration::ShortcutQuit,      quitApplicationAct);
+	m_configuration.applyShortcut(Configuration::ShortcutUndo,      editUndoAct);
+	m_configuration.applyShortcut(Configuration::ShortcutRedo,      editRedoAct);
+	m_configuration.applyShortcut(Configuration::ShortcutCut,       editCutAct);
+	m_configuration.applyShortcut(Configuration::ShortcutCopy,      editCopyAct);
+	m_configuration.applyShortcut(Configuration::ShortcutPaste,     editPasteAct);
+	m_configuration.applyShortcut(Configuration::ShortcutClear,     editClearAct);
+	m_configuration.applyShortcut(Configuration::ShortcutSelectAll, selectAllAct);
+	m_configuration.applyShortcut(Configuration::ShortcutFind,      findTextAct);
+	m_configuration.applyShortcut(Configuration::ShortcutFindNext,  findPrevTextAct);
+	m_configuration.applyShortcut(Configuration::ShortcutFindPrev,  findNextTextAct);
+	m_configuration.applyShortcut(Configuration::ShortcutReplace,   replaceTextAct);
+	m_configuration.applyShortcut(Configuration::ShortcutJump,      gotoLineAct);
+	m_configuration.applyShortcut(Configuration::ShortcutDebugRun,  debugRunAct);
+	m_configuration.applyShortcut(Configuration::ShortcutConfig,    settingAct);
 }
 
 void MainWindow::onNewFile()

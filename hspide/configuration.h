@@ -2,6 +2,8 @@
 #include <QVector>
 #include <QString>
 #include <QColor>
+#include <QAction>
+#include <QKeySequence>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -28,12 +30,40 @@ public:
 		ColorMetricsNum,
 	} ColorMetricsEnum;
 
+	typedef enum {
+		ShortcutNew,		// 新規作成
+		ShortcutOpen,		// 開く
+		ShortcutSave,		// 保存
+		ShortcutSaveAs,		// 名前をつけて保存
+		ShortcutSaveAll,	// 全て保存
+		ShortcutQuit,		// 終了
+		ShortcutUndo,		// 元に戻す
+		ShortcutRedo,		// やり直す
+		ShortcutCut,		// 切り取り
+		ShortcutCopy,		// コピー
+		ShortcutPaste,		// ペースト
+		ShortcutClear,		// 削除
+		ShortcutSelectAll,	// 全て選択
+		ShortcutFind,		// 検索
+		ShortcutFindNext,	// 次を検索
+		ShortcutFindPrev,	// 前を検索
+		ShortcutReplace,	// 置換
+		ShortcutJump,		// 指定行へ移動
+		ShortcutDebugRun,	// デバッグ開始
+		ShortcutConfig,		// 設定
+		ShortcutNum,
+	} ShortcutEnum;
+
 	typedef struct {
 		bool   enable;
 		bool   useBoldFont;
 		QColor backgroundColor;
 		QColor foregroundColor;
 	} ColorMetricsInfoType;
+
+	typedef struct {
+		QKeySequence keys;
+	} ShortcutInfoType;
 
 	typedef struct {
 		bool    enable;
@@ -62,6 +92,8 @@ private:
 	ColorMetricsInfoType m_colorMetrics[ColorMetricsNum];
 
 	QVector<ToolInfoType> m_tools;
+
+	ShortcutInfoType m_shortcutInfo[ShortcutNum];
 
 public:
 
@@ -121,6 +153,14 @@ public:
 		{ m_colorMetrics[type] = info; }
 	const ColorMetricsInfoType& colorMetrics(ColorMetricsEnum type) const
 		{ return m_colorMetrics[type]; }
+
+
+	void setShortcut(ShortcutEnum type, const ShortcutInfoType& info)
+		{ m_shortcutInfo[type] = info; }
+	const ShortcutInfoType& shortcut(ShortcutEnum type) const
+		{ return m_shortcutInfo[type]; }
+	void applyShortcut(ShortcutEnum type, QAction* action) const
+		{ action->setShortcut(m_shortcutInfo[type].keys); }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)

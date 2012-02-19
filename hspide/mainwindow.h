@@ -89,7 +89,9 @@ protected:
 	void closeEvent(QCloseEvent *event);
 
 public slots:
+
 	void actionTriggered(QAction *action);
+	void updateConfiguration(const Configuration& info);
 	void buildStart(const QString & filePath);
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
