@@ -93,6 +93,7 @@ public slots:
 	void buildStart(const QString & filePath);
 	void buildFinished(bool successed);
 	void buildOutput(const QString & output);
+	void onUpdatedSymbols();
 	void attachedDebugger(CDebugger* debugger);
 	void dettachedDebugger();
 	void onDocumentChanged();

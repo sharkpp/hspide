@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(m_compiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
 	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
 	connect(m_compiler, SIGNAL(attachedDebugger(CDebugger*)), this, SLOT(attachedDebugger(CDebugger*)));
+	connect(m_compiler, SIGNAL(updatedSymbols()),             this, SLOT(onUpdatedSymbols()));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
@@ -74,6 +75,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	loadSettings();
 
 	projectDock->setWorkSpace(m_workSpace);
+
+	// とりあえず空のファイルを追加
+	onOpenFile(m_workSpace->appendProject());
 }
 
 MainWindow::~MainWindow()
@@ -1187,6 +1191,22 @@ void MainWindow::buildOutput(const QString & output)
 	{
 		QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
 		dock->raise();
+	}
+}
+
+void MainWindow::onUpdatedSymbols()
+{
+	CCompiler* compiler = qobject_cast<CCompiler*>(sender());
+
+	// 開いているタブ全てにキーワードを再登録
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document )
+		{
+			document->setSymbols(compiler->symbols());
+		}
 	}
 }
 

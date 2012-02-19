@@ -89,6 +89,8 @@ signals:
 
 	void attachedDebugger(CDebugger* debugger);
 
+	void updatedSymbols();
+
 };
 
 #endif // !defined(INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29)

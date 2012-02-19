@@ -214,6 +214,8 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 
 	delete m_listingSymbolsProcess;
 	m_listingSymbolsProcess = NULL;
+
+	emit updatedSymbols();
 }
 
 // プロジェクトのビルド失敗
