@@ -29,55 +29,36 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 		item->setData(ui.stackedWidget->indexOf(ui.shortcutKeyPage));
 	ui.category->expandAll();
 
-	QStringList colorNames;
-	colorNames	<< tr("White")
-				<< tr("Black")
-				<< tr("Red")
-				<< tr("Dark red")
-				<< tr("Green")
-				<< tr("Dark green")
-				<< tr("Blue")
-				<< tr("Dark blue")
-				<< tr("Cyan")
-				<< tr("Dark cyan")
-				<< tr("Magenta")
-				<< tr("Dark magenta")
-				<< tr("Yellow")
-				<< tr("Dark yellow")
-				<< tr("Gray")
-				<< tr("Dark gray")
-				<< tr("Light gray")
-				;
-	QList<Qt::GlobalColor> colorValues;
-	colorValues	<< Qt::white
-				<< Qt::black
-				<< Qt::red
-				<< Qt::darkRed
-				<< Qt::green
-				<< Qt::darkGreen
-				<< Qt::blue
-				<< Qt::darkBlue
-				<< Qt::cyan
-				<< Qt::darkCyan
-				<< Qt::magenta
-				<< Qt::darkMagenta
-				<< Qt::yellow
-				<< Qt::darkYellow
-				<< Qt::gray
-				<< Qt::darkGray
-				<< Qt::lightGray
+	QVector<QPair<Qt::GlobalColor, QString> > colorValues;
+	colorValues	<< qMakePair(Qt::white,       tr("White"))
+				<< qMakePair(Qt::black,       tr("Black"))
+				<< qMakePair(Qt::red,         tr("Red"))
+				<< qMakePair(Qt::darkRed,     tr("Maroon"))
+				<< qMakePair(Qt::green,       tr("Lime"))
+				<< qMakePair(Qt::darkGreen,   tr("Green"))
+				<< qMakePair(Qt::blue,        tr("Blue"))
+				<< qMakePair(Qt::darkBlue,    tr("Navy"))
+				<< qMakePair(Qt::cyan,        tr("Aqua"))
+				<< qMakePair(Qt::darkCyan,    tr("Teal"))
+				<< qMakePair(Qt::magenta,     tr("Fuchsia"))
+				<< qMakePair(Qt::darkMagenta, tr("Purple"))
+				<< qMakePair(Qt::yellow,      tr("Yellow"))
+				<< qMakePair(Qt::darkYellow,  tr("Olive"))
+				<< qMakePair(Qt::gray,        tr("Light gray"))
+				<< qMakePair(Qt::darkGray,    tr("Gray"))
+				<< qMakePair(Qt::lightGray,   tr("Silver"))
 				;
 	QMenu* menu1 = new QMenu(this);
 	QMenu* menu2 = new QMenu(this);
 	QAction* action1, *action2;
-		for(int i = 0; i < colorNames.size(); i++)
+		for(int i = 0; i < colorValues.size(); i++)
 		{
 			QPixmap bmp(16, 16);
-			bmp.fill(colorValues.at(i));
-			action1 = menu1->addAction(QIcon(bmp), colorNames.at(i));
-			action2 = menu2->addAction(QIcon(bmp), colorNames.at(i));
-			action1->setData(int(colorValues.at(i)));
-			action2->setData(int(colorValues.at(i)));
+			bmp.fill(colorValues[i].first);
+			action1 = menu1->addAction(QIcon(bmp), colorValues[i].second);
+			action2 = menu2->addAction(QIcon(bmp), colorValues[i].second);
+			action1->setData(int(colorValues[i].first));
+			action2->setData(int(colorValues[i].first));
 			connect(action1, SIGNAL(triggered()), this, SLOT(onChangedMetricsBgcolor()));
 			connect(action2, SIGNAL(triggered()), this, SLOT(onChangedMetricsFgcolor()));
 		}

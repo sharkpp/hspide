@@ -2,6 +2,153 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ja_JP">
 <context>
+    <name>CConfigDialog</name>
+    <message>
+        <source>Directory</source>
+        <translation>ディレクトリ</translation>
+    </message>
+    <message>
+        <source>Editor</source>
+        <translation>エディタ</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation>一般</translation>
+    </message>
+    <message>
+        <source>Color</source>
+        <translation>色</translation>
+    </message>
+    <message>
+        <source>Tools</source>
+        <translation>ツール</translation>
+    </message>
+    <message>
+        <source>Shortcut key</source>
+        <translation>ショートカットキー</translation>
+    </message>
+    <message>
+        <source>White</source>
+        <translation>白色</translation>
+    </message>
+    <message>
+        <source>Black</source>
+        <translation>黒色</translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation>赤色</translation>
+    </message>
+    <message>
+        <source>Maroon</source>
+        <translation>茶色</translation>
+    </message>
+    <message>
+        <source>Lime</source>
+        <translation>ライム色</translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation>緑色</translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation>青色</translation>
+    </message>
+    <message>
+        <source>Navy</source>
+        <translation>紺色</translation>
+    </message>
+    <message>
+        <source>Aqua</source>
+        <translation>アクア色</translation>
+    </message>
+    <message>
+        <source>Teal</source>
+        <translation>青緑色</translation>
+    </message>
+    <message>
+        <source>Fuchsia</source>
+        <translation>赤紫色</translation>
+    </message>
+    <message>
+        <source>Purple</source>
+        <translation>紫色</translation>
+    </message>
+    <message>
+        <source>Yellow</source>
+        <translation>黄色</translation>
+    </message>
+    <message>
+        <source>Olive</source>
+        <translation>オリーブ色</translation>
+    </message>
+    <message>
+        <source>Light gray</source>
+        <translation>明るい灰色</translation>
+    </message>
+    <message>
+        <source>Gray</source>
+        <translation>灰色</translation>
+    </message>
+    <message>
+        <source>Silver</source>
+        <translation>銀色</translation>
+    </message>
+    <message>
+        <source>Custom ...</source>
+        <translation>カスタム ...</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>テキスト</translation>
+    </message>
+    <message>
+        <source>Line number</source>
+        <translation>行番号</translation>
+    </message>
+    <message>
+        <source>Function</source>
+        <translation>関数</translation>
+    </message>
+    <message>
+        <source>Sub routine</source>
+        <translation>命令</translation>
+    </message>
+    <message>
+        <source>Preprocessor</source>
+        <translation>プリプロセッサ</translation>
+    </message>
+    <message>
+        <source>Macro</source>
+        <translation>マクロ</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>ラベル</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>コメント</translation>
+    </message>
+    <message>
+        <source>String</source>
+        <translation>文字列</translation>
+    </message>
+    <message>
+        <source>Line feed char</source>
+        <translation>改行文字</translation>
+    </message>
+    <message>
+        <source>Tab char</source>
+        <translation>タブ文字</translation>
+    </message>
+    <message>
+        <source>End of file</source>
+        <translation>ファイル終端</translation>
+    </message>
+</context>
+<context>
     <name>CDocumentPane</name>
     <message>
         <source>(untitled)</source>
@@ -195,6 +342,97 @@
     <message>
         <source>All File (*.*)</source>
         <translation>全てのファイル (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>ConfigDialog</name>
+    <message>
+        <source>Configuration</source>
+        <translation>設定</translation>
+    </message>
+    <message>
+        <source>Directory</source>
+        <translation>ディレクトリ</translation>
+    </message>
+    <message>
+        <source>HSP directory</source>
+        <translation>HSPディレクトリ</translation>
+    </message>
+    <message>
+        <source>Install directory</source>
+        <translation>インストールディレクトリ</translation>
+    </message>
+    <message>
+        <source>Common directory</source>
+        <translation>common ディレクトリ</translation>
+    </message>
+    <message>
+        <source>Editor general</source>
+        <translation>エディタ一般</translation>
+    </message>
+    <message>
+        <source>Tab width:</source>
+        <translation>タブ幅:</translation>
+    </message>
+    <message>
+        <source>Enable line number</source>
+        <translation>行番号を有効</translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation>フォント</translation>
+    </message>
+    <message>
+        <source>Line number font</source>
+        <translation>行番号フォント</translation>
+    </message>
+    <message>
+        <source>Editor font</source>
+        <translation>エディタフォント</translation>
+    </message>
+    <message>
+        <source>Editor color</source>
+        <translation>エディタ色</translation>
+    </message>
+    <message>
+        <source>Enable</source>
+        <translation>有効</translation>
+    </message>
+    <message>
+        <source>Bold</source>
+        <translation>太字</translation>
+    </message>
+    <message>
+        <source>Background color:</source>
+        <translation>背景色:</translation>
+    </message>
+    <message>
+        <source>Foreground color:</source>
+        <translation>前景色:</translation>
+    </message>
+    <message>
+        <source>Tool</source>
+        <translation>ツール</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>追加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>下に</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>上に</translation>
     </message>
 </context>
 <context>
