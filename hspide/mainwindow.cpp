@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setObjectName("MainWindow");
 	setWindowTitle(tr("HSP script editor"));
 	setAcceptDrops(true);
+	setWindowIcon(QIcon(":/images/icons/hspide.png"));
 	resize(800, 600);
 
 	m_compiler = new CCompiler(this);
@@ -364,19 +365,19 @@ void MainWindow::setupActions()
 	debugSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
 	                                         ":/images/tango/small/media-playback-pause.png"), tr("All &suspend"), this);
 //	debugSuspendAct->setShortcuts(QKeySequence::Replace);
-	debugSuspendAct->setStatusTip(tr("Run program without debug"));
+	debugSuspendAct->setStatusTip(tr("Suspend debugging"));
 	connect(debugSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
 
 	debugResumeAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
 	                                        ":/images/tango/small/media-playback-start.png"), tr("All &resume"), this);
 //	debugResumeAct->setShortcuts(QKeySequence::Replace);
-	debugResumeAct->setStatusTip(tr("Run program without debug"));
+	debugResumeAct->setStatusTip(tr("Resume debugging"));
 	connect(debugResumeAct, SIGNAL(triggered()), this, SLOT(onDebugResume()));
 
 	debugStopAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-stop.png",
 	                                      ":/images/tango/small/media-playback-stop.png"), tr("Stop &debugging"), this);
 //	debugStopAct->setShortcuts(QKeySequence::Replace);
-	debugStopAct->setStatusTip(tr("Run program without debug"));
+	debugStopAct->setStatusTip(tr("Abort debugging"));
 	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
 
 	settingAct = new QAction(QMultiIcon(":/images/tango/middle/preferences-system.png",

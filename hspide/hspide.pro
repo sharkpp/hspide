@@ -8,6 +8,7 @@ DEPENDPATH += . debug release i18n
 INCLUDEPATH += .
 QT += xml network
 
+win32:RC_FILE  = hspide.rc
 
 # ランタイムライブラリを静的リンク 
 # Qtライブラリ側も同じオプションでビルドされていること！
@@ -31,3 +32,4 @@ SOURCES += main.cpp \
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts
 FORMS    = newfiledialog.ui jumpdialog.ui configdialog.ui
+
