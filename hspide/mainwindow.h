@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
 	QAction* debugResumeAct;
 	QAction* debugStopAct;
 	QAction* settingAct;
+	QAction* aboutAct;
 
 	CProjectDock*      projectDock;
 	CSymbolDock*       symbolDock;
@@ -101,6 +102,7 @@ public slots:
 	void onPutDebugLog(const QString& text);
 	void onDocumentChanged();
 	void currentTabChanged(int index);
+	void onAboutApp();
 	void onNewFile();
 	void onOpenFile();
 	void onOpenFile(const QString & filePath);

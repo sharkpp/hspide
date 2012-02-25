@@ -1,6 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 	<file>i18n/hspide_ja.qm</file>
+	<file>images/tango/middle/accessories-text-editor.png</file>
+	<file>images/tango/middle/dialog-information.png</file>
 	<file>images/tango/middle/document-new.png</file>
 	<file>images/tango/middle/document-open.png</file>
 	<file>images/tango/middle/document-print-preview.png</file>
@@ -17,17 +19,17 @@
 	<file>images/tango/middle/edit-redo.png</file>
 	<file>images/tango/middle/edit-select-all.png</file>
 	<file>images/tango/middle/edit-undo.png</file>
+	<file>images/tango/middle/go-down.png</file>
 	<file>images/tango/middle/go-jump.png</file>
+	<file>images/tango/middle/go-up.png</file>
+	<file>images/tango/middle/help-browser.png</file>
+	<file>images/tango/middle/list-add.png</file>
+	<file>images/tango/middle/list-remove.png</file>
 	<file>images/tango/middle/media-playback-pause.png</file>
 	<file>images/tango/middle/media-playback-start.png</file>
 	<file>images/tango/middle/media-playback-stop.png</file>
 	<file>images/tango/middle/preferences-system.png</file>
 	<file>images/tango/middle/system-log-out.png</file>
-	<file>images/tango/middle/accessories-text-editor.png</file>
-	<file>images/tango/middle/go-up.png</file>
-	<file>images/tango/middle/list-add.png</file>
-	<file>images/tango/middle/list-remove.png</file>
-	<file>images/tango/middle/go-down.png</file>
 	<file>images/tango/small/accessories-text-editor.png</file>
 	<file>images/tango/small/dialog-error.png</file>
 	<file>images/tango/small/dialog-information.png</file>
@@ -53,6 +55,7 @@
 	<file>images/tango/small/go-jump.png</file>
 	<file>images/tango/small/go-next.png</file>
 	<file>images/tango/small/go-up.png</file>
+	<file>images/tango/small/help-browser.png</file>
 	<file>images/tango/small/list-add.png</file>
 	<file>images/tango/small/list-remove.png</file>
 	<file>images/tango/small/media-playback-pause.png</file>

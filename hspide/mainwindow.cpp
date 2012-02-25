@@ -4,6 +4,7 @@
 #include "newfiledialog.h"
 #include "jumpdialog.h"
 #include "configdialog.h"
+#include "ui_aboutdialog.h"
 
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
@@ -249,7 +250,8 @@ void MainWindow::setupMenus()
 		toolsMenu->addAction(settingAct);
 
 	QMenu * helpMenu = menuBar()->addMenu(tr("&Help"));
-//		debugMenu->addAction(debugRunAct);
+		helpMenu->addSeparator();
+		helpMenu->addAction(aboutAct);
 }
 
 void MainWindow::setupActions()
@@ -338,53 +340,49 @@ void MainWindow::setupActions()
 
 
 	buildSolutionAct = new QAction(tr("Build &solution"), this);
-//	buildSolutionAct->setShortcuts(QKeySequence::Replace);
 	buildSolutionAct->setStatusTip(tr("Build solution"));
 	connect(buildSolutionAct, SIGNAL(triggered()), this, SLOT(onBuildSolution()));
 
 	buildProjectAct = new QAction(tr("&Build project"), this);
-//	buildProjectAct->setShortcuts(QKeySequence::Replace);
 	buildProjectAct->setStatusTip(tr("Build project"));
 	connect(buildProjectAct, SIGNAL(triggered()), this, SLOT(onBuildProject()));
 
 	compileOnlyAct = new QAction(tr("&Compile only"), this);
-//	compileOnlyAct->setShortcuts(QKeySequence::Replace);
 	compileOnlyAct->setStatusTip(tr("Compile only"));
 
 	debugRunAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
 	                                     ":/images/tango/small/media-playback-start.png"), tr("&Debug run"), this);
-//	debugRunAct->setShortcuts(QKeySequence::Replace);
 	debugRunAct->setStatusTip(tr("Run program with debug"));
 	connect(debugRunAct, SIGNAL(triggered()), this, SLOT(onDebugRun()));
 
 	noDebugRunAct = new QAction(tr("&NO debug run"), this);
-//	noDebugRunAct->setShortcuts(QKeySequence::Replace);
 	noDebugRunAct->setStatusTip(tr("Run program without debug"));
 	connect(noDebugRunAct, SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
 
 	debugSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
 	                                         ":/images/tango/small/media-playback-pause.png"), tr("All &suspend"), this);
-//	debugSuspendAct->setShortcuts(QKeySequence::Replace);
 	debugSuspendAct->setStatusTip(tr("Suspend debugging"));
 	connect(debugSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
 
 	debugResumeAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
 	                                        ":/images/tango/small/media-playback-start.png"), tr("All &resume"), this);
-//	debugResumeAct->setShortcuts(QKeySequence::Replace);
 	debugResumeAct->setStatusTip(tr("Resume debugging"));
 	connect(debugResumeAct, SIGNAL(triggered()), this, SLOT(onDebugResume()));
 
 	debugStopAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-stop.png",
 	                                      ":/images/tango/small/media-playback-stop.png"), tr("Stop &debugging"), this);
-//	debugStopAct->setShortcuts(QKeySequence::Replace);
 	debugStopAct->setStatusTip(tr("Abort debugging"));
 	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
 
 	settingAct = new QAction(QMultiIcon(":/images/tango/middle/preferences-system.png",
 	                                   ":/images/tango/small/preferences-system.png"), tr("&Setting"), this);
-//	settingAct->setShortcuts(QKeySequence::Replace);
 	settingAct->setStatusTip(tr("Application settings"));
 	connect(settingAct, SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
+
+	aboutAct = new QAction(QMultiIcon(":/images/tango/middle/dialog-information.png",
+	                                   ":/images/tango/small/dialog-information.png"), tr("&About hspide ..."), this);
+	aboutAct->setStatusTip(tr("About hspide"));
+	connect(aboutAct, SIGNAL(triggered()), this, SLOT(onAboutApp()));
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -668,6 +666,15 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	m_configuration.applyShortcut(Configuration::ShortcutJump,      gotoLineAct);
 	m_configuration.applyShortcut(Configuration::ShortcutDebugRun,  debugRunAct);
 	m_configuration.applyShortcut(Configuration::ShortcutConfig,    settingAct);
+}
+
+void MainWindow::onAboutApp()
+{
+//	CAboutDialog dlg(this);
+	QDialog dlg(this);
+	Ui::AboutDialog ui;
+	ui.setupUi(&dlg);
+	dlg.exec();
 }
 
 void MainWindow::onNewFile()
