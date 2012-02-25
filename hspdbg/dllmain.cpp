@@ -15,7 +15,10 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
 #ifdef _DEBUG
-	MessageBox(NULL,TEXT("Attach me"),TEXT("HSP3"),0);
+		// シフトキー押しているとアタッチをするためにダイアログを出す
+		if( GetAsyncKeyState(VK_SHIFT) < 0 ) {
+			MessageBox(NULL,TEXT("Attach me"),TEXT("HSP3"),MB_OK|MB_SYSTEMMODAL);
+		}
 #endif
 		break;
 	case DLL_PROCESS_DETACH:
