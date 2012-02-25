@@ -1,5 +1,19 @@
 #include "configdialog.h"
+#include "hotkeywidget.h"
 #include <QtGui>
+
+class CKeyAssignListItemDelegate
+	: public QItemDelegate
+{
+public:
+	CKeyAssignListItemDelegate(QObject* parent = 0) : QItemDelegate(parent) {}
+	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+		if( 1 == index.column() ) {
+			return QItemDelegate::createEditor(parent, option, index);
+		}
+		return 0;
+	}
+};
 
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
@@ -14,7 +28,6 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.category->setRootIsDecorated(false);
 	ui.category->setHeaderHidden(true);
 	ui.category->setModel(model = new QStandardItemModel());
-	ui.category->setEditTriggers(QTreeView::NoEditTriggers);
 	rootItem = model->invisibleRootItem();
 	rootItem->appendRow(item = new QStandardItem(tr("Directory")));
 		item->setData(ui.stackedWidget->indexOf(ui.directoryPage));
@@ -26,7 +39,7 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	rootItem->appendRow(item = new QStandardItem(tr("Tools")));
 		item->setData(ui.stackedWidget->indexOf(ui.toolsPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Shortcut key")));
-		item->setData(ui.stackedWidget->indexOf(ui.shortcutKeyPage));
+		item->setData(ui.stackedWidget->indexOf(ui.keyAssignPage));
 	ui.category->expandAll();
 
 	QVector<QPair<Qt::GlobalColor, QString> > colorValues;
@@ -71,19 +84,31 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.editorColorItemBgcolor->setMenu(menu1);
 	ui.editorColorItemFgcolor->setMenu(menu2);
 
-	// 設定画面のページ一覧を登録
-	ui.editorColorList->setEditTriggers(QTreeView::NoEditTriggers);
-	ui.editorColorList->setSelectionMode(QAbstractItemView::SingleSelection);
-	ui.editorColorList->setColumnCount(ColumnNum);
-	ui.editorColorList->header()->setResizeMode(CategoryColumn,        QHeaderView::Stretch);
-	ui.editorColorList->header()->setResizeMode(EnableColumn,          QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(FontBoldColumn,        QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(ForegroundColorCount,  QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(BackgroundColorColumn, QHeaderView::ResizeToContents);
+	// 色設定の一覧を初期化
+	ui.editorColorList->setColumnCount(ColorListColumnNum);
+	ui.editorColorList->header()->setResizeMode(ColorListCategoryColumn,        QHeaderView::Stretch);
+	ui.editorColorList->header()->setResizeMode(ColorListEnableColumn,          QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(ColorListFontBoldColumn,        QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(ColorListForegroundColorCount,  QHeaderView::ResizeToContents);
+	ui.editorColorList->header()->setResizeMode(ColorListBackgroundColorColumn, QHeaderView::ResizeToContents);
+
+	// ショートカットの一覧を初期化
+	ui.keyAssignList->setColumnCount(KeyAssignListColumnNum);
+	ui.keyAssignList->header()->setResizeMode(KeyAssignListNameColumn,        QHeaderView::Stretch);
+	ui.keyAssignList->header()->setResizeMode(KeyAssignListShortcutKeyColumn, QHeaderView::ResizeToContents);
 
 	ui.category->selectionModel()->clear();
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	ui.stackedWidget->setCurrentIndex(0);
+
+	QItemEditorFactory *factory = new QItemEditorFactory;
+	QItemEditorCreatorBase *hotkeyWidgetCreator =
+		new QStandardItemEditorCreator<CHotkeyWidget>();
+	factory->registerEditor(QVariant::KeySequence, hotkeyWidgetCreator);
+	//QItemEditorFactory::setDefaultFactory(factory);
+	CKeyAssignListItemDelegate* itemDelegate;
+	ui.keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
+	itemDelegate->setItemEditorFactory(factory);
 }
 
 void CConfigDialog::setConfiguration(const Configuration& info)
@@ -121,15 +146,47 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(ui.editorColorList);
 		const Configuration::ColorMetricsInfoType& metricsInfo = m_configuration.colorMetrics(Configuration::ColorMetricsEnum(i));
-		item->setText(CategoryColumn,                   categoryList.at(i));
-		item->setCheckState(EnableColumn,               metricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
-		item->setCheckState(FontBoldColumn,             metricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
-		item->setIcon(ForegroundColorCount,  (bmp.fill(metricsInfo.foregroundColor), QIcon(bmp)));
-		item->setIcon(BackgroundColorColumn, (bmp.fill(metricsInfo.backgroundColor), QIcon(bmp)));
+		item->setText(ColorListCategoryColumn,                   categoryList.at(i));
+		item->setCheckState(ColorListEnableColumn,               metricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
+		item->setCheckState(ColorListFontBoldColumn,             metricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+		item->setIcon(ColorListForegroundColorCount,  (bmp.fill(metricsInfo.foregroundColor), QIcon(bmp)));
+		item->setIcon(ColorListBackgroundColorColumn, (bmp.fill(metricsInfo.backgroundColor), QIcon(bmp)));
 	}
-	ui.editorColorList->resizeColumnToContents(EnableColumn);
-	ui.editorColorList->resizeColumnToContents(FontBoldColumn);
+	ui.editorColorList->resizeColumnToContents(ColorListEnableColumn);
+	ui.editorColorList->resizeColumnToContents(ColorListFontBoldColumn);
 	ui.editorColorList->setCurrentItem(ui.editorColorList->topLevelItem(0));
+
+	QVector<QPair<Configuration::ShortcutEnum, QString> > scValues;
+	scValues	<< qMakePair(Configuration::ShortcutNew,        tr("New"))
+				<< qMakePair(Configuration::ShortcutOpen,       tr("Open"))
+				<< qMakePair(Configuration::ShortcutSave,       tr("Save"))
+				<< qMakePair(Configuration::ShortcutSaveAs,     tr("Save as"))
+				<< qMakePair(Configuration::ShortcutSaveAll,    tr("Save all"))
+				<< qMakePair(Configuration::ShortcutQuit,       tr("Quit"))
+				<< qMakePair(Configuration::ShortcutUndo,       tr("Undo"))
+				<< qMakePair(Configuration::ShortcutRedo,       tr("Redo"))
+				<< qMakePair(Configuration::ShortcutCut,        tr("Cut"))
+				<< qMakePair(Configuration::ShortcutCopy,       tr("Copy"))
+				<< qMakePair(Configuration::ShortcutPaste,      tr("Paste"))
+				<< qMakePair(Configuration::ShortcutClear,      tr("Clear"))
+				<< qMakePair(Configuration::ShortcutSelectAll,  tr("Select all"))
+				<< qMakePair(Configuration::ShortcutFind,       tr("Find"))
+				<< qMakePair(Configuration::ShortcutFindNext,   tr("Find next"))
+				<< qMakePair(Configuration::ShortcutFindPrev,   tr("Find previous"))
+				<< qMakePair(Configuration::ShortcutReplace,    tr("Replace"))
+				<< qMakePair(Configuration::ShortcutJump,       tr("Jump"))
+				<< qMakePair(Configuration::ShortcutDebugRun,   tr("Debug run"))
+				<< qMakePair(Configuration::ShortcutConfig,     tr("Configuration"))
+				;
+	ui.keyAssignList->clear();
+	for(int i = 0; i < scValues.size(); i++)
+	{
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui.keyAssignList);
+		const Configuration::ShortcutInfoType& sc = m_configuration.shortcut(scValues[i].first);
+		item->setText(KeyAssignListNameColumn,        scValues[i].second);
+		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
+		item->setFlags(item->flags()|Qt::ItemIsEditable);
+	}
 }
 
 const Configuration& CConfigDialog::configuration() const
@@ -208,10 +265,10 @@ void CConfigDialog::onCurrentMetricsChanged()
 
 	QPixmap bmp(12, 12);
 
-	item->setCheckState(EnableColumn,               m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
-	item->setCheckState(FontBoldColumn,             m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
-	item->setIcon(ForegroundColorCount,  (bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
-	item->setIcon(BackgroundColorColumn, (bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
+	item->setCheckState(ColorListEnableColumn,               m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
+	item->setCheckState(ColorListFontBoldColumn,             m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+	item->setIcon(ColorListForegroundColorCount,  (bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
+	item->setIcon(ColorListBackgroundColorColumn, (bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
 
 	ui.editorColorItemEnable->setCheckState(m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
 	ui.editorColorItemBold->setCheckState(  m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
@@ -233,10 +290,10 @@ void CConfigDialog::onMetricsChanged(QTreeWidgetItem* item)
 
 	bool update = false;
 
-	update |= m_currentColorMetricsInfo.enable      != (item->checkState(EnableColumn)   == Qt::Checked);
-	update |= m_currentColorMetricsInfo.useBoldFont != (item->checkState(FontBoldColumn) == Qt::Checked);
-	m_currentColorMetricsInfo.enable      = item->checkState(EnableColumn)   == Qt::Checked;
-	m_currentColorMetricsInfo.useBoldFont = item->checkState(FontBoldColumn) == Qt::Checked;
+	update |= m_currentColorMetricsInfo.enable      != (item->checkState(ColorListEnableColumn)   == Qt::Checked);
+	update |= m_currentColorMetricsInfo.useBoldFont != (item->checkState(ColorListFontBoldColumn) == Qt::Checked);
+	m_currentColorMetricsInfo.enable      = item->checkState(ColorListEnableColumn)   == Qt::Checked;
+	m_currentColorMetricsInfo.useBoldFont = item->checkState(ColorListFontBoldColumn) == Qt::Checked;
 
 	if( update ) {
 		onCurrentMetricsChanged();

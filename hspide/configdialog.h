@@ -11,12 +11,18 @@ class CConfigDialog
 	Q_OBJECT
 
 	typedef enum {
-		CategoryColumn = 0,
-		EnableColumn,
-		FontBoldColumn,
-		ForegroundColorCount,
-		BackgroundColorColumn,
-		ColumnNum,
+		ColorListCategoryColumn = 0,
+		ColorListEnableColumn,
+		ColorListFontBoldColumn,
+		ColorListForegroundColorCount,
+		ColorListBackgroundColorColumn,
+		ColorListColumnNum,
+	};
+
+	typedef enum {
+		KeyAssignListNameColumn = 0,
+		KeyAssignListShortcutKeyColumn,
+		KeyAssignListColumnNum,
 	};
 
 	Ui::ConfigDialog ui;
