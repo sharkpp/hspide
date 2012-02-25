@@ -1281,10 +1281,11 @@ void MainWindow::onUpdatedSymbols()
 
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
-	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid &,int)), this, SLOT(onGoToLine(const QUuid &,int)));
-	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> > &)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
-	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
-	connect(debugger, SIGNAL(destroyed()), this, SLOT(dettachedDebugger()));
+	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid&,int)),                       this, SLOT(onGoToLine(const QUuid &,int)));
+	connect(debugger, SIGNAL(putLog(const QString&)),                                   this, SLOT(onPutDebugLog(const QString&)));
+	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> >&)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
+	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
+	connect(debugger, SIGNAL(destroyed()),                                              this, SLOT(dettachedDebugger()));
 
 	debugger->setConfiguration(m_configuration);
 
@@ -1368,6 +1369,12 @@ void MainWindow::endDebugging()
 	varInfoDockWidget->setVisible(false);
 	// 通常のレイアウトに変更
 	restoreState(m_stateDefault);
+}
+
+void MainWindow::onPutDebugLog(const QString& text)
+{
+	// 出力ドックに内容を送信
+	outputDock->outputCrLf(COutputDock::DebugOutput, text);
 }
 
 // 編集された

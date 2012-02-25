@@ -98,6 +98,7 @@ public slots:
 	void onUpdatedSymbols();
 	void attachedDebugger(CDebugger* debugger);
 	void dettachedDebugger();
+	void onPutDebugLog(const QString& text);
 	void onDocumentChanged();
 	void currentTabChanged(int index);
 	void onNewFile();

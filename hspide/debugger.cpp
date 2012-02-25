@@ -63,6 +63,10 @@ void CDebugger::recvCommand()
 		case CMD_PUT_LOG: { // ログを出力
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(param);
+#ifdef _DEBUG
+			if( "?{" != s.left(2) ) // とりあえず内部用のログはフィルタ
+#endif
+				emit putLog(s);
 			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << s;
 			break; }
 		case CMD_STOP_RUNNING: { // 実行の停止
