@@ -3,6 +3,7 @@
 #include "dbgmain.h"
 #include "hspsdk/hsp3debug.h"
 #include "hspsdk/hsp3struct.h"
+#include "hspsdk/hspwnd.h"
 
 extern CDbgMain* g_app;
 
@@ -504,6 +505,9 @@ void CDbgMain::recvCommand()
 			m_breaked = false;
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
+			HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+			BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
+			::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
 			break; }
 		case CMD_REQ_VAR_INFO: { // 変数情報を要求
 			QMutexLocker lck(&m_lock);

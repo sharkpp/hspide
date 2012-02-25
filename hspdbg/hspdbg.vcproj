@@ -278,6 +278,10 @@
 				>
 			</File>
 			<File
+				RelativePath="hspsdk\hspwnd.h"
+				>
+			</File>
+			<File
 				RelativePath="..\hspide\ipc_common.h"
 				>
 			</File>
