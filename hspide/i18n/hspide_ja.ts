@@ -147,6 +147,86 @@
         <source>End of file</source>
         <translation>ファイル終端</translation>
     </message>
+    <message>
+        <source>New</source>
+        <translation>新規作成</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>開く</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation>名前を付けて保存</translation>
+    </message>
+    <message>
+        <source>Save all</source>
+        <translation>全て保存</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>終了</translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation>元に戻す</translation>
+    </message>
+    <message>
+        <source>Redo</source>
+        <translation>やり直し</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation>切り取り</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>コピー</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>貼り付け</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>クリア</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>すべてを選択</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>検索</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation>次を検索</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation>前を検索</translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <translation>置換</translation>
+    </message>
+    <message>
+        <source>Jump</source>
+        <translation>移動</translation>
+    </message>
+    <message>
+        <source>Debug run</source>
+        <translation>デバッグ開始</translation>
+    </message>
+    <message>
+        <source>Configuration</source>
+        <translation>設定</translation>
+    </message>
 </context>
 <context>
     <name>CDocumentPane</name>
@@ -256,7 +336,7 @@
     </message>
     <message>
         <source>onTest</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Module</source>
@@ -433,6 +513,10 @@
     <message>
         <source>Up</source>
         <translation>上に</translation>
+    </message>
+    <message>
+        <source>Key assign</source>
+        <translation>キー割り当て</translation>
     </message>
 </context>
 <context>

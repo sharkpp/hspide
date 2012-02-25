@@ -33,12 +33,15 @@
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>4</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -424,6 +427,9 @@ color: rgb(255, 255, 255);</string>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
            <property name="rootIsDecorated">
             <bool>false</bool>
            </property>
@@ -748,7 +754,11 @@ color: rgb(255, 255, 255);</string>
             </layout>
            </item>
            <item>
-            <widget class="QTreeView" name="treeView"/>
+            <widget class="QTreeView" name="treeView">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -785,6 +795,18 @@ color: rgb(255, 255, 255);</string>
          </item>
          <item>
           <widget class="QTreeWidget" name="keyAssignList">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="rootIsDecorated">
             <bool>false</bool>
            </property>

@@ -2,11 +2,23 @@
 #include "hotkeywidget.h"
 #include <QtGui>
 
-class CKeyAssignListItemDelegate
+class CExpandedItemHeightDelegate
 	: public QItemDelegate
 {
 public:
-	CKeyAssignListItemDelegate(QObject* parent = 0) : QItemDelegate(parent) {}
+	CExpandedItemHeightDelegate(QObject* parent = 0) : QItemDelegate(parent) {}
+	QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const {
+		QSize size = QItemDelegate::sizeHint(option, index);
+		size.setHeight(size.height() + 4);
+		return size;
+	}
+};
+
+class CKeyAssignListItemDelegate
+	: public CExpandedItemHeightDelegate
+{
+public:
+	CKeyAssignListItemDelegate(QObject* parent = 0) : CExpandedItemHeightDelegate(parent) {}
 	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 		if( 1 == index.column() ) {
 			return QItemDelegate::createEditor(parent, option, index);
@@ -24,6 +36,9 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	QStandardItemModel* model;
 	QStandardItem* rootItem;
 	QStandardItem* item, *item2;
+	QItemEditorFactory* factory;
+	QItemDelegate* itemDelegate;
+
 	// 設定画面のページ一覧を登録
 	ui.category->setRootIsDecorated(false);
 	ui.category->setHeaderHidden(true);
@@ -91,24 +106,19 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.editorColorList->header()->setResizeMode(ColorListFontBoldColumn,        QHeaderView::ResizeToContents);
 	ui.editorColorList->header()->setResizeMode(ColorListForegroundColorCount,  QHeaderView::ResizeToContents);
 	ui.editorColorList->header()->setResizeMode(ColorListBackgroundColorColumn, QHeaderView::ResizeToContents);
+	ui.editorColorList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
 
 	// ショートカットの一覧を初期化
 	ui.keyAssignList->setColumnCount(KeyAssignListColumnNum);
 	ui.keyAssignList->header()->setResizeMode(KeyAssignListNameColumn,        QHeaderView::Stretch);
 	ui.keyAssignList->header()->setResizeMode(KeyAssignListShortcutKeyColumn, QHeaderView::ResizeToContents);
+	ui.keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
+		itemDelegate->setItemEditorFactory(factory = new QItemEditorFactory);
+			factory->registerEditor(QVariant::KeySequence, new QStandardItemEditorCreator<CHotkeyWidget>());
 
 	ui.category->selectionModel()->clear();
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	ui.stackedWidget->setCurrentIndex(0);
-
-	QItemEditorFactory *factory = new QItemEditorFactory;
-	QItemEditorCreatorBase *hotkeyWidgetCreator =
-		new QStandardItemEditorCreator<CHotkeyWidget>();
-	factory->registerEditor(QVariant::KeySequence, hotkeyWidgetCreator);
-	//QItemEditorFactory::setDefaultFactory(factory);
-	CKeyAssignListItemDelegate* itemDelegate;
-	ui.keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
-	itemDelegate->setItemEditorFactory(factory);
 }
 
 void CConfigDialog::setConfiguration(const Configuration& info)
@@ -184,6 +194,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		QTreeWidgetItem *item = new QTreeWidgetItem(ui.keyAssignList);
 		const Configuration::ShortcutInfoType& sc = m_configuration.shortcut(scValues[i].first);
 		item->setText(KeyAssignListNameColumn,        scValues[i].second);
+		item->setData(KeyAssignListNameColumn,        Qt::UserRole + 1, int(scValues[i].first));
 		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
@@ -205,6 +216,16 @@ void CConfigDialog::onOk()
 	m_configuration.setEditorLineNumberFontSize(ui.editorLineNumberFontSize->value());
 	m_configuration.setEditorFontName(ui.editorFont->currentFont().family());
 	m_configuration.setEditorFontSize(ui.editorFontSize->value());
+
+	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
+	{
+		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
+		Configuration::ShortcutEnum type
+			= Configuration::ShortcutEnum(item->data(KeyAssignListNameColumn, Qt::UserRole+1).toInt());
+		Configuration::ShortcutInfoType sc = m_configuration.shortcut(type);
+		sc.keys = QKeySequence((item->data(KeyAssignListShortcutKeyColumn, Qt::DisplayRole).toString()));
+		m_configuration.setShortcut(type, sc);
+	}
 
 	accept();
 }
