@@ -1,5 +1,4 @@
-#include <QFileInfo>
-#include <QTreeView>
+#include <QtGui>
 #include "workspacemodel.h"
 
 CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
@@ -219,6 +218,53 @@ int CWorkSpaceModel::rowCount(const QModelIndex & parent) const
 {
 	CWorkSpaceItem * item = getItem(parent);
 	return item ? item->count() : -1;
+}
+
+Qt::ItemFlags CWorkSpaceModel::flags(const QModelIndex & index) const
+{
+	Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+
+	if( index.isValid() ) {
+		return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+	} else {
+		return Qt::ItemIsDropEnabled | defaultFlags;
+	}
+}
+
+bool CWorkSpaceModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
+{
+	if( action == Qt::IgnoreAction )
+	{
+		return true;
+	}
+
+	CWorkSpaceItem* parentItem = getItem(parent);
+	if( !parentItem )
+	{
+		return false;
+	}
+
+qDebug()<< __FUNCTION__<<data->formats();
+	if( !data->hasUrls() ||
+		data->urls().empty() )
+	{
+		return false;
+	}
+
+
+	QList<QUrl> urls = data->urls();
+	for(int i = 0; i < urls.size(); i++)
+	{
+		QString filePath = urls.at(i).toLocalFile();
+		appendFile(filePath, parentItem);
+	}
+
+	return true;
+}
+
+Qt::DropActions CWorkSpaceModel::supportedDropActions() const
+{
+	return Qt::CopyAction | Qt::MoveAction;
 }
 
 bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex & parent)

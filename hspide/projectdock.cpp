@@ -5,16 +5,28 @@
 #include "projectdock.h"
 #include "workspacemodel.h"
 
+class QTreeView_ : public QTreeView
+{
+public:
+	QTreeView_(QWidget* parent) : QTreeView(parent) {}
+	void dragEnterEvent(QDragEnterEvent *event) { event->acceptProposedAction(); }
+	void dragMoveEvent(QDragMoveEvent *event)   { event->acceptProposedAction(); }
+};
+
 CProjectDock::CProjectDock(QWidget *parent)
 	: QWidget(parent)
 {
-	treeWidget = new QTreeView(this);
+	treeWidget = new QTreeView_(this);
 	treeWidget->header()->hide();
 	treeWidget->setRootIsDecorated(false);
 //	treeWidget->setIndentation(12);
 //	treeWidget->setUniformRowHeights(true);
 	treeWidget->setEditTriggers(QTreeView::EditKeyPressed);
 	treeWidget->setExpandsOnDoubleClick(false);
+	treeWidget->setDragEnabled(true);
+	treeWidget->setAcceptDrops(true);
+	treeWidget->setDropIndicatorShown(true);
+//	setAcceptDrops(true);
 
 	connect(treeWidget, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(doubleClickedTree(const QModelIndex &)));
 	connect(treeWidget, SIGNAL(expanded(const QModelIndex &)),      this, SLOT(expandedTree(const QModelIndex &)));

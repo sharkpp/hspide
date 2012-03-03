@@ -6,6 +6,8 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+class QMimeData;
+
 class CWorkSpaceModel
 	: public QAbstractItemModel
 {
@@ -53,6 +55,10 @@ public:
 	virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 	virtual QModelIndex parent(const QModelIndex & index ) const;
 	virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+
+	virtual Qt::ItemFlags flags(const QModelIndex & index) const;
+	virtual bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
+	virtual Qt::DropActions supportedDropActions() const;
 
 	virtual bool insertRows(int row, int count, const QModelIndex & parent = QModelIndex());
 	virtual bool removeRows(int row, int count, const QModelIndex & parent);

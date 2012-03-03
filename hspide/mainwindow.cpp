@@ -582,13 +582,6 @@ void MainWindow::showEvent(QShowEvent *event)
 	QMainWindow::showEvent(event);
 }
 
-void MainWindow::dragMoveEvent(QDragMoveEvent *event)
-{
-	if( event->mimeData()->hasUrls() ) {
-		event->acceptProposedAction();
-	}
-}
-
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	// デバッグ中の場合はドックを標準状態に戻す
@@ -604,9 +597,32 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-	if( event->mimeData()->hasUrls() ) {
-		event->acceptProposedAction();
+qDebug()<< __FUNCTION__<<event->mimeData()->formats();
+	if( event->mimeData()->hasUrls() )
+	{
+	//	if( !projectDock->isVisible() ||
+	//		!projectDock->parentWidget()->geometry().contains( event->pos() ) )
+	//	{
+			event->acceptProposedAction();
+	//		return;
+	//	}
 	}
+//	QMainWindow::dragEnterEvent(event);
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event)
+{
+qDebug()<< __FUNCTION__<<event->mimeData()->formats();
+	if( event->mimeData()->hasUrls() )
+	{
+	//	if( !projectDock->isVisible() ||
+	//		!projectDock->parentWidget()->geometry().contains( event->pos() ) )
+	//	{
+			event->acceptProposedAction();
+	//		return;
+	//	}
+	}
+//	QMainWindow::dragMoveEvent(event);
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
@@ -629,7 +645,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 		}
 		QList<QUrl> urls = mimeData->urls();
 		for(int i = 0; i < urls.size(); i++) {
-			QString filePath = mimeData->urls().at(i).toLocalFile();
+			QString filePath = urls.at(i).toLocalFile();
 			if( QFileInfo(filePath).exists() ) {
 				// 開いている途中に進行状況を出したい
 				// ついでに中止ボタンが押せるといいかも
