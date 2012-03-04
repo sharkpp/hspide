@@ -42,16 +42,20 @@ public:
 	bool remove(CWorkSpaceItem * item);
 
 	//
-	bool setAssignWidget(QWidget * widget);
+	bool setAssignWidget(QWidget* widget);
+	QWidget* assignWidget();
 
 	// ソリューションを取得
 	CWorkSpaceItem* solution();
+
+	bool dataChanged(const QModelIndex & from, const QModelIndex & to);
 
   // QAbstractItemModel オーバーライド
 
 	virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
 	virtual bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
 	virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+	virtual QMap<int, QVariant> itemData(const QModelIndex &index) const;
 	virtual QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 	virtual QModelIndex parent(const QModelIndex & index ) const;
 	virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

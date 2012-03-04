@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
+#include <QTreeView>
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	: QObject(parent)
@@ -19,6 +20,25 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
+
+	if( !model )
+	{
+		if( CWorkSpaceItem* parentItem = qobject_cast<CWorkSpaceItem*>(parent) )
+		{
+			m_model = parentItem->model();
+		}
+		else if( CWorkSpaceModel* parentModel = qobject_cast<CWorkSpaceModel*>(parent) )
+		{
+			m_model = parentModel;
+		}
+		else if( QTreeView* parentWidget = qobject_cast<QTreeView*>(parent) )
+		{
+			if( CWorkSpaceModel* parentModel = qobject_cast<CWorkSpaceModel*>(parentWidget->model()) )
+			{
+				m_model = parentModel;
+			}
+		}
+	}
 }
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model)
@@ -26,12 +46,53 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * mo
 	, m_model(NULL)
 	, m_parent(NULL)
 	, m_parentPos(0)
+	, m_type(type)
 	, m_assignDocument(NULL)
 	, m_uuid(QUuid::createUuid())
 {
-	setType(type);
+	static const struct {
+		NodeType nodeType;
+		QString iconPath;
+		QString text;
+		QString suffixFilter;
+	} TypeDefaultAttributes[TypeNum] = {
+		{ UnkownNodeType, ":/images/tango/small/text-x-generic.png", "",               "",                                    }, // UnkownType
+		{ FileNode,       ":/images/tango/small/text-x-generic.png", tr("(untitled)"), "",                                    }, // File
+		{ FolderNode,     ":/images/tango/small/folder.png",         "",               "",                                    }, // Folder
+		{ FolderNode,     ":/images/tango/small/edit-copy.png",      "",               "",                                    }, // Solution
+		{ FileNode,       ":/images/tango/small/folder.png",         "",               "*.hsp;*.as",                          }, // Project
+		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Dependence"), "",                                    }, // DependenceFolder
+		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Packfile"),   "*.*",                                 }, // PackFolder
+		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Source"),     "*.hsp;*.as",                          }, // SourceFolder
+		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Resource"),   "*.png;*.jpg;*.bmp;*.gif;*,wav;*.mid", }, // ResourceFolder
+	};
+
+	// 種別に応じて属性をセット
+	setNodeType(    TypeDefaultAttributes[type].nodeType);
+	setIcon(QIcon(  TypeDefaultAttributes[type].iconPath));
+	setText(        TypeDefaultAttributes[type].text);
+	setSuffixFilter(TypeDefaultAttributes[type].suffixFilter.split(";"));
 
 	m_model = model;
+
+	if( !model )
+	{
+		if( CWorkSpaceItem* parentItem = qobject_cast<CWorkSpaceItem*>(parent) )
+		{
+			m_model = parentItem->model();
+		}
+		else if( CWorkSpaceModel* parentModel = qobject_cast<CWorkSpaceModel*>(parent) )
+		{
+			m_model = parentModel;
+		}
+		else if( QTreeView* parentWidget = qobject_cast<QTreeView*>(parent) )
+		{
+			if( CWorkSpaceModel* parentModel = qobject_cast<CWorkSpaceModel*>(parentWidget->model()) )
+			{
+				m_model = parentModel;
+			}
+		}
+	}
 }
 
 CWorkSpaceItem::~CWorkSpaceItem()
@@ -56,30 +117,12 @@ CWorkSpaceItem::Type CWorkSpaceItem::type() const
 
 void CWorkSpaceItem::setType(Type type)
 {
-	static const struct {
-		NodeType nodeType;
-		QString iconPath;
-		QString text;
-		QString suffixFilter;
-	} TypeDefaultAttributes[TypeNum] = {
-		{ UnkownNodeType, ":/images/tango/small/text-x-generic.png", "",               "",                                    }, // UnkownType
-		{ FileNode,       ":/images/tango/small/text-x-generic.png", tr("(untitled)"), "",                                    }, // File
-		{ FolderNode,     ":/images/tango/small/folder.png",         "",               "",                                    }, // Folder
-		{ FolderNode,     ":/images/tango/small/edit-copy.png",      "",               "",                                    }, // Solution
-		{ FileNode,       ":/images/tango/small/folder.png",         "",               "*.hsp;*.as",                          }, // Project
-		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Dependence"), "",                                    }, // DependenceFolder
-		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Packfile"),   "*.*",                                 }, // PackFolder
-		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Source"),     "*.hsp;*.as",                          }, // SourceFolder
-		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Resource"),   "*.png;*.jpg;*.bmp;*.gif;*,wav;*.mid", }, // ResourceFolder
-	};
-
 	m_type = type;
 
-	// 種別に応じて属性をセット
-	setNodeType(    TypeDefaultAttributes[type].nodeType);
-	setIcon(QIcon(  TypeDefaultAttributes[type].iconPath));
-	setText(        TypeDefaultAttributes[type].text);
-	setSuffixFilter(TypeDefaultAttributes[type].suffixFilter.split(";"));
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->dataChanged(index(), index());
+	}
 }
 
 CWorkSpaceItem::NodeType CWorkSpaceItem::nodeType() const
@@ -90,6 +133,11 @@ CWorkSpaceItem::NodeType CWorkSpaceItem::nodeType() const
 void CWorkSpaceItem::setNodeType(NodeType type)
 {
 	m_nodeType = type;
+
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->dataChanged(index(), index());
+	}
 }
 
 const QString & CWorkSpaceItem::path() const
@@ -114,6 +162,11 @@ void CWorkSpaceItem::setPath(const QString & path)
 	default:
 		;
 	}
+
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->dataChanged(index(), index());
+	}
 }
 
 const QString & CWorkSpaceItem::text() const
@@ -124,9 +177,10 @@ const QString & CWorkSpaceItem::text() const
 void CWorkSpaceItem::setText(const QString & text)
 {
 	m_text = text.isEmpty() ? tr("(untitled)") : text;
+
 	// モデルに更新を通知しビューを再描画
 	if( m_model ) {
-		m_model->setData(index(), m_text, Qt::DisplayRole);
+		m_model->dataChanged(index(), index());
 	}
 }
 
@@ -138,9 +192,10 @@ const QIcon & CWorkSpaceItem::icon() const
 void CWorkSpaceItem::setIcon(const QIcon & icon)
 {
 	m_icon = icon;
+
 	// モデルに更新を通知しビューを再描画
 	if( m_model ) {
-		m_model->setData(index(), m_icon, Qt::DecorationRole);
+		m_model->dataChanged(index(), index());
 	}
 }
 
@@ -152,6 +207,11 @@ const QStringList & CWorkSpaceItem::suffixFilter() const
 void CWorkSpaceItem::setSuffixFilter(const QStringList & filters)
 {
 	m_suffixFilters = filters;
+
+	// モデルに更新を通知しビューを再描画
+	if( m_model ) {
+		m_model->dataChanged(index(), index());
+	}
 }
 
 int CWorkSpaceItem::count() const
@@ -283,6 +343,11 @@ bool CWorkSpaceItem::isUntitled() const
 const QUuid & CWorkSpaceItem::uuid() const
 {
 	return m_uuid;
+}
+
+void CWorkSpaceItem::setUuid(const QUuid & uuid)
+{
+	m_uuid = uuid;
 }
 
 void CWorkSpaceItem::setBreakPoint(int lineNo)

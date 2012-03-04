@@ -45,6 +45,14 @@ public:
 		TypeNum,
 	} Type;
 
+	enum {
+		PathRole = Qt::UserRole + 2,
+		TypeRole,
+		NodeTypeRole,
+		UuidRole,
+		SuffixFilterRole,
+	};
+
 private:
 
 	CWorkSpaceModel*		m_model;			// ƒ‚ƒfƒ‹
@@ -97,6 +105,7 @@ public:
 	bool isUntitled() const;
 
 	const QUuid & uuid() const;
+	void setUuid(const QUuid & uuid);
 
 	void setBreakPoint(int lineNo);
 	void clearBreakPoint(int lineNo);

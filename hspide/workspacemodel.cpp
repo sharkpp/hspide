@@ -200,6 +200,19 @@ bool CWorkSpaceModel::setAssignWidget(QWidget * widget)
 	return true;
 }
 
+QWidget* CWorkSpaceModel::assignWidget()
+{
+	return m_assignWidget;
+}
+
+bool CWorkSpaceModel::dataChanged(const QModelIndex & from, const QModelIndex & to)
+{
+	if( QTreeView *widget = dynamic_cast<QTreeView*>(m_assignWidget) ) {
+		widget->dataChanged(from, to);
+	}
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////
 // QAbstractItemModel オーバーライド
 
@@ -210,10 +223,40 @@ int CWorkSpaceModel::columnCount(const QModelIndex & parent) const
 
 bool CWorkSpaceModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-	if( QTreeView *widget = dynamic_cast<QTreeView*>(m_assignWidget) ) {
-		widget->dataChanged(index, index);
+	CWorkSpaceItem * item = getItem(index);
+
+	if( !item ) {
+		return false;
 	}
-	return true;
+
+	switch(role)
+	{
+	case Qt::DisplayRole:
+		item->setText(value.toString());
+		return true;
+	case Qt::DecorationRole:
+		item->setIcon(value.value<QIcon>());
+		return true;
+	case Qt::ToolTipRole:
+		return true;
+	case CWorkSpaceItem::PathRole:
+		item->setPath(value.toString());
+		return true;
+	case CWorkSpaceItem::TypeRole:
+		item->setType(CWorkSpaceItem::Type(value.toInt()));
+		return true;
+	case CWorkSpaceItem::NodeTypeRole:
+		item->setNodeType(CWorkSpaceItem::NodeType(value.toInt()));
+		return true;
+	case CWorkSpaceItem::UuidRole:
+		item->setUuid(value.toString());
+		return true;
+	case CWorkSpaceItem::SuffixFilterRole:
+		item->setSuffixFilter(value.toStringList());
+		return true;
+	}
+
+	return false;
 }
 
 QVariant CWorkSpaceModel::data(const QModelIndex & index, int role) const
@@ -232,17 +275,42 @@ QVariant CWorkSpaceModel::data(const QModelIndex & index, int role) const
 		return item->icon();
 	case Qt::ToolTipRole:
 		return item->path();
+	case CWorkSpaceItem::PathRole:
+		return item->path();
+	case CWorkSpaceItem::TypeRole:
+		return item->type();
+	case CWorkSpaceItem::NodeTypeRole:
+		return item->nodeType();
+	case CWorkSpaceItem::UuidRole:
+		return item->uuid();
+	case CWorkSpaceItem::SuffixFilterRole:
+		return item->suffixFilter();
 	}
 
 	return QVariant();
 }
 
+QMap<int, QVariant> CWorkSpaceModel::itemData(const QModelIndex &index) const
+{
+	QMap<int, QVariant> roles = QAbstractItemModel::itemData(index);
+
+	CWorkSpaceItem * item = getItem(index);
+
+	if( item )
+	{
+		roles.insert(CWorkSpaceItem::PathRole,         item->path());
+		roles.insert(CWorkSpaceItem::TypeRole,         item->type());
+		roles.insert(CWorkSpaceItem::NodeTypeRole,     item->nodeType());
+		roles.insert(CWorkSpaceItem::UuidRole,         item->uuid().toString());
+		roles.insert(CWorkSpaceItem::SuffixFilterRole, item->suffixFilter());
+	}
+qDebug() << roles;
+
+	return roles;
+}
+
 QModelIndex CWorkSpaceModel::index(int row, int column, const QModelIndex & parent) const
 {
-//	if( parent.isValid() && parent.column() ) {
-//		return QModelIndex();
-//	}
-
 	CWorkSpaceItem * item = getItem(parent);
 	                 item = item->at(row);
 
@@ -308,21 +376,40 @@ bool CWorkSpaceModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 	}
 
 qDebug()<< __FUNCTION__<<data->formats();
-	if( !data->hasUrls() ||
-		data->urls().empty() )
+
+
+	if( data->hasUrls() )
 	{
-		return false;
+		if( data->urls().empty() )
+		{
+			return false;
+		}
+
+		QList<QUrl> urls = data->urls();
+		for(int i = 0; i < urls.size(); i++)
+		{
+			QString filePath = urls.at(i).toLocalFile();
+			appendFile(filePath, parentItem);
+		}
+		return true;
+	}
+	else if( data->hasFormat("application/x-qabstractitemmodeldatalist") )
+	{
+		QByteArray encoded = data->data("application/x-qabstractitemmodeldatalist");
+		QDataStream stream(&encoded, QIODevice::ReadOnly);
+
+		while( !stream.atEnd() )
+		{
+			int row, col;
+			QMap<int,  QVariant> roleDataMap;
+			stream >> row >> col >> roleDataMap;
+			qDebug() << row << col << roleDataMap;
+		}
+
+		return QAbstractItemModel::dropMimeData(data, action, row, column, parent);
 	}
 
-
-	QList<QUrl> urls = data->urls();
-	for(int i = 0; i < urls.size(); i++)
-	{
-		QString filePath = urls.at(i).toLocalFile();
-		appendFile(filePath, parentItem);
-	}
-
-	return true;
+	return false;
 }
 
 Qt::DropActions CWorkSpaceModel::supportedDropActions() const

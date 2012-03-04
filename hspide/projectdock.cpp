@@ -10,7 +10,13 @@ class QTreeView_ : public QTreeView
 public:
 	QTreeView_(QWidget* parent) : QTreeView(parent) {}
 	void dragEnterEvent(QDragEnterEvent *event) { event->acceptProposedAction(); }
-	void dragMoveEvent(QDragMoveEvent *event)   { event->acceptProposedAction(); }
+	void dragMoveEvent(QDragMoveEvent *event)
+	{
+		event->acceptProposedAction();
+		if( event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist") ) {
+			event->setDropAction(Qt::MoveAction);
+		}
+	}
 };
 
 CProjectDock::CProjectDock(QWidget *parent)
