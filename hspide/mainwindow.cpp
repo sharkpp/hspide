@@ -741,6 +741,11 @@ void MainWindow::onOpenFile(const QString & filePath)
 
 void MainWindow::onOpenFile(CWorkSpaceItem * item)
 {
+	if( !item )
+	{
+		return;
+	}
+
 	// すでに開いていたらタブを選択しなおす
 	for(int index = 0; index < tabWidget->count(); index++)
 	{
@@ -1434,6 +1439,7 @@ void MainWindow::currentTabChanged(int index)
 	if( document )
 	{
 		// シグナルと関連付け
+		connect(document,                       SIGNAL(modificationChanged(bool)), this,               SLOT(onDocumentChanged(bool)));
 		connect(document,                       SIGNAL(modificationChanged(bool)), saveDocumentAct,    SLOT(setEnabled(bool)));
 		connect(document->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,        SLOT(setEnabled(bool)));
 		connect(document->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,        SLOT(setEnabled(bool)));
@@ -1472,6 +1478,20 @@ void MainWindow::clipboardDataChanged()
 	const QMimeData *md = QApplication::clipboard()->mimeData();
 
 	editPasteAct->setEnabled(document && md && md->hasText());
+}
+
+void MainWindow::onDocumentChanged(bool)
+{
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(sender());
+
+	int index = tabWidget->indexOf(document);
+	if( 0 <= index )
+	{
+		tabWidget->setTabText(tabWidget->currentIndex()
+			, document->fileName()
+				+ (document->editor()->document()->isModified() ? "*" : ""));
+	}
 }
 
 void MainWindow::onSymbolDockVisibilityChanged(bool visible)

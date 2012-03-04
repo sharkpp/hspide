@@ -146,6 +146,7 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 bool CDocumentPane::save(const QString & filePath)
 {
 	QString fileName = filePath;
+	QString lastFilePath = m_filePath;
 
 	// 引数にファイル名が指定されていた場合はそのファイルに保存
 	// 指定されていなかった場合は、
@@ -175,6 +176,12 @@ bool CDocumentPane::save(const QString & filePath)
 				return false;
 			}
 		}
+	}
+
+	if( lastFilePath == fileName &&
+		!m_editorWidget->document()->isModified() )
+	{
+		return true;
 	}
 
 	QFile file(fileName);

@@ -100,6 +100,8 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 
 	items.clear();
 
+	projectItem->setPath(fileName);
+
 	return projectItem;
 }
 
@@ -127,15 +129,21 @@ CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpace
 		}
 		break;
 	case CWorkSpaceItem::Solution: {
-		QModelIndex itemIndex = index(0, 0, parentItem->index());
-		for(int row = 0, count = rowCount(parentItem->index());
-			row < count; row++, itemIndex = index(row, 0, parentItem->index()))
+		QSharedPointer<CWorkSpaceItem> tempProject(new CWorkSpaceItem(NULL, CWorkSpaceItem::Project));
+
+		// フィルタにマッチするもののみ登録
+		foreach(const QString& pattern, tempProject->suffixFilter())
 		{
-			if( NULL != (fileItem = appendFile(fileName, getItem(itemIndex))) )
+			QRegExp re(pattern, Qt::CaseSensitive, QRegExp::Wildcard);
+			if( re.exactMatch(fileName) )
 			{
+				// プロジェクトツリーにファイルを追加
+				fileItem = appendProject(fileName);
+
 				return fileItem;
 			}
 		}
+
 		break; }
 	case CWorkSpaceItem::Project: {
 		// 先にフィルタの登録数から優先順位を決める

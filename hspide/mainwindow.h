@@ -129,6 +129,7 @@ public slots:
 	void onTabList();
 	void onTabClose();
 	void clipboardDataChanged();
+	void onDocumentChanged(bool);
 	void onSymbolDockVisibilityChanged(bool visible);
 
 private:

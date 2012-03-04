@@ -348,6 +348,8 @@ void CConfigDialog::onChangedMetricsBgcolor()
 	{
 		QColorDialog dlg;
 
+		dlg.setCurrentColor(m_currentColorMetricsInfo.backgroundColor);
+
 		if( QDialog::Accepted == dlg.exec() )
 		{
 			m_currentColorMetricsInfo.backgroundColor = dlg.selectedColor();
@@ -369,6 +371,8 @@ void CConfigDialog::onChangedMetricsFgcolor()
 	else
 	{
 		QColorDialog dlg;
+
+		dlg.setCurrentColor(m_currentColorMetricsInfo.foregroundColor);
 
 		if( QDialog::Accepted == dlg.exec() )
 		{
