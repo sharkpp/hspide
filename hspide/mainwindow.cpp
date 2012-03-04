@@ -597,32 +597,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-qDebug()<< __FUNCTION__<<event->mimeData()->formats();
 	if( event->mimeData()->hasUrls() )
 	{
-	//	if( !projectDock->isVisible() ||
-	//		!projectDock->parentWidget()->geometry().contains( event->pos() ) )
-	//	{
-			event->acceptProposedAction();
-	//		return;
-	//	}
+		event->acceptProposedAction();
 	}
-//	QMainWindow::dragEnterEvent(event);
 }
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
-qDebug()<< __FUNCTION__<<event->mimeData()->formats();
 	if( event->mimeData()->hasUrls() )
 	{
-	//	if( !projectDock->isVisible() ||
-	//		!projectDock->parentWidget()->geometry().contains( event->pos() ) )
-	//	{
-			event->acceptProposedAction();
-	//		return;
-	//	}
+		event->acceptProposedAction();
 	}
-//	QMainWindow::dragMoveEvent(event);
 }
 
 void MainWindow::dropEvent(QDropEvent *event)

@@ -29,6 +29,7 @@ public:
 		UnkownNodeType = 0,
 		FileNode,
 		FolderNode,
+		NodeTypeNum,
 	} NodeType;
 
 	typedef enum {
@@ -41,24 +42,27 @@ public:
 		PackFolder,
 		SourceFolder,
 		ResourceFolder,
+		TypeNum,
 	} Type;
 
 private:
 
-	CWorkSpaceModel*		m_model;
-	CWorkSpaceItem*			m_parent;
-	QList<CWorkSpaceItem*>	m_children;
-	int						m_parentPos;
-	QIcon					m_icon;
-	QString					m_text;
-	QString					m_path;
-	Type					m_type;
-	NodeType				m_nodeType;
-	QUuid					m_uuid;
+	CWorkSpaceModel*		m_model;			// モデル
+	CWorkSpaceItem*			m_parent;			// 親アイテム
+	QList<CWorkSpaceItem*>	m_children;			// 子アイテム
+	int						m_parentPos;		// 親アイテムでの位置
+	QIcon					m_icon;				// 表示アイコン
+	QString					m_text;				// 表示テキスト
+	QString					m_path;				// ファイルパス
+	Type					m_type;				// 種別
+	NodeType				m_nodeType;			// ノード種別
+	QUuid					m_uuid;				// ファイルに対して一意に割り当てられているID
 
-	CDocumentPane*			m_assignDocument;
+	QStringList				m_suffixFilters;	// 拡張子のフィルタ
 
-	QSet<int>				m_breakpoints;
+	CDocumentPane*			m_assignDocument;	// 関連付けられているドキュメント
+
+	QSet<int>				m_breakpoints;		// ブレークポイント
 
 public:
 
@@ -83,6 +87,9 @@ public:
 
 	const QIcon & icon() const;
 	void setIcon(const QIcon & icon);
+
+	const QStringList & suffixFilter() const;
+	void setSuffixFilter(const QStringList & filter);
 
 	bool load(const QString & fileName);
 	bool save(const QString & fileName = QString());

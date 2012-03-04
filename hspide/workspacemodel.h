@@ -71,6 +71,6 @@ public:
 
 private:
 
-	CWorkSpaceItem * getItem(const QModelIndex & index) const;
+	CWorkSpaceItem* getItem(const QModelIndex & index) const;
 
 };

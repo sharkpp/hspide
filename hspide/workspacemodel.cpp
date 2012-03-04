@@ -104,33 +104,88 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 }
 
 // ファイルの追加
-CWorkSpaceItem * CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpaceItem * parentItem)
+CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpaceItem * parentItem)
 {
+	CWorkSpaceItem* fileItem = NULL;
+
 	if( !parentItem )
 	{
 		return NULL;
 	}
 
-	QModelIndex projectIndex  = parentItem->index();
-	QModelIndex itemIndex     = index(0, 0, projectIndex);
-	for(int row = 0, count = rowCount(projectIndex);
-		row < count && CWorkSpaceItem::SourceFolder != getItem(itemIndex)->type();
-		row++, itemIndex = index(row, 0, projectIndex));
+	switch( parentItem->type() )
+	{
+	case CWorkSpaceItem::File:
+		for(CWorkSpaceItem* item = parentItem->parent();
+			item && CWorkSpaceItem::UnkownType != item->type();
+			item = item->parent())
+		{
+			if( NULL != (fileItem = appendFile(fileName, item)) )
+			{
+				return fileItem;
+			}
+		}
+		break;
+	case CWorkSpaceItem::Solution: {
+		QModelIndex itemIndex = index(0, 0, parentItem->index());
+		for(int row = 0, count = rowCount(parentItem->index());
+			row < count; row++, itemIndex = index(row, 0, parentItem->index()))
+		{
+			if( NULL != (fileItem = appendFile(fileName, getItem(itemIndex))) )
+			{
+				return fileItem;
+			}
+		}
+		break; }
+	case CWorkSpaceItem::Project: {
+		// 先にフィルタの登録数から優先順位を決める
+		QMultiMap<int, CWorkSpaceItem*> searchOrder;
+		QModelIndex itemIndex = index(0, 0, parentItem->index());
+		for(int row = 0, count = rowCount(parentItem->index());
+			row < count; row++, itemIndex = index(row, 0, parentItem->index()))
+		{
+			CWorkSpaceItem* item = getItem(itemIndex);
+			searchOrder.insert(-item->suffixFilter().size(), item);
+		}
+		for(QMultiMap<int, CWorkSpaceItem*>::iterator i = searchOrder.begin();
+			i != searchOrder.end(); ++i)
+		{
+			if( NULL != (fileItem = appendFile(fileName, i.value())) )
+			{
+				return fileItem;
+			}
+		}
+		break; }
+//	case CWorkSpaceItem::DependenceFolder:
+	case CWorkSpaceItem::PackFolder:
+	case CWorkSpaceItem::SourceFolder:
+	case CWorkSpaceItem::ResourceFolder:
+		// フィルタにマッチするもののみ登録
+		foreach(const QString& pattern, parentItem->suffixFilter())
+		{
+			QRegExp re(pattern, Qt::CaseSensitive, QRegExp::Wildcard);
+			if( re.exactMatch(fileName) )
+			{
+				// プロジェクトツリーにファイルを追加
 
-	if( CWorkSpaceItem::SourceFolder != getItem(itemIndex)->type() ) {
+				fileItem = new CWorkSpaceItem(parentItem, CWorkSpaceItem::File, this);
+
+				if( !insertRow(rowCount(parentItem->index()), fileItem, parentItem->index()) ) {
+					delete fileItem;
+					return NULL;
+				}
+
+				fileItem->setPath(fileName);
+
+				return fileItem;
+			}
+		}
+		break;
+	default:
 		return NULL;
 	}
 
-	CWorkSpaceItem* fileItem
-		= new CWorkSpaceItem(parentItem, CWorkSpaceItem::File, this);
-
-	if( !insertRow(rowCount(itemIndex), fileItem, itemIndex) ) {
-		return NULL;
-	}
-
-	fileItem->setPath(fileName);
-
-	return fileItem;
+	return NULL;
 }
 
 // 削除
@@ -225,7 +280,14 @@ Qt::ItemFlags CWorkSpaceModel::flags(const QModelIndex & index) const
 	Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
 	if( index.isValid() ) {
-		return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+		CWorkSpaceItem* item = getItem(index);
+		if( item &&
+			CWorkSpaceItem::FileNode == item->nodeType() &&
+			CWorkSpaceItem::Project  != item->type() )
+		{
+			return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+		}
+		return Qt::ItemIsDropEnabled | defaultFlags;
 	} else {
 		return Qt::ItemIsDropEnabled | defaultFlags;
 	}
@@ -239,7 +301,8 @@ bool CWorkSpaceModel::dropMimeData(const QMimeData * data, Qt::DropAction action
 	}
 
 	CWorkSpaceItem* parentItem = getItem(parent);
-	if( !parentItem )
+	if( !parentItem ||
+		CWorkSpaceItem::DependenceFolder == parentItem->type() )
 	{
 		return false;
 	}
