@@ -31,8 +31,6 @@ class CCompiler
 
 	QString m_buildAfterRunArgs;		// ビルド後に実行を行うか？
 
-	QProcess *m_listingSymbolsProcess;	// シンボル取得プロセス
-
 	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
 
 	QMap<quint64, CBreakPointInfo> m_breakpoints;

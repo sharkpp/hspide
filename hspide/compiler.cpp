@@ -11,7 +11,6 @@ CCompiler::CCompiler(QObject *parent)
 	, m_hspCompPath(QDir::toNativeSeparators("./"))
 	, m_hspPath(QDir::toNativeSeparators("./"))
 	, m_hspCommonPath(QDir::toNativeSeparators("./common/"))
-	, m_listingSymbolsProcess(NULL)
 {
 	updateCompilerPath();
 
@@ -64,17 +63,17 @@ void CCompiler::updateCompilerPath()
 		return;
 	}
 
-	delete m_listingSymbolsProcess;
-	m_listingSymbolsProcess = new QProcess(this);
+	QProcess* listingSymbolsProcess = new QProcess(this);
 
-	m_listingSymbolsProcess->start(program, arguments);
+	listingSymbolsProcess->start(program, arguments);
 
-	if( !m_listingSymbolsProcess->waitForStarted() ) {
+	if( !listingSymbolsProcess->waitForStarted() ) {
+		delete listingSymbolsProcess;
 		return;
 	}
 
 	// 処理完了時の通知を登録
-	connect(m_listingSymbolsProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+	connect(listingSymbolsProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
 			this, SLOT(listedSymbolsFinished(int,QProcess::ExitStatus)));
 }
 
@@ -182,7 +181,8 @@ bool CCompiler::run(CWorkSpaceItem * targetItem, bool debugMode)
 // シンボルの取得完了
 void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-	QString tmp(m_listingSymbolsProcess->readAllStandardOutput());
+	QProcess* listingSymbolsProcess = qobject_cast<QProcess*>(sender());
+	QString tmp(listingSymbolsProcess->readAllStandardOutput());
 
 	m_highlightSymbols.clear();
 
@@ -212,10 +212,9 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 
 //	qDebug() << mSymbols;
 
-	delete m_listingSymbolsProcess;
-	m_listingSymbolsProcess = NULL;
-
 	emit updatedSymbols();
+
+	listingSymbolsProcess->deleteLater();
 }
 
 // プロジェクトのビルド失敗
