@@ -21,8 +21,11 @@ EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
 {
 	//		debugini ptr  (type1)
 
-	// メイン処理ルーティンを生成
-	CDbgMain::create();
+	if( !g_app )
+	{
+		// メイン処理ルーティンを生成
+		CDbgMain::create();
+	}
 
 	g_app->initialize(p1);
 
@@ -60,6 +63,7 @@ int runmode = hspctx->runmode;
 		hspctx->runmode = RUNMODE_STOP;
 	}
 
+		hspctx->runmode = RUNMODE_RUN;
 	int r =
 	p1->dbg_set( breaked ? HSPDEBUG_STOP : HSPDEBUG_STEPIN );
 
@@ -78,4 +82,20 @@ EXPORT void WINAPI hspdbg_init(HSP3TYPEINFO * info)
 {
 	//		プラグイン初期化 (実行・終了処理を登録します)
 	//
+	HSP3TYPEINFO* top = info - info->type;
+	HSP3TYPEINFO* last= top  + info->type + 1;
+	HSP3TYPEINFO* ite = top;
+
+	if( !g_app )
+	{
+		// メイン処理ルーティンを生成
+		CDbgMain::create();
+	}
+
+	g_app->hook(top, last);
+	//for(; ite < last; ++ite)
+	//{
+	//	// 書き換え
+	//	g_cmdfunc[ite - top].install_hook(&ite->cmdfunc);
+	//}
 }

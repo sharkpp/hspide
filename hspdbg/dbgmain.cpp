@@ -1,6 +1,7 @@
 #include <QTextCodec>
 #include <process.h>
 #include "dbgmain.h"
+#include "apihook.h"
 #include "hspsdk/hsp3debug.h"
 #include "hspsdk/hsp3struct.h"
 #include "hspsdk/hspwnd.h"
@@ -21,13 +22,67 @@ typedef enum {
 HANDLE	CDbgMain::m_handle = NULL;
 HANDLE	CDbgMain::m_waitThread = NULL;
 
+static BOOL (WINAPI * PeekMessageA_)(LPMSG lpMsg, HWND hWnd,UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg) = NULL;
+
+BOOL WINAPI HookPeekMessageA(LPMSG lpMsg, HWND hWnd,UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+{
+HSP3DEBUG* dbg = g_app->debugInfo();
+dbg->dbg_curinf();
+char tmp[256];
+sprintf(tmp,">>%s(%2d)",dbg->fname?dbg->fname:"???",dbg->line);
+g_app->putLog(tmp, strlen(tmp));
+
+	// オリジナルのAPIを呼び出し
+	BOOL r = PeekMessageA_(lpMsg, hWnd,wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+
+	return r;
+}
+
+CDbgMain::cmdfunc_hook::cmdfunc_hook()
+	: m_thunk(this, cmdfunc_thunk) // C4355
+	, m_cmdfunc_old(NULL)
+	, m_typeinfo(NULL)
+{
+}
+
+void CDbgMain::cmdfunc_hook::install_hook(HSP3TYPEINFO* typeinfo)
+{
+	if( !m_typeinfo ) {
+		m_typeinfo    = typeinfo;
+		m_cmdfunc_old = typeinfo->cmdfunc;
+		typeinfo->cmdfunc = (int(*)(int))m_thunk.get();
+	}
+}
+
+int CALLBACK CDbgMain::cmdfunc_hook::cmdfunc_thunk(int cmd)
+{
+	return thunk_type::thunk->cmdfunc(cmd);
+}
+
+int CALLBACK CDbgMain::cmdfunc_hook::cmdfunc(int cmd)
+{
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%d)/%d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	g_app->putLog(tmp, strlen(tmp));
+	return m_cmdfunc_old(cmd);
+}
+
 CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
 	, m_socket(new QLocalSocket(this))
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
 	, m_dbg(NULL)
 	, m_breaked(false)
+	, m_cmdfunc_hook(NULL)
 {
+	// オリジナルのAPIを保存
+//	if( !PeekMessageA_ ) {
+//		PeekMessageA_	= PeekMessage;
+//	}
+//	INSTALL_HOOK("user32.dll", "PeekMessageA",	HookPeekMessageA,	NULL);
+
 	// 受信通知などのシグナルと接続
 	connect(m_socket, SIGNAL(connected()),  this, SLOT(connected()));
 	connect(m_socket, SIGNAL(readyRead()),  this, SLOT(recvCommand()));
@@ -38,11 +93,15 @@ CDbgMain::CDbgMain()
 
 	// 接続通知送信
 	connectToDebugger();
+
+	m_cmdfunc_hook = new cmdfunc_hook[1024];
 }
 
 CDbgMain::~CDbgMain()
 {
 	m_socket->disconnectFromServer();
+
+	delete [] m_cmdfunc_hook;
 }
 
 void CDbgMain::create()
@@ -260,6 +319,20 @@ void CDbgMain::initialize(HSP3DEBUG* dbg)
 	m_dbg = dbg;
 
 	initializeVariableNames();
+}
+
+HSP3DEBUG* CDbgMain::debugInfo()
+{
+	return m_dbg;
+}
+
+void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
+{
+	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
+	{
+		// 書き換え
+		m_cmdfunc_hook[ite - top].install_hook(ite);
+	}
 }
 
 void CDbgMain::updateInfo()

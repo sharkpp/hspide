@@ -33,6 +33,8 @@ HEADERS += hspdbg.h \
            stdafx.h \
            targetver.h \
            dbgmain.h \
+           thunk_generator.hpp \
+           apihook.h \
            hspsdk/hsp3debug.h \
            hspsdk/hsp3struct.h \
            hspsdk/hspvar_core.h \
@@ -40,4 +42,5 @@ HEADERS += hspdbg.h \
            ../hspide/ipc_common.h
 SOURCES += dllmain.cpp hspdbg.cpp stdafx.cpp \
            dbgmain.cpp \
+           apihook.cpp \
            ../hspide/ipc_common.cpp
