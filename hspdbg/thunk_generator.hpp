@@ -65,9 +65,11 @@ public:
 	}
 
 	// フック用のコードを挿入
-	void* injection_code(void * func)
+	void* injection_code(void * func, int x)
 	{
-		DWORD op;
+		u8* code_top = m_code;
+
+		DWORD op, op2;
 		// 関数フックのため一旦属性を書き込みできるようにする
 		VirtualProtect(func, 5, PAGE_EXECUTE_READWRITE, &op);
 
@@ -75,27 +77,31 @@ public:
 		u8* code = (u8*)func;
 
 		// ※jmp命令があることを前提にしている...
-		if( 0xE9 != *code )
+		if( 0&&0xE9 != *code )
 		{
 			// 改変検知のためページ属性を元に戻す
 			VirtualProtect(code, 5, op, &op);
 			return NULL;
 		}
 
-		u8* jmp_addr  = (u8*)((u32)code + *((u32*)(code+1)) + 5);
+		VirtualProtect(m_code_top, 64, PAGE_EXECUTE_READWRITE, &op2);
+
+		memcpy(m_code, code, x);
+		m_code += x;
+
+		u8* jmp_addr  = (u8*)((u32)code + x);
+	//	u8* jmp_addr  = (u8*)((u32)code + *((u32*)(code+1)) + 5);
 		*code++       = 0xE9; // jmp
-		*((u32*)code) = (u32)m_code - (u32)code - 4;
+		*((u32*)code) = (u32)m_code_top - (u32)code - 4;
 
 		// 改変検知のためページ属性を元に戻す
 		VirtualProtect(code, 5, op, &op);
-
-		u8* code_top = m_code;
 
 		*m_code++       = 0xE9; // jmp
 		*((u32*)m_code) = (u32)jmp_addr - (u32)m_code - 4; m_code += sizeof(u32);
 
 		// ページ属性を実行のみに変更
-		::VirtualProtect(code_top, DWORD(m_code - code_top), PAGE_EXECUTE, &op);
+		::VirtualProtect(m_code_top, DWORD(m_code - m_code_top), PAGE_EXECUTE, &op2);
 
 		return code_top;
 	}

@@ -401,10 +401,10 @@ void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 	HSPCTX* hspctx = (HSPCTX*)top->hspctx;
 
 	if( hspctx->exinfo.HspFunc_malloc ) {
-		m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc);
+		m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc, 7);
 	}
 	if( hspctx->exinfo.HspFunc_expand ) {
-		m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand);
+		m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand, 5);
 	}
 
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
