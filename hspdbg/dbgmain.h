@@ -41,21 +41,42 @@ class CDbgMain
 
 	QVector<QString> m_varNames;
 
-	class cmdfunc_hook
+	class typeinfo_hook
 	{
-		typedef spplib::thunk_generator<cmdfunc_hook> thunk_type;
-		thunk_type m_thunk;
-		int (*m_cmdfunc_old)(int);
+		typedef spplib::thunk_generator<typeinfo_hook> thunk_type;
+		thunk_type    m_cmdfunc_thunk;
+		thunk_type    m_reffunc_thunk;
+		thunk_type    m_termfunc_thunk;
+		thunk_type    m_msgfunc_thunk;
+		thunk_type    m_eventfunc_thunk;
 		HSP3TYPEINFO* m_typeinfo;
+		HSP3TYPEINFO  m_typeinfo_old;
 	private:
-		static int CALLBACK cmdfunc_thunk(int cmd);
-		int CALLBACK cmdfunc(int cmd);
+		static int CALLBACK cmdfunc_thunk(int cmd) { return thunk_type::thunk->cmdfunc(cmd); }
+		       int CALLBACK cmdfunc      (int cmd);
+		static void* CALLBACK reffunc_thunk(int *type_res, int arg) { return thunk_type::thunk->reffunc(type_res, arg); }
+		       void* CALLBACK reffunc      (int *type_res, int arg);
+		static int CALLBACK termfunc_thunk(int option) { return thunk_type::thunk->termfunc(option); }
+		       int CALLBACK termfunc      (int option);
+		static int CALLBACK msgfunc_thunk(int prm1,int prm2,int prm3) { return thunk_type::thunk->msgfunc(prm1,prm2,prm3); }
+		       int CALLBACK msgfunc      (int prm1,int prm2,int prm3);
+		static int CALLBACK eventfunc_thunk(int event, int prm1, int prm2, void *prm3) { return thunk_type::thunk->eventfunc(event, prm1, prm2, prm3); }
+		       int CALLBACK eventfunc      (int event, int prm1, int prm2, void *prm3);
+		static int CALLBACK sballoc_thunk(int event, int prm1, int prm2, void *prm3) { return thunk_type::thunk->eventfunc(event, prm1, prm2, prm3); }
+		       int CALLBACK sballoc      (int event, int prm1, int prm2, void *prm3);
 	public:
-		cmdfunc_hook();
+		typeinfo_hook();
 		void install_hook(HSP3TYPEINFO* typeinfo);
 	};
 
-	cmdfunc_hook*	m_cmdfunc_hook;
+	typeinfo_hook*	m_typeinfo_hook;
+
+	typedef spplib::thunk_generator<CDbgMain> thunk_type;
+	thunk_type    m_sbAlloc_thunk;
+	thunk_type    m_sbExpand_thunk;
+
+	char * (*m_sbAlloc)(int size);
+	char * (*m_sbExpand)(char *ptr, int size);
 
 public:
 	CDbgMain();
@@ -95,6 +116,11 @@ protected:
 	QString getVariableName(int index);
 
 	QString loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx);
+
+	static char * CALLBACK sbAlloc_thunk(int size) { return thunk_type::thunk->sbAlloc(size); }
+	       char * CALLBACK sbAlloc      (int size);
+	static char * CALLBACK sbExpand_thunk(char *ptr, int size) { return thunk_type::thunk->sbExpand(ptr, size); }
+	       char * CALLBACK sbExpand      (char *ptr, int size);
 
 public slots:
 

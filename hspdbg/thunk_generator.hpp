@@ -21,35 +21,83 @@ namespace spplib {
 template<typename T>
 class thunk_generator
 {
-	BYTE* m_code;
+	typedef unsigned char u8;
+	typedef unsigned int  u32;
+	u8* m_code_top;  // フック用コードデータの先頭アドレス
+	u8* m_code_last; // フック用コードデータの先頭アドレス
+	u8* m_code;      // フック用コードデータの先頭アドレス
 public:
 	static T * thunk;
 public:
-	thunk_generator(void * this_ptr, void * func)
+
+	// コンストラクタ
+	thunk_generator(void * this_ptr, void * func, size_t code_len = 256)
 	{
 #if (defined(WIN32) || defined(_WIN32)) && (!defined(WIN64) || !defined(_WIN64))
-		LPBYTE code = m_code = (LPBYTE)VirtualAlloc(NULL, 64, MEM_COMMIT, PAGE_READWRITE);
-		// mov ptr DWORD[&thunk], this_ptr
-		*code++                = 0xC7;
-		*code++                = 0x05;
-		*((unsigned int*)code) = (unsigned int)&thunk;   code += sizeof(unsigned int);
-		*((unsigned int*)code) = (unsigned int)this_ptr; code += sizeof(unsigned int);
+		m_code_top  = m_code = (LPBYTE)VirtualAlloc(NULL, code_len, MEM_COMMIT, PAGE_READWRITE);
+		m_code_last = m_code_top + code_len;
+		// mov DWORD PTR [&thunk], this_ptr
+		*m_code++       = 0xC7;
+		*m_code++       = 0x05;
+		*((u32*)m_code) = (u32)&thunk;   m_code += sizeof(u32);
+		*((u32*)m_code) = (u32)this_ptr; m_code += sizeof(u32);
 		// jmp func
-		*code++                = 0xE9;
-		*((unsigned int*)code) = (unsigned int)func - (unsigned int)code - 4;
-		//
-		DWORD dwOldProtect;
-		VirtualProtect(m_code, 15, PAGE_EXECUTE, &dwOldProtect);
+		*m_code++       = 0xE9;
+		*((u32*)m_code) = (u32)func - (u32)m_code - 4; m_code += sizeof(u32);
+		// ページ属性を実行のみに変更
+		DWORD op;
+		::VirtualProtect(m_code_top, DWORD(m_code - m_code_top), PAGE_EXECUTE, &op);
 #else
 #error "not impliment!"
 #endif
 	}
+
+	// デストラクタ
 	~thunk_generator()
 	{
-		VirtualFree(m_code, 0, MEM_RELEASE);
+		::VirtualFree(m_code_top, 0, MEM_RELEASE);
 	}
-	void* get() {
-		return m_code;
+
+	// フック用のコードを取得
+	void* get_code()
+	{
+		return m_code_top;
+	}
+
+	// フック用のコードを挿入
+	void* injection_code(void * func)
+	{
+		DWORD op;
+		// 関数フックのため一旦属性を書き込みできるようにする
+		VirtualProtect(func, 5, PAGE_EXECUTE_READWRITE, &op);
+
+		// 次コード読み込み関数処理前に関数を割り込ます
+		u8* code = (u8*)func;
+
+		// ※jmp命令があることを前提にしている...
+		if( 0xE9 != *code )
+		{
+			// 改変検知のためページ属性を元に戻す
+			VirtualProtect(code, 5, op, &op);
+			return NULL;
+		}
+
+		u8* jmp_addr  = (u8*)((u32)code + *((u32*)(code+1)) + 5);
+		*code++       = 0xE9; // jmp
+		*((u32*)code) = (u32)m_code - (u32)code - 4;
+
+		// 改変検知のためページ属性を元に戻す
+		VirtualProtect(code, 5, op, &op);
+
+		u8* code_top = m_code;
+
+		*m_code++       = 0xE9; // jmp
+		*((u32*)m_code) = (u32)jmp_addr - (u32)m_code - 4; m_code += sizeof(u32);
+
+		// ページ属性を実行のみに変更
+		::VirtualProtect(code_top, DWORD(m_code - code_top), PAGE_EXECUTE, &op);
+
+		return code_top;
 	}
 };
 

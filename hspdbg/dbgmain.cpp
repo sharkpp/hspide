@@ -22,52 +22,124 @@ typedef enum {
 HANDLE	CDbgMain::m_handle = NULL;
 HANDLE	CDbgMain::m_waitThread = NULL;
 
-static BOOL (WINAPI * PeekMessageA_)(LPMSG lpMsg, HWND hWnd,UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg) = NULL;
+//--------------------------------------------------------------------
+// typeinfo_hookクラス
 
-BOOL WINAPI HookPeekMessageA(LPMSG lpMsg, HWND hWnd,UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
-{
-HSP3DEBUG* dbg = g_app->debugInfo();
-dbg->dbg_curinf();
-char tmp[256];
-sprintf(tmp,">>%s(%2d)",dbg->fname?dbg->fname:"???",dbg->line);
-g_app->putLog(tmp, strlen(tmp));
-
-	// オリジナルのAPIを呼び出し
-	BOOL r = PeekMessageA_(lpMsg, hWnd,wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
-
-	return r;
-}
-
-CDbgMain::cmdfunc_hook::cmdfunc_hook()
-	: m_thunk(this, cmdfunc_thunk) // C4355
-	, m_cmdfunc_old(NULL)
+CDbgMain::typeinfo_hook::typeinfo_hook()
+	: m_cmdfunc_thunk(this, cmdfunc_thunk) // C4355
+	, m_reffunc_thunk(this, reffunc_thunk) // C4355
+	, m_termfunc_thunk(this, termfunc_thunk) // C4355
+	, m_msgfunc_thunk(this, msgfunc_thunk) // C4355
+	, m_eventfunc_thunk(this, eventfunc_thunk) // C4355
 	, m_typeinfo(NULL)
 {
 }
 
-void CDbgMain::cmdfunc_hook::install_hook(HSP3TYPEINFO* typeinfo)
+void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 {
 	if( !m_typeinfo ) {
 		m_typeinfo    = typeinfo;
-		m_cmdfunc_old = typeinfo->cmdfunc;
-		typeinfo->cmdfunc = (int(*)(int))m_thunk.get();
+		m_typeinfo_old= *typeinfo;
+		// cmdfuncのフック
+		if( typeinfo->cmdfunc ) {
+			typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
+		}
+		if( typeinfo->reffunc ) {
+			typeinfo->reffunc = (void*(*)(int*,int))m_reffunc_thunk.get_code();
+		}
+		if( typeinfo->termfunc ) {
+			typeinfo->termfunc = (int(*)(int))m_termfunc_thunk.get_code();
+		}
+		if( typeinfo->msgfunc ) {
+			typeinfo->msgfunc = (int(*)(int,int,int))m_msgfunc_thunk.get_code();
+		}
+		if( typeinfo->eventfunc ) {
+			typeinfo->eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.get_code();
+		}
 	}
 }
 
-int CALLBACK CDbgMain::cmdfunc_hook::cmdfunc_thunk(int cmd)
-{
-	return thunk_type::thunk->cmdfunc(cmd);
-}
-
-int CALLBACK CDbgMain::cmdfunc_hook::cmdfunc(int cmd)
+int CALLBACK CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%d)/%d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
-	return m_cmdfunc_old(cmd);
+
+	return m_typeinfo_old.cmdfunc(cmd);
 }
+
+void* CALLBACK CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
+{
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%p,%d)/%d>>%s(%2d)",this,__FUNCTION__,type_res,arg,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return m_typeinfo_old.reffunc(type_res, arg);
+}
+
+int CALLBACK CDbgMain::typeinfo_hook::termfunc(int option)
+{
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%d)/%d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return m_typeinfo_old.termfunc(option);
+}
+
+int CALLBACK CDbgMain::typeinfo_hook::msgfunc(int prm1,int prm2,int prm3)
+{
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%d,%d,%d)/%d>>%s(%2d)",this,__FUNCTION__,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return m_typeinfo_old.msgfunc(prm1,prm2,prm3);
+}
+
+int CALLBACK CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3)
+{
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%d,%d,%d,%p)/%d>>%s(%2d)",this,__FUNCTION__,event,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return m_typeinfo_old.eventfunc(event,prm1,prm2,prm3);
+}
+
+char * CALLBACK CDbgMain::sbAlloc(int size)
+{
+	char *p = m_sbAlloc(size);
+
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%d) -> %p",this,__FUNCTION__,size,p);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return p;
+}
+
+char * CALLBACK CDbgMain::sbExpand(char *ptr, int size)
+{
+	char *p = m_sbExpand(ptr,size);
+
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	char tmp[256];
+	sprintf(tmp,"%p %s(%p,%d) -> %p",this,__FUNCTION__,ptr,size,p);
+	g_app->putLog(tmp, strlen(tmp));
+
+	return p;
+}
+
+//--------------------------------------------------------------------
+// CDbgMainクラス
 
 CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
@@ -75,14 +147,12 @@ CDbgMain::CDbgMain()
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
 	, m_dbg(NULL)
 	, m_breaked(false)
-	, m_cmdfunc_hook(NULL)
+	, m_typeinfo_hook(NULL)
+	, m_sbAlloc_thunk(this, sbAlloc_thunk)
+	, m_sbExpand_thunk(this, sbExpand_thunk)
+	, m_sbAlloc(NULL)
+	, m_sbExpand(NULL)
 {
-	// オリジナルのAPIを保存
-//	if( !PeekMessageA_ ) {
-//		PeekMessageA_	= PeekMessage;
-//	}
-//	INSTALL_HOOK("user32.dll", "PeekMessageA",	HookPeekMessageA,	NULL);
-
 	// 受信通知などのシグナルと接続
 	connect(m_socket, SIGNAL(connected()),  this, SLOT(connected()));
 	connect(m_socket, SIGNAL(readyRead()),  this, SLOT(recvCommand()));
@@ -94,14 +164,14 @@ CDbgMain::CDbgMain()
 	// 接続通知送信
 	connectToDebugger();
 
-	m_cmdfunc_hook = new cmdfunc_hook[1024];
+	m_typeinfo_hook = new typeinfo_hook[1024];
 }
 
 CDbgMain::~CDbgMain()
 {
 	m_socket->disconnectFromServer();
 
-	delete [] m_cmdfunc_hook;
+	delete [] m_typeinfo_hook;
 }
 
 void CDbgMain::create()
@@ -328,10 +398,19 @@ HSP3DEBUG* CDbgMain::debugInfo()
 
 void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 {
+	HSPCTX* hspctx = (HSPCTX*)top->hspctx;
+
+	if( hspctx->exinfo.HspFunc_malloc ) {
+		m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc);
+	}
+	if( hspctx->exinfo.HspFunc_expand ) {
+		m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand);
+	}
+
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
 	{
 		// 書き換え
-		m_cmdfunc_hook[ite - top].install_hook(ite);
+		m_typeinfo_hook[ite - top].install_hook(ite);
 	}
 }
 
