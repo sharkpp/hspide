@@ -1,5 +1,5 @@
 
-#include "module_loader.hpp"
+#include <spplib/module_loader.hpp>
 
 // hsc_comp p1
 #define DEBUG_INFO_ENABLE	1	// デバッグ情報をオブジェクトファイルに付加

@@ -1,7 +1,7 @@
 #include <QTextCodec>
 #include <process.h>
 #include "dbgmain.h"
-#include "apihook.h"
+#include <spplib/apihook.h>
 #include "hspsdk/hsp3debug.h"
 #include "hspsdk/hsp3struct.h"
 #include "hspsdk/hspwnd.h"

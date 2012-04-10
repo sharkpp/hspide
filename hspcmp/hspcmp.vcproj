@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\common&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,6 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)..\common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -173,7 +175,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\apihook.cpp"
+				RelativePath="..\common\spplib\apihook.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -227,7 +229,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\apihook.h"
+				RelativePath="..\common\spplib\apihook.h"
 				>
 			</File>
 			<File
@@ -235,7 +237,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\module_loader.hpp"
+				RelativePath="..\common\spplib\module_loader.hpp"
 				>
 			</File>
 			<File

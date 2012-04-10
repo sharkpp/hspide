@@ -8,7 +8,7 @@
 #include <QSet>
 #include <QUuid>
 #include "../hspide/ipc_common.h"
-#include "thunk_generator.hpp"
+#include <spplib/thunk.hpp>
 #include "hspsdk/hsp3struct.h"
 
 typedef QMap<QUuid, QSet<int> > CBreakPointInfo;

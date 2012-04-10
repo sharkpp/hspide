@@ -4,8 +4,8 @@
 
 TEMPLATE = vclib
 TARGET = hspdbg
-DEPENDPATH += . hspsdk
-INCLUDEPATH += .
+DEPENDPATH += . hspsdk ..\\common\\spplib
+INCLUDEPATH += . ..\\common
 QT += network
 QT -= gui
 CONFIG -= embed_manifest_dll
@@ -33,7 +33,7 @@ HEADERS += hspdbg.h \
            stdafx.h \
            targetver.h \
            dbgmain.h \
-           thunk_generator.hpp \
+           thunk.hpp \
            apihook.h \
            hspsdk/hsp3debug.h \
            hspsdk/hsp3struct.h \
