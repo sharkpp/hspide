@@ -113,6 +113,7 @@ public slots:
 	void onQuit();
 	void onGoToLine();
 	void onGoToLine(const QUuid & uuid, int lineNo);
+	void onStopAtBreakPoint(const QUuid & uuid, int lineNo);
 	void onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info);
 	void onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> & info);
 	void onReqVarInfo(const QString& varName, int* info);

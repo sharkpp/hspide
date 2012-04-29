@@ -849,6 +849,15 @@ void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
 	}
 }
 
+void MainWindow::onStopAtBreakPoint(const QUuid & uuid, int lineNo)
+{
+	onGoToLine(uuid, lineNo);
+
+	// メニューを変更
+	debugResumeAct->setEnabled(true);
+	debugSuspendAct->setEnabled(false);
+}
+
 void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info)
 {
 	typedef QPair<QString,QString> string_pair; // 直接だとマクロの展開エラーになるので...
@@ -1296,7 +1305,7 @@ void MainWindow::onUpdatedSymbols()
 
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
-	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid&,int)),                       this, SLOT(onGoToLine(const QUuid &,int)));
+	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid&,int)),                       this, SLOT(onStopAtBreakPoint(const QUuid &,int)));
 	connect(debugger, SIGNAL(putLog(const QString&)),                                   this, SLOT(onPutDebugLog(const QString&)));
 	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> >&)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));

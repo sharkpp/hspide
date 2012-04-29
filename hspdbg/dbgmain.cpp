@@ -62,10 +62,39 @@ void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
+	HSPCTX*    ctx = (HSPCTX*)dbg->hspctx;
+
+	// デバッグの一時中断中か？
+	if( g_app->isDebugPaused() )
+	{
+		// 終了要求が出ているか？
+		if( g_app->isQuitRequested() )
+		{
+			ctx->endcode = 0;
+			ctx->runmode = RUNMODE_END;
+			return 1;
+		}
+		// ぐるぐる回るのでCPUを奪わないようにスリープ
+		Sleep(100);
+		return 0;
+	}
+
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+
+	bool breaked = g_app->isBreak(dbg->fname, dbg->line);
+	// デバッグの一時中断指示が来たか？
+	if( breaked &&
+		!g_app->isDebugResumed() )
+	{
+		g_app->debugSuspend();
+
+		g_app->updateInfo();
+
+		return 0;
+	}
 
 	return m_typeinfo_old.cmdfunc(cmd);
 }
@@ -114,30 +143,6 @@ int CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3
 	return m_typeinfo_old.eventfunc(event,prm1,prm2,prm3);
 }
 
-char * CDbgMain::sbAlloc(int size)
-{
-	char *p = m_sbAlloc(size);
-
-	HSP3DEBUG* dbg = g_app->debugInfo();
-	char tmp[256];
-	sprintf(tmp,"%p %s(%d) -> %p %d",this,__FUNCTION__,size,p,size/sizeof(HSP3TYPEINFO)*sizeof(HSP3TYPEINFO)==size);
-	g_app->putLog(tmp, strlen(tmp));
-
-	return p;
-}
-
-char * CDbgMain::sbExpand(char *ptr, int size)
-{
-	char *p = m_sbExpand(ptr,size);
-
-	HSP3DEBUG* dbg = g_app->debugInfo();
-	char tmp[256];
-	sprintf(tmp,"%p %s(%p,%d) -> %p %d",this,__FUNCTION__,ptr,size,p,size/sizeof(HSP3TYPEINFO)*sizeof(HSP3TYPEINFO)==size);
-	g_app->putLog(tmp, strlen(tmp));
-
-	return p;
-}
-
 //--------------------------------------------------------------------
 // CDbgMainクラス
 
@@ -147,9 +152,9 @@ CDbgMain::CDbgMain()
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
 	, m_dbg(NULL)
 	, m_breaked(false)
+	, m_resumed(false)
+	, m_quit(false)
 	, m_typeinfo_hook(NULL)
-	, m_sbAlloc_thunk (this, &CDbgMain::sbAlloc)
-	, m_sbExpand_thunk(this, &CDbgMain::sbExpand)
 	, m_sbAlloc(NULL)
 	, m_sbExpand(NULL)
 {
@@ -229,6 +234,43 @@ void CDbgMain::putLog(const char *text, int len)
 {
 	QByteArray  data(text, len);
 	IpcSend(*m_socket, CMD_PUT_LOG, data);
+}
+
+// 終了要求が出ているか？
+bool CDbgMain::isQuitRequested()
+{
+	QMutexLocker lck(&m_lock);
+	return m_quit;
+}
+
+// デバッグの一時中断中か？
+bool CDbgMain::isDebugPaused()
+{
+	QMutexLocker lck(&m_lock);
+	return m_breaked;
+}
+
+// デバッグが直前で再開されたか？
+bool CDbgMain::isDebugResumed()
+{
+	QMutexLocker lck(&m_lock);
+	bool resumed = m_resumed;
+	m_resumed = false;
+	return resumed;
+}
+
+// デバッグを中断
+void CDbgMain::debugSuspend()
+{
+	QMutexLocker lck(&m_lock);
+	m_breaked = true;
+}
+
+// デバッグを再開
+void CDbgMain::debugResume()
+{
+	QMutexLocker lck(&m_lock);
+	m_breaked = false;
 }
 
 bool CDbgMain::isBreak(const char* filename, int lineNo)
@@ -399,13 +441,6 @@ HSP3DEBUG* CDbgMain::debugInfo()
 void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 {
 	HSPCTX* hspctx = (HSPCTX*)top->hspctx;
-
-	//if( hspctx->exinfo.HspFunc_malloc ) {
-	//	m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc);
-	//}
-	//if( hspctx->exinfo.HspFunc_expand ) {
-	//	m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand);
-	//}
 
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
 	{
@@ -653,17 +688,23 @@ void CDbgMain::recvCommand()
 			::SetEvent(m_waitThread);
 			break; }
 		case CMD_SUSPEND_DEBUG: { // デバッグを停止
-			QMutexLocker lck(&m_lock);
-			m_breaked = true;
+			debugSuspend();
 			break; }
 		case CMD_RESUME_DEBUG: { // デバッグを再開
 			QMutexLocker lck(&m_lock);
 			m_breaked = false;
+			m_resumed = true;
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
-			HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
-			BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
-			::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+			QMutexLocker lck(&m_lock);
+			if( m_breaked ) {
+				// デバッグの中断中はメッセージループが回らないので
+				m_quit = true;
+			} else {
+				HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+				BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
+				::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+			}
 			break; }
 		case CMD_REQ_VAR_INFO: { // 変数情報を要求
 			QMutexLocker lck(&m_lock);

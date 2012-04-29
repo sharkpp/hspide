@@ -32,7 +32,9 @@ class CDbgMain
 
 	HSP3DEBUG*		m_dbg;
 
-	bool			m_breaked;
+	bool			m_breaked;	// デバッグの一時中断中か？
+	bool			m_resumed;	// デバッグの再開直後か？
+	bool			m_quit;		// 終了要求が出ているか？
 
 	CBreakPointInfo	m_bp;
 	CUuidLookupInfo	m_lookup;
@@ -43,12 +45,11 @@ class CDbgMain
 
 	class typeinfo_hook
 	{
-		typedef spplib::thunk thunk_type;
-		thunk_type    m_cmdfunc_thunk;
-		thunk_type    m_reffunc_thunk;
-		thunk_type    m_termfunc_thunk;
-		thunk_type    m_msgfunc_thunk;
-		thunk_type    m_eventfunc_thunk;
+		spplib::thunk m_cmdfunc_thunk;
+		spplib::thunk m_reffunc_thunk;
+		spplib::thunk m_termfunc_thunk;
+		spplib::thunk m_msgfunc_thunk;
+		spplib::thunk m_eventfunc_thunk;
 		HSP3TYPEINFO* m_typeinfo;
 		HSP3TYPEINFO  m_typeinfo_old;
 	private:
@@ -64,10 +65,6 @@ class CDbgMain
 	};
 
 	typeinfo_hook*	m_typeinfo_hook;
-
-	typedef spplib::thunk thunk_type;
-	thunk_type    m_sbAlloc_thunk;
-	thunk_type    m_sbExpand_thunk;
 
 	char * (*m_sbAlloc)(int size);
 	char * (*m_sbExpand)(char *ptr, int size);
@@ -86,6 +83,13 @@ public:
 	void putLog(const char* text, int len);
 
 	void updateInfo();
+
+	bool isQuitRequested();
+
+	bool isDebugPaused();
+	bool isDebugResumed();
+	void debugSuspend();
+	void debugResume();
 
 	bool isBreak(const char* filename, int lineNo);
 
@@ -110,9 +114,6 @@ protected:
 	QString getVariableName(int index);
 
 	QString loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx);
-
-	char * sbAlloc(int size);
-	char * sbExpand(char *ptr, int size);
 
 public slots:
 

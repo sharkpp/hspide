@@ -51,26 +51,6 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 
 	p1->dbg_curinf();
 
-int line = p1->line;
-int runmode = hspctx->runmode;
-
-	bool breaked = g_app->isBreak(p1->fname, p1->line);
-
-	if( breaked )
-	{
-		g_app->updateInfo();
-
-		hspctx->runmode = RUNMODE_STOP;
-	}
-
-		hspctx->runmode = RUNMODE_RUN;
-	int r =
-	p1->dbg_set( breaked ? HSPDEBUG_STOP : HSPDEBUG_STEPIN );
-
-char tmp[256];
-sprintf(tmp,"%s(%2d) p2=%d runmode=%d,breaked=%d,r=%d",p1->fname?p1->fname:"???",line,p2,runmode,breaked,r);
-g_app->putLog(tmp, strlen(tmp));
-
 	return FALSE;
 }
 
