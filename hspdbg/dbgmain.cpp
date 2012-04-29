@@ -26,11 +26,11 @@ HANDLE	CDbgMain::m_waitThread = NULL;
 // typeinfo_hookƒNƒ‰ƒX
 
 CDbgMain::typeinfo_hook::typeinfo_hook()
-	: m_cmdfunc_thunk(this, cmdfunc_thunk) // C4355
-	, m_reffunc_thunk(this, reffunc_thunk) // C4355
-	, m_termfunc_thunk(this, termfunc_thunk) // C4355
-	, m_msgfunc_thunk(this, msgfunc_thunk) // C4355
-	, m_eventfunc_thunk(this, eventfunc_thunk) // C4355
+	: m_cmdfunc_thunk  (this, &CDbgMain::typeinfo_hook::cmdfunc) // C4355
+	, m_reffunc_thunk  (this, &CDbgMain::typeinfo_hook::reffunc) // C4355
+	, m_termfunc_thunk (this, &CDbgMain::typeinfo_hook::termfunc) // C4355
+	, m_msgfunc_thunk  (this, &CDbgMain::typeinfo_hook::msgfunc) // C4355
+	, m_eventfunc_thunk(this, &CDbgMain::typeinfo_hook::eventfunc) // C4355
 	, m_typeinfo(NULL)
 {
 }
@@ -59,80 +59,80 @@ void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 	}
 }
 
-int CALLBACK CDbgMain::typeinfo_hook::cmdfunc(int cmd)
+int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%d)/%d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return m_typeinfo_old.cmdfunc(cmd);
 }
 
-void* CALLBACK CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
+void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%p,%d)/%d>>%s(%2d)",this,__FUNCTION__,type_res,arg,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%p,%d)/%2d>>%s(%2d)",this,__FUNCTION__,type_res,arg,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return m_typeinfo_old.reffunc(type_res, arg);
 }
 
-int CALLBACK CDbgMain::typeinfo_hook::termfunc(int option)
+int CDbgMain::typeinfo_hook::termfunc(int option)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%d)/%d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return m_typeinfo_old.termfunc(option);
 }
 
-int CALLBACK CDbgMain::typeinfo_hook::msgfunc(int prm1,int prm2,int prm3)
+int CDbgMain::typeinfo_hook::msgfunc(int prm1,int prm2,int prm3)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%d,%d,%d)/%d>>%s(%2d)",this,__FUNCTION__,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%d,%d,%d)/%2d>>%s(%2d)",this,__FUNCTION__,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return m_typeinfo_old.msgfunc(prm1,prm2,prm3);
 }
 
-int CALLBACK CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3)
+int CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%d,%d,%d,%p)/%d>>%s(%2d)",this,__FUNCTION__,event,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%d,%d,%d,%p)/%2d>>%s(%2d)",this,__FUNCTION__,event,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return m_typeinfo_old.eventfunc(event,prm1,prm2,prm3);
 }
 
-char * CALLBACK CDbgMain::sbAlloc(int size)
+char * CDbgMain::sbAlloc(int size)
 {
 	char *p = m_sbAlloc(size);
 
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%d) -> %p",this,__FUNCTION__,size,p);
+	sprintf(tmp,"%p %s(%d) -> %p %d",this,__FUNCTION__,size,p,size/sizeof(HSP3TYPEINFO)*sizeof(HSP3TYPEINFO)==size);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return p;
 }
 
-char * CALLBACK CDbgMain::sbExpand(char *ptr, int size)
+char * CDbgMain::sbExpand(char *ptr, int size)
 {
 	char *p = m_sbExpand(ptr,size);
 
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%p,%d) -> %p",this,__FUNCTION__,ptr,size,p);
+	sprintf(tmp,"%p %s(%p,%d) -> %p %d",this,__FUNCTION__,ptr,size,p,size/sizeof(HSP3TYPEINFO)*sizeof(HSP3TYPEINFO)==size);
 	g_app->putLog(tmp, strlen(tmp));
 
 	return p;
@@ -148,8 +148,8 @@ CDbgMain::CDbgMain()
 	, m_dbg(NULL)
 	, m_breaked(false)
 	, m_typeinfo_hook(NULL)
-	, m_sbAlloc_thunk(this, sbAlloc_thunk)
-	, m_sbExpand_thunk(this, sbExpand_thunk)
+	, m_sbAlloc_thunk (this, &CDbgMain::sbAlloc)
+	, m_sbExpand_thunk(this, &CDbgMain::sbExpand)
 	, m_sbAlloc(NULL)
 	, m_sbExpand(NULL)
 {
@@ -400,12 +400,12 @@ void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 {
 	HSPCTX* hspctx = (HSPCTX*)top->hspctx;
 
-	if( hspctx->exinfo.HspFunc_malloc ) {
-		m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc, 7);
-	}
-	if( hspctx->exinfo.HspFunc_expand ) {
-		m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand, 5);
-	}
+	//if( hspctx->exinfo.HspFunc_malloc ) {
+	//	m_sbAlloc = (char*(*)(int))m_sbAlloc_thunk.injection_code(hspctx->exinfo.HspFunc_malloc);
+	//}
+	//if( hspctx->exinfo.HspFunc_expand ) {
+	//	m_sbExpand = (char*(*)(char*,int))m_sbExpand_thunk.injection_code(hspctx->exinfo.HspFunc_expand);
+	//}
 
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
 	{
@@ -426,6 +426,10 @@ void CDbgMain::updateInfo()
 void CDbgMain::updateDebugInfo()
 {
 	QTextCodec* codec = QTextCodec::codecForLocale();
+
+	if( !m_dbg->fname ) {
+		return;
+	}
 
 	char* ptr = m_dbg->get_value(DEBUGINFO_GENERAL);
 

@@ -78,24 +78,38 @@ g_app->putLog(tmp, strlen(tmp));
 // デバッグ処理プラグイン側関数
 //--------------------------------------------------------------------
 
+HSP3TYPEINFO* top;
+
+#define code_next top->hspctx->exinfo.HspFunc_prm_next
+#define puterror  top->hspctx->exinfo2->HspFunc_puterror
+
+int cmdfunc(int cmd)
+{
+	//		実行処理 (命令実行時に呼ばれます)
+	//
+	code_next(); // 次のコードを取得(最初に必ず必要です)
+
+	switch(cmd)
+	{
+	case 0:
+		if( top ) {
+			HSP3TYPEINFO* last = top + TYPE_USERDEF + top->hspctx->hsphed->max_hpi / sizeof(HPIDAT) + top->hspctx->hsphed->max_varhpi;
+			g_app->hook(top, last);
+			top = NULL;
+			break;
+		}
+	default:
+		puterror(HSPERR_UNSUPPORTED_FUNCTION);
+	}
+	return RUNMODE_RUN;
+}
+
 EXPORT void WINAPI hspdbg_init(HSP3TYPEINFO * info)
 {
 	//		プラグイン初期化 (実行・終了処理を登録します)
 	//
-	HSP3TYPEINFO* top = info - info->type;
-	HSP3TYPEINFO* last= top  + info->type + 1;
-	HSP3TYPEINFO* ite = top;
 
-	if( !g_app )
-	{
-		// メイン処理ルーティンを生成
-		CDbgMain::create();
-	}
+	top = info - info->type;
 
-	g_app->hook(top, last);
-	//for(; ite < last; ++ite)
-	//{
-	//	// 書き換え
-	//	g_cmdfunc[ite - top].install_hook(&ite->cmdfunc);
-	//}
+	info->cmdfunc = cmdfunc;
 }
