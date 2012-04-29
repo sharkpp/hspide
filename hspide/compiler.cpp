@@ -45,11 +45,20 @@ void CCompiler::updateConfiguration(const Configuration& info)
 	}
 }
 
-bool CCompiler::getBreakPoint(qint64 id, CBreakPointInfo & bp, CUuidLookupInfo & lookup)
+CWorkSpaceItem* CCompiler::getTargetItem(qint64 id)
 {
-	bp = m_breakpoints[id];
-	lookup = m_lookup[id];
-	return true;
+	QMap<quint64, CWorkSpaceItem*>::iterator
+		ite = m_targetsTemp.find(id);
+	if( m_targetsTemp.end() == ite )
+	{
+		return NULL;
+	}
+
+	CWorkSpaceItem* item = *ite;
+
+	m_targetsTemp.erase(ite);
+
+	return item;
 }
 
 void CCompiler::updateCompilerPath()
@@ -116,13 +125,7 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 
 	quint64 id = (quint64)proccess;
 
-	CBreakPointInfo bpi;
-	CUuidLookupInfo lookup;
-	if( targetItem->getBreakPoints(bpi, lookup) )
-	{
-		m_breakpoints[id] = bpi;
-		m_lookup[id] = lookup;
-	}
+	m_targetsTemp[id] = targetItem; // “r’†‚Å¸”s‚µ‚½ê‡ƒŠ[ƒN‚·‚é‚¯‚Ç‚Ç‚¤‚â‚Á‚Ä‰ğÁ‚µ‚æ‚¤H
 
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;

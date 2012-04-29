@@ -33,8 +33,7 @@ class CCompiler
 
 	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
 
-	QMap<quint64, CBreakPointInfo> m_breakpoints;
-	QMap<quint64, CUuidLookupInfo> m_lookup;
+	QMap<quint64, CWorkSpaceItem*> m_targetsTemp;
 	QList<QProcess*> m_compilerProcesses;
 
 	QLocalServer* m_server;
@@ -58,7 +57,7 @@ public:
 	// 単一ファイルをコンパイル
 	void compile();
 
-	bool getBreakPoint(qint64 id, CBreakPointInfo & bp, CUuidLookupInfo & lookup);
+	CWorkSpaceItem* getTargetItem(qint64 id);
 
 protected:
 

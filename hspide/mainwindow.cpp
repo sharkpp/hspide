@@ -1418,6 +1418,15 @@ void MainWindow::onDocumentChanged()
 	}
 }
 
+// ブレークポイントが更新された
+void MainWindow::onUpdateBreakpoint()
+{
+	// 全てのデバッグを中断
+	foreach(CDebugger* debugger, m_debuggers) {
+		debugger->updateBreakpoint();
+	}
+}
+
 // タブが変更された
 void MainWindow::currentTabChanged(int index)
 {
@@ -1431,6 +1440,7 @@ void MainWindow::currentTabChanged(int index)
 
 		// シグナルとの関連付けを切断
 		disconnect(lastDocument,                       SIGNAL(modificationChanged(bool)));
+		disconnect(lastDocument,                       SIGNAL(updateBreakpoint()));
 		disconnect(lastDocument->editor()->document(), SIGNAL(undoAvailable(bool)));
 		disconnect(lastDocument->editor()->document(), SIGNAL(redoAvailable(bool)));
 		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
@@ -1450,6 +1460,7 @@ void MainWindow::currentTabChanged(int index)
 		// シグナルと関連付け
 		connect(document,                       SIGNAL(modificationChanged(bool)), this,               SLOT(onDocumentChanged(bool)));
 		connect(document,                       SIGNAL(modificationChanged(bool)), saveDocumentAct,    SLOT(setEnabled(bool)));
+		connect(document,                       SIGNAL(updateBreakpoint()),        this,               SLOT(onUpdateBreakpoint()));
 		connect(document->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,        SLOT(setEnabled(bool)));
 		connect(document->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,        SLOT(setEnabled(bool)));
 		connect(document->editor(),             SIGNAL(copyAvailable(bool)),       editCutAct,         SLOT(setEnabled(bool)));

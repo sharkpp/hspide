@@ -1,12 +1,14 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <QDataStream>
+#include "workspaceitem.h"
 #include "compiler.h"
 #include "debugger.h"
 
 CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	: QObject(parent)
 	, m_clientConnection(socket)
+	, m_targetItem(NULL)
 {
 	connect(m_clientConnection, SIGNAL(readyRead()), this, SLOT(recvCommand()));
 	connect(m_clientConnection, SIGNAL(destroyed()), this, SLOT(deleteLater()));
@@ -43,21 +45,10 @@ void CDebugger::recvCommand()
 				in.setVersion(QDataStream::Qt_4_4);
 				qint64 id;
 				in >> id;
-				// ブレークポイント取得
-				CBreakPointInfo bp;
-				CUuidLookupInfo lookup;
-				compiler->getBreakPoint(id, bp, lookup);
-				// ブレークポイントをDLL側へ送信
-				QByteArray  data;
-				QDataStream out(&data, QIODevice::WriteOnly);
-				out.setVersion(QDataStream::Qt_4_4);
-				out << lookup << bp;
-				foreach(const QUuid &key, bp.keys()) {
-					foreach(int lineNo, bp[key]) {
-						qDebug() << "bp" << key << lineNo;
-					}
-				}
-				IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
+				// 関連付けられたアイテムを取得
+				m_targetItem = compiler->getTargetItem(id);
+				// ブレークポイントを更新
+				updateBreakpoint();
 			}
 			break; }
 		case CMD_PUT_LOG: { // ログを出力
@@ -135,4 +126,27 @@ void CDebugger::reqVariableInfo(const QString& varName, int info[])
 		<< info[0] << info[1]
 		<< info[2] << info[3];
 	IpcSend(*m_clientConnection, CMD_REQ_VAR_INFO, data);
+}
+
+// ブレークポイントを更新
+void CDebugger::updateBreakpoint()
+{
+	CBreakPointInfo bp;
+	CUuidLookupInfo lookup;
+
+	if( m_targetItem &&
+		m_targetItem->getBreakPoints(bp, lookup) )
+	{
+		// ブレークポイントをDLL側へ送信
+		QByteArray  data;
+		QDataStream out(&data, QIODevice::WriteOnly);
+		out.setVersion(QDataStream::Qt_4_4);
+		out << lookup << bp;
+		foreach(const QUuid &key, bp.keys()) {
+			foreach(int lineNo, bp[key]) {
+				qDebug() << "bp" << key << lineNo;
+			}
+		}
+		IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
+	}
 }

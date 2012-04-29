@@ -101,6 +101,7 @@ public slots:
 	void dettachedDebugger();
 	void onPutDebugLog(const QString& text);
 	void onDocumentChanged();
+	void onUpdateBreakpoint();
 	void currentTabChanged(int index);
 	void onAboutApp();
 	void onNewFile();

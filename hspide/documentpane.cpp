@@ -48,6 +48,7 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 		}
 	}
 
+	emit updateBreakpoint();
 }
 
 // İ’èXV

@@ -85,6 +85,7 @@ public slots:
 
 signals:
 	void modificationChanged(bool changed);
+	void updateBreakpoint();
 
 private:
 

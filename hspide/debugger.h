@@ -11,6 +11,8 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+class CWorkSpaceItem;
+
 class CDebugger
 	: public QObject
 {
@@ -21,6 +23,8 @@ class CDebugger
 	bool			m_waitAttach;
 
 	QVector<QPair<QString,QString> >	m_debugInfo;
+
+	CWorkSpaceItem*	m_targetItem;
 
 public:
 
@@ -40,6 +44,9 @@ public:
 
 	// 変数情報を要求
 	void reqVariableInfo(const QString& varName, int info[]);
+
+	// ブレークポイントを更新
+	void updateBreakpoint();
 
 protected:
 
