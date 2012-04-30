@@ -110,6 +110,8 @@ QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
 	QStandardItem* item;
 	QStringList key = valueName.split("/");
 	QList<QStandardItem*> itemPath;
+	QStandardItem* rootItem = NULL;
+	bool bCreateRoot = false;
 
 	itemPath.push_back(parent);
 
@@ -136,12 +138,21 @@ QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
 		item   = new QStandardItem(key.front());
 		item->setData(m_keyBase++);
 		parent = itemPath.back();
+		//
+		if( !rootItem && "@" == key.front() ) {
+			bCreateRoot = true;
+			rootItem = item;
+		}
 		// アイテム追加
 		parent->setColumnCount(ColumnCount);
 		parent->appendRow(item);
 		// 下のレベルに移動
 		itemPath.push_back(item);
 		key.pop_front();
+	}
+
+	if( bCreateRoot ) {
+		m_listWidget->expand(rootItem->index());
 	}
 
 	return item;

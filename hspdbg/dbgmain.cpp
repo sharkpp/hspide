@@ -159,9 +159,10 @@ CDbgMain::CDbgMain()
 	, m_sbExpand(NULL)
 {
 	// 受信通知などのシグナルと接続
-	connect(m_socket, SIGNAL(connected()),  this, SLOT(connected()));
-	connect(m_socket, SIGNAL(readyRead()),  this, SLOT(recvCommand()));
-	connect(m_socket, SIGNAL(disconnect()), this, SLOT(deleteLater()));
+	connect(m_socket, SIGNAL(connected()),    this, SLOT(connected()));
+	connect(m_socket, SIGNAL(readyRead()),    this, SLOT(recvCommand()));
+	connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+//	connect(m_socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 
 	// デバッガサーバーに接続
 	m_socket->connectToServer("test@hspide");
@@ -633,6 +634,7 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 		break;
 	}
 
+#ifdef _DEBUG
 	varInfo.description +=
 			QString("|%1,%2,%3,[%5,%6,%7,%8,%9]")
 				.arg(pval->flag)
@@ -643,6 +645,7 @@ bool CDbgMain::GetVariableInfo(int indexOfVariable, int indexOf[], VARIABLE_INFO
 				.arg(pval->len[2])
 				.arg(pval->len[3])
 				.arg(pval->len[4]);
+#endif
 
 	return true;
 }
@@ -668,6 +671,19 @@ void CDbgMain::ReqestVariableInfo(const QString& varName, int indexOf[])
 void CDbgMain::connected()
 {
 
+}
+
+void CDbgMain::disconnected()
+{
+	QMutexLocker lck(&m_lock);
+	if( m_breaked ) {
+		// デバッグの中断中はメッセージループが回らないので
+		m_quit = true;
+	} else {
+		HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+		BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
+		::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+	}
 }
 
 void CDbgMain::recvCommand()
@@ -696,15 +712,7 @@ void CDbgMain::recvCommand()
 			m_resumed = true;
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
-			QMutexLocker lck(&m_lock);
-			if( m_breaked ) {
-				// デバッグの中断中はメッセージループが回らないので
-				m_quit = true;
-			} else {
-				HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
-				BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
-				::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
-			}
+			m_socket->disconnectFromServer();
 			break; }
 		case CMD_REQ_VAR_INFO: { // 変数情報を要求
 			QMutexLocker lck(&m_lock);

@@ -118,5 +118,6 @@ protected:
 public slots:
 
 	void connected();
+	void disconnected();
 	void recvCommand();
 };
