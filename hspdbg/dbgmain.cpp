@@ -79,10 +79,12 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 		return 0;
 	}
 
+#ifdef _DEBUG
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+#endif
 
 	bool breaked = g_app->isBreak(dbg->fname, dbg->line);
 	// デバッグの一時中断指示が来たか？
@@ -102,10 +104,12 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
+#ifdef _DEBUG
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%p,%d)/%2d>>%s(%2d)",this,__FUNCTION__,type_res,arg,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+#endif
 
 	return m_typeinfo_old.reffunc(type_res, arg);
 }
@@ -113,10 +117,12 @@ void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 int CDbgMain::typeinfo_hook::termfunc(int option)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
+#ifdef _DEBUG
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+#endif
 
 	return m_typeinfo_old.termfunc(option);
 }
@@ -124,21 +130,25 @@ int CDbgMain::typeinfo_hook::termfunc(int option)
 int CDbgMain::typeinfo_hook::msgfunc(int prm1,int prm2,int prm3)
 {
 	HSP3DEBUG* dbg = g_app->debugInfo();
+#ifdef _DEBUG
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%d,%d,%d)/%2d>>%s(%2d)",this,__FUNCTION__,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+#endif
 
 	return m_typeinfo_old.msgfunc(prm1,prm2,prm3);
 }
 
 int CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3)
 {
+#ifdef _DEBUG
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%d,%d,%d,%p)/%2d>>%s(%2d)",this,__FUNCTION__,event,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
+#endif
 
 	return m_typeinfo_old.eventfunc(event,prm1,prm2,prm3);
 }
@@ -175,7 +185,9 @@ CDbgMain::CDbgMain()
 
 CDbgMain::~CDbgMain()
 {
-	m_socket->disconnectFromServer();
+	if( m_socket->isOpen() ) {
+		m_socket->disconnectFromServer();
+	}
 
 	delete [] m_typeinfo_hook;
 }
@@ -676,14 +688,10 @@ void CDbgMain::connected()
 void CDbgMain::disconnected()
 {
 	QMutexLocker lck(&m_lock);
-	if( m_breaked ) {
-		// デバッグの中断中はメッセージループが回らないので
-		m_quit = true;
-	} else {
-		HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
-		BMSCR* bmscr = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
-		::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
-	}
+	m_quit = true;
+	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+	BMSCR*  bmscr  = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
+	::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
 }
 
 void CDbgMain::recvCommand()

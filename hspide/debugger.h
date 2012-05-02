@@ -29,7 +29,7 @@ class CDebugger
 public:
 
 	CDebugger(QObject *parent, QLocalSocket* socket);
-
+virtual ~CDebugger();
 	// ê›íËçXêV
 	void setConfiguration(const Configuration& info);
 
@@ -53,7 +53,6 @@ protected:
 public slots:
 
 	void updateConfiguration(const Configuration& info);
-
 	void recvCommand();
 
 signals:

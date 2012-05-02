@@ -10,8 +10,8 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	, m_clientConnection(socket)
 	, m_targetItem(NULL)
 {
-	connect(m_clientConnection, SIGNAL(readyRead()), this, SLOT(recvCommand()));
-	connect(m_clientConnection, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+	connect(m_clientConnection, SIGNAL(readyRead()),    this, SLOT(recvCommand()));
+	connect(m_clientConnection, SIGNAL(destroyed()),    this, SLOT(deleteLater()));
 }
 
 // 設定更新
@@ -20,6 +20,11 @@ void CDebugger::setConfiguration(const Configuration& info)
 	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
 	        this,  SLOT(updateConfiguration(const Configuration&)));
 	updateConfiguration(info);
+qDebug()<<__FUNCTION__<<this;
+}
+CDebugger::~CDebugger()
+{
+qDebug()<<__FUNCTION__<<this;
 }
 
 void CDebugger::updateConfiguration(const Configuration& info)
@@ -36,7 +41,7 @@ void CDebugger::recvCommand()
 		switch(cmd_id)
 		{
 		case CMD_CONNECT: { // デバッガに接続
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id;
 			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
 			if( compiler )
 			{
@@ -55,10 +60,10 @@ void CDebugger::recvCommand()
 			QTextCodec* codec = QTextCodec::codecForLocale();
 			QString s = codec->toUnicode(param);
 #ifdef _DEBUG
-			if( "?{" != s.left(2) ) // とりあえず内部用のログはフィルタ
+			if( !s.contains("typeinfo_hook::") ) // とりあえず内部用のログはフィルタ
 #endif
-				emit putLog(s);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << s;
+			emit putLog(s);
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << s;
 			break; }
 		case CMD_STOP_RUNNING: { // 実行の停止
 			QDataStream in(param);
@@ -67,14 +72,14 @@ void CDebugger::recvCommand()
 			int   lineNo;
 			in >> uuid >> lineNo;
 			emit stopAtBreakPoint(uuid, lineNo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << uuid << lineNo;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << uuid << lineNo;
 			break; }
 		case CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
 			QDataStream in(param);
 			in.setVersion(QDataStream::Qt_4_4);
 			in >> m_debugInfo;
 			emit updateDebugInfo(m_debugInfo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << m_debugInfo;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << m_debugInfo;
 			break; }
 		case CMD_PUT_VAR_DIGEST: { // 変数情報の概要を通知
 			QDataStream in(param);
@@ -82,7 +87,7 @@ void CDebugger::recvCommand()
 			QVector<VARIABLE_INFO_TYPE> varInfo;
 			in >> varInfo;
 			emit updateVarInfo(varInfo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << varInfo;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << varInfo;
 			break; }
 		case CMD_RES_VAR_INFO: { // 変数情報を返答
 			QDataStream in(param);
@@ -90,10 +95,10 @@ void CDebugger::recvCommand()
 			QVector<VARIABLE_INFO_TYPE> varInfo(1);
 			in >> varInfo.back();
 			emit updateVarInfo(varInfo);
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id << varInfo;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << varInfo;
 			break; }
 		default:
-			qDebug() <<"CDebugger::recvCommand"<< (void*)m_clientConnection << cmd_id;
+			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id;
 		}
 	}
 }
@@ -101,18 +106,21 @@ void CDebugger::recvCommand()
 // デバッグを中断
 void CDebugger::suspendDebugging()
 {
+	qDebug() <<__FUNCTION__<< CMD_SUSPEND_DEBUG;
 	IpcSend(*m_clientConnection, CMD_SUSPEND_DEBUG);
 }
 
 // デバッグを再開
 void CDebugger::resumeDebugging()
 {
+	qDebug() <<__FUNCTION__<< CMD_RESUME_DEBUG;
 	IpcSend(*m_clientConnection, CMD_RESUME_DEBUG);
 }
 
 // デバッグを停止
 void CDebugger::stopDebugging()
 {
+	qDebug() <<__FUNCTION__<< CMD_STOP_DEBUG;
 	IpcSend(*m_clientConnection, CMD_STOP_DEBUG);
 }
 
@@ -125,6 +133,7 @@ void CDebugger::reqVariableInfo(const QString& varName, int info[])
 	out << varName
 		<< info[0] << info[1]
 		<< info[2] << info[3];
+	qDebug() <<__FUNCTION__<< CMD_REQ_VAR_INFO<< data;
 	IpcSend(*m_clientConnection, CMD_REQ_VAR_INFO, data);
 }
 
@@ -147,6 +156,7 @@ void CDebugger::updateBreakpoint()
 				qDebug() << "bp" << key << lineNo;
 			}
 		}
+		qDebug() <<__FUNCTION__<< CMD_SET_BREAK_POINT <<lookup <<bp;
 		IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
 	}
 }

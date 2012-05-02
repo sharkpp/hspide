@@ -1360,6 +1360,9 @@ void MainWindow::beginDebugging()
 	sysInfoDock->setEnable(true);
 	varInfoDock->clear();
 	varInfoDock->setEnable(true);
+	// メニューを変更
+	debugResumeAct->setEnabled(false);
+	debugSuspendAct->setEnabled(true);
 
 	// 現在のレイアウトを保存
 	m_stateDefault = saveState();
