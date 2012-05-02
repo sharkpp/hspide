@@ -232,9 +232,9 @@ bool Hsp3Lexer::scan()
 			if( len <= pos + 1 ) {
 				pos--;
 				READ_TOKEN(NOOP);
+				pos++;
 				tokenStart = pos;
 				lineNo     = m_line;
-				pos++;
 				READ_TOKEN(NOOP);
 				break;
 			} else {
