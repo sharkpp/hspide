@@ -21,6 +21,7 @@ typedef enum {
 
 HANDLE	CDbgMain::m_handle = NULL;
 HANDLE	CDbgMain::m_waitThread = NULL;
+HANDLE	CDbgMain::m_waitDisconnect = NULL;
 
 //--------------------------------------------------------------------
 // typeinfo_hookクラス
@@ -116,13 +117,15 @@ void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 
 int CDbgMain::typeinfo_hook::termfunc(int option)
 {
-	HSP3DEBUG* dbg = g_app->debugInfo();
+	if( g_app ) {
+		HSP3DEBUG* dbg = g_app->debugInfo();
 #ifdef _DEBUG
-	dbg->dbg_curinf();
-	char tmp[256];
-	sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
-	g_app->putLog(tmp, strlen(tmp));
+		dbg->dbg_curinf();
+		char tmp[256];
+		sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+		g_app->putLog(tmp, strlen(tmp));
 #endif
+	}
 
 	return m_typeinfo_old.termfunc(option);
 }
@@ -165,13 +168,12 @@ CDbgMain::CDbgMain()
 	, m_resumed(false)
 	, m_quit(false)
 	, m_typeinfo_hook(NULL)
-	, m_sbAlloc(NULL)
-	, m_sbExpand(NULL)
 {
 	// 受信通知などのシグナルと接続
 	connect(m_socket, SIGNAL(connected()),    this, SLOT(connected()));
 	connect(m_socket, SIGNAL(readyRead()),    this, SLOT(recvCommand()));
 	connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+	connect(m_socket, SIGNAL(disconnected()), this, SLOT(quit()));
 //	connect(m_socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 
 	// デバッガサーバーに接続
@@ -195,7 +197,8 @@ CDbgMain::~CDbgMain()
 void CDbgMain::create()
 {
 	// 通知イベント初期化
-	m_waitThread = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_waitThread     = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_waitDisconnect = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 	// スレッド開始
 	m_handle
 		= (HANDLE)::_beginthreadex(NULL, 0, CDbgMain::runStatic,
@@ -206,11 +209,16 @@ void CDbgMain::create()
 
 void CDbgMain::destroy()
 {
+OutputDebugStringA("CDbgMain::destroy #1\n");
 	// 終了要求
-	g_app->quit();
+	//QMetaObject::invokeMethod(g_app, "quit");
+	g_app->disconnectFromDebugger();
+OutputDebugStringA("CDbgMain::destroy #2\n");
 	// 終了待機
 	::WaitForSingleObject(m_waitThread, INFINITE);
+OutputDebugStringA("CDbgMain::destroy #3\n");
 	// リソース解放
+	::CloseHandle(m_waitDisconnect);
 	::CloseHandle(m_waitThread);
 	::CloseHandle(m_handle);
 }
@@ -221,12 +229,19 @@ unsigned CDbgMain::runStatic(void* p)
 		= new CDbgMain();
 	*static_cast<CDbgMain**>(p) = app;
 
-	// 初期化完了を通知
-//	::SetEvent(m_waitThread);
-
+	// メイン処理
 	app->exec();
+OutputDebugStringA("CDbgMain::runStatic #1\n");
+
+	// 切断待機
+	::WaitForSingleObject(m_waitDisconnect, INFINITE);
+OutputDebugStringA("CDbgMain::runStatic #2\n");
+
+	*static_cast<CDbgMain**>(p) = NULL;
+OutputDebugStringA("CDbgMain::runStatic #3\n");
 
 	delete app;
+OutputDebugStringA("CDbgMain::runStatic #4\n");
 
 	// 終了完了を通知
 	::SetEvent(m_waitThread);
@@ -243,10 +258,17 @@ void CDbgMain::connectToDebugger()
 	IpcSend(*m_socket, CMD_CONNECT, data);
 }
 
+void CDbgMain::disconnectFromDebugger()
+{
+	QMetaObject::invokeMethod(this, "disconnectLater");
+}
+
 void CDbgMain::putLog(const char *text, int len)
 {
-	QByteArray  data(text, len);
-	IpcSend(*m_socket, CMD_PUT_LOG, data);
+	if( !isQuitRequested() ) {
+		QByteArray  data(text, len);
+		IpcSend(*m_socket, CMD_PUT_LOG, data);
+	}
 }
 
 // 終了要求が出ているか？
@@ -687,11 +709,18 @@ void CDbgMain::connected()
 
 void CDbgMain::disconnected()
 {
+OutputDebugStringA("CDbgMain::disconnected\n");
 	QMutexLocker lck(&m_lock);
 	m_quit = true;
 	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
 	BMSCR*  bmscr  = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
 	::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+	::SetEvent(m_waitDisconnect);
+}
+
+void CDbgMain::disconnectLater()
+{
+	m_socket->disconnectFromServer();
 }
 
 void CDbgMain::recvCommand()
@@ -734,8 +763,9 @@ void CDbgMain::recvCommand()
 			ReqestVariableInfo(varName, indexOf);
 			break; }
 		default: {
-			qDebug() <<"CDbgMain::recvCommand"<< (void*)m_socket<< cmd_id;
+			qDebug() <<__FUNCTION__<< (void*)m_socket<< cmd_id;
 			}
 		}
+char tmp[256];sprintf(tmp,"%s %d\n",__FUNCTION__,cmd_id);OutputDebugStringA(tmp);
 	}
 }

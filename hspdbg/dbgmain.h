@@ -24,6 +24,7 @@ class CDbgMain
 
 	static HANDLE	m_handle;
 	static HANDLE	m_waitThread;
+	static HANDLE	m_waitDisconnect;
 
 	QLocalSocket*	m_socket;
 	qint64			m_id;
@@ -66,9 +67,6 @@ class CDbgMain
 
 	typeinfo_hook*	m_typeinfo_hook;
 
-	char * (*m_sbAlloc)(int size);
-	char * (*m_sbExpand)(char *ptr, int size);
-
 public:
 	CDbgMain();
 	virtual ~CDbgMain();
@@ -80,6 +78,7 @@ public:
 	void hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last);
 
 	void connectToDebugger();
+	void disconnectFromDebugger();
 	void putLog(const char* text, int len);
 
 	void updateInfo();
@@ -119,5 +118,6 @@ public slots:
 
 	void connected();
 	void disconnected();
+	void disconnectLater();
 	void recvCommand();
 };

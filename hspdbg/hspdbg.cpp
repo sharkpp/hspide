@@ -56,7 +56,9 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 // デバッグ処理プラグイン側関数
 //--------------------------------------------------------------------
 
+namespace {
 HSP3TYPEINFO* top;
+}
 
 #define code_next top->hspctx->exinfo.HspFunc_prm_next
 #define puterror  top->hspctx->exinfo2->HspFunc_puterror
@@ -82,12 +84,21 @@ int cmdfunc(int cmd)
 	return RUNMODE_RUN;
 }
 
+int termfunc(int /*option*/)
+{
+OutputDebugStringA("CDbgMain::termfunc #1\n");
+	g_app->disconnectFromDebugger();
+OutputDebugStringA("CDbgMain::termfunc #2\n");
+	return 0;
+}
+
 EXPORT void WINAPI hspdbg_init(HSP3TYPEINFO * info)
 {
 	//		プラグイン初期化 (実行・終了処理を登録します)
 	//
 
-	top = info - info->type;
+	top  = info - info->type;
 
-	info->cmdfunc = cmdfunc;
+	info->cmdfunc  = cmdfunc;
+	info->termfunc = termfunc;
 }
