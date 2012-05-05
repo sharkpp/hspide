@@ -145,6 +145,7 @@ class thunk
 	u8* m_code_top;  // フック用コードデータの先頭アドレス
 	u8* m_code_last; // フック用コードデータの先頭アドレス
 	u8* m_code;      // フック用コードデータの先頭アドレス
+	size_t m_code_max; // フック用のコード追加用のバッファの最大長
 
 	// from instructionLength.hpp
 	size_t thunk::instructionLength_x86(const u8* codes);
@@ -153,11 +154,12 @@ public:
 
 	thunk(){}
 
-	thunk(void* this_, const func_holder& f)
+	thunk(void* this_, const func_holder& f, size_t code_max = 256)
 	{
+		m_code_max = code_max;
 #if (defined(WIN32) || defined(_WIN32)) && (!defined(WIN64) || !defined(_WIN64))
-		m_code_top  = m_code = (u8*)VirtualAlloc(NULL, 256, MEM_COMMIT, PAGE_READWRITE);
-		m_code_last = m_code_top + 256;
+		m_code_top  = m_code = (u8*)VirtualAlloc(NULL, m_code_max, MEM_COMMIT, PAGE_READWRITE);
+		m_code_last = m_code_top + m_code_max;
 		// mov dword ptr [f.this_holder_ptr], this_
 		*m_code++       = 0xC7;
 		*m_code++       = 0x05;
@@ -199,7 +201,7 @@ public:
 		// 次コード読み込み関数処理前に関数を割り込ます
 		u8* code = (u8*)func;
 
-		::VirtualProtect(m_code_top, 256, PAGE_EXECUTE_READWRITE, &op);
+		::VirtualProtect(m_code_top, m_code_max, PAGE_EXECUTE_READWRITE, &op);
 
 		u8* jmp_addr;
 
@@ -233,7 +235,7 @@ public:
 
 #ifdef _DEBUG
 		for(size_t i = 0; i < copy_len; i++) {
-			code[i] = 0xCD; // int3
+			code[i] = 0xCC; // int3
 		}
 #endif
 
@@ -249,9 +251,44 @@ public:
 		*((u32*)m_code) = (u32)jmp_addr - (u32)m_code - 4; m_code += sizeof(u32);
 
 		// ページ属性を実行のみに変更
-		::VirtualProtect(m_code_top, 256, PAGE_EXECUTE, &op);
+		::VirtualProtect(m_code_top, m_code_max, PAGE_EXECUTE, &op);
 
 		return (void*)code_top;
+	}
+
+	// フックコードの削除
+	bool uninjection_code(void* func, void* hook_code)
+	{
+		u8* code_= (u8*)func;
+		u8* code = code_;
+
+		// 無条件 jmp や call の場合は飛び先に飛んでフック
+		while( 0xE9 == *code_ || 0xE8 == *code_ )
+		{
+			// 飛び先を計算
+			code   = code_;
+			code_  = (u8*)((u32)code_ + *((u32*)(code_+1)) + 5);
+		}
+
+		size_t copy_len = 0;
+
+		// ジャンプコードを上書くために待避するサイズを取得
+		for(; copy_len < 5; ) {
+			size_t len = instructionLength_x86((u8*)hook_code + copy_len);
+			if( !len ) {
+				return false;
+			}
+			copy_len += len;
+		}
+
+		DWORD op;
+		::VirtualProtect(code, copy_len, PAGE_EXECUTE_READWRITE, &op);
+
+		::memcpy(code, hook_code, copy_len);
+
+		::VirtualProtect(code, copy_len, op, &op);
+
+		return true;
 	}
 };
 
