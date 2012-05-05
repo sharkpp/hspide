@@ -36,12 +36,17 @@ CDbgMain::typeinfo_hook::typeinfo_hook()
 {
 }
 
+CDbgMain::typeinfo_hook::~typeinfo_hook()
+{
+	uninstall_hook();
+}
+
 void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 {
 	if( !m_typeinfo ) {
 		m_typeinfo    = typeinfo;
 		m_typeinfo_old= *typeinfo;
-		// cmdfuncのフック
+		// cmdfuncなどのフック
 		if( typeinfo->cmdfunc ) {
 			typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
 		}
@@ -56,6 +61,27 @@ void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 		}
 		if( typeinfo->eventfunc ) {
 			typeinfo->eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.get_code();
+		}
+	}
+}
+
+void CDbgMain::typeinfo_hook::uninstall_hook()
+{
+	if( m_typeinfo ) {
+		if( m_typeinfo->cmdfunc ) {
+			m_typeinfo->cmdfunc = m_typeinfo_old.cmdfunc;
+		}
+		if( m_typeinfo->reffunc ) {
+			m_typeinfo->reffunc = m_typeinfo_old.reffunc;
+		}
+		if( m_typeinfo->termfunc ) {
+			m_typeinfo->termfunc = m_typeinfo_old.termfunc;
+		}
+		if( m_typeinfo->msgfunc ) {
+			m_typeinfo->msgfunc = m_typeinfo_old.msgfunc;
+		}
+		if( m_typeinfo->eventfunc ) {
+			m_typeinfo->eventfunc = m_typeinfo_old.eventfunc;
 		}
 	}
 }
@@ -117,15 +143,18 @@ void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 
 int CDbgMain::typeinfo_hook::termfunc(int option)
 {
+OutputDebugStringA("typeinfo_hook::termfunc #1\n");
 	if( g_app ) {
 		HSP3DEBUG* dbg = g_app->debugInfo();
 #ifdef _DEBUG
 		dbg->dbg_curinf();
 		char tmp[256];
 		sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+OutputDebugStringA(tmp);
 		g_app->putLog(tmp, strlen(tmp));
 #endif
 	}
+OutputDebugStringA("typeinfo_hook::termfunc #2\n");
 
 	return m_typeinfo_old.termfunc(option);
 }
@@ -720,6 +749,7 @@ OutputDebugStringA("CDbgMain::disconnected\n");
 
 void CDbgMain::disconnectLater()
 {
+	disconnect(m_socket, SIGNAL(readyRead()), this, SLOT(recvCommand()));
 	m_socket->disconnectFromServer();
 }
 
@@ -749,7 +779,7 @@ void CDbgMain::recvCommand()
 			m_resumed = true;
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
-			m_socket->disconnectFromServer();
+			disconnectFromDebugger();
 			break; }
 		case CMD_REQ_VAR_INFO: { // 変数情報を要求
 			QMutexLocker lck(&m_lock);

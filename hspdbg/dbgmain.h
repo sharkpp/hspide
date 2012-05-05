@@ -59,10 +59,11 @@ class CDbgMain
 		int termfunc(int option);
 		int msgfunc(int prm1,int prm2,int prm3);
 		int eventfunc(int event, int prm1, int prm2, void *prm3);
-		int sballoc(int event, int prm1, int prm2, void *prm3);
 	public:
 		typeinfo_hook();
+		~typeinfo_hook();
 		void install_hook(HSP3TYPEINFO* typeinfo);
+		void uninstall_hook();
 	};
 
 	typeinfo_hook*	m_typeinfo_hook;
