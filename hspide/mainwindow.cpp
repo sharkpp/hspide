@@ -144,6 +144,12 @@ void MainWindow::setupDockWindows()
 	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
 	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
 	varInfoDockWidget->setVisible(false);
+
+	QDockWidget* breakPointDockWidget = new QDockWidget(tr("BreakPoint"), this);
+	breakPointDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	breakPointDockWidget->setWidget(breakPointDock = new CBreakPointDock(breakPointDockWidget));
+	breakPointDockWidget->setObjectName("BreakPoint"); // saveState()で警告がトレースで出るため
+	breakPointDockWidget->setVisible(false);
 }
 
 void MainWindow::setupStatusBar()
@@ -1360,6 +1366,7 @@ void MainWindow::beginDebugging()
 	sysInfoDock->setEnable(true);
 	varInfoDock->clear();
 	varInfoDock->setEnable(true);
+	breakPointDock->setEnable(true);
 	// メニューを変更
 	debugResumeAct->setEnabled(false);
 	debugSuspendAct->setEnabled(true);
@@ -1367,15 +1374,19 @@ void MainWindow::beginDebugging()
 	// 現在のレイアウトを保存
 	m_stateDefault = saveState();
 	// デバッグ時にしか存在しないドックを追加
-	QDockWidget* sysInfoDockWidget = qobject_cast<QDockWidget*>(sysInfoDock->parentWidget());
-	QDockWidget* varInfoDockWidget = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
-	QDockWidget* outputDockWidget  = qobject_cast<QDockWidget*>(outputDock->parentWidget());
+	QDockWidget* sysInfoDockWidget    = qobject_cast<QDockWidget*>(sysInfoDock->parentWidget());
+	QDockWidget* varInfoDockWidget    = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
+	QDockWidget* breakPointDockWidget = qobject_cast<QDockWidget*>(breakPointDock->parentWidget());
+	QDockWidget* outputDockWidget     = qobject_cast<QDockWidget*>(outputDock->parentWidget());
 	addDockWidget(Qt::BottomDockWidgetArea, sysInfoDockWidget);
 	addDockWidget(Qt::BottomDockWidgetArea, varInfoDockWidget);
+	addDockWidget(Qt::BottomDockWidgetArea, breakPointDockWidget);
 	tabifyDockWidget(outputDockWidget, sysInfoDockWidget);
 	tabifyDockWidget(outputDockWidget, varInfoDockWidget);
+	tabifyDockWidget(outputDockWidget, breakPointDockWidget);
 	sysInfoDockWidget->setVisible(true);
 	varInfoDockWidget->setVisible(true);
+	breakPointDockWidget->setVisible(true);
 	// デバッグ用のレイアウトに変更
 	restoreState(m_stateDebugging);
 }
@@ -1384,16 +1395,20 @@ void MainWindow::endDebugging()
 {
 	sysInfoDock->setEnable(false);
 	varInfoDock->setEnable(false);
+	breakPointDock->setEnable(false);
 
 	// 現在のレイアウトを保存
 	m_stateDebugging = saveState();
 	// デバッグ時にしか存在しないドックを取り除く
 	QDockWidget* sysInfoDockWidget = qobject_cast<QDockWidget*>(sysInfoDock->parentWidget());
 	QDockWidget* varInfoDockWidget = qobject_cast<QDockWidget*>(varInfoDock->parentWidget());
+	QDockWidget* breakPointDockWidget = qobject_cast<QDockWidget*>(breakPointDock->parentWidget());
 	removeDockWidget(sysInfoDockWidget);
 	removeDockWidget(varInfoDockWidget);
+	removeDockWidget(breakPointDockWidget);
 	sysInfoDockWidget->setVisible(false);
 	varInfoDockWidget->setVisible(false);
+	breakPointDockWidget->setVisible(false);
 	// 通常のレイアウトに変更
 	restoreState(m_stateDefault);
 }

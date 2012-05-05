@@ -12,6 +12,7 @@
 #include "searchdock.h"
 #include "symboldock.h"
 #include "messagedock.h"
+#include "breakpointdock.h"
 #include "configuration.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -63,6 +64,7 @@ class MainWindow : public QMainWindow
 	CVariableInfoDock* varInfoDock;
 	CSearchDock*       searchDock;
 	CMessageDock*      messageDock;
+	CBreakPointDock*   breakPointDock;
 
 	QWidget*			m_lastActivatedDocument;
 
