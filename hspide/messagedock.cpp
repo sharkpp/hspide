@@ -1,5 +1,6 @@
-#include "messagedock.h"
 #include <QtGui>
+#include "messagedock.h"
+#include "global.h"
 
 CMessageDock::CMessageDock(QWidget *parent)
 	: QWidget(parent)
@@ -100,7 +101,7 @@ void CMessageDock::clear()
 	updateMessagesCount();
 }
 
-void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int lineNo, CategoryType category, const QString & description)
+void CMessageDock::addMessage(const QUuid & uuid, int lineNo, CategoryType category, const QString & description)
 {
 	QString iconPath, categoryName;
 	switch(category)
@@ -135,15 +136,14 @@ void CMessageDock::addMessage(const QUuid & uuid, const QString & fileName, int 
 	}
 	model->setData(model->index(row, RefIndexColumn   ), m_messages.size(), Qt::UserRole + 1);
 	model->setData(model->index(row, DescriptionColumn), description);
-	model->setData(model->index(row, FileNameColumn   ), fileName);
+	model->setData(model->index(row, FileNameColumn   ), theFile.fileName(uuid));
 	model->setData(model->index(row, LineNoColumn     ), 0 < lineNo ? QString("%1").arg(lineNo) : "");
 	model->setData(model->index(row, LineNoColumn     ), Qt::AlignRight, Qt::TextAlignmentRole);
-	//
+
 	MessageInfoType info;
 	info.description= description;
 	info.category	= category;
 	info.uuid		= uuid;
-	info.fileName	= fileName;
 	info.lineNo		= lineNo;
 	m_messages.push_back(info);
 

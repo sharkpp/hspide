@@ -1,10 +1,11 @@
+#include <QDebug>
+#include <QResizeEvent>
+#include <QtGui>
 #include "symboldock.h"
 #include "documentpane.h"
 #include "workspaceitem.h"
-#include <QDebug>
 #include "hsp3lexer.h"
-#include <QResizeEvent>
-#include <QtGui>
+#include "global.h"
 
 CSymbolDock::CSymbolDock(QWidget *parent)
 	: QWidget(parent)
@@ -94,7 +95,7 @@ void CSymbolDock::analyze(CDocumentPane* document)
 	Hsp3Lexer lexer;
 	lexer.reset(text);
 
-	append(item->uuid(), item->path(), 1, "", "@", TypeModule);
+	append(item->uuid(), 1, "", "@", TypeModule);
 
 	int  lineNo = -1;
 	bool prevColon = false;
@@ -104,7 +105,7 @@ void CSymbolDock::analyze(CDocumentPane* document)
 		if( Hsp3Lexer::TypeLabel == lexer.type() &&
 			(lineNo != lexer.lineNo() || prevColon))
 		{
-			append(item->uuid(), item->path(), lexer.lineNo(), lexer.text(), "@", TypeLabel);
+			append(item->uuid(), lexer.lineNo(), lexer.text(), "@", TypeLabel);
 		}
 		prevColon = ":" == lexer.text();
 		lineNo    = lexer.lineNo();
@@ -123,7 +124,7 @@ void CSymbolDock::clear()
 }
 
 // ƒVƒ“ƒ{ƒ‹‚ð’Ç‰Á
-void CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type)
+void CSymbolDock::append(const QUuid& uuid, int lineNo, const QString& name, const QString& scope, SymbolType type)
 {
 	QString typeName;
 	switch(type) {
@@ -178,11 +179,10 @@ void CSymbolDock::append(const QUuid& uuid, const QString& fileName, int lineNo,
 	model->setData(model->index(row, TypeColumn,     parent), typeName);
 	model->setData(model->index(row, LineNoColumn,   parent), QString("%1").arg(lineNo));
 	model->setData(model->index(row, LineNoColumn,   parent), Qt::AlignRight, Qt::TextAlignmentRole);
-	model->setData(model->index(row, FileNameColumn, parent), fileName);
+	model->setData(model->index(row, FileNameColumn, parent), theFile.fileName(uuid));
 
 	SymbolInfoType info;
 	info.uuid		= uuid;
-	info.fileName	= fileName;
 	info.lineNo		= lineNo;
 	info.name		= name;
 	info.scope		= scope;

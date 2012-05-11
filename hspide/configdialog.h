@@ -36,10 +36,11 @@ public:
 
 	CConfigDialog(QWidget *parent = 0);
 
-	void setConfiguration(const Configuration& info);
 	const Configuration& configuration() const;
 
 protected:
+
+	void setConfiguration(const Configuration& info);
 
 public slots:
 

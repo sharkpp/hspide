@@ -2,6 +2,64 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="ja_JP">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <source>About hspide</source>
+        <translation>hspideについて</translation>
+    </message>
+    <message>
+        <source>hspide</source>
+        <translation>hspide</translation>
+    </message>
+    <message utf8="true">
+        <source>the Hot Soup Processer™ integrated development environment</source>
+        <translation>the Hot Soup Processer™ integrated development environment</translation>
+    </message>
+    <message utf8="true">
+        <source>Copyright© 2011-2012 by sharkpp.</source>
+        <translation>Copyright© 2011-2012 by sharkpp.</translation>
+    </message>
+    <message>
+        <source>website:</source>
+        <translation>website:</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS UI Gothic&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.sharkpp.net/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.sharkpp.net/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS UI Gothic&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.sharkpp.net/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.sharkpp.net/&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>e-mail:</source>
+        <translation>e-mail:</translation>
+    </message>
+    <message>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS UI Gothic&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;mailto:webmaster@sharkpp.net&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;webmaster@sharkpp.net&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS UI Gothic&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;mailto:webmaster@sharkpp.net&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;webmaster@sharkpp.net&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>CBreakPointDock</name>
+    <message>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+</context>
+<context>
     <name>CConfigDialog</name>
     <message>
         <source>Directory</source>
@@ -520,6 +578,13 @@
     </message>
 </context>
 <context>
+    <name>FileManager</name>
+    <message>
+        <source>(untitled)</source>
+        <translation>(無題)</translation>
+    </message>
+</context>
+<context>
     <name>JumpDialog</name>
     <message>
         <source>Go to line</source>
@@ -859,6 +924,30 @@
     <message>
         <source>Application settings</source>
         <translation>アプリケーションの設定</translation>
+    </message>
+    <message>
+        <source>BreakPoint</source>
+        <translation>ブレークポイント</translation>
+    </message>
+    <message>
+        <source>Suspend debugging</source>
+        <translation>デバッグの休止</translation>
+    </message>
+    <message>
+        <source>Resume debugging</source>
+        <translation>デバッグの再開</translation>
+    </message>
+    <message>
+        <source>Abort debugging</source>
+        <translation>デバッグの中止</translation>
+    </message>
+    <message>
+        <source>&amp;About hspide ...</source>
+        <translation>hspideについて(&amp;A)</translation>
+    </message>
+    <message>
+        <source>About hspide</source>
+        <translation>hspideについて</translation>
     </message>
 </context>
 <context>

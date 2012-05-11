@@ -1,5 +1,6 @@
 #include "configdialog.h"
 #include "hotkeywidget.h"
+#include "global.h"
 #include <QtGui>
 
 class CExpandedItemHeightDelegate
@@ -119,6 +120,8 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.category->selectionModel()->clear();
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	ui.stackedWidget->setCurrentIndex(0);
+
+	setConfiguration(theConf);
 }
 
 void CConfigDialog::setConfiguration(const Configuration& info)

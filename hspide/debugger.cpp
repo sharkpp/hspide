@@ -12,16 +12,13 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 {
 	connect(m_clientConnection, SIGNAL(readyRead()),    this, SLOT(recvCommand()));
 	connect(m_clientConnection, SIGNAL(destroyed()),    this, SLOT(deleteLater()));
+
+	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—
+	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(theConf);
 }
 
-// İ’èXV
-void CDebugger::setConfiguration(const Configuration& info)
-{
-	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
-	updateConfiguration(info);
-qDebug()<<__FUNCTION__<<this;
-}
 CDebugger::~CDebugger()
 {
 qDebug()<<__FUNCTION__<<this;

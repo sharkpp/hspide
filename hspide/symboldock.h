@@ -37,7 +37,6 @@ private:
 
 	typedef struct {
 		QUuid      uuid;
-		QString    fileName;
 		int        lineNo;
 		SymbolType type;
 		QString    name;
@@ -64,7 +63,7 @@ public:
 	void update();
 
 	// シンボルを追加
-	void append(const QUuid& uuid, const QString& fileName, int lineNo, const QString& name, const QString& scope, SymbolType type);
+	void append(const QUuid& uuid, int lineNo, const QString& name, const QString& scope, SymbolType type);
 
 	// シンボルを解析
 	void analyze(CDocumentPane* document);

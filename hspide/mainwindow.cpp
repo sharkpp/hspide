@@ -6,6 +6,10 @@
 #include "configdialog.h"
 #include "ui_aboutdialog.h"
 
+Configuration     theConf;
+FileManager       theFile;
+BreakPointManager theBreakPoint;
+
 QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
 {
 	QIcon icon;
@@ -32,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	resize(800, 600);
 
 	m_compiler = new CCompiler(this);
-	m_compiler->setConfiguration(m_configuration);
 
 	m_workSpace = new CWorkSpaceModel(this);
 //	m_workSpace->setConfiguration(m_configuration);
@@ -73,8 +76,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(varInfoDock, SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
 	connect(qobject_cast<QDockWidget*>(symbolDock->parentWidget()),
 	                     SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
-	connect(&m_configuration,
-	                     SIGNAL(updateConfiguration(const Configuration&)),  this,  SLOT(updateConfiguration(const Configuration&)));
+	connect(&theConf,    SIGNAL(updateConfiguration(const Configuration&)),  this, SLOT(updateConfiguration(const Configuration&)));
 
 	loadSettings();
 
@@ -417,7 +419,7 @@ void MainWindow::loadSettings()
 	QSettings settings("hspide.ini", QSettings::IniFormat);
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
-	Configuration conf = m_configuration;
+	Configuration conf = theConf;
 	QVariant tmp;
 
 	// コンパイラパスを取得
@@ -491,7 +493,7 @@ void MainWindow::loadSettings()
 		conf.setShortcut(Configuration::ShortcutEnum(i), info);
 	}
 
-	m_configuration = conf;
+	theConf = conf;
 
 	// ウインドウ位置などを取得
 	m_stateDefault      = settings.value("window/state").toByteArray();
@@ -509,19 +511,19 @@ void MainWindow::saveSettings()
 	QString tmp;
 
 	// コンパイラパスを保存
-	settings.setValue("path/compiler", m_configuration.compilerPath());
+	settings.setValue("path/compiler", theConf.compilerPath());
 	// HSPディレクトリの保存
-	settings.setValue("path/hsp", m_configuration.hspPath());
+	settings.setValue("path/hsp", theConf.hspPath());
 	// Commonディレクトリの保存
-	settings.setValue("path/hsp-common", m_configuration.hspCommonPath());
+	settings.setValue("path/hsp-common", theConf.hspCommonPath());
 
 	// エディタ関連の設定を保存
-	settings.setValue("editor/tab-width", m_configuration.editorTabWidth());
-	settings.setValue("editor/line-number-visible", m_configuration.editorLineNumberVisibled());
-	settings.setValue("editor/line-number-font-name", m_configuration.editorLineNumberFontName());
-	settings.setValue("editor/line-number-font-size", m_configuration.editorLineNumberFontSize());
-	settings.setValue("editor/font-name", m_configuration.editorFontName());
-	settings.setValue("editor/font-size", m_configuration.editorFontSize());
+	settings.setValue("editor/tab-width", theConf.editorTabWidth());
+	settings.setValue("editor/line-number-visible", theConf.editorLineNumberVisibled());
+	settings.setValue("editor/line-number-font-name", theConf.editorLineNumberFontName());
+	settings.setValue("editor/line-number-font-size", theConf.editorLineNumberFontSize());
+	settings.setValue("editor/font-name", theConf.editorFontName());
+	settings.setValue("editor/font-size", theConf.editorFontSize());
 
 	// 色設定
 	QStringList listItems;
@@ -540,7 +542,7 @@ void MainWindow::saveSettings()
 				;
 	for(int i = 0; i < listItems.size(); i++)
 	{
-		const Configuration::ColorMetricsInfoType& metrics = m_configuration.colorMetrics(Configuration::ColorMetricsEnum(i));
+		const Configuration::ColorMetricsInfoType& metrics = theConf.colorMetrics(Configuration::ColorMetricsEnum(i));
 		settings.setValue(QString("editor-color/%1-enable"          ).arg(listItems.at(i)), metrics.enable);
 		settings.setValue(QString("editor-color/%1-use-bold-font"   ).arg(listItems.at(i)), metrics.useBoldFont);
 		settings.setValue(QString("editor-color/%1-foreground-color").arg(listItems.at(i)), metrics.backgroundColor);
@@ -573,12 +575,12 @@ void MainWindow::saveSettings()
 				;
 	for(int i = 0; i < listShortcutItems.size(); i++)
 	{
-		const Configuration::ShortcutInfoType& info = m_configuration.shortcut(Configuration::ShortcutEnum(i));
+		const Configuration::ShortcutInfoType& info = theConf.shortcut(Configuration::ShortcutEnum(i));
 		settings.setValue(QString("key-assign/%1").arg(listShortcutItems.at(i)), info.keys.toString());
 	}
 
 	// ウインドウ位置などを保存
-	settings.setValue("window/geometry", saveGeometry());
+	settings.setValue("window/geometry",        saveGeometry());
 	settings.setValue("window/state",           saveState());
 	settings.setValue("window/state-debugging", m_stateDebugging);
 }
@@ -654,26 +656,26 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::updateConfiguration(const Configuration& info)
 {
-	m_configuration.applyShortcut(Configuration::ShortcutNew,       newDocumentAct);
-	m_configuration.applyShortcut(Configuration::ShortcutOpen,      openDocumentAct);
-	m_configuration.applyShortcut(Configuration::ShortcutSave,      saveDocumentAct);
-	m_configuration.applyShortcut(Configuration::ShortcutSaveAs,    saveAsDocumentAct);
-	m_configuration.applyShortcut(Configuration::ShortcutSaveAll,   saveAllDocumentAct);
-	m_configuration.applyShortcut(Configuration::ShortcutQuit,      quitApplicationAct);
-	m_configuration.applyShortcut(Configuration::ShortcutUndo,      editUndoAct);
-	m_configuration.applyShortcut(Configuration::ShortcutRedo,      editRedoAct);
-	m_configuration.applyShortcut(Configuration::ShortcutCut,       editCutAct);
-	m_configuration.applyShortcut(Configuration::ShortcutCopy,      editCopyAct);
-	m_configuration.applyShortcut(Configuration::ShortcutPaste,     editPasteAct);
-	m_configuration.applyShortcut(Configuration::ShortcutClear,     editClearAct);
-	m_configuration.applyShortcut(Configuration::ShortcutSelectAll, selectAllAct);
-	m_configuration.applyShortcut(Configuration::ShortcutFind,      findTextAct);
-	m_configuration.applyShortcut(Configuration::ShortcutFindNext,  findPrevTextAct);
-	m_configuration.applyShortcut(Configuration::ShortcutFindPrev,  findNextTextAct);
-	m_configuration.applyShortcut(Configuration::ShortcutReplace,   replaceTextAct);
-	m_configuration.applyShortcut(Configuration::ShortcutJump,      gotoLineAct);
-	m_configuration.applyShortcut(Configuration::ShortcutDebugRun,  debugRunAct);
-	m_configuration.applyShortcut(Configuration::ShortcutConfig,    settingAct);
+	theConf.applyShortcut(Configuration::ShortcutNew,       newDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutOpen,      openDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSave,      saveDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAs,    saveAsDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAll,   saveAllDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutQuit,      quitApplicationAct);
+	theConf.applyShortcut(Configuration::ShortcutUndo,      editUndoAct);
+	theConf.applyShortcut(Configuration::ShortcutRedo,      editRedoAct);
+	theConf.applyShortcut(Configuration::ShortcutCut,       editCutAct);
+	theConf.applyShortcut(Configuration::ShortcutCopy,      editCopyAct);
+	theConf.applyShortcut(Configuration::ShortcutPaste,     editPasteAct);
+	theConf.applyShortcut(Configuration::ShortcutClear,     editClearAct);
+	theConf.applyShortcut(Configuration::ShortcutSelectAll, selectAllAct);
+	theConf.applyShortcut(Configuration::ShortcutFind,      findTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindNext,  findPrevTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindPrev,  findNextTextAct);
+	theConf.applyShortcut(Configuration::ShortcutReplace,   replaceTextAct);
+	theConf.applyShortcut(Configuration::ShortcutJump,      gotoLineAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugRun,  debugRunAct);
+	theConf.applyShortcut(Configuration::ShortcutConfig,    settingAct);
 }
 
 void MainWindow::onAboutApp()
@@ -700,7 +702,6 @@ void MainWindow::onNewFile()
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = m_workSpace->appendProject();
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
-	document->setConfiguration(m_configuration);
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
@@ -773,7 +774,6 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 
 	// 新たに開く
 	CDocumentPane * document = new CDocumentPane(tabWidget);
-	document->setConfiguration(m_configuration);
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(item);
 	document->load(item->path());
@@ -1015,11 +1015,9 @@ void MainWindow::onOpenSettingDialog()
 {
 	CConfigDialog dlg(this);
 
-	dlg.setConfiguration(m_configuration);
-
 	if( QDialog::Accepted == dlg.exec() )
 	{
-		m_configuration = dlg.configuration();
+		theConf = dlg.configuration();
 	}
 }
 
@@ -1264,13 +1262,8 @@ void MainWindow::buildOutput(const QString & output)
 			}
 			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
 			if( 0 <= reFileName.indexIn(fileName) ) {
-				uuid = QUuid(reFileName.cap(1));
-				if( CWorkSpaceItem* item
-						= solutionItem ? solutionItem->search(uuid)
-						               : NULL )
-				{
-					fileName = item->text();
-				}
+qDebug()<<">>"<<reFileName.cap(1);
+				uuid = theFile.uuidFromFilename(reFileName.cap(1));
 			} else {
 				if( CWorkSpaceItem* item
 						= solutionItem ? solutionItem->search(fileName)
@@ -1280,7 +1273,7 @@ void MainWindow::buildOutput(const QString & output)
 				}
 			}
 			// メッセージを追加
-			messageDock->addMessage(uuid, fileName, lineNo.toInt(), type, desc);
+			messageDock->addMessage(uuid, lineNo.toInt(), type, desc);
 			accepted  = true;
 		}
 	}
@@ -1316,8 +1309,6 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> >&)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
 	connect(debugger, SIGNAL(destroyed()),                                              this, SLOT(dettachedDebugger()));
-
-	debugger->setConfiguration(m_configuration);
 
 	debugRunAct    ->setVisible( !m_debuggers.empty() );
 	noDebugRunAct  ->setVisible( !m_debuggers.empty() );

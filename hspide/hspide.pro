@@ -22,14 +22,15 @@ QMAKE_LFLAGS_DEBUG   += /NODEFAULTLIB:"msvcrtd.lib"
 # Input
 HEADERS += outputdock.h varinfodock.h sysinfodock.h projectdock.h searchdock.h symboldock.h messagedock.h \
            breakpointdock.h \
+           global.h \
            documentpane.h mainwindow.h workspaceitem.h workspacemodel.h compiler.h debugger.h codeedit.h \
-           newfiledialog.h jumpdialog.h configdialog.h \
+           newfiledialog.h jumpdialog.h configdialog.h filemanager.h breakpointmanager.h \
            ipc_common.h hsp3lexer.h hsp3highlighter.h configuration.h hotkeywidget.h
 SOURCES += main.cpp \
            outputdock.cpp varinfodock.cpp sysinfodock.cpp projectdock.cpp searchdock.cpp symboldock.cpp messagedock.cpp \
            breakpointdock.cpp \
            documentpane.cpp mainwindow.cpp workspaceitem.cpp workspacemodel.cpp compiler.cpp debugger.cpp codeedit.cpp \
-           newfiledialog.cpp jumpdialog.cpp configdialog.cpp \
+           newfiledialog.cpp jumpdialog.cpp configdialog.cpp filemanager.cpp breakpointmanager.cpp \
            ipc_common.cpp hsp3highlighter.cpp configuration.cpp hotkeywidget.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts

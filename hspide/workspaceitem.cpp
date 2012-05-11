@@ -1,12 +1,13 @@
-#include "workspacemodel.h"
-#include "workspaceitem.h"
-#include "documentpane.h"
 #include <QApplication>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QTreeView>
+#include "workspacemodel.h"
+#include "workspaceitem.h"
+#include "documentpane.h"
+#include "global.h"
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	: QObject(parent)
@@ -16,7 +17,6 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	, m_type(UnkownType)
 	, m_nodeType(UnkownNodeType)
 	, m_assignDocument(NULL)
-	, m_uuid(QUuid::createUuid())
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -48,7 +48,6 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * mo
 	, m_parentPos(0)
 	, m_type(type)
 	, m_assignDocument(NULL)
-	, m_uuid(QUuid::createUuid())
 {
 	static const struct {
 		NodeType nodeType;
@@ -149,15 +148,21 @@ void CWorkSpaceItem::setPath(const QString & path)
 {
 	m_path = path;
 
+	if( path.isEmpty() ) { // êVÇµÇ¢UUIDÇäÑÇËìñÇƒ
+		m_uuid = theFile.create();
+	} else {
+		m_uuid = theFile.path(path);
+	}
+
 	switch( m_type )
 	{
 	case File:
 	case Folder:
 	case Project:
-		setText(path.isEmpty() ? QString() : QFileInfo(path).fileName());
+		setText(path.isEmpty() ? QString() : QFileInfo(m_path).fileName());
 		break;
 	case Solution:
-		setText(path.isEmpty() ? QString() : QFileInfo(path).baseName());
+		setText(path.isEmpty() ? QString() : QFileInfo(m_path).baseName());
 		break;
 	default:
 		;

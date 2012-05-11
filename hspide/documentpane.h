@@ -31,9 +31,6 @@ public:
 
 	CCodeEdit * editor();
 
-	// 設定更新
-	void setConfiguration(const Configuration& info);
-
 	// シンボル一覧を指定
 	void setSymbols(const QVector<QStringList> & symbols);
 

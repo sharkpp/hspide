@@ -18,14 +18,11 @@ CCompiler::CCompiler(QObject *parent)
 	if( !m_server->listen("test@hspide") ) {
 	}
 	connect(m_server, SIGNAL(newConnection()), this, SLOT(attachDebugger()));
-}
 
-// İ’èXV
-void CCompiler::setConfiguration(const Configuration& info)
-{
-	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
+	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—
+	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
 	        this,  SLOT(updateConfiguration(const Configuration&)));
-	updateConfiguration(info);
+	updateConfiguration(theConf);
 }
 
 void CCompiler::updateConfiguration(const Configuration& info)

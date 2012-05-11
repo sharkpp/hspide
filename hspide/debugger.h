@@ -4,7 +4,7 @@
 #include <QProcess>
 #include <QLocalSocket>
 #include <QUuid>
-#include "configuration.h"
+#include "global.h"
 #include "ipc_common.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
@@ -30,8 +30,6 @@ public:
 
 	CDebugger(QObject *parent, QLocalSocket* socket);
 virtual ~CDebugger();
-	// 設定更新
-	void setConfiguration(const Configuration& info);
 
 	// デバッグを中断
 	void suspendDebugging();

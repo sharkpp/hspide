@@ -1,5 +1,6 @@
 #include <QtGui>
 #include "documentpane.h"
+#include "global.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -10,6 +11,11 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	, m_assignItem(NULL)
 {
 	connect(m_editorWidget, SIGNAL(pressIconArea(int)), this, SLOT(onPressEditorIconArea(int)));
+
+	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—
+	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(theConf);
 }
 
 void CDocumentPane::resizeEvent(QResizeEvent * event)
@@ -49,14 +55,6 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 	}
 
 	emit updateBreakpoint();
-}
-
-// İ’èXV
-void CDocumentPane::setConfiguration(const Configuration& info)
-{
-	connect(&info, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
-	updateConfiguration(info);
 }
 
 void CDocumentPane::updateConfiguration(const Configuration& info)

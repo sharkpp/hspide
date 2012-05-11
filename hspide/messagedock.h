@@ -36,7 +36,6 @@ private:
 		CategoryType category;
 		QString	description;
 		QUuid	uuid;
-		QString	fileName;
 		int		lineNo;
 	} MessageInfoType;
 
@@ -58,7 +57,7 @@ public:
 	CMessageDock(QWidget *parent = 0);
 
 	void clear();
-	void addMessage(const QUuid & uuid, const QString & fileName, int lineNo, CategoryType category, const QString & description);
+	void addMessage(const QUuid & uuid, int lineNo, CategoryType category, const QString & description);
 
 protected:
 

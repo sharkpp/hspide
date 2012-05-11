@@ -5,7 +5,7 @@
 #include <QMap>
 #include <QLocalServer>
 #include <QUuid>
-#include "configuration.h"
+#include "global.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -44,9 +44,6 @@ public:
 
 	// シンボル一覧を取得
 	const QVector<QStringList> & symbols() const;
-
-	// 設定更新
-	void setConfiguration(const Configuration& info);
 
 	// ビルド
 	bool build(CWorkSpaceItem * targetItem, bool debugMode);
