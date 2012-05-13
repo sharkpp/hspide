@@ -46,10 +46,9 @@ public:
 	} Type;
 
 	enum {
-		PathRole = Qt::UserRole + 2,
+		UuidRole = Qt::UserRole + 2,
 		TypeRole,
 		NodeTypeRole,
-		UuidRole,
 		SuffixFilterRole,
 	};
 
@@ -87,10 +86,10 @@ public:
 	NodeType nodeType() const;
 	void setNodeType(NodeType type);
 
-	const QString & path() const;
-	void setPath(const QString & path);
+	QString path() const;
+//	void setPath(const QString & path);
 
-	const QString & text() const;
+	const QString& text() const;
 	void setText(const QString & text = QString());
 
 	const QIcon & icon() const;
@@ -133,5 +132,9 @@ private:
 
 	bool serialize(QXmlStreamWriter * xml);
 	bool deserialize(QXmlStreamReader * xml);
+
+public slots:
+
+	void onFileChanged(const QUuid& uuid);
 };
 

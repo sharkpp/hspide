@@ -39,6 +39,9 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 			}
 		}
 	}
+
+	// 通知を登録
+	connect(&theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
 }
 
 CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model)
@@ -57,9 +60,9 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * mo
 	} TypeDefaultAttributes[TypeNum] = {
 		{ UnkownNodeType, ":/images/tango/small/text-x-generic.png", "",               "",                                    }, // UnkownType
 		{ FileNode,       ":/images/tango/small/text-x-generic.png", tr("(untitled)"), "",                                    }, // File
-		{ FolderNode,     ":/images/tango/small/folder.png",         "",               "",                                    }, // Folder
-		{ FolderNode,     ":/images/tango/small/edit-copy.png",      "",               "",                                    }, // Solution
-		{ FileNode,       ":/images/tango/small/folder.png",         "",               "*.hsp;*.as",                          }, // Project
+		{ FolderNode,     ":/images/tango/small/folder.png",         tr("(untitled)"), "",                                    }, // Folder
+		{ FolderNode,     ":/images/tango/small/edit-copy.png",      tr("(untitled)"), "",                                    }, // Solution
+		{ FileNode,       ":/images/tango/small/folder.png",         tr("(untitled)"), "*.hsp;*.as",                          }, // Project
 		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Dependence"), "",                                    }, // DependenceFolder
 		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Packfile"),   "*.*",                                 }, // PackFolder
 		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Source"),     "*.hsp;*.as",                          }, // SourceFolder
@@ -92,6 +95,9 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * mo
 			}
 		}
 	}
+
+	// 通知を登録
+	connect(&theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
 }
 
 CWorkSpaceItem::~CWorkSpaceItem()
@@ -139,49 +145,20 @@ void CWorkSpaceItem::setNodeType(NodeType type)
 	}
 }
 
-const QString & CWorkSpaceItem::path() const
+// ファイルパスを取得
+QString CWorkSpaceItem::path() const
 {
-	return m_path;
+	return theFile.path(m_uuid);
 }
 
-void CWorkSpaceItem::setPath(const QString & path)
-{
-	m_path = path;
-
-	if( path.isEmpty() ) { // 新しいUUIDを割り当て
-		m_uuid = theFile.create();
-	} else {
-		m_uuid = theFile.path(path);
-	}
-
-	switch( m_type )
-	{
-	case File:
-	case Folder:
-	case Project:
-		setText(path.isEmpty() ? QString() : QFileInfo(m_path).fileName());
-		break;
-	case Solution:
-		setText(path.isEmpty() ? QString() : QFileInfo(m_path).baseName());
-		break;
-	default:
-		;
-	}
-
-	// モデルに更新を通知しビューを再描画
-	if( m_model ) {
-		m_model->dataChanged(index(), index());
-	}
-}
-
-const QString & CWorkSpaceItem::text() const
+const QString& CWorkSpaceItem::text() const
 {
 	return m_text;
 }
 
 void CWorkSpaceItem::setText(const QString & text)
 {
-	m_text = text.isEmpty() ? tr("(untitled)") : text;
+	m_text = text;
 
 	// モデルに更新を通知しビューを再描画
 	if( m_model ) {
@@ -325,24 +302,10 @@ bool CWorkSpaceItem::remove(int position)
 	return true;
 }
 
+// 無題ファイル(ディスクに保存していないファイル)か？
 bool CWorkSpaceItem::isUntitled() const
 {
-	if( m_assignDocument )
-	{
-		return m_assignDocument->isUntitled();
-	}
-	else
-	{
-		switch(m_type)
-		{
-		case Solution:
-			return m_text.isEmpty() || m_text == tr("(untitled)");
-		case Project:
-		case File:
-			return QFileInfo(m_path).baseName().isEmpty();
-		}
-	}
-	return true;
+	return theFile.isUntitled(m_uuid);
 }
 
 const QUuid & CWorkSpaceItem::uuid() const
@@ -421,15 +384,16 @@ bool CWorkSpaceItem::save(const QString & fileName)
 	// 子も全て保存
 	foreach(CWorkSpaceItem* item, m_children)
 	{
-		item->save();
+		if( item->assignDocument() &&
+			item->assignDocument()->isModified() )
+		{
+			item->save();
+		}
 	}
 
 	if( m_assignDocument )
 	{
-		if( m_assignDocument->save(fileName) )
-		{
-			setPath(m_assignDocument->filePath());
-		}
+		m_assignDocument->save(fileName);
 	}
 	else
 	{
@@ -457,6 +421,10 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 						tr("HSP IDE Solution File (*.hspsln)") + ";;" +
 						tr("All File (*.*)")
 						);
+		if( filePath.isEmpty() )
+		{
+			return false;
+		}
 	}
 
 	// 書き込み用のファイルをオープン
@@ -466,12 +434,12 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName)
 		return false;
 	}
 
-	setPath(filePath);
+	theFile.rename(m_uuid, filePath);
 
 	// ファイルにXMLとして出力
 	xml.setDevice(&file);
 	xml.writeStartDocument();
-	xml.writeDTD("<!DOCTYPE xbel>");
+//	xml.writeDTD("<!DOCTYPE hspide>");
 	xml.writeStartElement("hspide");
 	xml.writeAttribute("version", "1.0");
 	xml.writeAttribute("type", "solution");
@@ -514,29 +482,32 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 			// ルートを指定
 			vItems.push_back(this);
 			if( m_model ) {
-				m_model->setData(index(), m_text, Qt::DisplayRole);
+				m_model->setData(index(), text(), Qt::DisplayRole);
 			}
 			break;
 		case QXmlStreamReader::StartElement: {
 			CWorkSpaceItem* parentItem = vItems.back();
 			CWorkSpaceItem* newItem    = NULL;
 			QString name = xml.name().toString();
-			       if( !name.compare("solution", Qt::CaseSensitive) ) {
+			QString path;
+			/*****/if( !name.compare("solution", Qt::CaseSensitive) ) {
 				if( 1 != vItems.size() ) {
 					xml.clear();
 					return false;
 				}
-				setText(xml.attributes().value("name").toString());
-				continue;
+				newItem = this;
+				path = fileName;
+			//	setText(xml.attributes().value("name").toString());
+			//	continue;
 			} else if( !name.compare("project", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, Project);
-				newItem->setPath(xml.attributes().value("path").toString());
+				path = xml.attributes().value("path").toString();
 			} else if( !name.compare("folder", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, Folder);
 				newItem->setText(xml.attributes().value("name").toString());
 			} else if( !name.compare("file", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, File);
-				newItem->setPath(xml.attributes().value("path").toString());
+				path = xml.attributes().value("path").toString();
 			} else if( !name.compare("dependence", Qt::CaseSensitive) ) {
 				newItem = new CWorkSpaceItem(parentItem, DependenceFolder);
 			} else if( !name.compare("pack", Qt::CaseSensitive) ) {
@@ -553,19 +524,52 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 				return false;
 			}
 			// UUIDが存在する時のみUUIDセット
-			QUuid uuid(xml.attributes().value("uuid").toString());
-			if( !uuid.isNull() ) {
+			if( !path.isEmpty() ) {
+				QUuid uuid(xml.attributes().value("uuid").toString());
+				if( !uuid.isNull() ) {
+					theFile.assign(path, uuid);
+				} else {
+					uuid = theFile.assign(path);
+				}
 				newItem->m_uuid = uuid;
 			}
-			// ツリーモデルをセット
-			newItem->setModel(m_model);
-			if( m_model ) {
-				m_model->appendRow(newItem, parentItem->index());
-				m_model->setData(newItem->index(), newItem->text(), Qt::DisplayRole);
-			} else {
-				parentItem->insert(parentItem->count(), newItem);
+			// テキストを指定
+			switch( newItem->m_type )
+			{
+			case File:
+			case Folder:
+			case Project:
+				newItem->setText(theFile.fileName(newItem->m_uuid));
+				break;
+			case Solution: {
+				QString name = xml.attributes().value("name").toString();
+				if( !name.isEmpty() ) {
+					newItem->setText(name);
+				} else if( theFile.isUntitled(newItem->m_uuid) ) {
+					newItem->setText( theFile.fileName(newItem->m_uuid) );
+				} else {
+					newItem->setText( theFile.fileInfo(newItem->m_uuid).baseName() );
+				}
+				break; }
+			default:
+				;
 			}
-			vItems.push_back(newItem);
+			if( newItem != this )
+			{
+				// ツリーモデルをセット
+				newItem->setModel(m_model);
+				if( m_model ) {
+					m_model->appendRow(newItem, parentItem->index());
+					m_model->setData(newItem->index(), newItem->text(), Qt::DisplayRole);
+				} else {
+					parentItem->insert(parentItem->count(), newItem);
+				}
+				vItems.push_back(newItem);
+			}
+			// 通知
+			if( !newItem->m_uuid.isNull() ) {
+				onFileChanged(newItem->m_uuid);
+			}
 			break; }
 		case QXmlStreamReader::EndElement: {
 			QString name = xml.name().toString();
@@ -592,12 +596,14 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 
 bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 {
+	bool uuidValid = false;
 
 	switch( m_type )
 	{
 	case File:
 		xml->writeStartElement("file");
 		xml->writeAttribute("path", m_path);
+		uuidValid = true;
 		break;
 	case Folder:
 		xml->writeStartElement("folder");
@@ -606,10 +612,12 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 	case Solution:
 		xml->writeStartElement("solution");
 		xml->writeAttribute("name", m_text);
+		uuidValid = true;
 		break;
 	case Project:
 		xml->writeStartElement("project");
 		xml->writeAttribute("path", m_path);
+		uuidValid = true;
 		break;
 	case DependenceFolder:
 		xml->writeStartElement("dependence");
@@ -627,7 +635,9 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 		return false;
 	}
 
-	xml->writeAttribute("uuid", m_uuid.toString());
+	if( uuidValid ) {
+		xml->writeAttribute("uuid", m_uuid.toString());
+	}
 
 	// 子も全てシリアライズ
 	foreach(CWorkSpaceItem* item, m_children)
@@ -655,4 +665,14 @@ bool CWorkSpaceItem::setAssignDocument(CDocumentPane * doc)
 CDocumentPane * CWorkSpaceItem::assignDocument()
 {
 	return m_assignDocument;
+}
+
+void CWorkSpaceItem::onFileChanged(const QUuid& uuid)
+{
+	// モデルに更新を通知しビューを再描画
+	if( uuid == m_uuid &&
+		m_model )
+	{
+		m_model->dataChanged(index(), index());
+	}
 }

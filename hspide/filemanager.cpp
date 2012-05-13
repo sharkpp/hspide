@@ -19,12 +19,26 @@ QUuid FileManager::create()
 // ファイルパスにUUIDを割り当て
 QUuid FileManager::assign(const QString& filePath)
 {
-	QUuid uuid(QUuid::createUuid());
+	return assign(filePath, QUuid::createUuid());
+}
+
+// ファイルパスにUUIDを割り当て
+QUuid FileManager::assign(const QString& filePath, const QUuid& uuid)
+{
+	// すでに割り当て済みかチェック
+	QList<QUuid> values = m_infoLookup.values(filePath);
+	if( !values.empty() &&
+		!filePath.isEmpty() )
+	{
+		return values.front();
+	}
+
 	m_manageInfo[uuid] = filePath;
 	m_infoLookup.insert(filePath, uuid);
 #if defined(_DEBUG)
 	qDebug() << __FUNCTION__ << uuid << filePath;
 #endif
+
 	return uuid;
 }
 
@@ -71,6 +85,19 @@ QUuid FileManager::uuidFromFilename(const QString& fileName)
 // UUIDを指定して関連付けられているファイル名を変更
 bool FileManager::rename(const QUuid& uuid, const QString& fileName)
 {
+	QMap<QUuid, QString>::iterator
+		ite = m_manageInfo.find(uuid);
+	if( m_manageInfo.end() != ite ) {
+		QMultiMap<QString, QUuid>::iterator
+			ite2 = m_infoLookup.find(ite.value());
+		if( m_infoLookup.end() != ite2 ) {
+			m_infoLookup.erase(ite2);
+			m_infoLookup.insert(fileName, uuid);
+			ite.value() = fileName;
+			emit filePathChanged(uuid);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -86,3 +113,8 @@ bool FileManager::removeAll()
 	return false;
 }
 
+// 無題ファイル(ディスクに保存していないファイル)か？
+bool FileManager::isUntitled(const QUuid& uuid) const
+{
+	return uuid.isNull() || QFileInfo(path(uuid)).fileName().isEmpty();
+}

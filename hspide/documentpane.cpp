@@ -10,7 +10,8 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	, m_highlighter(new CHsp3Highlighter(m_editorWidget->document()))
 	, m_assignItem(NULL)
 {
-	connect(m_editorWidget, SIGNAL(pressIconArea(int)), this, SLOT(onPressEditorIconArea(int)));
+	connect(m_editorWidget,             SIGNAL(pressIconArea(int)),        this, SLOT(onPressEditorIconArea(int)));
+	connect(m_editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
 	// 設定の変更通史の登録と設定からの初期化処理
 	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
@@ -131,7 +132,7 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 		return false;
 	}
 
-	m_filePath = filepath;
+	m_uuid = theFile.assign(filepath);
 
 	m_editorWidget->setPlainText(file.readAll());
 
@@ -145,7 +146,7 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 bool CDocumentPane::save(const QString & filePath)
 {
 	QString fileName = filePath;
-	QString lastFilePath = m_filePath;
+	QString lastFilePath = theFile.path(m_uuid);
 
 	// 引数にファイル名が指定されていた場合はそのファイルに保存
 	// 指定されていなかった場合は、
@@ -154,7 +155,7 @@ bool CDocumentPane::save(const QString & filePath)
 
 	if( fileName.isEmpty() )
 	{
-		fileName = m_filePath;
+		fileName = lastFilePath;
 		// 無題の場合は適当なファイル名を付ける
 		if( isUntitled() )
 		{
@@ -165,21 +166,25 @@ bool CDocumentPane::save(const QString & filePath)
 					.absoluteFilePath(tr("untitled") + fileInfo.fileName());
 			fileName = QDir::toNativeSeparators(fileName);
 
-			m_filePath = QFileDialog::getSaveFileName(this,
+			fileName = QFileDialog::getSaveFileName(this,
 							tr("Save File"), fileName,
 							tr("Hot Soup Processor Files (*.hsp *.as)"));
-			if( isUntitled() )
+			if( QFileInfo(fileName).baseName().isEmpty() )
 			{
 				// 保持しているファイル名も新たに指定されたファイル名も無い場合
 				// 保存できないのでエラーとする
 				return false;
 			}
+
+			fileName = QDir::toNativeSeparators(fileName);
 		}
 	}
 
+	// 変更が加えられているか？
 	if( lastFilePath == fileName &&
 		!m_editorWidget->document()->isModified() )
 	{
+		// 変更されていなければファイルへは保存せずに戻る
 		return true;
 	}
 
@@ -223,30 +228,28 @@ CWorkSpaceItem * CDocumentPane::assignItem()
 	return m_assignItem;
 }
 
+// uuidを取得
+const QUuid& CDocumentPane::uuid() const
+{
+	return m_uuid;
+}
+
 // ファイルパスを取得
-const QString & CDocumentPane::filePath() const
+QString CDocumentPane::path() const
 {
-	return m_filePath;
+	return theFile.path(m_uuid);
 }
 
-// ファイル名を取得
-QString CDocumentPane::fileName() const
-{
-	return isUntitled()
-			? tr("(untitled)")
-			: QFileInfo(m_filePath).fileName();
-}
-
-// 空ファイルか？
+// 無題ファイル(ディスクに保存していないファイル)か？
 bool CDocumentPane::isUntitled() const
 {
-	return QFileInfo(m_filePath).baseName().isEmpty();
+	return theFile.isUntitled(m_uuid);
 }
 
 // 変更されているか
 bool CDocumentPane::isModified() const
 {
 	return
-		isUntitled() ||
+		m_editorWidget->document() &&
 		m_editorWidget->document()->isModified();
 }

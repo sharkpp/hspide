@@ -1,6 +1,7 @@
 #include <QPlainTextEdit>
 #include <QSyntaxHighlighter>
 #include <QString>
+#include <QUuid>
 #include "codeedit.h"
 #include "workspaceitem.h"
 #include "configuration.h"
@@ -21,7 +22,7 @@ class CDocumentPane
 	CCodeEdit *			m_editorWidget;
 	CHsp3Highlighter*	m_highlighter;
 
-	QString				m_filePath;
+	QUuid				m_uuid;
 
 	CWorkSpaceItem*		m_assignItem;
 
@@ -53,13 +54,13 @@ public:
 	bool setAssignItem(CWorkSpaceItem * item);
 	CWorkSpaceItem * assignItem();
 
+	// uuidを取得
+	const QUuid& uuid() const;
+
 	// ファイルパスを取得
-	const QString & filePath() const;
+	QString path() const;
 
-	// ファイル名を取得
-	QString fileName() const;
-
-	// 空ファイルか？
+	// 無題ファイル(ディスクに保存していないファイル)か？
 	bool isUntitled() const;
 
 	// 変更されているか

@@ -27,6 +27,9 @@ public:
 	// ファイルパスにUUIDを割り当て
 	QUuid assign(const QString& filePath);
 
+	// ファイルパスにUUIDを割り当て
+	QUuid assign(const QString& filePath, const QUuid& uuid);
+
 	// パスを取得
 	QString path(const QUuid& uuid) const;
 
@@ -50,8 +53,12 @@ public:
 	
 	// 全て登録削除
 	bool removeAll();
+	
+	// 無題ファイル(ディスクに保存していないファイル)か？
+	bool isUntitled(const QUuid& uuid) const;
 
-private:
+signals:
 
+	void filePathChanged(const QUuid& uuid);
 };
 

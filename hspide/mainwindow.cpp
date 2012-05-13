@@ -592,6 +592,12 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+	// 終了する前に編集中のファイルを全て保存
+	CWorkSpaceItem * solutionItem = projectDock->currentSolution();
+	if( solutionItem &&
+		solutionItem->save() )
+	{
+	}
 	// デバッグ中の場合はドックを標準状態に戻す
 	if( isDebugging() &&
 		Qt::NoDockWidgetArea
@@ -678,6 +684,23 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	theConf.applyShortcut(Configuration::ShortcutConfig,    settingAct);
 }
 
+void MainWindow::closeTab(CWorkSpaceItem* targetItem)
+{
+	for(int index = tabWidget->count() - 1; 0 <= index; index--)
+	{
+		CDocumentPane * document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		CWorkSpaceItem* item = document->assignItem();
+		if( !targetItem || targetItem == item )
+		{
+			tabWidget->removeTab(index);
+			// 全て削除の場合以外は対象のタブが見つかったら終了
+			if( targetItem ) {
+				break;
+			}
+		}
+	}
+}
+
 void MainWindow::onAboutApp()
 {
 //	CAboutDialog dlg(this);
@@ -705,7 +728,7 @@ void MainWindow::onNewFile()
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
-	tabWidget->addTab(document, document->fileName());
+	tabWidget->addTab(document, theFile.fileName(document->uuid()));
 	tabWidget->setCurrentWidget(document);
 }
 
@@ -732,11 +755,19 @@ void MainWindow::onOpenFile(const QString & filePath)
 	if( !fileName.isEmpty() ) {
 		QString ext = QFileInfo(fileName).suffix();
 		if( !ext.compare("hspsln", Qt::CaseSensitive) ) {
+			// ソリューションファイルの場合はすでに開いているソリューションを閉じて開く
 			CWorkSpaceItem * solutionItem = projectDock->currentSolution();
 			if( solutionItem &&
 				solutionItem->save() &&
 				solutionItem->load(fileName) )
 			{
+				// 今のタブを全て閉じて
+				closeTab();
+				// プロジェクトを開く
+				QList<CWorkSpaceItem*> r(projectDock->projects());
+				for(int i = 0, num = r.count(); i < num; i++) {
+					onOpenFile(r[i]);
+				}
 			}
 		} else {
 			CWorkSpaceItem * parentItem = projectDock->currentProject();
@@ -777,7 +808,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(item);
 	document->load(item->path());
-	tabWidget->addTab(document, document->fileName());
+	tabWidget->addTab(document, theFile.fileName(document->uuid()));
 	tabWidget->setCurrentWidget(document);
 }
 
@@ -793,7 +824,7 @@ void MainWindow::onSaveFile()
 		if( CDocumentPane* document = item->assignDocument() )
 		{
 			// ファイル名を更新
-			tabWidget->setTabText(tabWidget->currentIndex(), document->fileName());
+			tabWidget->setTabText(tabWidget->currentIndex(), theFile.fileName(document->uuid()));
 		}
 	}
 
@@ -1091,12 +1122,15 @@ void MainWindow::onTabClose()
 	// 何はともあれ保存
 	onSaveFile();
 
-	// 関連付けを解除
 	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
 
 	CWorkSpaceItem * solutionItem = projectDock->currentSolution();
 	CWorkSpaceItem * currentItem  = document->assignItem();
 
+	// タブを閉じる
+	closeTab(currentItem);
+
+	// 関連付けを解除
 	currentItem->setAssignDocument(NULL);
 
 	// ソリューションが空もしくはプロジェクトに名前を
@@ -1106,9 +1140,6 @@ void MainWindow::onTabClose()
 	{
 		m_workSpace->remove(currentItem);
 	}
-
-	// タブを閉じる
-	tabWidget->removeTab(tabWidget->currentIndex());
 }
 
 void MainWindow::buildStart(const QString & filePath)
@@ -1127,14 +1158,14 @@ void MainWindow::buildStart(const QString & filePath)
 		// ファイルを保存
 		for(int index = 0, num = tabWidget->count(); index < num; index++)
 		{
-			CDocumentPane * textEdit = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-			CWorkSpaceItem* assignItem = textEdit->assignItem();
+			CDocumentPane * document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+			CWorkSpaceItem* item = document->assignItem();
 			if( targetProjectItem ==
-					assignItem->ancestor(CWorkSpaceItem::Project) )
+					item->ancestor(CWorkSpaceItem::Project) )
 			{
-				if( !textEdit->isUntitled() )
+				if( !document->isUntitled() )
 				{
-					textEdit->save();
+					document->save();
 				}
 			}
 		}
@@ -1518,7 +1549,7 @@ void MainWindow::onDocumentChanged(bool)
 	if( 0 <= index )
 	{
 		tabWidget->setTabText(tabWidget->currentIndex()
-			, document->fileName()
+			, theFile.fileName(document->uuid())
 				+ (document->editor()->document()->isModified() ? "*" : ""));
 	}
 }
@@ -1530,4 +1561,3 @@ void MainWindow::onSymbolDockVisibilityChanged(bool visible)
 		symbolDock->update();
 	}
 }
-

@@ -1,14 +1,17 @@
 #include <QtGui>
 #include "workspacemodel.h"
+#include "global.h"
 
 CWorkSpaceModel::CWorkSpaceModel(QObject * parent)
 	: QAbstractItemModel(parent)
 	, m_assignWidget(NULL)
 	, rootItem(new CWorkSpaceItem(this, this))
 {
+	// 空のプロジェクトを追加
 	QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
 	CWorkSpaceItem* item  = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
 	if( insertRow(0, item, rootIndex) ) {
+		item->setUuid(theFile.assign(""));
 	} else {
 	}
 }
@@ -100,7 +103,7 @@ CWorkSpaceItem * CWorkSpaceModel::appendProject(const QString & fileName)
 
 	items.clear();
 
-	projectItem->setPath(fileName);
+	projectItem->setUuid(theFile.assign(fileName));
 
 	return projectItem;
 }
@@ -183,7 +186,7 @@ CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpace
 					return NULL;
 				}
 
-				fileItem->setPath(fileName);
+				fileItem->setUuid(theFile.assign(fileName));
 
 				return fileItem;
 			}
@@ -247,17 +250,14 @@ bool CWorkSpaceModel::setData(const QModelIndex & index, const QVariant & value,
 		return true;
 	case Qt::ToolTipRole:
 		return true;
-	case CWorkSpaceItem::PathRole:
-		item->setPath(value.toString());
+	case CWorkSpaceItem::UuidRole:
+		item->setUuid(value.toString());
 		return true;
 	case CWorkSpaceItem::TypeRole:
 		item->setType(CWorkSpaceItem::Type(value.toInt()));
 		return true;
 	case CWorkSpaceItem::NodeTypeRole:
 		item->setNodeType(CWorkSpaceItem::NodeType(value.toInt()));
-		return true;
-	case CWorkSpaceItem::UuidRole:
-		item->setUuid(value.toString());
 		return true;
 	case CWorkSpaceItem::SuffixFilterRole:
 		item->setSuffixFilter(value.toStringList());
@@ -282,15 +282,13 @@ QVariant CWorkSpaceModel::data(const QModelIndex & index, int role) const
 	case Qt::DecorationRole:
 		return item->icon();
 	case Qt::ToolTipRole:
-		return item->path();
-	case CWorkSpaceItem::PathRole:
-		return item->path();
+		return theFile.path(item->uuid());
+	case CWorkSpaceItem::UuidRole:
+		return item->uuid();
 	case CWorkSpaceItem::TypeRole:
 		return item->type();
 	case CWorkSpaceItem::NodeTypeRole:
 		return item->nodeType();
-	case CWorkSpaceItem::UuidRole:
-		return item->uuid();
 	case CWorkSpaceItem::SuffixFilterRole:
 		return item->suffixFilter();
 	}
@@ -306,13 +304,11 @@ QMap<int, QVariant> CWorkSpaceModel::itemData(const QModelIndex &index) const
 
 	if( item )
 	{
-		roles.insert(CWorkSpaceItem::PathRole,         item->path());
+		roles.insert(CWorkSpaceItem::UuidRole,         item->uuid().toString());
 		roles.insert(CWorkSpaceItem::TypeRole,         item->type());
 		roles.insert(CWorkSpaceItem::NodeTypeRole,     item->nodeType());
-		roles.insert(CWorkSpaceItem::UuidRole,         item->uuid().toString());
 		roles.insert(CWorkSpaceItem::SuffixFilterRole, item->suffixFilter());
 	}
-qDebug() << roles;
 
 	return roles;
 }
