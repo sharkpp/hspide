@@ -149,4 +149,6 @@ private:
 	void beginDebugging();
 	void endDebugging();
 
+	void closeTab(CWorkSpaceItem* targetItem = NULL);
+
 };

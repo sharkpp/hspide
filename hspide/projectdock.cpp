@@ -99,6 +99,26 @@ CWorkSpaceItem * CProjectDock::currentProject()
 	return item;
 }
 
+// プロジェクトを取得
+QList<CWorkSpaceItem*> CProjectDock::projects()
+{
+	QList<CWorkSpaceItem*> result;
+
+	CWorkSpaceModel* model = dynamic_cast<CWorkSpaceModel*>(treeWidget->model());
+	CWorkSpaceItem*  solutionItem  = currentSolution();
+	QModelIndex      solutionIndex = solutionItem->index();
+
+	for(int row = 0, num = model->rowCount(solutionIndex);
+		row < num; row++)
+	{
+		QModelIndex index = model->index(row, 0, solutionIndex);
+		CWorkSpaceItem* item = static_cast<CWorkSpaceItem*>(index.internalPointer());
+		result.append(item);
+	}
+
+	return result;
+}
+
 // 現在のファイルを取得
 CWorkSpaceItem * CProjectDock::currentFile()
 {

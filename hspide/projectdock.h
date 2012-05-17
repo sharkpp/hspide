@@ -1,4 +1,5 @@
 #include <QTreeView>
+#include <QList>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -32,6 +33,9 @@ public:
 
 	// 現在のプロジェクトを取得
 	CWorkSpaceItem * currentProject();
+
+	// プロジェクトを取得
+	QList<CWorkSpaceItem*> projects();
 
 	// 現在のファイルを取得
 	CWorkSpaceItem * currentFile();

@@ -4,6 +4,7 @@
 #include "newfiledialog.h"
 #include "jumpdialog.h"
 #include "configdialog.h"
+#include "savesolutiondialog.h"
 #include "ui_aboutdialog.h"
 
 Configuration     theConf;
@@ -593,11 +594,33 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	// 終了する前に編集中のファイルを全て保存
-	CWorkSpaceItem * solutionItem = projectDock->currentSolution();
-	if( solutionItem &&
-		solutionItem->save() )
+	CSaveSolutionDialog dlg(this);
+
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	
+	if( dlg.setSolution(solutionItem) )
 	{
+		switch( dlg.exec() ) 
+		{
+		default:
+		case QDialogButtonBox::No:
+			// 保存しない
+			break;
+		case QDialogButtonBox::Yes: {
+			QList<CWorkSpaceItem*> list = dlg.list();
+			foreach(CWorkSpaceItem* item, list) {
+				if( item->save() )
+				{
+				}
+			}
+			break; }
+		case QDialogButtonBox::Cancel: 
+			// 終了処理キャンセル
+			event->ignore();
+			return;
+		}
 	}
+
 	// デバッグ中の場合はドックを標準状態に戻す
 	if( isDebugging() &&
 		Qt::NoDockWidgetArea

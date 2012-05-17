@@ -99,7 +99,7 @@ public:
 	void setSuffixFilter(const QStringList & filter);
 
 	bool load(const QString & fileName);
-	bool save(const QString & fileName = QString());
+	bool save(const QString & fileName = QString(), bool noReclusive = false);
 
 	bool isUntitled() const;
 

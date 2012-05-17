@@ -379,15 +379,18 @@ bool CWorkSpaceItem::load(const QString & fileName)
 	return true;
 }
 
-bool CWorkSpaceItem::save(const QString & fileName)
+bool CWorkSpaceItem::save(const QString & fileName, bool noReclusive)
 {
-	// 子も全て保存
-	foreach(CWorkSpaceItem* item, m_children)
+	if( !noReclusive )
 	{
-		if( item->assignDocument() &&
-			item->assignDocument()->isModified() )
+		// 子も全て保存
+		foreach(CWorkSpaceItem* item, m_children)
 		{
-			item->save();
+			if( item->assignDocument() &&
+				item->assignDocument()->isModified() )
+			{
+				item->save();
+			}
 		}
 	}
 

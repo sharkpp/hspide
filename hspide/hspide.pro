@@ -20,19 +20,20 @@ QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:"msvcrt.lib"
 QMAKE_LFLAGS_DEBUG   += /NODEFAULTLIB:"msvcrtd.lib"
 
 # Input
-HEADERS += outputdock.h varinfodock.h sysinfodock.h projectdock.h searchdock.h symboldock.h messagedock.h \
-           breakpointdock.h \
-           global.h \
+HEADERS += outputdock.h varinfodock.h sysinfodock.h projectdock.h searchdock.h symboldock.h \
+           messagedock.h breakpointdock.h \
            documentpane.h mainwindow.h workspaceitem.h workspacemodel.h compiler.h debugger.h codeedit.h \
-           newfiledialog.h jumpdialog.h configdialog.h filemanager.h breakpointmanager.h \
-           ipc_common.h hsp3lexer.h hsp3highlighter.h configuration.h hotkeywidget.h
+           newfiledialog.h jumpdialog.h configdialog.h savesolutiondialog.h \
+           global.h configuration.h filemanager.h breakpointmanager.h  \
+           ipc_common.h hsp3lexer.h hsp3highlighter.h hotkeywidget.h
 SOURCES += main.cpp \
-           outputdock.cpp varinfodock.cpp sysinfodock.cpp projectdock.cpp searchdock.cpp symboldock.cpp messagedock.cpp \
-           breakpointdock.cpp \
+           outputdock.cpp varinfodock.cpp sysinfodock.cpp projectdock.cpp searchdock.cpp symboldock.cpp \
+           messagedock.cpp breakpointdock.cpp \
            documentpane.cpp mainwindow.cpp workspaceitem.cpp workspacemodel.cpp compiler.cpp debugger.cpp codeedit.cpp \
-           newfiledialog.cpp jumpdialog.cpp configdialog.cpp filemanager.cpp breakpointmanager.cpp \
-           ipc_common.cpp hsp3highlighter.cpp configuration.cpp hotkeywidget.cpp
+           newfiledialog.cpp jumpdialog.cpp configdialog.cpp savesolutiondialog.cpp \
+           configuration.cpp filemanager.cpp breakpointmanager.cpp \
+           ipc_common.cpp hsp3highlighter.cpp hotkeywidget.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts
-FORMS    = newfiledialog.ui jumpdialog.ui configdialog.ui aboutdialog.ui
+FORMS    = newfiledialog.ui jumpdialog.ui configdialog.ui aboutdialog.ui savesolutiondialog.ui
 

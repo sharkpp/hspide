@@ -289,10 +289,6 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>CDocumentPane</name>
     <message>
-        <source>(untitled)</source>
-        <translation>(無題)</translation>
-    </message>
-    <message>
         <source>untitled</source>
         <translation>無題</translation>
     </message>
@@ -998,6 +994,36 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Select All</source>
         <translation>すべてを選択</translation>
+    </message>
+</context>
+<context>
+    <name>SaveSolutionDialog</name>
+    <message>
+        <source>hspide</source>
+        <translation>hspide</translation>
+    </message>
+    <message>
+        <source>Do you want to save the changes</source>
+        <translation>変更を保存しますか？</translation>
+    </message>
+</context>
+<context>
+    <name>QDialogButtonBox</name>
+    <message>
+        <source>&amp;Yes</source>
+        <translation>はい(&amp;Y)</translation>
+    </message>
+    <message>
+        <source>&amp;No</source>
+        <translation>いいえ(&amp;N)</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>閉じる</translation>
     </message>
 </context>
 </TS>
