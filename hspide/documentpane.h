@@ -60,6 +60,9 @@ public:
 	// ファイルパスを取得
 	QString path() const;
 
+	// タイトルを取得
+	QString title() const;
+
 	// 無題ファイル(ディスクに保存していないファイル)か？
 	bool isUntitled() const;
 

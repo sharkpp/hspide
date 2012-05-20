@@ -136,6 +136,11 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 
 	m_editorWidget->setPlainText(file.readAll());
 
+	// テンプレートから追加した時は初期時に変更ありにする
+	if( !tmplFilePath.isEmpty() ) {
+		m_editorWidget->document()->setModified();
+	}
+
 	// 変更通知シグナルに接続
 	connect(m_editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
@@ -165,7 +170,11 @@ bool CDocumentPane::save(const QString & filePath, bool saveAs)
 
 			fileName
 				= fileInfo.dir()
-					.absoluteFilePath(tr("untitled") + fileInfo.fileName());
+					.absoluteFilePath(
+							isUntitled() || !saveAs
+								? tr("untitled") + fileInfo.suffix()
+								: fileInfo.fileName()
+						);
 			fileName = QDir::toNativeSeparators(fileName);
 
 			fileName = QFileDialog::getSaveFileName(this,
@@ -240,6 +249,12 @@ const QUuid& CDocumentPane::uuid() const
 QString CDocumentPane::path() const
 {
 	return theFile.path(m_uuid);
+}
+
+// タイトルを取得
+QString CDocumentPane::title() const
+{
+	return theFile.fileName(m_uuid) + (m_editorWidget->document()->isModified() ? "*" : "");
 }
 
 // 無題ファイル(ディスクに保存していないファイル)か？

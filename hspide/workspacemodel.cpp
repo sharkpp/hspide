@@ -187,6 +187,7 @@ CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString & fileName, CWorkSpace
 				}
 
 				fileItem->setUuid(theFile.assign(fileName));
+				fileItem->setText(theFile.fileName(fileItem->uuid()));
 
 				return fileItem;
 			}

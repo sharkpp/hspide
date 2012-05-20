@@ -146,6 +146,8 @@ void CSaveSolutionDialog::canceled()
 
 bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 {
+	bool noSaveItem = true;
+
 	QVector<QTreeWidgetItem*> stackItem;
 	QVector<QPair<CWorkSpaceItem*, int> > stack;
 	stack.push_back(qMakePair(item, 0));
@@ -206,6 +208,8 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 			}
 			else
 			{
+				noSaveItem = false;
+
 				if( document->isUntitled() ) { // –³‘è‚Ìê‡ã‘‚«•Û‘¶‚ð–³Œø‚É‚·‚é
 					newItem->setData(SaveKindColumn, DisableIndexRole, qVariantFromValue<int>(OverwriteSave));
 					newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(SaveAs));
@@ -229,7 +233,7 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 
 	ui.saveTargetList->expandAll();
 
-	return true;
+	return !noSaveItem;
 }
 
 QList<CSaveSolutionDialog::SavingItemInfo> CSaveSolutionDialog::list()

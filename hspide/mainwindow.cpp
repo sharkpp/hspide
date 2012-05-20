@@ -751,7 +751,7 @@ void MainWindow::onNewFile()
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
-	tabWidget->addTab(document, theFile.fileName(document->uuid()));
+	tabWidget->addTab(document, document->title());
 	tabWidget->setCurrentWidget(document);
 }
 
@@ -831,7 +831,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 	document->setSymbols(m_compiler->symbols());
 	document->setAssignItem(item);
 	document->load(item->path());
-	tabWidget->addTab(document, theFile.fileName(document->uuid()));
+	tabWidget->addTab(document, document->title());
 	tabWidget->setCurrentWidget(document);
 }
 
@@ -847,7 +847,7 @@ void MainWindow::onSaveFile()
 		if( CDocumentPane* document = item->assignDocument() )
 		{
 			// ファイル名を更新
-			tabWidget->setTabText(tabWidget->currentIndex(), theFile.fileName(document->uuid()));
+			tabWidget->setTabText(tabWidget->currentIndex(), document->title());
 		}
 	}
 
@@ -1571,9 +1571,7 @@ void MainWindow::onDocumentChanged(bool)
 	int index = tabWidget->indexOf(document);
 	if( 0 <= index )
 	{
-		tabWidget->setTabText(tabWidget->currentIndex()
-			, theFile.fileName(document->uuid())
-				+ (document->editor()->document()->isModified() ? "*" : ""));
+		tabWidget->setTabText(tabWidget->currentIndex(), document->title());
 	}
 }
 

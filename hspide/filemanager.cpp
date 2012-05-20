@@ -56,8 +56,8 @@ QString FileManager::path(const QUuid& uuid) const
 // ファイル名を取得
 QString FileManager::fileName(const QUuid& uuid) const
 {
-	QString fileName = QFileInfo(path(uuid)).fileName();
-	return fileName.isEmpty() ? tr("(untitled)") : fileName;
+	QFileInfo fileInfo = QFileInfo(path(uuid));
+	return fileInfo.baseName().isEmpty() ? tr("(untitled)") : fileInfo.fileName();
 }
 
 // ファイル情報を取得
@@ -116,5 +116,5 @@ bool FileManager::removeAll()
 // 無題ファイル(ディスクに保存していないファイル)か？
 bool FileManager::isUntitled(const QUuid& uuid) const
 {
-	return uuid.isNull() || QFileInfo(path(uuid)).fileName().isEmpty();
+	return uuid.isNull() || QFileInfo(path(uuid)).baseName().isEmpty();
 }
