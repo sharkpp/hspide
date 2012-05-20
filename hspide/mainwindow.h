@@ -151,4 +151,6 @@ private:
 
 	void closeTab(CWorkSpaceItem* targetItem = NULL);
 
+	bool closeSolution();
+
 };

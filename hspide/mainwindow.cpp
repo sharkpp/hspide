@@ -594,31 +594,11 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	// 終了する前に編集中のファイルを全て保存
-	CSaveSolutionDialog dlg(this);
-
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
-	
-	if( dlg.setSolution(solutionItem) )
+	if( !closeSolution() )
 	{
-		switch( dlg.exec() ) 
-		{
-		default:
-		case QDialogButtonBox::No:
-			// 保存しない
-			break;
-		case QDialogButtonBox::Yes: {
-			QList<CSaveSolutionDialog::SavingItemInfo> list = dlg.list();
-			foreach(CSaveSolutionDialog::SavingItemInfo listItem, list) {
-				if( listItem.first->save(listItem.second) )
-				{
-				}
-			}
-			break; }
-		case QDialogButtonBox::Cancel: 
 			// 終了処理キャンセル
 			event->ignore();
 			return;
-		}
 	}
 
 	// デバッグ中の場合はドックを標準状態に戻す
@@ -724,6 +704,37 @@ void MainWindow::closeTab(CWorkSpaceItem* targetItem)
 	}
 }
 
+bool MainWindow::closeSolution()
+{
+	CSaveSolutionDialog dlg(this);
+
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	
+	if( dlg.setSolution(solutionItem) )
+	{
+		switch( dlg.exec() ) 
+		{
+		default:
+		case QDialogButtonBox::No:
+			// 保存しない
+			break;
+		case QDialogButtonBox::Yes: {
+			QList<CSaveSolutionDialog::SavingItemInfo> list = dlg.list();
+			foreach(CSaveSolutionDialog::SavingItemInfo listItem, list) {
+				if( listItem.first->save(listItem.second) )
+				{
+				}
+			}
+			break; }
+		case QDialogButtonBox::Cancel: 
+			// キャンセル
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void MainWindow::onAboutApp()
 {
 //	CAboutDialog dlg(this);
@@ -780,16 +791,18 @@ void MainWindow::onOpenFile(const QString & filePath)
 		if( !ext.compare("hspsln", Qt::CaseSensitive) ) {
 			// ソリューションファイルの場合はすでに開いているソリューションを閉じて開く
 			CWorkSpaceItem * solutionItem = projectDock->currentSolution();
-			if( solutionItem &&
-				solutionItem->save() &&
-				solutionItem->load(fileName) )
+			// ソリューションを閉じる
+			if( closeSolution() )
 			{
 				// 今のタブを全て閉じて
 				closeTab();
 				// プロジェクトを開く
-				QList<CWorkSpaceItem*> r(projectDock->projects());
-				for(int i = 0, num = r.count(); i < num; i++) {
-					onOpenFile(r[i]);
+				if( solutionItem->load(fileName) )
+				{
+					QList<CWorkSpaceItem*> r(projectDock->projects());
+					for(int i = 0, num = r.count(); i < num; i++) {
+						onOpenFile(r[i]);
+					}
 				}
 			}
 		} else {

@@ -128,8 +128,8 @@ void CSaveSolutionDialog::clicked(QAbstractButton* button)
 				CWorkSpaceItem::SaveType saveType;
 				switch( data.toInt() ) {
 					default:
-					case OverwriteSave: saveType = CWorkSpaceItem::OverwriteSave;
-					case SaveAs:        saveType = CWorkSpaceItem::SaveAs;
+					case OverwriteSave: saveType = CWorkSpaceItem::OverwriteSave; break;
+					case SaveAs:        saveType = CWorkSpaceItem::SaveAs; break;
 				}
 				m_savingItems.push_back( qMakePair(wsItem, saveType) );
 			}
