@@ -607,9 +607,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 			// •Û‘¶‚µ‚È‚¢
 			break;
 		case QDialogButtonBox::Yes: {
-			QList<CWorkSpaceItem*> list = dlg.list();
-			foreach(CWorkSpaceItem* item, list) {
-				if( item->save() )
+			QList<CSaveSolutionDialog::SavingItemInfo> list = dlg.list();
+			foreach(CSaveSolutionDialog::SavingItemInfo listItem, list) {
+				if( listItem.first->save(listItem.second) )
 				{
 				}
 			}

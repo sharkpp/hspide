@@ -371,6 +371,21 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>CSaveSolutionDialog</name>
+    <message>
+        <source>Without save</source>
+        <translation>保存しない</translation>
+    </message>
+    <message>
+        <source>Overwrite save</source>
+        <translation>上書き保存</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation>名前を付けて保存</translation>
+    </message>
+</context>
+<context>
     <name>CSymbolDock</name>
     <message>
         <source>Name</source>
@@ -962,6 +977,25 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>QDialogButtonBox</name>
+    <message>
+        <source>&amp;Yes</source>
+        <translation>はい(&amp;Y)</translation>
+    </message>
+    <message>
+        <source>&amp;No</source>
+        <translation>いいえ(&amp;N)</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>閉じる</translation>
+    </message>
+</context>
+<context>
     <name>QTextControl</name>
     <message>
         <source>&amp;Undo</source>
@@ -1005,25 +1039,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Do you want to save the changes</source>
         <translation>変更を保存しますか？</translation>
-    </message>
-</context>
-<context>
-    <name>QDialogButtonBox</name>
-    <message>
-        <source>&amp;Yes</source>
-        <translation>はい(&amp;Y)</translation>
-    </message>
-    <message>
-        <source>&amp;No</source>
-        <translation>いいえ(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>キャンセル</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>閉じる</translation>
     </message>
 </context>
 </TS>

@@ -379,7 +379,12 @@ bool CWorkSpaceItem::load(const QString & fileName)
 	return true;
 }
 
-bool CWorkSpaceItem::save(const QString & fileName, bool noReclusive)
+bool CWorkSpaceItem::save(SaveType saveType, bool noReclusive)
+{
+	return save(QString(), saveType, noReclusive);
+}
+
+bool CWorkSpaceItem::save(const QString & fileName, SaveType saveType, bool noReclusive)
 {
 	if( !noReclusive )
 	{
@@ -389,21 +394,21 @@ bool CWorkSpaceItem::save(const QString & fileName, bool noReclusive)
 			if( item->assignDocument() &&
 				item->assignDocument()->isModified() )
 			{
-				item->save();
+				item->save(saveType);
 			}
 		}
 	}
 
 	if( m_assignDocument )
 	{
-		m_assignDocument->save(fileName);
+		m_assignDocument->save(fileName, SaveAs == saveType);
 	}
 	else
 	{
 		switch(m_type)
 		{
 		case Solution:
-			saveSolution(fileName);
+			saveSolution(fileName, SaveAs == saveType);
 			break;
 		}
 	}
@@ -411,16 +416,25 @@ bool CWorkSpaceItem::save(const QString & fileName, bool noReclusive)
 	return true;
 }
 
-bool CWorkSpaceItem::saveSolution(const QString & fileName)
+bool CWorkSpaceItem::saveSolution(const QString & fileName, bool saveAs)
 {
 	QXmlStreamWriter xml;
 	QString filePath = fileName;
 
 	// ファイル名が指定されていない場合はダイアログを表示して表示
-	if( filePath.isEmpty() )
+	if( filePath.isEmpty() || saveAs )
 	{
+		QString defaultName = tr("untitled") + ".hspsln";
+		if( !filePath.isEmpty() && !saveAs ) {
+			QFileInfo fileInfo(filePath);
+			defaultName
+				= fileInfo.dir()
+					.absoluteFilePath(fileInfo.baseName() + ".hspsln");
+			defaultName = QDir::toNativeSeparators(defaultName);
+		}
+
 		filePath = QFileDialog::getSaveFileName(QApplication::activeWindow(),
-						tr("Save File"), tr("untitled") + ".hspsln",
+						tr("Save File"), defaultName,
 						tr("HSP IDE Solution File (*.hspsln)") + ";;" +
 						tr("All File (*.*)")
 						);

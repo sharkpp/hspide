@@ -45,6 +45,12 @@ public:
 		TypeNum,
 	} Type;
 
+	typedef enum {
+		WithoutSave,
+		OverwriteSave,
+		SaveAs,
+	} SaveType;
+
 	enum {
 		UuidRole = Qt::UserRole + 2,
 		TypeRole,
@@ -99,7 +105,8 @@ public:
 	void setSuffixFilter(const QStringList & filter);
 
 	bool load(const QString & fileName);
-	bool save(const QString & fileName = QString(), bool noReclusive = false);
+	bool save(const QString & fileName = QString(), SaveType saveType = OverwriteSave, bool noReclusive = false);
+	bool save(SaveType saveType, bool noReclusive = false);
 
 	bool isUntitled() const;
 
@@ -127,7 +134,7 @@ public:
 
 private:
 
-	bool saveSolution(const QString & fileName);
+	bool saveSolution(const QString & fileName, bool saveAs = false);
 	bool loadSolution(const QString & fileName);
 
 	bool serialize(QXmlStreamWriter * xml);

@@ -39,7 +39,7 @@ public:
 	bool load(const QString & filepath, const QString & tmplFilePath = QString());
 
 	// ファイルに保存
-	bool save(const QString & filepath = QString());
+	bool save(const QString & filepath = QString(), bool saveAs = false);
 
 //	// 一時ファイルに保存
 //	bool saveTemporary();

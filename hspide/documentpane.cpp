@@ -143,7 +143,7 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 }
 
 // ファイルに保存
-bool CDocumentPane::save(const QString & filePath)
+bool CDocumentPane::save(const QString & filePath, bool saveAs)
 {
 	QString fileName = filePath;
 	QString lastFilePath = theFile.path(m_uuid);
@@ -153,11 +153,13 @@ bool CDocumentPane::save(const QString & filePath)
 	// (無題)で無い場合はそのファイルに保存
 	// (無題)の場合はファイル指定ダイアログを表示し指定
 
-	if( fileName.isEmpty() )
+	if( fileName.isEmpty() || saveAs )
 	{
-		fileName = lastFilePath;
+		if( fileName.isEmpty() || !saveAs ) {
+			fileName = lastFilePath;
+		}
 		// 無題の場合は適当なファイル名を付ける
-		if( isUntitled() )
+		if( isUntitled() || saveAs )
 		{
 			QFileInfo fileInfo(fileName);
 

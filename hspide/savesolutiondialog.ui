@@ -24,22 +24,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QTreeView" name="treeView">
+      <widget class="QTreeWidget" name="saveTargetList">
        <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::MultiSelection</enum>
-       </property>
-       <property name="indentation">
-        <number>20</number>
+        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
        </property>
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>
-       <property name="headerHidden">
-        <bool>true</bool>
-       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
