@@ -318,39 +318,6 @@ void CWorkSpaceItem::setUuid(const QUuid & uuid)
 	m_uuid = uuid;
 }
 
-void CWorkSpaceItem::setBreakPoint(int lineNo)
-{
-	m_breakpoints.insert(lineNo);
-}
-
-void CWorkSpaceItem::clearBreakPoint(int lineNo)
-{
-	m_breakpoints.remove(lineNo);
-}
-
-bool CWorkSpaceItem::getBreakPoints(CBreakPointInfo & breakpoints, CUuidLookupInfo & lookup)
-{
-	QString filename = QFileInfo(m_path).baseName();
-
-	breakpoints[m_uuid] = m_breakpoints;
-	lookup[!filename.compare("???") ? "" : filename] = m_uuid;
-
-	// 子のブレイクポイントも列挙
-	foreach(CWorkSpaceItem* item, m_children)
-	{
-		switch(item->m_type)
-		{
-		case File:
-		case Solution:
-		case Project:
-			item->getBreakPoints(breakpoints, lookup);
-			break;
-		}
-	}
-
-	return true;
-}
-
 bool CWorkSpaceItem::load(const QString & fileName)
 {
 	if( m_assignDocument )

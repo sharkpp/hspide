@@ -357,19 +357,11 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 	else
 	{
 		// –¼‘Oˆø‚«
-		CUuidLookupInfo::iterator
-			ite = m_lookup.find(fname);
-		if( ite != m_lookup.end() )
-		{
-			uuid = *ite;
-		}
+		uuid = m_lookup.uuidFromFilename(fname);
 	}
 	if( !uuid.isNull() )
 	{
-		CBreakPointInfo::iterator
-			ite = m_bp.find(uuid);
-		if( ite != m_bp.end() &&
-			ite->end() != ite->find(lineNo) )
+		if( m_bp.isSet(uuid, lineNo) )
 		{
 			breaked = true;
 		}

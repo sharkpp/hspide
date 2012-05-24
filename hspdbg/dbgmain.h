@@ -8,11 +8,10 @@
 #include <QSet>
 #include <QUuid>
 #include "../hspide/ipc_common.h"
+#include "../hspide/filemanager.h"
+#include "../hspide/breakpointmanager.h"
 #include <spplib/thunk.hpp>
 #include "hspsdk/hsp3struct.h"
-
-typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
-typedef QMap<QString, QUuid> CUuidLookupInfo;
 
 struct HSP3DEBUG;
 struct HSPCTX;
@@ -37,8 +36,8 @@ class CDbgMain
 	bool			m_resumed;	// デバッグの再開直後か？
 	bool			m_quit;		// 終了要求が出ているか？
 
-	CBreakPointInfo	m_bp;
-	CUuidLookupInfo	m_lookup;
+	BreakPointManager m_bp;
+	FileManager		m_lookup;
 
 	QByteArray		m_cmdBuff;
 

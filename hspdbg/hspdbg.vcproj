@@ -214,11 +214,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\hspide\breakpointmanager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="dbgmain.cpp"
 				>
 			</File>
 			<File
 				RelativePath="dllmain.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\hspide\filemanager.cpp"
 				>
 			</File>
 			<File
@@ -244,6 +252,32 @@
 				>
 			</File>
 			<File
+				RelativePath="..\hspide\breakpointmanager.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC ..\hspide\breakpointmanager.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o debug\moc_breakpointmanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						Outputs="debug\moc_breakpointmanager.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC ..\hspide\breakpointmanager.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o release\moc_breakpointmanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						Outputs="release\moc_breakpointmanager.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="dbgmain.h"
 				>
 				<FileConfiguration
@@ -266,6 +300,32 @@
 						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 dbgmain.h -o release\moc_dbgmain.cpp&#x0D;&#x0A;"
 						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;dbgmain.h"
 						Outputs="release\moc_dbgmain.cpp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\hspide\filemanager.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC ..\hspide\filemanager.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o debug\moc_filemanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						Outputs="debug\moc_filemanager.cpp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="MOC ..\hspide\filemanager.h"
+						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o release\moc_filemanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						Outputs="release\moc_filemanager.cpp"
 					/>
 				</FileConfiguration>
 			</File>
@@ -312,6 +372,30 @@
 			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}"
 			>
 			<File
+				RelativePath="release\moc_breakpointmanager.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_breakpointmanager.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="release\moc_dbgmain.cpp"
 				>
 				<FileConfiguration
@@ -325,6 +409,30 @@
 			</File>
 			<File
 				RelativePath="debug\moc_dbgmain.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="release\moc_filemanager.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="debug\moc_filemanager.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"

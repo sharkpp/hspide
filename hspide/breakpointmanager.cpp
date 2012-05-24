@@ -1,5 +1,23 @@
 #include "breakpointmanager.h"
 
+QDebug& operator<<(QDebug& debug, const BreakPointManager& v)
+{
+	debug << v.m_breakPointList;
+	return debug;
+}
+
+QDataStream& operator<<(QDataStream& stream, const BreakPointManager& v)
+{
+	stream << v.m_breakPointList;
+	return stream;
+}
+
+QDataStream& operator>>(QDataStream& stream, BreakPointManager& v)
+{
+	stream >> v.m_breakPointList;
+	return stream;
+}
+
 BreakPointManager::BreakPointManager()
 {
 }
@@ -22,7 +40,7 @@ bool BreakPointManager::append(const QUuid& uuid, const QSet<int>& lineNumberes)
 	return true;
 }
 
-const CBreakPointList& BreakPointManager::toList() const
+const BreakPointManager::ListType& BreakPointManager::list() const
 {
 	return m_breakPointList;
 }
@@ -37,7 +55,7 @@ bool BreakPointManager::remove(const QUuid& uuid)
 // UUIDと行番号を指定してブレークポイント削除
 bool BreakPointManager::remove(const QUuid& uuid, int lineNumber)
 {
-	CBreakPointList::iterator
+	ListType::iterator
 		ite = m_breakPointList.find(uuid);
 	if( m_breakPointList.end() != ite ) {
 		ite->remove(lineNumber);
@@ -56,3 +74,15 @@ bool BreakPointManager::removeAll()
 	return true;
 }
 
+// ブレークポイントが存在しているか
+bool BreakPointManager::isSet(const QUuid& uuid, int lineNumber) const
+{
+	ListType::iterator
+		ite = m_breakPointList.find(uuid);
+	if( m_breakPointList.end() != ite &&
+		ite->end() != ite->find(lineNumber) )
+	{
+		return true;
+	}
+	return false;
+}

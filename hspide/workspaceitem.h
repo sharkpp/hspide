@@ -75,8 +75,6 @@ private:
 
 	CDocumentPane*			m_assignDocument;	// 関連付けられているドキュメント
 
-	QSet<int>				m_breakpoints;		// ブレークポイント
-
 public:
 
 	CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model = NULL);
@@ -112,10 +110,6 @@ public:
 
 	const QUuid & uuid() const;
 	void setUuid(const QUuid & uuid);
-
-	void setBreakPoint(int lineNo);
-	void clearBreakPoint(int lineNo);
-	bool getBreakPoints(CBreakPointInfo & breakpoints, CUuidLookupInfo & lookup);
 
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane * item);

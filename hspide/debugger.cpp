@@ -137,23 +137,16 @@ void CDebugger::reqVariableInfo(const QString& varName, int info[])
 // ブレークポイントを更新
 void CDebugger::updateBreakpoint()
 {
-	CBreakPointInfo bp;
-	CUuidLookupInfo lookup;
-
-	if( m_targetItem &&
-		m_targetItem->getBreakPoints(bp, lookup) )
-	{
-		// ブレークポイントをDLL側へ送信
-		QByteArray  data;
-		QDataStream out(&data, QIODevice::WriteOnly);
-		out.setVersion(QDataStream::Qt_4_4);
-		out << lookup << bp;
-		foreach(const QUuid &key, bp.keys()) {
-			foreach(int lineNo, bp[key]) {
-				qDebug() << "bp" << key << lineNo;
-			}
-		}
-		qDebug() <<__FUNCTION__<< CMD_SET_BREAK_POINT <<lookup <<bp;
-		IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
+	// メインのファイルが無題の場合は ???? からもUUIDを引けるようにする
+	FileManager theFile_ = theFile;
+	if( m_targetItem->isUntitled() ) {
+		theFile_.assign("????", m_targetItem->uuid());
 	}
+	// ブレークポイントをDLL側へ送信
+	QByteArray  data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << theFile_ << theBreakPoint;
+	qDebug() <<__FUNCTION__<< CMD_SET_BREAK_POINT << theFile << theBreakPoint;
+	IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
 }

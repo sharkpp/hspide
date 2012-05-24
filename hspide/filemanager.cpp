@@ -2,11 +2,37 @@
 #include <QDebug>
 #include "filemanager.h"
 
+QDebug& operator<<(QDebug& debug, const FileManager& v)
+{
+	debug << v.m_manageInfo;
+	return debug;
+}
+
+QDataStream& operator<<(QDataStream& stream, const FileManager& v)
+{
+	stream << v.m_manageInfo
+	       << v.m_infoLookup;
+	return stream;
+}
+
+QDataStream& operator>>(QDataStream& stream, FileManager& v)
+{
+	stream >> v.m_manageInfo
+	       >> v.m_infoLookup;
+	return stream;
+}
+
 FileManager::FileManager()
 {
 }
 
 FileManager::~FileManager()
+{
+}
+
+FileManager::FileManager(const FileManager& rhs)
+	: m_manageInfo(rhs.m_manageInfo)
+	, m_infoLookup(rhs.m_infoLookup)
 {
 }
 

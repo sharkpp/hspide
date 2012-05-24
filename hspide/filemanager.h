@@ -3,6 +3,7 @@
 #include <QMap>
 #include <QString>
 #include <QUuid>
+#include <QDebug>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -13,6 +14,10 @@ class FileManager
 {
 	Q_OBJECT
 
+	friend QDebug&      operator<<(QDebug& debug,       const FileManager& v);
+	friend QDataStream& operator<<(QDataStream& stream, const FileManager& v);
+	friend QDataStream& operator>>(QDataStream& stream,       FileManager& v);
+
 	QMap<QUuid, QString>		m_manageInfo;
 	QMultiMap<QString, QUuid>	m_infoLookup;
 
@@ -20,6 +25,8 @@ public:
 
 	FileManager();
 	~FileManager();
+
+	FileManager(const FileManager& rhs);
 
 	// 新しいファイルを作成
 	QUuid create();
@@ -62,3 +69,6 @@ signals:
 	void filePathChanged(const QUuid& uuid);
 };
 
+QDebug&      operator<<(QDebug& debug,       const FileManager& v);
+QDataStream& operator<<(QDataStream& stream, const FileManager& v);
+QDataStream& operator>>(QDataStream& stream,       FileManager& v);

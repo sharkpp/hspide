@@ -39,8 +39,12 @@ HEADERS += hspdbg.h \
            hspsdk/hsp3struct.h \
            hspsdk/hspvar_core.h \
            hspsdk/hspwnd.h \
-           ../hspide/ipc_common.h
+           ../hspide/ipc_common.h \
+           ../hspide/filemanager.h \
+           ../hspide/breakpointmanager.h
 SOURCES += dllmain.cpp hspdbg.cpp stdafx.cpp \
            dbgmain.cpp \
            apihook.cpp \
-           ../hspide/ipc_common.cpp
+           ../hspide/ipc_common.cpp \
+           ../hspide/filemanager.cpp \
+           ../hspide/breakpointmanager.cpp

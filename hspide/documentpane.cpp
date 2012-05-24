@@ -40,18 +40,16 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 	{
 		m_editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
 		// ブレークポイントをセット
-		if( m_assignItem )
-		{
-			m_assignItem->setBreakPoint(lineNo + 1); // 1オリジン
+		if( !m_uuid.isNull() ) {
+			theBreakPoint.append(m_uuid, lineNo + 1); // 1オリジン
 		}
 	}
 	else
 	{
 		m_editorWidget->clearLineIcon(lineNo);
 		// ブレークポイントをリセット
-		if( m_assignItem )
-		{
-			m_assignItem->clearBreakPoint(lineNo + 1); // 1オリジン
+		if( !m_uuid.isNull() ) {
+			theBreakPoint.remove(m_uuid, lineNo + 1); // 1オリジン
 		}
 	}
 
@@ -231,6 +229,7 @@ bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 	}
 	m_assignItem = item;
 	m_assignItem->setAssignDocument(this);
+	m_uuid = m_assignItem->uuid();
 	return true;
 }
 
