@@ -30,6 +30,10 @@ BreakPointManager::~BreakPointManager()
 bool BreakPointManager::append(const QUuid& uuid, int lineNumber)
 {
 	m_breakPointList[uuid].insert(lineNumber);
+	// 変更を通知
+	QList<QPair<int, bool> > modified;
+	modified << qMakePair(lineNumber, true);
+	emit breakPointChanged(uuid, modified);
 	return true;
 }
 
@@ -37,6 +41,12 @@ bool BreakPointManager::append(const QUuid& uuid, int lineNumber)
 bool BreakPointManager::append(const QUuid& uuid, const QSet<int>& lineNumberes)
 {
 	m_breakPointList[uuid].unite(lineNumberes);
+	// 変更を通知
+	QList<QPair<int, bool> > modified;
+	foreach(int lineNumber, lineNumberes) {
+		modified << qMakePair(lineNumber, true);
+	}
+	emit breakPointChanged(uuid, modified);
 	return true;
 }
 
@@ -48,7 +58,18 @@ const BreakPointManager::ListType& BreakPointManager::list() const
 // UUIDを指定して登録削除
 bool BreakPointManager::remove(const QUuid& uuid)
 {
+	QList<QPair<int, bool> > modified;
+	ListType::iterator
+		ite = m_breakPointList.find(uuid);
+	if( m_breakPointList.end() != ite ) {
+		foreach(int lineNumber, ite->values()) {
+			modified << qMakePair(lineNumber, false);
+		}
+	}
+	// 削除
 	m_breakPointList.remove(uuid);
+	// 変更を通知
+	emit breakPointChanged(uuid, modified);
 	return true;
 }
 
@@ -62,6 +83,10 @@ bool BreakPointManager::remove(const QUuid& uuid, int lineNumber)
 		if( ite->empty() ) {
 			m_breakPointList.erase(ite);
 		}
+		// 変更を通知
+		QList<QPair<int, bool> > modified;
+		modified << qMakePair(lineNumber, false);
+		emit breakPointChanged(uuid, modified);
 		return true;
 	}
 	return false;
@@ -70,7 +95,17 @@ bool BreakPointManager::remove(const QUuid& uuid, int lineNumber)
 // 全て登録削除
 bool BreakPointManager::removeAll()
 {
+	ListType breakPointList = m_breakPointList;
 	m_breakPointList.clear();
+
+	foreach(QUuid uuid, breakPointList.keys()) {
+		QList<QPair<int, bool> > modified;
+		foreach(int lineNumber, breakPointList[uuid].values()) {
+			modified << qMakePair(lineNumber, false);
+		}
+		emit breakPointChanged(uuid, modified);
+	}
+
 	return true;
 }
 

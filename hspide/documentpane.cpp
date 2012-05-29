@@ -17,6 +17,9 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
 	        this,  SLOT(updateConfiguration(const Configuration&)));
 	updateConfiguration(theConf);
+
+	connect(&theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
+	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
 }
 
 void CDocumentPane::resizeEvent(QResizeEvent * event)
@@ -36,21 +39,16 @@ void CDocumentPane::onModificationChanged(bool changed)
 
 void CDocumentPane::onPressEditorIconArea(int lineNo)
 {
-	if( m_editorWidget->lineIcon(lineNo).isNull() )
+	if( m_editorWidget->lineIcon(lineNo).isNull() &&
+		!m_uuid.isNull() )
 	{
-		m_editorWidget->setLineIcon(lineNo, QIcon(":/images/icons/small/media-record-blue.png"));
 		// ブレークポイントをセット
-		if( !m_uuid.isNull() ) {
-			theBreakPoint.append(m_uuid, lineNo + 1); // 1オリジン
-		}
+		theBreakPoint.append(m_uuid, lineNo + 1); // 1オリジン
 	}
 	else
 	{
-		m_editorWidget->clearLineIcon(lineNo);
 		// ブレークポイントをリセット
-		if( !m_uuid.isNull() ) {
-			theBreakPoint.remove(m_uuid, lineNo + 1); // 1オリジン
-		}
+		theBreakPoint.remove(m_uuid, lineNo + 1); // 1オリジン
 	}
 
 	emit updateBreakpoint();
@@ -111,6 +109,25 @@ void CDocumentPane::updateConfiguration(const Configuration& info)
 
 	// キーワードハイライトを再描画
 	m_highlighter->rehighlight();
+}
+
+void CDocumentPane::onBreakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes)
+{
+	if( m_uuid != uuid ) {
+		return;
+	}
+
+	for(QList<QPair<int, bool> >::const_iterator
+			ite = modifiedLineNumberes.begin(),
+			last= modifiedLineNumberes.end();
+		ite != last; ++ite)
+	{
+		if( ite->second ) {
+			m_editorWidget->setLineIcon(ite->first - 1, QIcon(":/images/icons/small/media-record-blue.png"));
+		} else {
+			m_editorWidget->clearLineIcon(ite->first - 1);
+		}
+	}
 }
 
 // シンボル一覧を指定

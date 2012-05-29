@@ -1,13 +1,12 @@
-#include <QTextEdit>
-#include <QTreeView>
-#include <QMap>
-#include <QVector>
+#include <QWidget>
+#include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
-class QStandardItem;
+class QResizeEvent;
+class QTreeWidget;
 
 class CBreakPointDock
 	: public QWidget
@@ -19,7 +18,7 @@ class CBreakPointDock
 		ColumnCount,
 	} ColumnType;
 
-	QTreeView * m_listWidget;
+	QTreeWidget * m_listWidget;
 
 public:
 
@@ -34,6 +33,8 @@ protected:
 	virtual void resizeEvent(QResizeEvent * event);
 
 public slots:
+
+	void onBreakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes);
 
 signals:
 

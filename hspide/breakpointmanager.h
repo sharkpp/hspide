@@ -52,6 +52,9 @@ public:
 
 private:
 
+signals:
+
+	void breakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes);
 };
 
 QDebug&      operator<<(QDebug& debug,       const BreakPointManager& v);

@@ -84,6 +84,8 @@ public slots:
 	void onModificationChanged(bool changed);
 	void onPressEditorIconArea(int lineNo);
 
+	void onBreakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes);
+
 signals:
 	void modificationChanged(bool changed);
 	void updateBreakpoint();
