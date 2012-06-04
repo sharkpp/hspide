@@ -31,13 +31,12 @@ CBreakPointDock::CBreakPointDock(QWidget *parent)
 			;
 
 	m_listWidget = new QTreeWidget(this);
-	m_listWidget->setRootIsDecorated(false);
 	m_listWidget->setIndentation(10);
+	m_listWidget->setAlternatingRowColors(true);
 	m_listWidget->setEditTriggers(QTreeView::NoEditTriggers);
 	m_listWidget->setColumnCount(ColumnCount);
 	m_listWidget->setHeaderLabels(labels);
 	m_listWidget->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
-//	setEnable(false);
 
 	connect(&theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
 	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
@@ -76,11 +75,15 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 	}
 	if( !fileItem )
 	{
-		rootItem->addChild(fileItem = new QTreeWidgetItem(QStringList(theFile.fileName(uuid))));
+		rootItem->addChild(fileItem = new QTreeWidgetItem());
 		fileItem->setData(FileColumn, UuidRole,       uuid.toString());
 		fileItem->setData(FileColumn, LineNumberRole, -1);
 		fileItem->setCheckState(FileColumn, Qt::Checked);
 	}
+	fileItem->setText(FileColumn, QString(tr("%1 (%2 breakpoints)"))
+										.arg(theFile.fileName(uuid))
+										.arg(theBreakPoint.countOf(uuid))
+									);
 
 	// çsÇíTÇ∑
 	for(QList<QPair<int, bool> >::const_iterator
@@ -108,7 +111,7 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 		{
 			if( !lineItem )
 			{
-				fileItem->insertChild(insertLine, lineItem = new QTreeWidgetItem(QStringList(QString("%1").arg(ite->first))));
+				fileItem->insertChild(insertLine, lineItem = new QTreeWidgetItem(QStringList(QString(tr("line %1")).arg(ite->first))));
 				lineItem->setData(FileColumn, UuidRole,       uuid.toString());
 				lineItem->setData(FileColumn, LineNumberRole, ite->first);
 				lineItem->setCheckState(FileColumn, Qt::Checked);

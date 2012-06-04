@@ -58,6 +58,14 @@ p, li { white-space: pre-wrap; }
         <source>Name</source>
         <translation>名称</translation>
     </message>
+    <message>
+        <source>%1 (%2 breakpoints)</source>
+        <translation>%1 (%2 個のブレークポイント)</translation>
+    </message>
+    <message>
+        <source>line %1</source>
+        <translation>%1 行目</translation>
+    </message>
 </context>
 <context>
     <name>CConfigDialog</name>

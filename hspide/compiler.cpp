@@ -98,8 +98,7 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	bool tempSave = false;
 
 	// 無題の場合は一時的なファイルに保存
-	if( filename.isEmpty() &&
-		targetItem->isUntitled() )
+	if( targetItem->isUntitled() )
 	{
 		CDocumentPane* document = targetItem->assignDocument();
 		if( !document )

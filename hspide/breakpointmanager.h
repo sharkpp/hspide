@@ -43,12 +43,15 @@ public:
 
 	// UUIDと行番号を指定してブレークポイント削除
 	bool remove(const QUuid& uuid, int lineNumber);
-	
+
 	// 全て登録削除
 	bool removeAll();
-	
+
 	// ブレークポイントが存在しているか
 	bool isSet(const QUuid& uuid, int lineNumber) const;
+
+	// ブレークポイントの個数
+	int countOf(const QUuid& uuid) const;
 
 private:
 

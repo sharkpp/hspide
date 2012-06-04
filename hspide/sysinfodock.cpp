@@ -10,6 +10,7 @@ CSystemInfoDock::CSystemInfoDock(QWidget *parent)
 	listWidget->setRootIsDecorated(false);
 	listWidget->setModel(model = new QStandardItemModel());
 	listWidget->setEditTriggers(QTreeView::NoEditTriggers);
+	listWidget->setAlternatingRowColors(true);
 	model->invisibleRootItem()->setColumnCount(ColumnCount);
 	model->setHeaderData(NameColumn,        Qt::Horizontal, tr("Name"));
 	model->setHeaderData(DescriptionColumn, Qt::Horizontal, tr("Description"));

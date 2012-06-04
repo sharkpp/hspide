@@ -121,3 +121,15 @@ bool BreakPointManager::isSet(const QUuid& uuid, int lineNumber) const
 	}
 	return false;
 }
+
+// ブレークポイントの個数
+int BreakPointManager::countOf(const QUuid& uuid) const
+{
+	ListType::iterator
+		ite = m_breakPointList.find(uuid);
+	if( m_breakPointList.end() != ite )
+	{
+		return ite->count();
+	}
+	return -1;
+}
