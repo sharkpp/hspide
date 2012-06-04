@@ -7,6 +7,7 @@
 
 class QResizeEvent;
 class QTreeWidget;
+class QTreeWidgetItem;
 
 class CBreakPointDock
 	: public QWidget
@@ -35,7 +36,11 @@ protected:
 public slots:
 
 	void onBreakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes);
+	void onBreakPointStateChanged(QTreeWidgetItem* item, int column);
+	void onBreakPointDoubleClicked(QTreeWidgetItem* item, int column);
 
 signals:
+
+	void gotoLine(const QUuid & uuid, int lineNo);
 
 };

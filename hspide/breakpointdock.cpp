@@ -37,13 +37,15 @@ CBreakPointDock::CBreakPointDock(QWidget *parent)
 	m_listWidget->setColumnCount(ColumnCount);
 	m_listWidget->setHeaderLabels(labels);
 	m_listWidget->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
-	setEnable(false);
+//	setEnable(false);
 
 	connect(&theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
 	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
 
 	connect(m_listWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
-			this, SLOT(onBreakPointStateChanged(QTreeWidgetItem*)));
+			this, SLOT(onBreakPointStateChanged(QTreeWidgetItem*,int)));
+	connect(m_listWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+			this, SLOT(onBreakPointDoubleClicked(QTreeWidgetItem*,int)));
 }
 
 void CBreakPointDock::resizeEvent(QResizeEvent * event)
@@ -86,14 +88,19 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 			last= modifiedLineNumberes.end();
 		ite != last; ++ite)
 	{
+		int insertLine = 0;
 		for(int i = 0, num = fileItem->childCount();
 			i < num && !lineItem; ++i)
 		{
 			QTreeWidgetItem* item = fileItem->child(i);
-			if( ite->first
-				== item->data(FileColumn, LineNumberRole).toInt() )
+			int lineNum = item->data(FileColumn, LineNumberRole).toInt();
+			if( ite->first == lineNum )
 			{
 				lineItem = item;
+			}
+			if( lineNum <= ite->first )
+			{
+				insertLine = i + 1;
 			}
 		}
 
@@ -101,7 +108,7 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 		{
 			if( !lineItem )
 			{
-				fileItem->addChild(lineItem = new QTreeWidgetItem(QStringList(QString("%1").arg(ite->first))));
+				fileItem->insertChild(insertLine, lineItem = new QTreeWidgetItem(QStringList(QString("%1").arg(ite->first))));
 				lineItem->setData(FileColumn, UuidRole,       uuid.toString());
 				lineItem->setData(FileColumn, LineNumberRole, ite->first);
 				lineItem->setCheckState(FileColumn, Qt::Checked);
@@ -126,6 +133,16 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 	m_listWidget->expandAll();
 }
 
-void CBreakPointDock::onBreakPointStateChanged(QTreeWidgetItem* item)
+void CBreakPointDock::onBreakPointStateChanged(QTreeWidgetItem* item, int column)
 {
+	QUuid uuid(item->data(FileColumn, UuidRole).toString());
+	int lineNo = item->data(FileColumn, LineNumberRole).toInt();
+}
+
+void CBreakPointDock::onBreakPointDoubleClicked(QTreeWidgetItem* item, int column)
+{
+	QUuid uuid(item->data(FileColumn, UuidRole).toString());
+	int lineNo = item->data(FileColumn, LineNumberRole).toInt();
+
+	emit gotoLine(uuid, lineNo);
 }

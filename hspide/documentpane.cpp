@@ -147,7 +147,14 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 		return false;
 	}
 
-	m_uuid = theFile.assign(filepath);
+	if( !m_uuid.isNull() )
+	{
+		theFile.rename(m_uuid, filepath);
+	}
+	else
+	{
+		m_uuid = theFile.assign(filepath);
+	}
 
 	m_editorWidget->setPlainText(file.readAll());
 
