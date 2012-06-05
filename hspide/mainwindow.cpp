@@ -931,6 +931,8 @@ void MainWindow::onStopAtBreakPoint(const QUuid & uuid, int lineNo)
 	// メニューを変更
 	debugResumeAct->setEnabled(true);
 	debugSuspendAct->setEnabled(false);
+	varInfoDock->setEnable(true);
+	sysInfoDock->setEnable(true);
 }
 
 void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info)
@@ -1058,6 +1060,8 @@ void MainWindow::onDebugSuspend()
 	// メニューを変更
 	debugResumeAct->setEnabled(true);
 	debugSuspendAct->setEnabled(false);
+	varInfoDock->setEnable(true);
+	sysInfoDock->setEnable(true);
 }
 
 void MainWindow::onDebugResume()
@@ -1070,6 +1074,8 @@ void MainWindow::onDebugResume()
 	// メニューを変更
 	debugResumeAct->setEnabled(false);
 	debugSuspendAct->setEnabled(true);
+	varInfoDock->setEnable(false);
+	sysInfoDock->setEnable(false);
 }
 
 void MainWindow::onDebugStop()
@@ -1423,9 +1429,9 @@ void MainWindow::beginDebugging()
 
 	// 最初のデバッガの場合のみクリア
 	sysInfoDock->clear();
-	sysInfoDock->setEnable(true);
+	sysInfoDock->setEnable(false);
 	varInfoDock->clear();
-	varInfoDock->setEnable(true);
+	varInfoDock->setEnable(false);
 	// メニューを変更
 	debugResumeAct->setEnabled(false);
 	debugSuspendAct->setEnabled(true);

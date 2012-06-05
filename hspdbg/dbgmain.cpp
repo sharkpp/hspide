@@ -91,6 +91,8 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	HSPCTX*    ctx = (HSPCTX*)dbg->hspctx;
 
+	dbg->dbg_curinf();
+
 	// デバッグの一時中断中か？
 	if( g_app->isDebugPaused() )
 	{
@@ -107,7 +109,6 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 	}
 
 #ifdef _DEBUG
-	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
@@ -194,6 +195,7 @@ CDbgMain::CDbgMain()
 	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
 	, m_dbg(NULL)
 	, m_breaked(false)
+	, m_breakedLast(false)
 	, m_resumed(false)
 	, m_quit(false)
 	, m_typeinfo_hook(NULL)
@@ -311,6 +313,32 @@ bool CDbgMain::isQuitRequested()
 bool CDbgMain::isDebugPaused()
 {
 	QMutexLocker lck(&m_lock);
+
+	if( m_breakedLast != m_breaked &&
+		m_breaked )
+	{
+		HSP3DEBUG* dbg = debugInfo();
+
+		QString fname = dbg->fname ? dbg->fname : "";
+		QUuid uuid;
+
+		if( '?' == fname[0] )
+		{
+			// UUID直接指定
+			uuid = QUuid(fname.mid(1));
+		}
+		else
+		{
+			// 名前引き
+			uuid = m_lookup.uuidFromFilename(fname);
+		}
+		if( !uuid.isNull() )
+		{
+			breakRunning(uuid, dbg->line);
+		}
+	}
+
+	m_breakedLast = m_breaked;
 	return m_breaked;
 }
 
@@ -369,15 +397,20 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 
 	if( breaked )
 	{
-		QByteArray  data;
-		QDataStream out(&data, QIODevice::WriteOnly);
-		out.setVersion(QDataStream::Qt_4_4);
-		out << uuid << lineNo;
-		IpcSend(*m_socket, CMD_STOP_RUNNING, data);
+		breakRunning(uuid, lineNo);
 		return true;
 	}
 
 	return false;
+}
+
+void CDbgMain::breakRunning(const QUuid& uuid, int lineNo)
+{
+	QByteArray  data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_4_4);
+	out << uuid << lineNo;
+	IpcSend(*m_socket, CMD_STOP_RUNNING, data);
 }
 
 // data seg から 文字列を読み込み
