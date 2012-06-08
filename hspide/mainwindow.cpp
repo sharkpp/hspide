@@ -124,10 +124,10 @@ void MainWindow::setupDockWindows()
 	messageDockWidget->setObjectName("Messages"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, messageDockWidget);
 
-	QDockWidget* breakPointDockWidget = new QDockWidget(tr("BreakPoint"), this);
+	QDockWidget* breakPointDockWidget = new QDockWidget(tr("Breakpoint list"), this);
 	breakPointDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	breakPointDockWidget->setWidget(breakPointDock = new CBreakPointDock(breakPointDockWidget));
-	breakPointDockWidget->setObjectName("BreakPoint"); // saveState()で警告がトレースで出るため
+	breakPointDockWidget->setObjectName("Breakpoint list"); // saveState()で警告がトレースで出るため
 	breakPointDockWidget->setVisible(false);
 
 	// ドックタブに結合
@@ -234,6 +234,12 @@ void MainWindow::setupMenus()
 		editMenu->addAction(selectAllAct);
 
 	QMenu * viewMenu = menuBar()->addMenu(tr("&View"));
+		viewMenu->addAction(showProjectDock);
+		viewMenu->addAction(showSymbolDock);
+		viewMenu->addAction(showOutputDock);
+		viewMenu->addAction(showSearchDock);
+		viewMenu->addAction(showMessageDock);
+		viewMenu->addAction(showBreakPointDock);
 
 	QMenu * searchMenu = menuBar()->addMenu(tr("&Search"));
 		searchMenu->addAction(findTextAct);
@@ -269,131 +275,94 @@ void MainWindow::setupActions()
 {
 //	connect(newLetterAct, SIGNAL(triggered()), this, SLOT(newLetter()));
 
-	newDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-new.png",
-	                                        ":/images/tango/small/document-new.png"), tr("&New"), this);
-	newDocumentAct->setStatusTip(tr("Create a new file"));
-	connect(newDocumentAct, SIGNAL(triggered()), this, SLOT(onNewFile()));
+	struct {
+		QAction** action;
+		QString   middleIcon, smallIcon;
+		QString   text, tooltipText, statusText;
+	} menuInitTable[] = {
+		{ &newDocumentAct,     ":/images/tango/middle/document-new.png",         ":/images/tango/small/document-new.png",          tr("&New"),              tr("New"),              tr("Create a new file")         },
+		{ &openDocumentAct,    ":/images/tango/middle/document-open.png",        ":/images/tango/small/document-open.png",         tr("&Open"),             tr("Open"),             tr("Open file")                 },
+		{ &saveDocumentAct,    ":/images/tango/middle/document-save.png",        ":/images/tango/small/document-save.png",         tr("&Save"),             tr("Save"),             tr("Save file")                 },
+		{ &saveAsDocumentAct,  ":/images/tango/middle/document-save-as.png",     ":/images/tango/small/document-save-as.png",      tr("S&ave as"),          tr("Save as"),          tr("Save file with a name")     },
+		{ &saveAllDocumentAct, ":/images/icons/middle/document-save-all.png",    ":/images/icons/small/document-save-all.png",     tr("Save all"),          tr("Save all"),         tr("Save all file")             },
+		{ &quitApplicationAct, ":/images/tango/middle/system-log-out.png",       ":/images/tango/small/system-log-out.png",        tr("&Quit"),             tr("Quit"),             tr("Quit application")          },
+		{ &editUndoAct,        ":/images/tango/middle/edit-undo.png",            ":/images/tango/small/edit-undo.png",             tr("&Undo"),             tr("Undo"),             tr("Undo")                      },
+		{ &editRedoAct,        ":/images/tango/middle/edit-redo.png",            ":/images/tango/small/edit-redo.png",             tr("&Redo"),             tr("Redo"),             tr("Redo")                      },
+		{ &editCutAct,         ":/images/tango/middle/edit-cut.png",             ":/images/tango/small/edit-cut.png",              tr("Cu&t"),              tr("Cut"),              tr("Cut selected text")         },
+		{ &editCopyAct,        ":/images/tango/middle/edit-copy.png",            ":/images/tango/small/edit-copy.png",             tr("&Copy"),             tr("Copy"),             tr("Copy selected text")        },
+		{ &editPasteAct,       ":/images/tango/middle/edit-paste.png",           ":/images/tango/small/edit-paste.png",            tr("&Paste"),            tr("Paste"),            tr("Paste text")                },
+		{ &editClearAct,       ":/images/tango/middle/edit-clear.png",           ":/images/tango/small/edit-clear.png",            tr("&Delete"),           tr("Delete"),           tr("Delete selected text")      },
+		{ &selectAllAct,       ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("&Select All"),       tr("Select All"),       tr("Select all text")           },
+		{ &findTextAct,        ":/images/tango/middle/edit-find.png",            ":/images/tango/small/edit-find.png",             tr("&Find"),             tr("Find"),             tr("Find text")                 },
+		{ &findPrevTextAct,    ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &next"),        tr("Find next"),        tr("Find next text")            },
+		{ &findNextTextAct,    ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &previous"),    tr("Find previous"),    tr("Find previous text")        },
+		{ &replaceTextAct,     ":/images/tango/middle/edit-find-replace.png",    ":/images/tango/small/edit-find-replace.png",     tr("&Replace"),          tr("Replace"),          tr("Replace text")              },
+		{ &gotoLineAct,        ":/images/tango/middle/go-jump.png",              ":/images/tango/small/go-jump.png",               tr("&Go to line"),       tr("Go to line"),       tr("Go to line")                },
+		{ &showProjectDock,    "",                                               "",                                               tr("&Project"),          tr("Show project"),     tr("Show project")              },
+		{ &showSymbolDock,     "",                                               "",                                               tr("&Symbol list"),      tr("Show symbol list"), tr("Show symbol list")          },
+		{ &showOutputDock,     "",                                               "",                                               tr("&Output"),           tr("Show output"),      tr("Show output")               },
+		{ &showSearchDock,     "",                                               "",                                               tr("&Search"),           tr("Show search"),      tr("Show search")               },
+		{ &showMessageDock,    "",                                               "",                                               tr("&Messages"),         tr("Show messages"),    tr("Show messages")             },
+		{ &showBreakPointDock, "",                                               "",                                               tr("&Breakpoint list"),  tr("Show breakpoint list"),tr("Show breakpoint list")   },
+		{ &showSysInfoDock,    "",                                               "",                                               tr("&System info"),      tr("Show system info"), tr("Show system info")          },
+		{ &showVarInfoDock,    "",                                               "",                                               tr("&Variable info"),    tr("Show variable info"),tr("Show variable info")       },
+		{ &buildSolutionAct,   "",                                               "",                                               tr("Build &solution"),   tr("Build solution"),   tr("Build solution")            },
+		{ &buildProjectAct,    "",                                               "",                                               tr("&Build project"),    tr("Build project"),    tr("Build project")             },
+		{ &compileOnlyAct,     "",                                               "",                                               tr("&Compile only"),     tr("Compile only"),     tr("Compile only")              },
+		{ &debugRunAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("&Debug run"),        tr("Debug run"),        tr("Run program with debug")    },
+		{ &noDebugRunAct,      "",                                               "",                                               tr("&NO debug run"),     tr("NO debug run"),     tr("Run program without debug") },
+		{ &debugSuspendAct,    ":/images/tango/middle/media-playback-pause.png", ":/images/tango/small/media-playback-pause.png",  tr("All &suspend"),      tr("All suspend"),      tr("Suspend debugging")         },
+		{ &debugResumeAct,     ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),       tr("All resume"),       tr("Resume debugging")          },
+		{ &debugStopAct,       ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),   tr("Stop debugging"),   tr("Abort debugging")           },
+		{ &settingAct,         ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),          tr("Setting"),          tr("Application settings")      },
+		{ &aboutAct,           ":/images/tango/middle/dialog-information.png",   ":/images/tango/small/dialog-information.png",    tr("&About hspide ..."), tr("About hspide ..."), tr("About hspide")              },
+	};
 
-	openDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-open.png",
-	                                        ":/images/tango/small/document-open.png"), tr("&Open"), this);
-	openDocumentAct->setStatusTip(tr("Open file"));
-	connect(openDocumentAct, SIGNAL(triggered()), this, SLOT(onOpenFile()));
+	for(size_t i = 0; i < _countof(menuInitTable); i++)
+	{
+		QAction* action;
+		if( menuInitTable[i].middleIcon.isEmpty() ) {
+			action = *menuInitTable[i].action = new QAction(menuInitTable[i].text, this);
+		} else {
+			action = *menuInitTable[i].action = new QAction(QMultiIcon(menuInitTable[i].middleIcon,
+			                                                           menuInitTable[i].smallIcon), menuInitTable[i].text, this);
+		}
+		action->setToolTip(menuInitTable[i].tooltipText);
+		action->setStatusTip(menuInitTable[i].statusText);
+	}
 
-	saveDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-save.png",
-	                                         ":/images/tango/small/document-save.png"), tr("&Save"), this);
-	saveDocumentAct->setStatusTip(tr("Save file"));
-	connect(saveDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveFile()));
+	connect(newDocumentAct,            SIGNAL(triggered()), this, SLOT(onNewFile()));
+	connect(openDocumentAct,           SIGNAL(triggered()), this, SLOT(onOpenFile()));
+	connect(saveDocumentAct,           SIGNAL(triggered()), this, SLOT(onSaveFile()));
+	connect(saveAsDocumentAct,         SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
+	connect(saveAllDocumentAct,        SIGNAL(triggered()), this, SLOT(onSaveAllFile()));
+	connect(quitApplicationAct,        SIGNAL(triggered()), this, SLOT(onQuit()));
+	connect(QApplication::clipboard(), SIGNAL(dataChanged()),this,SLOT(clipboardDataChanged()));
+	connect(gotoLineAct,               SIGNAL(triggered()), this, SLOT(onGoToLine()));
+	connect(buildSolutionAct,          SIGNAL(triggered()), this, SLOT(onBuildSolution()));
+	connect(buildProjectAct,           SIGNAL(triggered()), this, SLOT(onBuildProject()));
+	connect(debugRunAct,               SIGNAL(triggered()), this, SLOT(onDebugRun()));
+	connect(noDebugRunAct,             SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
+	connect(debugSuspendAct,           SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
+	connect(debugResumeAct,            SIGNAL(triggered()), this, SLOT(onDebugResume()));
+	connect(debugStopAct,              SIGNAL(triggered()), this, SLOT(onDebugStop()));
+	connect(settingAct,                SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
+	connect(aboutAct,                  SIGNAL(triggered()), this, SLOT(onAboutApp()));
+	connect(showProjectDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showSymbolDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showOutputDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showSearchDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showMessageDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showBreakPointDock,        SIGNAL(triggered()), this, SLOT(onShowDock()));
+//	connect(showSysInfoDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
+//	connect(showVarInfoDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
 
-	saveAsDocumentAct = new QAction(QMultiIcon(":/images/tango/middle/document-save-as.png",
-	                                           ":/images/tango/small/document-save-as.png"), tr("S&ave as"), this);
-	saveAsDocumentAct->setStatusTip(tr("Save file with a name"));
-	connect(saveAsDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAsFile()));
-
-	saveAllDocumentAct = new QAction(QMultiIcon(":/images/icons/middle/document-save-all.png",
-	                                            ":/images/icons/small/document-save-all.png"), tr("Save all"), this);
-	saveAllDocumentAct->setStatusTip(tr("Save all file"));
-	connect(saveAllDocumentAct, SIGNAL(triggered()), this, SLOT(onSaveAllFile()));
-
-	quitApplicationAct = new QAction(QMultiIcon(":/images/tango/middle/system-log-out.png",
-	                                            ":/images/tango/small/system-log-out.png"), tr("&Quit"), this);
-	quitApplicationAct->setStatusTip(tr("Quit application"));
-	connect(quitApplicationAct, SIGNAL(triggered()), this, SLOT(onQuit()));
-
-	editUndoAct = new QAction(QMultiIcon(":/images/tango/middle/edit-undo.png",
-	                                     ":/images/tango/small/edit-undo.png"), tr("&Undo"), this);
-	editUndoAct->setStatusTip(tr("Undo"));
-
-	editRedoAct = new QAction(QMultiIcon(":/images/tango/middle/edit-redo.png",
-	                                     ":/images/tango/small/edit-redo.png"), tr("&Redo"), this);
-	editRedoAct->setStatusTip(tr("Redo"));
-	connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(clipboardDataChanged()));
-
-	editCutAct = new QAction(QMultiIcon(":/images/tango/middle/edit-cut.png",
-	                                    ":/images/tango/small/edit-cut.png"), tr("Cu&t"), this);
-	editCutAct->setStatusTip(tr("Cut selected text"));
-
-	editCopyAct = new QAction(QMultiIcon(":/images/tango/middle/edit-copy.png",
-	                                     ":/images/tango/small/edit-copy.png"), tr("&Copy"), this);
-	editCopyAct->setStatusTip(tr("Copy selected text"));
-
-	editPasteAct = new QAction(QMultiIcon(":/images/tango/middle/edit-paste.png",
-	                                      ":/images/tango/small/edit-paste.png"), tr("&Paste"), this);
-	editPasteAct->setStatusTip(tr("Paste text"));
-
-	editClearAct = new QAction(QMultiIcon(":/images/tango/middle/edit-clear.png",
-	                                      ":/images/tango/small/edit-clear.png"), tr("&Delete"), this);
-	editClearAct->setStatusTip(tr("Delete selected text"));
-
-	selectAllAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
-	                                      ":/images/tango/small/edit-select-all.png"), tr("&Select All"), this);
-	selectAllAct->setStatusTip(tr("Select all text"));
-
-	findTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-find.png",
-	                                     ":/images/tango/small/edit-find.png"), tr("&Find"), this);
-	findTextAct->setStatusTip(tr("Find text"));
-
-	findPrevTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
-	                                         ":/images/tango/small/edit-select-all.png"), tr("Find &next"), this);
-	findPrevTextAct->setStatusTip(tr("Find next text"));
-
-	findNextTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-select-all.png",
-	                                         ":/images/tango/small/edit-select-all.png"), tr("Find &previous"), this);
-	findNextTextAct->setStatusTip(tr("Find previous text"));
-
-	replaceTextAct = new QAction(QMultiIcon(":/images/tango/middle/edit-find-replace.png",
-	                                        ":/images/tango/small/edit-find-replace.png"), tr("&Replace"), this);
-	replaceTextAct->setStatusTip(tr("Replace text"));
-
-	gotoLineAct = new QAction(QMultiIcon(":/images/tango/middle/go-jump.png",
-	                                     ":/images/tango/small/go-jump.png"), tr("&Go to line"), this);
-	gotoLineAct->setStatusTip(tr("Go to line"));
-	connect(gotoLineAct, SIGNAL(triggered()), this, SLOT(onGoToLine()));
-
-
-	buildSolutionAct = new QAction(tr("Build &solution"), this);
-	buildSolutionAct->setStatusTip(tr("Build solution"));
-	connect(buildSolutionAct, SIGNAL(triggered()), this, SLOT(onBuildSolution()));
-
-	buildProjectAct = new QAction(tr("&Build project"), this);
-	buildProjectAct->setStatusTip(tr("Build project"));
-	connect(buildProjectAct, SIGNAL(triggered()), this, SLOT(onBuildProject()));
-
-	compileOnlyAct = new QAction(tr("&Compile only"), this);
-	compileOnlyAct->setStatusTip(tr("Compile only"));
-
-	debugRunAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
-	                                     ":/images/tango/small/media-playback-start.png"), tr("&Debug run"), this);
-	debugRunAct->setStatusTip(tr("Run program with debug"));
-	connect(debugRunAct, SIGNAL(triggered()), this, SLOT(onDebugRun()));
-
-	noDebugRunAct = new QAction(tr("&NO debug run"), this);
-	noDebugRunAct->setStatusTip(tr("Run program without debug"));
-	connect(noDebugRunAct, SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
-
-	debugSuspendAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-pause.png",
-	                                         ":/images/tango/small/media-playback-pause.png"), tr("All &suspend"), this);
-	debugSuspendAct->setStatusTip(tr("Suspend debugging"));
-	connect(debugSuspendAct, SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
-
-	debugResumeAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-start.png",
-	                                        ":/images/tango/small/media-playback-start.png"), tr("All &resume"), this);
-	debugResumeAct->setStatusTip(tr("Resume debugging"));
-	connect(debugResumeAct, SIGNAL(triggered()), this, SLOT(onDebugResume()));
-
-	debugStopAct = new QAction(QMultiIcon(":/images/tango/middle/media-playback-stop.png",
-	                                      ":/images/tango/small/media-playback-stop.png"), tr("Stop &debugging"), this);
-	debugStopAct->setStatusTip(tr("Abort debugging"));
-	connect(debugStopAct, SIGNAL(triggered()), this, SLOT(onDebugStop()));
-
-	settingAct = new QAction(QMultiIcon(":/images/tango/middle/preferences-system.png",
-	                                   ":/images/tango/small/preferences-system.png"), tr("&Setting"), this);
-	settingAct->setStatusTip(tr("Application settings"));
-	connect(settingAct, SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
-
-	aboutAct = new QAction(QMultiIcon(":/images/tango/middle/dialog-information.png",
-	                                   ":/images/tango/small/dialog-information.png"), tr("&About hspide ..."), this);
-	aboutAct->setStatusTip(tr("About hspide"));
-	connect(aboutAct, SIGNAL(triggered()), this, SLOT(onAboutApp()));
+	showProjectDock   ->setData( qVariantFromValue((void*)projectDock) );
+	showSymbolDock    ->setData( qVariantFromValue((void*)symbolDock) );
+	showOutputDock    ->setData( qVariantFromValue((void*)outputDock) );
+	showSearchDock    ->setData( qVariantFromValue((void*)searchDock) );
+	showMessageDock   ->setData( qVariantFromValue((void*)messageDock) );
+	showBreakPointDock->setData( qVariantFromValue((void*)breakPointDock) );
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -1594,3 +1563,13 @@ void MainWindow::onSymbolDockVisibilityChanged(bool visible)
 		symbolDock->update();
 	}
 }
+
+void MainWindow::onShowDock()
+{
+	QAction* action = qobject_cast<QAction*>(sender());
+	QWidget* dock   = (QWidget*)action->data().value<void*>();
+	QDockWidget* dockWidget = qobject_cast<QDockWidget*>(dock->parentWidget());
+	dockWidget->setVisible(true);
+	dockWidget->raise();
+}
+

@@ -814,7 +814,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Symbol list</source>
-        <translation>シンボルリスト</translation>
+        <translation>シンボル一覧</translation>
     </message>
     <message>
         <source>Output</source>
@@ -945,8 +945,8 @@ p, li { white-space: pre-wrap; }
         <translation>アプリケーションの設定</translation>
     </message>
     <message>
-        <source>BreakPoint</source>
-        <translation>ブレークポイント</translation>
+        <source>Breakpoint list</source>
+        <translation>ブレークポイント一覧</translation>
     </message>
     <message>
         <source>Suspend debugging</source>
@@ -966,6 +966,150 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>About hspide</source>
+        <translation>hspideについて</translation>
+    </message>
+    <message>
+        <source>New</source>
+        <translation>新規作成</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>開く</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <source>Save as</source>
+        <translation>名前を付けて保存</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>終了</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation>切り取り</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>コピー</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>貼り付け</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>Select All</source>
+        <translation>すべてを選択</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>検索</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation>次を検索</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation>前を検索</translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <translation>置換</translation>
+    </message>
+    <message>
+        <source>&amp;Project</source>
+        <translation>プロジェクト(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Show project</source>
+        <translation>プロジェクトを表示</translation>
+    </message>
+    <message>
+        <source>&amp;Symbol list</source>
+        <translation>シンボル一覧(&amp;S)</translation>
+    </message>
+    <message>
+        <source>Show symbol list</source>
+        <translation>シンボル一覧を表示</translation>
+    </message>
+    <message>
+        <source>&amp;Output</source>
+        <translation>出力(&amp;O)</translation>
+    </message>
+    <message>
+        <source>Show output</source>
+        <translation>出力を表示</translation>
+    </message>
+    <message>
+        <source>Show search</source>
+        <translation>検索を表示</translation>
+    </message>
+    <message>
+        <source>&amp;Messages</source>
+        <translation>メッセージ(&amp;M)</translation>
+    </message>
+    <message>
+        <source>Show messages</source>
+        <translation>メッセージを表示</translation>
+    </message>
+    <message>
+        <source>&amp;Breakpoint list</source>
+        <translation>ブレークポイント一覧(&amp;B)</translation>
+    </message>
+    <message>
+        <source>Show breakpoint list</source>
+        <translation>ブレークポイント一覧を表示</translation>
+    </message>
+    <message>
+        <source>&amp;System info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show system info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Variable info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show variable info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debug run</source>
+        <translation>デバッグ開始</translation>
+    </message>
+    <message>
+        <source>NO debug run</source>
+        <translation>デバッグなしで実行</translation>
+    </message>
+    <message>
+        <source>All suspend</source>
+        <translation>全て中断</translation>
+    </message>
+    <message>
+        <source>All resume</source>
+        <translation>全て再開</translation>
+    </message>
+    <message>
+        <source>Stop debugging</source>
+        <translation>デバッグの停止</translation>
+    </message>
+    <message>
+        <source>Setting</source>
+        <translation>設定</translation>
+    </message>
+    <message>
+        <source>About hspide ...</source>
         <translation>hspideについて</translation>
     </message>
 </context>

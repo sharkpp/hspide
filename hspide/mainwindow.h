@@ -54,6 +54,14 @@ class MainWindow : public QMainWindow
 	QAction* debugStopAct;
 	QAction* settingAct;
 	QAction* aboutAct;
+	QAction* showProjectDock;
+	QAction* showSymbolDock;
+	QAction* showOutputDock;
+	QAction* showSearchDock;
+	QAction* showMessageDock;
+	QAction* showBreakPointDock;
+	QAction* showSysInfoDock;
+	QAction* showVarInfoDock;
 
 	CProjectDock*      projectDock;
 	CSymbolDock*       symbolDock;
@@ -133,6 +141,7 @@ public slots:
 	void clipboardDataChanged();
 	void onDocumentChanged(bool);
 	void onSymbolDockVisibilityChanged(bool visible);
+	void onShowDock();
 
 private:
 
