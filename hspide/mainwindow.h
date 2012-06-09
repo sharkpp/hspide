@@ -54,14 +54,14 @@ class MainWindow : public QMainWindow
 	QAction* debugStopAct;
 	QAction* settingAct;
 	QAction* aboutAct;
-	QAction* showProjectDock;
-	QAction* showSymbolDock;
-	QAction* showOutputDock;
-	QAction* showSearchDock;
-	QAction* showMessageDock;
-	QAction* showBreakPointDock;
-	QAction* showSysInfoDock;
-	QAction* showVarInfoDock;
+	QAction* showProjectDockAct;
+	QAction* showSymbolDockAct;
+	QAction* showOutputDockAct;
+	QAction* showSearchDockAct;
+	QAction* showMessageDockAct;
+	QAction* showBreakPointDockAct;
+	QAction* showSysInfoDockAct;
+	QAction* showVarInfoDockAct;
 
 	CProjectDock*      projectDock;
 	CSymbolDock*       symbolDock;

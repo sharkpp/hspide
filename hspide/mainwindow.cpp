@@ -100,10 +100,10 @@ void MainWindow::setupDockWindows()
 	projectDockWidget->setObjectName("Project"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::LeftDockWidgetArea, projectDockWidget);
 
-	QDockWidget* symbolDockWidget = new QDockWidget(tr("Symbol list"), this);
+	QDockWidget* symbolDockWidget = new QDockWidget(tr("Symbols"), this);
 	symbolDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	symbolDockWidget->setWidget(symbolDock = new CSymbolDock(symbolDockWidget));
-	symbolDockWidget->setObjectName("Symbol list"); // saveState()で警告がトレースで出るため
+	symbolDockWidget->setObjectName("Symbols"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::LeftDockWidgetArea, symbolDockWidget);
 
 	QDockWidget* outputDockWidget = new QDockWidget(tr("Output"), this);
@@ -124,10 +124,10 @@ void MainWindow::setupDockWindows()
 	messageDockWidget->setObjectName("Messages"); // saveState()で警告がトレースで出るため
 	addDockWidget(Qt::BottomDockWidgetArea, messageDockWidget);
 
-	QDockWidget* breakPointDockWidget = new QDockWidget(tr("Breakpoint list"), this);
+	QDockWidget* breakPointDockWidget = new QDockWidget(tr("Breakpoints"), this);
 	breakPointDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	breakPointDockWidget->setWidget(breakPointDock = new CBreakPointDock(breakPointDockWidget));
-	breakPointDockWidget->setObjectName("Breakpoint list"); // saveState()で警告がトレースで出るため
+	breakPointDockWidget->setObjectName("Breakpoints"); // saveState()で警告がトレースで出るため
 	breakPointDockWidget->setVisible(false);
 
 	// ドックタブに結合
@@ -144,16 +144,16 @@ void MainWindow::setupDockWindows()
 
  // デバッグ時のみ有効なドック
 
-	QDockWidget* sysInfoDockWidget = new QDockWidget(tr("SystemInfo"), this);
+	QDockWidget* sysInfoDockWidget = new QDockWidget(tr("System variables"), this);
 	sysInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	sysInfoDockWidget->setWidget(sysInfoDock = new CSystemInfoDock(sysInfoDockWidget));
-	sysInfoDockWidget->setObjectName("SystemInfo"); // saveState()で警告がトレースで出るため
+	sysInfoDockWidget->setObjectName("System variables"); // saveState()で警告がトレースで出るため
 	sysInfoDockWidget->setVisible(false);
 
-	QDockWidget* varInfoDockWidget = new QDockWidget(tr("VariableInfo"), this);
+	QDockWidget* varInfoDockWidget = new QDockWidget(tr("Variables"), this);
 	varInfoDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
 	varInfoDockWidget->setWidget(varInfoDock = new CVariableInfoDock(varInfoDockWidget));
-	varInfoDockWidget->setObjectName("VariableInfo"); // saveState()で警告がトレースで出るため
+	varInfoDockWidget->setObjectName("Variables"); // saveState()で警告がトレースで出るため
 	varInfoDockWidget->setVisible(false);
 }
 
@@ -234,12 +234,12 @@ void MainWindow::setupMenus()
 		editMenu->addAction(selectAllAct);
 
 	QMenu * viewMenu = menuBar()->addMenu(tr("&View"));
-		viewMenu->addAction(showProjectDock);
-		viewMenu->addAction(showSymbolDock);
-		viewMenu->addAction(showOutputDock);
-		viewMenu->addAction(showSearchDock);
-		viewMenu->addAction(showMessageDock);
-		viewMenu->addAction(showBreakPointDock);
+		viewMenu->addAction(showProjectDockAct);
+		viewMenu->addAction(showSymbolDockAct);
+		viewMenu->addAction(showOutputDockAct);
+		viewMenu->addAction(showSearchDockAct);
+		viewMenu->addAction(showMessageDockAct);
+		viewMenu->addAction(showBreakPointDockAct);
 
 	QMenu * searchMenu = menuBar()->addMenu(tr("&Search"));
 		searchMenu->addAction(findTextAct);
@@ -298,14 +298,14 @@ void MainWindow::setupActions()
 		{ &findNextTextAct,    ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &previous"),    tr("Find previous"),    tr("Find previous text")        },
 		{ &replaceTextAct,     ":/images/tango/middle/edit-find-replace.png",    ":/images/tango/small/edit-find-replace.png",     tr("&Replace"),          tr("Replace"),          tr("Replace text")              },
 		{ &gotoLineAct,        ":/images/tango/middle/go-jump.png",              ":/images/tango/small/go-jump.png",               tr("&Go to line"),       tr("Go to line"),       tr("Go to line")                },
-		{ &showProjectDock,    "",                                               "",                                               tr("&Project"),          tr("Show project"),     tr("Show project")              },
-		{ &showSymbolDock,     "",                                               "",                                               tr("&Symbol list"),      tr("Show symbol list"), tr("Show symbol list")          },
-		{ &showOutputDock,     "",                                               "",                                               tr("&Output"),           tr("Show output"),      tr("Show output")               },
-		{ &showSearchDock,     "",                                               "",                                               tr("&Search"),           tr("Show search"),      tr("Show search")               },
-		{ &showMessageDock,    "",                                               "",                                               tr("&Messages"),         tr("Show messages"),    tr("Show messages")             },
-		{ &showBreakPointDock, "",                                               "",                                               tr("&Breakpoint list"),  tr("Show breakpoint list"),tr("Show breakpoint list")   },
-		{ &showSysInfoDock,    "",                                               "",                                               tr("&System info"),      tr("Show system info"), tr("Show system info")          },
-		{ &showVarInfoDock,    "",                                               "",                                               tr("&Variable info"),    tr("Show variable info"),tr("Show variable info")       },
+		{ &showProjectDockAct, "",                                               "",                                               tr("&Project"),          tr("Show project"),     tr("Show project")              },
+		{ &showSymbolDockAct,  "",                                               "",                                               tr("S&ymbols"),          tr("Show symbols"),     tr("Show symbols")              },
+		{ &showOutputDockAct,  "",                                               "",                                               tr("&Output"),           tr("Show output"),      tr("Show output")               },
+		{ &showSearchDockAct,  "",                                               "",                                               tr("&Search"),           tr("Show search"),      tr("Show search")               },
+		{ &showMessageDockAct, "",                                               "",                                               tr("&Messages"),         tr("Show messages"),    tr("Show messages")             },
+		{ &showBreakPointDockAct, "",                                            "",                                               tr("&Breakpoints"),      tr("Show breakpoints"), tr("Show breakpoints")          },
+		{ &showSysInfoDockAct, "",                                               "",                                               tr("&System variables"), tr("Show system variables"),tr("Show system variables") },
+		{ &showVarInfoDockAct, "",                                               "",                                               tr("&Variables"),        tr("Show variables"),   tr("Show variables")            },
 		{ &buildSolutionAct,   "",                                               "",                                               tr("Build &solution"),   tr("Build solution"),   tr("Build solution")            },
 		{ &buildProjectAct,    "",                                               "",                                               tr("&Build project"),    tr("Build project"),    tr("Build project")             },
 		{ &compileOnlyAct,     "",                                               "",                                               tr("&Compile only"),     tr("Compile only"),     tr("Compile only")              },
@@ -348,21 +348,21 @@ void MainWindow::setupActions()
 	connect(debugStopAct,              SIGNAL(triggered()), this, SLOT(onDebugStop()));
 	connect(settingAct,                SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
 	connect(aboutAct,                  SIGNAL(triggered()), this, SLOT(onAboutApp()));
-	connect(showProjectDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
-	connect(showSymbolDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
-	connect(showOutputDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
-	connect(showSearchDock,            SIGNAL(triggered()), this, SLOT(onShowDock()));
-	connect(showMessageDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
-	connect(showBreakPointDock,        SIGNAL(triggered()), this, SLOT(onShowDock()));
-//	connect(showSysInfoDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
-//	connect(showVarInfoDock,           SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showProjectDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showSymbolDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showOutputDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showSearchDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showMessageDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showBreakPointDockAct,     SIGNAL(triggered()), this, SLOT(onShowDock()));
+//	connect(showSysInfoDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
+//	connect(showVarInfoDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
 
-	showProjectDock   ->setData( qVariantFromValue((void*)projectDock) );
-	showSymbolDock    ->setData( qVariantFromValue((void*)symbolDock) );
-	showOutputDock    ->setData( qVariantFromValue((void*)outputDock) );
-	showSearchDock    ->setData( qVariantFromValue((void*)searchDock) );
-	showMessageDock   ->setData( qVariantFromValue((void*)messageDock) );
-	showBreakPointDock->setData( qVariantFromValue((void*)breakPointDock) );
+	showProjectDockAct   ->setData( qVariantFromValue((void*)projectDock) );
+	showSymbolDockAct    ->setData( qVariantFromValue((void*)symbolDock) );
+	showOutputDockAct    ->setData( qVariantFromValue((void*)outputDock) );
+	showSearchDockAct    ->setData( qVariantFromValue((void*)searchDock) );
+	showMessageDockAct   ->setData( qVariantFromValue((void*)messageDock) );
+	showBreakPointDockAct->setData( qVariantFromValue((void*)breakPointDock) );
 
 	saveDocumentAct->setEnabled(false);
 	saveAsDocumentAct->setEnabled(false);
@@ -455,8 +455,23 @@ void MainWindow::loadSettings()
 				<< "find-prev"
 				<< "replace"
 				<< "jump"
+				<< "build-solution"
+				<< "build-project"
+				<< "compile"
 				<< "debug-run"
+				<< "no-debug-run"
+				<< "debug-suspend"
+				<< "debug-resume"
+				<< "debug-stop"
 				<< "config"
+				<< "show-project"
+				<< "show-symbols"
+				<< "show-output"
+				<< "show-search"
+				<< "show-messages"
+				<< "show-breakpoints"
+				<< "show-system-variables"
+				<< "show-variables"
 				;
 	for(int i = 0; i < listShortcutItems.size(); i++)
 	{
@@ -542,8 +557,23 @@ void MainWindow::saveSettings()
 				<< "find-prev"
 				<< "replace"
 				<< "jump"
+				<< "build-solution"
+				<< "build-project"
+				<< "compile"
 				<< "debug-run"
+				<< "no-debug-run"
+				<< "debug-suspend"
+				<< "debug-resume"
+				<< "debug-stop"
 				<< "config"
+				<< "show-project"
+				<< "show-symbols"
+				<< "show-output"
+				<< "show-search"
+				<< "show-messages"
+				<< "show-breakpoints"
+				<< "show-system-variables"
+				<< "show-variables"
 				;
 	for(int i = 0; i < listShortcutItems.size(); i++)
 	{
@@ -636,26 +666,41 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::updateConfiguration(const Configuration& info)
 {
-	theConf.applyShortcut(Configuration::ShortcutNew,       newDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutOpen,      openDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSave,      saveDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAs,    saveAsDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAll,   saveAllDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutQuit,      quitApplicationAct);
-	theConf.applyShortcut(Configuration::ShortcutUndo,      editUndoAct);
-	theConf.applyShortcut(Configuration::ShortcutRedo,      editRedoAct);
-	theConf.applyShortcut(Configuration::ShortcutCut,       editCutAct);
-	theConf.applyShortcut(Configuration::ShortcutCopy,      editCopyAct);
-	theConf.applyShortcut(Configuration::ShortcutPaste,     editPasteAct);
-	theConf.applyShortcut(Configuration::ShortcutClear,     editClearAct);
-	theConf.applyShortcut(Configuration::ShortcutSelectAll, selectAllAct);
-	theConf.applyShortcut(Configuration::ShortcutFind,      findTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindNext,  findPrevTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindPrev,  findNextTextAct);
-	theConf.applyShortcut(Configuration::ShortcutReplace,   replaceTextAct);
-	theConf.applyShortcut(Configuration::ShortcutJump,      gotoLineAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugRun,  debugRunAct);
-	theConf.applyShortcut(Configuration::ShortcutConfig,    settingAct);
+	theConf.applyShortcut(Configuration::ShortcutNew,				newDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutOpen,				openDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSave,				saveDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAs,			saveAsDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAll,			saveAllDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutQuit,				quitApplicationAct);
+	theConf.applyShortcut(Configuration::ShortcutUndo,				editUndoAct);
+	theConf.applyShortcut(Configuration::ShortcutRedo,				editRedoAct);
+	theConf.applyShortcut(Configuration::ShortcutCut,				editCutAct);
+	theConf.applyShortcut(Configuration::ShortcutCopy,				editCopyAct);
+	theConf.applyShortcut(Configuration::ShortcutPaste,				editPasteAct);
+	theConf.applyShortcut(Configuration::ShortcutClear,				editClearAct);
+	theConf.applyShortcut(Configuration::ShortcutSelectAll,			selectAllAct);
+	theConf.applyShortcut(Configuration::ShortcutFind,				findTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindNext,			findPrevTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindPrev,			findNextTextAct);
+	theConf.applyShortcut(Configuration::ShortcutReplace,			replaceTextAct);
+	theConf.applyShortcut(Configuration::ShortcutJump,				gotoLineAct);
+	theConf.applyShortcut(Configuration::ShortcutBuildSolution,		buildSolutionAct);
+	theConf.applyShortcut(Configuration::ShortcutBuildProject,		buildProjectAct);
+	theConf.applyShortcut(Configuration::ShortcutCompileOnly,		compileOnlyAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugRun,			debugRunAct);
+	theConf.applyShortcut(Configuration::ShortcutNoDebugRun,		noDebugRunAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugSuspend,		debugSuspendAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugResume,		debugResumeAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugStop,			debugStopAct);
+	theConf.applyShortcut(Configuration::ShortcutConfig,			settingAct);
+	theConf.applyShortcut(Configuration::ShortcutShowProject,		showProjectDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowSymbol,		showSymbolDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowOutput,		showOutputDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowSearch,		showSearchDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowMessage,		showMessageDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowBreakPoint,	showBreakPointDockAct);
+//	theConf.applyShortcut(Configuration::ShortcutShowSysInfo,		showSysInfoDockAct);
+//	theConf.applyShortcut(Configuration::ShortcutShowVarInfo,		showVarInfoDockAct);
 }
 
 void MainWindow::closeTab(CWorkSpaceItem* targetItem)

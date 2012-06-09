@@ -293,6 +293,58 @@ p, li { white-space: pre-wrap; }
         <source>Configuration</source>
         <translation>設定</translation>
     </message>
+    <message>
+        <source>Build solution</source>
+        <translation>ソリューションのビルド</translation>
+    </message>
+    <message>
+        <source>Build project</source>
+        <translation>プロジェクトのビルド</translation>
+    </message>
+    <message>
+        <source>Compile only</source>
+        <translation>コンパイルのみ</translation>
+    </message>
+    <message>
+        <source>No debug run</source>
+        <translation>デバッグなしで実行</translation>
+    </message>
+    <message>
+        <source>Debug suspend</source>
+        <translation>デバッグの中断</translation>
+    </message>
+    <message>
+        <source>Debug resume</source>
+        <translation>デバッグの再開</translation>
+    </message>
+    <message>
+        <source>Debug stop</source>
+        <translation>デバッグの中止</translation>
+    </message>
+    <message>
+        <source>Show project</source>
+        <translation>プロジェクトを表示</translation>
+    </message>
+    <message>
+        <source>Show symbols</source>
+        <translation>シンボルを表示</translation>
+    </message>
+    <message>
+        <source>Show output</source>
+        <translation>出力を表示</translation>
+    </message>
+    <message>
+        <source>Show search</source>
+        <translation>検索を表示</translation>
+    </message>
+    <message>
+        <source>Show messages</source>
+        <translation>メッセージを表示</translation>
+    </message>
+    <message>
+        <source>Show breakpoints</source>
+        <translation>ブレークポイントを表示</translation>
+    </message>
 </context>
 <context>
     <name>CDocumentPane</name>
@@ -813,8 +865,8 @@ p, li { white-space: pre-wrap; }
         <translation>プロジェクト</translation>
     </message>
     <message>
-        <source>Symbol list</source>
-        <translation>シンボル一覧</translation>
+        <source>Symbols</source>
+        <translation>シンボル</translation>
     </message>
     <message>
         <source>Output</source>
@@ -929,12 +981,12 @@ p, li { white-space: pre-wrap; }
         <translation>デバッグの停止(&amp;D)</translation>
     </message>
     <message>
-        <source>SystemInfo</source>
-        <translation>システム情報</translation>
+        <source>System variables</source>
+        <translation>システム変数</translation>
     </message>
     <message>
-        <source>VariableInfo</source>
-        <translation>変数情報</translation>
+        <source>Variables</source>
+        <translation>変数</translation>
     </message>
     <message>
         <source>&amp;Setting</source>
@@ -945,8 +997,8 @@ p, li { white-space: pre-wrap; }
         <translation>アプリケーションの設定</translation>
     </message>
     <message>
-        <source>Breakpoint list</source>
-        <translation>ブレークポイント一覧</translation>
+        <source>Breakpoints</source>
+        <translation>ブレークポイント</translation>
     </message>
     <message>
         <source>Suspend debugging</source>
@@ -1033,12 +1085,12 @@ p, li { white-space: pre-wrap; }
         <translation>プロジェクトを表示</translation>
     </message>
     <message>
-        <source>&amp;Symbol list</source>
-        <translation>シンボル一覧(&amp;S)</translation>
+        <source>S&amp;ymbols</source>
+        <translation>シンボル(&amp;Y)</translation>
     </message>
     <message>
-        <source>Show symbol list</source>
-        <translation>シンボル一覧を表示</translation>
+        <source>Show symbols</source>
+        <translation>シンボルを表示</translation>
     </message>
     <message>
         <source>&amp;Output</source>
@@ -1061,28 +1113,28 @@ p, li { white-space: pre-wrap; }
         <translation>メッセージを表示</translation>
     </message>
     <message>
-        <source>&amp;Breakpoint list</source>
-        <translation>ブレークポイント一覧(&amp;B)</translation>
+        <source>&amp;Breakpoints</source>
+        <translation>ブレークポイント(&amp;B)</translation>
     </message>
     <message>
-        <source>Show breakpoint list</source>
-        <translation>ブレークポイント一覧を表示</translation>
+        <source>Show breakpoints</source>
+        <translation>ブレークポイントを表示</translation>
     </message>
     <message>
-        <source>&amp;System info</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;System variables</source>
+        <translation>システム変数(&amp;S)</translation>
     </message>
     <message>
-        <source>Show system info</source>
-        <translation type="unfinished"></translation>
+        <source>Show system variables</source>
+        <translation>システム変数を表示</translation>
     </message>
     <message>
-        <source>&amp;Variable info</source>
-        <translation type="unfinished"></translation>
+        <source>&amp;Variables</source>
+        <translation>変数(&amp;V)</translation>
     </message>
     <message>
-        <source>Show variable info</source>
-        <translation type="unfinished"></translation>
+        <source>Show variables</source>
+        <translation>変数を表示を表示</translation>
     </message>
     <message>
         <source>Debug run</source>
