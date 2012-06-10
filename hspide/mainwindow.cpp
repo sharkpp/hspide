@@ -250,8 +250,8 @@ void MainWindow::setupMenus()
 		searchMenu->addAction(gotoLineAct);
 
 	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
-		buildMenu->addAction(buildProjectAct);
 		buildMenu->addAction(buildSolutionAct);
+		buildMenu->addAction(buildProjectAct);
 		buildMenu->addSeparator();
 		buildMenu->addAction(compileOnlyAct);
 
@@ -751,6 +751,25 @@ bool MainWindow::closeSolution()
 	return true;
 }
 
+CWorkSpaceItem* MainWindow::currentItem()
+{
+	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	CWorkSpaceItem* item = NULL;
+
+	if( document )
+	{
+		// 現在選択しているタブに関連付けられているファイルを取得
+		item = document->assignItem();
+	}
+	else
+	{
+		// なければ、プロジェクトツリーから選択しているファイルを取得
+		item = projectDock->currentItem();
+	}
+
+	return item;
+}
+
 void MainWindow::onAboutApp()
 {
 //	CAboutDialog dlg(this);
@@ -979,40 +998,60 @@ void MainWindow::onReqVarInfo(const QString& varName, int* info)
 
 void MainWindow::onBuildProject()
 {
-}
+	CWorkSpaceItem* item = currentItem();
 
-void MainWindow::onBuildSolution()
-{
-}
-
-void MainWindow::onDebugRun()
-{
-	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
-	CWorkSpaceItem* currentItem = NULL;
-
-	if( document )
-	{
-		// 現在選択しているタブに関連付けられているファイルを取得
-		currentItem = document->assignItem();
-	}
-	else
-	{
-		// なければ、プロジェクトツリーから選択しているファイルを取得
-		currentItem = projectDock->currentItem();
-	}
-
-	if( !currentItem )
+	if( !item )
 	{
 		return;
 	}
 
 	// もし、プロジェクトに属していたら取得
 	CWorkSpaceItem* currentProject
-		= currentItem->ancestor(CWorkSpaceItem::Project);
+		= item->ancestor(CWorkSpaceItem::Project);
+
+	if( currentProject )
+	{
+		// プロジェクトが取得できたらビルド＆実行
+		m_compiler->build(currentProject, true);
+	}
+}
+
+void MainWindow::onBuildSolution()
+{
+	CWorkSpaceItem* item = currentItem();
+
+	if( !item )
+	{
+		return;
+	}
 
 	// もし、ソリューションに属していたら取得
 	CWorkSpaceItem* currentSolution
-		= currentItem->ancestor(CWorkSpaceItem::Solution);
+		= item->ancestor(CWorkSpaceItem::Solution);
+
+	if( currentSolution )
+	{
+		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
+		
+	}
+}
+
+void MainWindow::onDebugRun()
+{
+	CWorkSpaceItem* item = currentItem();
+
+	if( !item )
+	{
+		return;
+	}
+
+	// もし、プロジェクトに属していたら取得
+	CWorkSpaceItem* currentProject
+		= item->ancestor(CWorkSpaceItem::Project);
+
+	// もし、ソリューションに属していたら取得
+	CWorkSpaceItem* currentSolution
+		= item->ancestor(CWorkSpaceItem::Solution);
 
 	if( currentSolution &&
 		0 )
@@ -1029,27 +1068,20 @@ void MainWindow::onDebugRun()
 
 void MainWindow::onNoDebugRun()
 {
-	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
-	CWorkSpaceItem* currentItem = NULL;
+	CWorkSpaceItem* item = currentItem();
 
-	if( document )
+	if( !item )
 	{
-		// 現在選択しているタブに関連付けられているファイルを取得
-		currentItem = document->assignItem();
-	}
-	else
-	{
-		// なければ、プロジェクトツリーから選択しているファイルを取得
-		currentItem = projectDock->currentItem();
+		return;
 	}
 
 	// もし、プロジェクトに属していたら取得
 	CWorkSpaceItem* currentProject
-		= currentItem->ancestor(CWorkSpaceItem::Project);
+		= item->ancestor(CWorkSpaceItem::Project);
 
 	// もし、ソリューションに属していたら取得
 	CWorkSpaceItem* currentSolution
-		= currentItem->ancestor(CWorkSpaceItem::Solution);
+		= item->ancestor(CWorkSpaceItem::Solution);
 
 	if( currentSolution &&
 		0 )

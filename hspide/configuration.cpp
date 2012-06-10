@@ -48,11 +48,11 @@ Configuration::Configuration()
 	m_shortcutInfo[ShortcutFindPrev].keys       = QKeySequence::FindPrevious;
 	m_shortcutInfo[ShortcutReplace].keys        = QKeySequence::Replace;
 	m_shortcutInfo[ShortcutJump].keys           = QKeySequence(Qt::CTRL + Qt::Key_J);
-//	m_shortcutInfo[ShortcutBuildSolution].keys  = 
-//	m_shortcutInfo[ShortcutBuildProject].keys   = 
+	m_shortcutInfo[ShortcutBuildSolution].keys  = QKeySequence(Qt::Key_F7);
+	m_shortcutInfo[ShortcutBuildProject].keys   = QKeySequence(Qt::CTRL + Qt::Key_F7);
 //	m_shortcutInfo[ShortcutCompileOnly].keys    = 
 	m_shortcutInfo[ShortcutDebugRun].keys       = QKeySequence(Qt::Key_F5);
-//	m_shortcutInfo[ShortcutNoDebugRun].keys     = 
+	m_shortcutInfo[ShortcutNoDebugRun].keys     = QKeySequence(Qt::CTRL + Qt::Key_F5);
 	m_shortcutInfo[ShortcutDebugSuspend].keys   = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
 	m_shortcutInfo[ShortcutDebugResume].keys    = QKeySequence(Qt::Key_F5);
 	m_shortcutInfo[ShortcutDebugStop].keys      = QKeySequence(Qt::SHIFT + Qt::Key_F5);

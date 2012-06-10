@@ -162,4 +162,6 @@ private:
 
 	bool closeSolution();
 
+	CWorkSpaceItem* currentItem();
+
 };
