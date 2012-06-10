@@ -19,12 +19,12 @@
 
 // pack_exe p1
 #define EXE_TYPE_DEFAULT		0	// 標準
-#define EXE_TYPE_FULLSCREEN		1	// フルスクリーンモード
+#define EXE_TYPE_FULLSCREEN		1	// フルスクリーンモード(obsolete)
 #define EXE_TYPE_SCREENSAVER	2	// スクリーンセーバー
 
 // pack_opt p3
-#define EXE_OPT_HIDDEN_WINDOW	0	// 初期ウィンドウ非表示
-#define EXE_OPT_NO_CHANGE_DIR	1	// ディレクトリ移動なし
+#define EXE_OPT_HIDDEN_WINDOW	1	// 初期ウィンドウ非表示
+#define EXE_OPT_NO_CHANGE_DIR	2	// ディレクトリ移動なし
 
 
 class hspcmp

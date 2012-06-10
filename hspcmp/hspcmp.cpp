@@ -22,6 +22,7 @@ struct option {
 	const char * filename;			// 処理ファイル名
 	packfile_manager
 				packfile;			// パックファイル処理
+	int			exetype;			// 実行ファイル種別
 	int			wx, wy;				// ウインドウサイズ(wx=幅,wy=高さ)
 	bool		hidden_window;		// 生成した実行ファイルで起動時にウインドウを非表示にしておくか
 	bool		debug;				// デバッグモード
@@ -42,7 +43,7 @@ struct option {
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
-		, wx(0), wy(0), hidden_window(false)
+		, exetype(EXE_TYPE_DEFAULT), wx(0), wy(0), hidden_window(false)
 		, debug(false), debug_window(false), preprocess_only(false)
 		, auto_make(false), make(false), execute(false)
 		, symbol_put(false)
@@ -58,6 +59,7 @@ struct option {
 		printf("!!! option.help = %s\n", help ? "true" : "false");
 		printf("!!! option.exename = \"%s\"\n", exename);
 		printf("!!! option.filename = \"%s\"\n", filename);
+		printf("!!! option.exetype = %d\n", exetype);
 		printf("!!! option.wx = %d\n", wx);
 		printf("!!! option.wy = %d\n", wy);
 		printf("!!! option.hidden_window = %s\n", hidden_window ? "true" : "false");
@@ -102,12 +104,16 @@ void usage()
 		"    -h , --help , -?\n"
 		"    -v , --version\n"
 		"    -n NAME , --name NAME\n"
+		"    -T TYPE , --type TYPE\n"
+		"        0 or \"exe\" -> default\n"
+		"        2 or \"scr\" -> screen saver\n"
 		"    -s X,Y , --size X,Y\n"
 		"    -I , --hidden\n"
 		"    -d , --debug\n"
 		"    -D , --debug-window\n"
 		"    -P , --preprocess-only\n"
 		"    -a , --auto-make\n"
+		"        auto making exe file, ignore packname\n"
 		"    -m , --make\n"
 		"    -r REFERENCE_NAME , --refname REFERENCE_NAME\n"
 		"    -o OBJCT_NAME , --objname OBJCT_NAME\n"
@@ -145,6 +151,20 @@ bool read_args(int argc, char * argv[])
 					int wy = strtol(argv[i], &ep, 10);
 					option.wx = wx;
 					option.wy = wy;
+				}
+			} else if( (!strcmp(argv[i], "-T") || !strcmp(argv[i], "--type")) && i + 1 < argc ) {
+				// 実行ファイル種別
+				i++;
+				       if( !strcmp(argv[i], "exe") ) {
+					option.exetype = EXE_TYPE_DEFAULT;
+				} else if( !strcmp(argv[i], "scr") ) {
+					option.exetype = EXE_TYPE_SCREENSAVER;
+				} else {
+					char * ep;
+					int exetype = strtol(argv[i], &ep, 10);
+					if( ep ) {
+						option.exetype = exetype;
+					}
 				}
 			} else if(  !strcmp(argv[i], "-I") || !strcmp(argv[i], "--hidden") ) {
 				// ウインドウの非表示の指定
@@ -475,7 +495,7 @@ int main(int argc, char * argv[])
 		option.exename = exename.c_str();
 	}
 
-	if( option.make || option.auto_make )
+	if( option.make )
 	{
 		// パックファイル生成
 		option.packfile.save(option.work_path);
@@ -503,6 +523,7 @@ int main(int argc, char * argv[])
 			return -1;
 		}
 
+		// ランタイム指定
 		tmp2  = option.hsp_path;
 		normalize_directory(tmp2);
 		tmp2 += runtime;
@@ -512,7 +533,28 @@ int main(int argc, char * argv[])
 			return -1;
 		}
 
-		if( (result = cmp.pack_exe(EXE_TYPE_DEFAULT)) != 0 ) {
+		// 実行ファイル生成
+		if( EXE_TYPE_FULLSCREEN == option.exetype ) {
+			print_message("fullscreen option is now obsolete.\n");
+		}
+		if( option.exetype < 0 || EXE_TYPE_SCREENSAVER < option.exetype ) {
+			option.exetype = EXE_TYPE_DEFAULT;
+			print_message("exe type is ignored.\n");
+		}
+		if( (result = cmp.pack_exe(option.exetype)) != 0 ) {
+			// エラーメッセージ取得＆表示
+			print_compiler_message(cmp);
+			UninstallAPIHook();
+			return -1;
+		}
+	}
+	else if( option.auto_make )
+	{
+		// 実行ファイル生成
+		tmp2  = option.hsp_path;
+		normalize_directory(tmp2);
+		tmp2 += runtime;
+		if( (result = cmp.hsc3_make(tmp2.c_str())) != 0 ) {
 			// エラーメッセージ取得＆表示
 			print_compiler_message(cmp);
 			UninstallAPIHook();
