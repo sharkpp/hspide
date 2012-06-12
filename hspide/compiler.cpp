@@ -58,6 +58,14 @@ CWorkSpaceItem* CCompiler::getTargetItem(qint64 id)
 	return item;
 }
 
+// ビルド順を取得
+int CCompiler::buildOrder(QProcess* process) const
+{
+	QMap<QProcess*, int>::const_iterator
+		ite = m_buildOrder.find(process);
+		return m_buildOrder.end() != ite ? ite.value() : -1;
+}
+
 void CCompiler::updateCompilerPath()
 {
 	QString program = m_hspCompPath + "hspcmp.exe";
@@ -95,6 +103,27 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 	QString workDir = QDir::currentPath(); // いらないかも
 
 	QString filename = targetItem->path();
+
+	int order = m_buildOrder.size();
+
+	switch( targetItem->type() )
+	{
+	case CWorkSpaceItem::Solution: {
+		bool result = true;
+		for(int i = 0, num = targetItem->count();
+			i < num; i++ )
+		{
+			result &= execCompiler(targetItem->at(i), buildAfterRun, debugMode);
+		}
+		return result; }
+	case CWorkSpaceItem::Project:
+		break;
+	default:
+		emit buildStart(order, filename);
+		emit buildFinished(order, false);
+		return false;
+	}
+
 	bool tempSave = false;
 
 	// 無題の場合は一時的なファイルに保存
@@ -103,25 +132,27 @@ bool CCompiler::execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bo
 		CDocumentPane* document = targetItem->assignDocument();
 		if( !document )
 		{
-			emit buildStart(filename);
-			emit buildFinished(false);
+			emit buildStart(order, filename);
+			emit buildFinished(order, false);
 			return false;
 		}
 
 		// 一時的なファイルに保存
 		tempSave = true;
-		filename = QDir::toNativeSeparators(workDir + "/hsptmp");
+		filename = QDir::toNativeSeparators(workDir + "/hsptmp"); //ユニークな名前に変える
 		document->save(filename);
 	}
 
 	// シグナル発報
-	emit buildStart(filename);
+	emit buildStart(order, filename);
 
 	QProcess* proccess = new QProcess(this);
 
 	quint64 id = (quint64)proccess;
 
 	m_targetsTemp[id] = targetItem; // 途中で失敗した場合リークするけどどうやって解消しよう？
+
+	m_buildOrder[proccess] = order;
 
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;
@@ -156,7 +187,7 @@ qDebug() << arguments;
 
 	if( !proccess->waitForStarted() ) {
 		delete proccess;
-		emit buildFinished(false);
+		emit buildFinished(order, false);
 		return false;
 	}
 
@@ -168,12 +199,14 @@ qDebug() << arguments;
 // ビルド
 bool CCompiler::build(CWorkSpaceItem * targetItem, bool debugMode)
 {
+	m_buildOrder.clear();
 	return execCompiler(targetItem, false, debugMode);
 }
 
 // 実行
 bool CCompiler::run(CWorkSpaceItem * targetItem, bool debugMode)
 {
+	m_buildOrder.clear();
 	return execCompiler(targetItem, true, debugMode);
 }
 
@@ -224,11 +257,13 @@ void CCompiler::buildError(QProcess::ProcessError error)
 // プロジェクトのビルド完了
 void CCompiler::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+	QProcess* compiler = qobject_cast<QProcess*>(sender());
+	int       order    = buildOrder(compiler);
+
 	// シグナル発報
-	emit buildFinished(QProcess::NormalExit == exitStatus);
+	emit buildFinished(order, QProcess::NormalExit == exitStatus);
 
 	// ビルド処理リストから取り除く
-	QProcess* compiler = qobject_cast<QProcess*>(sender());
 	m_compilerProcesses.removeAll(compiler);
 	delete compiler;
 }
@@ -237,8 +272,9 @@ void CCompiler::buildFinished(int exitCode, QProcess::ExitStatus exitStatus)
 void CCompiler::buildReadOutput()
 {
 	QProcess* compiler = qobject_cast<QProcess*>(sender());
-	QString tmp(compiler->readAllStandardOutput());
-	emit buildOutput(tmp);
+	int       order    = buildOrder(compiler);
+	QString   tmp(compiler->readAllStandardOutput());
+	emit buildOutput(order, tmp);
 }
 
 void CCompiler::attachDebugger()

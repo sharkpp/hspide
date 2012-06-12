@@ -42,11 +42,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 //	m_workSpace->setConfiguration(m_configuration);
 
 	// 処理完了時の通知を登録
-	connect(m_compiler, SIGNAL(buildStart(const QString &)),  this, SLOT(buildStart(const QString &)));
-	connect(m_compiler, SIGNAL(buildFinished(bool)),          this, SLOT(buildFinished(bool)));
-	connect(m_compiler, SIGNAL(buildOutput(const QString &)), this, SLOT(buildOutput(const QString &)));
-	connect(m_compiler, SIGNAL(attachedDebugger(CDebugger*)), this, SLOT(attachedDebugger(CDebugger*)));
-	connect(m_compiler, SIGNAL(updatedSymbols()),             this, SLOT(onUpdatedSymbols()));
+	connect(m_compiler, SIGNAL(buildStart(int, const QString &)),  this, SLOT(buildStart(int, const QString &)));
+	connect(m_compiler, SIGNAL(buildFinished(int, bool)),          this, SLOT(buildFinished(int, bool)));
+	connect(m_compiler, SIGNAL(buildOutput(int, const QString &)), this, SLOT(buildOutput(int, const QString &)));
+	connect(m_compiler, SIGNAL(attachedDebugger(CDebugger*)),      this, SLOT(attachedDebugger(CDebugger*)));
+	connect(m_compiler, SIGNAL(updatedSymbols()),                  this, SLOT(onUpdatedSymbols()));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
@@ -203,7 +203,7 @@ void MainWindow::setupToolBars()
 		generalToolbar->addAction(findNextTextAct);
 		generalToolbar->addAction(replaceTextAct);
 		generalToolbar->addSeparator();
-		generalToolbar->addAction(debugRunAct);
+		generalToolbar->addAction(debugRunSolutionAct);
 		generalToolbar->addAction(debugResumeAct);
 		generalToolbar->addAction(debugSuspendAct);
 		generalToolbar->addAction(debugStopAct);
@@ -252,12 +252,15 @@ void MainWindow::setupMenus()
 	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
 		buildMenu->addAction(buildSolutionAct);
 		buildMenu->addAction(buildProjectAct);
-		buildMenu->addSeparator();
-		buildMenu->addAction(compileOnlyAct);
+		buildMenu->addAction(batchBuildAct);
 
 	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
-		debugMenu->addAction(debugRunAct);
-		debugMenu->addAction(noDebugRunAct);
+		debugMenu->addAction(debugRunSolutionAct);
+		debugMenu->addAction(noDebugRunSolutionAct);
+		debugMenu->addSeparator();
+		debugMenu->addAction(debugRunProjectAct);
+		debugMenu->addAction(noDebugRunProjectAct);
+		debugMenu->addSeparator();
 		debugMenu->addAction(debugResumeAct);
 		debugMenu->addAction(debugSuspendAct);
 		debugMenu->addAction(debugStopAct);
@@ -280,42 +283,45 @@ void MainWindow::setupActions()
 		QString   middleIcon, smallIcon;
 		QString   text, tooltipText, statusText;
 	} menuInitTable[] = {
-		{ &newDocumentAct,     ":/images/tango/middle/document-new.png",         ":/images/tango/small/document-new.png",          tr("&New"),              tr("New"),              tr("Create a new file")         },
-		{ &openDocumentAct,    ":/images/tango/middle/document-open.png",        ":/images/tango/small/document-open.png",         tr("&Open"),             tr("Open"),             tr("Open file")                 },
-		{ &saveDocumentAct,    ":/images/tango/middle/document-save.png",        ":/images/tango/small/document-save.png",         tr("&Save"),             tr("Save"),             tr("Save file")                 },
-		{ &saveAsDocumentAct,  ":/images/tango/middle/document-save-as.png",     ":/images/tango/small/document-save-as.png",      tr("S&ave as"),          tr("Save as"),          tr("Save file with a name")     },
-		{ &saveAllDocumentAct, ":/images/icons/middle/document-save-all.png",    ":/images/icons/small/document-save-all.png",     tr("Save all"),          tr("Save all"),         tr("Save all file")             },
-		{ &quitApplicationAct, ":/images/tango/middle/system-log-out.png",       ":/images/tango/small/system-log-out.png",        tr("&Quit"),             tr("Quit"),             tr("Quit application")          },
-		{ &editUndoAct,        ":/images/tango/middle/edit-undo.png",            ":/images/tango/small/edit-undo.png",             tr("&Undo"),             tr("Undo"),             tr("Undo")                      },
-		{ &editRedoAct,        ":/images/tango/middle/edit-redo.png",            ":/images/tango/small/edit-redo.png",             tr("&Redo"),             tr("Redo"),             tr("Redo")                      },
-		{ &editCutAct,         ":/images/tango/middle/edit-cut.png",             ":/images/tango/small/edit-cut.png",              tr("Cu&t"),              tr("Cut"),              tr("Cut selected text")         },
-		{ &editCopyAct,        ":/images/tango/middle/edit-copy.png",            ":/images/tango/small/edit-copy.png",             tr("&Copy"),             tr("Copy"),             tr("Copy selected text")        },
-		{ &editPasteAct,       ":/images/tango/middle/edit-paste.png",           ":/images/tango/small/edit-paste.png",            tr("&Paste"),            tr("Paste"),            tr("Paste text")                },
-		{ &editClearAct,       ":/images/tango/middle/edit-clear.png",           ":/images/tango/small/edit-clear.png",            tr("&Delete"),           tr("Delete"),           tr("Delete selected text")      },
-		{ &selectAllAct,       ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("&Select All"),       tr("Select All"),       tr("Select all text")           },
-		{ &findTextAct,        ":/images/tango/middle/edit-find.png",            ":/images/tango/small/edit-find.png",             tr("&Find"),             tr("Find"),             tr("Find text")                 },
-		{ &findPrevTextAct,    ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &next"),        tr("Find next"),        tr("Find next text")            },
-		{ &findNextTextAct,    ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &previous"),    tr("Find previous"),    tr("Find previous text")        },
-		{ &replaceTextAct,     ":/images/tango/middle/edit-find-replace.png",    ":/images/tango/small/edit-find-replace.png",     tr("&Replace"),          tr("Replace"),          tr("Replace text")              },
-		{ &gotoLineAct,        ":/images/tango/middle/go-jump.png",              ":/images/tango/small/go-jump.png",               tr("&Go to line"),       tr("Go to line"),       tr("Go to line")                },
-		{ &showProjectDockAct, "",                                               "",                                               tr("&Project"),          tr("Show project"),     tr("Show project")              },
-		{ &showSymbolDockAct,  "",                                               "",                                               tr("S&ymbols"),          tr("Show symbols"),     tr("Show symbols")              },
-		{ &showOutputDockAct,  "",                                               "",                                               tr("&Output"),           tr("Show output"),      tr("Show output")               },
-		{ &showSearchDockAct,  "",                                               "",                                               tr("&Search"),           tr("Show search"),      tr("Show search")               },
-		{ &showMessageDockAct, "",                                               "",                                               tr("&Messages"),         tr("Show messages"),    tr("Show messages")             },
-		{ &showBreakPointDockAct, "",                                            "",                                               tr("&Breakpoints"),      tr("Show breakpoints"), tr("Show breakpoints")          },
-		{ &showSysInfoDockAct, "",                                               "",                                               tr("&System variables"), tr("Show system variables"),tr("Show system variables") },
-		{ &showVarInfoDockAct, "",                                               "",                                               tr("&Variables"),        tr("Show variables"),   tr("Show variables")            },
-		{ &buildSolutionAct,   "",                                               "",                                               tr("Build &solution"),   tr("Build solution"),   tr("Build solution")            },
-		{ &buildProjectAct,    "",                                               "",                                               tr("&Build project"),    tr("Build project"),    tr("Build project")             },
-		{ &compileOnlyAct,     "",                                               "",                                               tr("&Compile only"),     tr("Compile only"),     tr("Compile only")              },
-		{ &debugRunAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("&Debug run"),        tr("Debug run"),        tr("Run program with debug")    },
-		{ &noDebugRunAct,      "",                                               "",                                               tr("&NO debug run"),     tr("NO debug run"),     tr("Run program without debug") },
-		{ &debugSuspendAct,    ":/images/tango/middle/media-playback-pause.png", ":/images/tango/small/media-playback-pause.png",  tr("All &suspend"),      tr("All suspend"),      tr("Suspend debugging")         },
-		{ &debugResumeAct,     ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),       tr("All resume"),       tr("Resume debugging")          },
-		{ &debugStopAct,       ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),   tr("Stop debugging"),   tr("Abort debugging")           },
-		{ &settingAct,         ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),          tr("Setting"),          tr("Application settings")      },
-		{ &aboutAct,           ":/images/tango/middle/dialog-information.png",   ":/images/tango/small/dialog-information.png",    tr("&About hspide ..."), tr("About hspide ..."), tr("About hspide")              },
+		{ &newDocumentAct,        ":/images/tango/middle/document-new.png",         ":/images/tango/small/document-new.png",          tr("&New"),                  tr("New"),                  tr("Create a new file")         },
+		{ &openDocumentAct,       ":/images/tango/middle/document-open.png",        ":/images/tango/small/document-open.png",         tr("&Open"),                 tr("Open"),                 tr("Open file")                 },
+		{ &saveDocumentAct,       ":/images/tango/middle/document-save.png",        ":/images/tango/small/document-save.png",         tr("&Save"),                 tr("Save"),                 tr("Save file")                 },
+		{ &saveAsDocumentAct,     ":/images/tango/middle/document-save-as.png",     ":/images/tango/small/document-save-as.png",      tr("S&ave as"),              tr("Save as"),              tr("Save file with a name")     },
+		{ &saveAllDocumentAct,    ":/images/icons/middle/document-save-all.png",    ":/images/icons/small/document-save-all.png",     tr("Save all"),              tr("Save all"),             tr("Save all file")             },
+		{ &quitApplicationAct,    ":/images/tango/middle/system-log-out.png",       ":/images/tango/small/system-log-out.png",        tr("&Quit"),                 tr("Quit"),                 tr("Quit application")          },
+		{ &editUndoAct,           ":/images/tango/middle/edit-undo.png",            ":/images/tango/small/edit-undo.png",             tr("&Undo"),                 tr("Undo"),                 tr("Undo")                      },
+		{ &editRedoAct,           ":/images/tango/middle/edit-redo.png",            ":/images/tango/small/edit-redo.png",             tr("&Redo"),                 tr("Redo"),                 tr("Redo")                      },
+		{ &editCutAct,            ":/images/tango/middle/edit-cut.png",             ":/images/tango/small/edit-cut.png",              tr("Cu&t"),                  tr("Cut"),                  tr("Cut selected text")         },
+		{ &editCopyAct,           ":/images/tango/middle/edit-copy.png",            ":/images/tango/small/edit-copy.png",             tr("&Copy"),                 tr("Copy"),                 tr("Copy selected text")        },
+		{ &editPasteAct,          ":/images/tango/middle/edit-paste.png",           ":/images/tango/small/edit-paste.png",            tr("&Paste"),                tr("Paste"),                tr("Paste text")                },
+		{ &editClearAct,          ":/images/tango/middle/edit-clear.png",           ":/images/tango/small/edit-clear.png",            tr("&Delete"),               tr("Delete"),               tr("Delete selected text")      },
+		{ &selectAllAct,          ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("&Select All"),           tr("Select All"),           tr("Select all text")           },
+		{ &findTextAct,           ":/images/tango/middle/edit-find.png",            ":/images/tango/small/edit-find.png",             tr("&Find"),                 tr("Find"),                 tr("Find text")                 },
+		{ &findPrevTextAct,       ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &next"),            tr("Find next"),            tr("Find next text")            },
+		{ &findNextTextAct,       ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &previous"),        tr("Find previous"),        tr("Find previous text")        },
+		{ &replaceTextAct,        ":/images/tango/middle/edit-find-replace.png",    ":/images/tango/small/edit-find-replace.png",     tr("&Replace"),              tr("Replace"),              tr("Replace text")              },
+		{ &gotoLineAct,           ":/images/tango/middle/go-jump.png",              ":/images/tango/small/go-jump.png",               tr("&Go to line"),           tr("Go to line"),           tr("Go to line")                },
+		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
+		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
+		{ &showOutputDockAct,     "",                                               "",                                               tr("&Output"),               tr("Show output"),          tr("Show output")               },
+		{ &showSearchDockAct,     "",                                               "",                                               tr("&Search"),               tr("Show search"),          tr("Show search")               },
+		{ &showMessageDockAct,    "",                                               "",                                               tr("&Messages"),             tr("Show messages"),        tr("Show messages")             },
+		{ &showBreakPointDockAct, "",                                            "",                                                  tr("&Breakpoints"),          tr("Show breakpoints"),     tr("Show breakpoints")          },
+		{ &showSysInfoDockAct,    "",                                               "",                                               tr("&System variables"),     tr("Show system variables"),tr("Show system variables")     },
+		{ &showVarInfoDockAct,    "",                                               "",                                               tr("&Variables"),            tr("Show variables"),       tr("Show variables")            },
+		{ &buildSolutionAct,      "",                                               "",                                               tr("Build &solution"),       tr("Build solution"),       tr("Build solution")            },
+		{ &buildProjectAct,       "",                                               "",                                               tr("&Build project"),        tr("Build project"),        tr("Build project")             },
+		{ &batchBuildAct,         "",                                               "",                                               tr("B&atch build"),          tr("Batch build"),          tr("Batch build")               },
+		{ &compileOnlyAct,        "",                                               "",                                               tr("&Compile only"),         tr("Compile only"),         tr("Compile only")              },
+		{ &debugRunSolutionAct,   ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("&Debug run solution"),   tr("Debug run solution"),   tr("Run solution with debug")   },
+		{ &noDebugRunSolutionAct, "",                                               "",                                               tr("&NO debug run solution"),tr("NO debug run solution"),tr("Run solution without debug")},
+		{ &debugRunProjectAct,    "",                                               "",                                               tr("Debug run &project"),    tr("Debug run project"),    tr("Run project with debug")    },
+		{ &noDebugRunProjectAct,  "",                                               "",                                               tr("N&O debug run project"), tr("NO debug run project"), tr("Run project without debug") },
+		{ &debugSuspendAct,       ":/images/tango/middle/media-playback-pause.png", ":/images/tango/small/media-playback-pause.png",  tr("All &suspend"),          tr("All suspend"),          tr("Suspend debugging")         },
+		{ &debugResumeAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),           tr("All resume"),           tr("Resume debugging")          },
+		{ &debugStopAct,          ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),       tr("Stop debugging"),       tr("Abort debugging")           },
+		{ &settingAct,            ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),              tr("Setting"),              tr("Application settings")      },
+		{ &aboutAct,              ":/images/tango/middle/dialog-information.png",   ":/images/tango/small/dialog-information.png",    tr("&About hspide ..."),     tr("About hspide ..."),     tr("About hspide")              },
 	};
 
 	for(size_t i = 0; i < _countof(menuInitTable); i++)
@@ -341,8 +347,11 @@ void MainWindow::setupActions()
 	connect(gotoLineAct,               SIGNAL(triggered()), this, SLOT(onGoToLine()));
 	connect(buildSolutionAct,          SIGNAL(triggered()), this, SLOT(onBuildSolution()));
 	connect(buildProjectAct,           SIGNAL(triggered()), this, SLOT(onBuildProject()));
-	connect(debugRunAct,               SIGNAL(triggered()), this, SLOT(onDebugRun()));
-	connect(noDebugRunAct,             SIGNAL(triggered()), this, SLOT(onNoDebugRun()));
+	connect(batchBuildAct,             SIGNAL(triggered()), this, SLOT(onBatchBuild()));
+	connect(debugRunSolutionAct,       SIGNAL(triggered()), this, SLOT(onDebugRunSolution()));
+	connect(noDebugRunSolutionAct,     SIGNAL(triggered()), this, SLOT(onNoDebugRunSolution()));
+	connect(debugRunProjectAct,        SIGNAL(triggered()), this, SLOT(onDebugRunProject()));
+	connect(noDebugRunProjectAct,      SIGNAL(triggered()), this, SLOT(onNoDebugRunProject()));
 	connect(debugSuspendAct,           SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
 	connect(debugResumeAct,            SIGNAL(triggered()), this, SLOT(onDebugResume()));
 	connect(debugStopAct,              SIGNAL(triggered()), this, SLOT(onDebugStop()));
@@ -458,8 +467,11 @@ void MainWindow::loadSettings()
 				<< "build-solution"
 				<< "build-project"
 				<< "compile"
-				<< "debug-run"
-				<< "no-debug-run"
+				<< "batch-build"
+				<< "debug-run-solution"
+				<< "no-debug-run-solution"
+				<< "debug-run-project"
+				<< "no-debug-run-project"
 				<< "debug-suspend"
 				<< "debug-resume"
 				<< "debug-stop"
@@ -560,8 +572,11 @@ void MainWindow::saveSettings()
 				<< "build-solution"
 				<< "build-project"
 				<< "compile"
-				<< "debug-run"
-				<< "no-debug-run"
+				<< "batch-build"
+				<< "debug-run-solution"
+				<< "no-debug-run-solution"
+				<< "debug-run-project"
+				<< "no-debug-run-project"
 				<< "debug-suspend"
 				<< "debug-resume"
 				<< "debug-stop"
@@ -666,41 +681,44 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::updateConfiguration(const Configuration& info)
 {
-	theConf.applyShortcut(Configuration::ShortcutNew,				newDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutOpen,				openDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSave,				saveDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAs,			saveAsDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAll,			saveAllDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutQuit,				quitApplicationAct);
-	theConf.applyShortcut(Configuration::ShortcutUndo,				editUndoAct);
-	theConf.applyShortcut(Configuration::ShortcutRedo,				editRedoAct);
-	theConf.applyShortcut(Configuration::ShortcutCut,				editCutAct);
-	theConf.applyShortcut(Configuration::ShortcutCopy,				editCopyAct);
-	theConf.applyShortcut(Configuration::ShortcutPaste,				editPasteAct);
-	theConf.applyShortcut(Configuration::ShortcutClear,				editClearAct);
-	theConf.applyShortcut(Configuration::ShortcutSelectAll,			selectAllAct);
-	theConf.applyShortcut(Configuration::ShortcutFind,				findTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindNext,			findPrevTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindPrev,			findNextTextAct);
-	theConf.applyShortcut(Configuration::ShortcutReplace,			replaceTextAct);
-	theConf.applyShortcut(Configuration::ShortcutJump,				gotoLineAct);
-	theConf.applyShortcut(Configuration::ShortcutBuildSolution,		buildSolutionAct);
-	theConf.applyShortcut(Configuration::ShortcutBuildProject,		buildProjectAct);
-	theConf.applyShortcut(Configuration::ShortcutCompileOnly,		compileOnlyAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugRun,			debugRunAct);
-	theConf.applyShortcut(Configuration::ShortcutNoDebugRun,		noDebugRunAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugSuspend,		debugSuspendAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugResume,		debugResumeAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugStop,			debugStopAct);
-	theConf.applyShortcut(Configuration::ShortcutConfig,			settingAct);
-	theConf.applyShortcut(Configuration::ShortcutShowProject,		showProjectDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowSymbol,		showSymbolDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowOutput,		showOutputDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowSearch,		showSearchDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowMessage,		showMessageDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowBreakPoint,	showBreakPointDockAct);
-//	theConf.applyShortcut(Configuration::ShortcutShowSysInfo,		showSysInfoDockAct);
-//	theConf.applyShortcut(Configuration::ShortcutShowVarInfo,		showVarInfoDockAct);
+	theConf.applyShortcut(Configuration::ShortcutNew,					newDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutOpen,					openDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSave,					saveDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAs,				saveAsDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutSaveAll,				saveAllDocumentAct);
+	theConf.applyShortcut(Configuration::ShortcutQuit,					quitApplicationAct);
+	theConf.applyShortcut(Configuration::ShortcutUndo,					editUndoAct);
+	theConf.applyShortcut(Configuration::ShortcutRedo,					editRedoAct);
+	theConf.applyShortcut(Configuration::ShortcutCut,					editCutAct);
+	theConf.applyShortcut(Configuration::ShortcutCopy,					editCopyAct);
+	theConf.applyShortcut(Configuration::ShortcutPaste,					editPasteAct);
+	theConf.applyShortcut(Configuration::ShortcutClear,					editClearAct);
+	theConf.applyShortcut(Configuration::ShortcutSelectAll,				selectAllAct);
+	theConf.applyShortcut(Configuration::ShortcutFind,					findTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindNext,				findPrevTextAct);
+	theConf.applyShortcut(Configuration::ShortcutFindPrev,				findNextTextAct);
+	theConf.applyShortcut(Configuration::ShortcutReplace,				replaceTextAct);
+	theConf.applyShortcut(Configuration::ShortcutJump,					gotoLineAct);
+	theConf.applyShortcut(Configuration::ShortcutBuildSolution,			buildSolutionAct);
+	theConf.applyShortcut(Configuration::ShortcutBuildProject,			buildProjectAct);
+	theConf.applyShortcut(Configuration::ShortcutCompileOnly,			compileOnlyAct);
+	theConf.applyShortcut(Configuration::ShortcutBatchBuild,			batchBuildAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugRunSolution,		debugRunSolutionAct);
+	theConf.applyShortcut(Configuration::ShortcutNoDebugRunSolution,	noDebugRunSolutionAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugRunProject,		debugRunProjectAct);
+	theConf.applyShortcut(Configuration::ShortcutNoDebugRunProject,		noDebugRunProjectAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugSuspend,			debugSuspendAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugResume,			debugResumeAct);
+	theConf.applyShortcut(Configuration::ShortcutDebugStop,				debugStopAct);
+	theConf.applyShortcut(Configuration::ShortcutConfig,				settingAct);
+	theConf.applyShortcut(Configuration::ShortcutShowProject,			showProjectDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowSymbol,			showSymbolDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowOutput,			showOutputDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowSearch,			showSearchDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowMessage,			showMessageDockAct);
+	theConf.applyShortcut(Configuration::ShortcutShowBreakPoint,		showBreakPointDockAct);
+//	theConf.applyShortcut(Configuration::ShortcutShowSysInfo,			showSysInfoDockAct);
+//	theConf.applyShortcut(Configuration::ShortcutShowVarInfo,			showVarInfoDockAct);
 }
 
 void MainWindow::closeTab(CWorkSpaceItem* targetItem)
@@ -1032,11 +1050,55 @@ void MainWindow::onBuildSolution()
 	if( currentSolution )
 	{
 		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		
+		m_compiler->build(currentSolution, true);
 	}
 }
 
-void MainWindow::onDebugRun()
+void MainWindow::onBatchBuild()
+{
+}
+
+void MainWindow::onDebugRunSolution()
+{
+	CWorkSpaceItem* item = currentItem();
+
+	if( !item )
+	{
+		return;
+	}
+
+	// もし、ソリューションに属していたら取得
+	CWorkSpaceItem* currentSolution
+		= item->ancestor(CWorkSpaceItem::Solution);
+
+	if( currentSolution )
+	{
+		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
+		m_compiler->run(currentSolution, true);
+	}
+}
+
+void MainWindow::onNoDebugRunSolution()
+{
+	CWorkSpaceItem* item = currentItem();
+
+	if( !item )
+	{
+		return;
+	}
+
+	// もし、ソリューションに属していたら取得
+	CWorkSpaceItem* currentSolution
+		= item->ancestor(CWorkSpaceItem::Solution);
+
+	if( currentSolution )
+	{
+		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
+		m_compiler->run(currentSolution, false);
+	}
+}
+
+void MainWindow::onDebugRunProject()
 {
 	CWorkSpaceItem* item = currentItem();
 
@@ -1049,24 +1111,14 @@ void MainWindow::onDebugRun()
 	CWorkSpaceItem* currentProject
 		= item->ancestor(CWorkSpaceItem::Project);
 
-	// もし、ソリューションに属していたら取得
-	CWorkSpaceItem* currentSolution
-		= item->ancestor(CWorkSpaceItem::Solution);
-
-	if( currentSolution &&
-		0 )
-	{
-		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		
-	}
-	else if( currentProject )
+	if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
 		m_compiler->run(currentProject, true);
 	}
 }
 
-void MainWindow::onNoDebugRun()
+void MainWindow::onNoDebugRunProject()
 {
 	CWorkSpaceItem* item = currentItem();
 
@@ -1079,17 +1131,7 @@ void MainWindow::onNoDebugRun()
 	CWorkSpaceItem* currentProject
 		= item->ancestor(CWorkSpaceItem::Project);
 
-	// もし、ソリューションに属していたら取得
-	CWorkSpaceItem* currentSolution
-		= item->ancestor(CWorkSpaceItem::Solution);
-
-	if( currentSolution &&
-		0 )
-	{
-		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		
-	}
-	else if( currentProject )
+	if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
 		m_compiler->run(currentProject, false);
@@ -1232,12 +1274,13 @@ void MainWindow::onTabClose()
 	}
 }
 
-void MainWindow::buildStart(const QString & filePath)
+void MainWindow::buildStart(int buildOrder, const QString & filePath)
 {
 	// ビルド処理開始
 
 	outputDock->select(COutputDock::BuildOutput);
-	outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build start"));
+	outputDock->outputCrLf(COutputDock::BuildOutput,
+	                       QString("%1>").arg(buildOrder + 1) + tr("Build start"));
 
 	CWorkSpaceItem* targetProjectItem
 		= projectDock->currentSolution()->search(filePath);
@@ -1270,44 +1313,56 @@ void MainWindow::buildStart(const QString & filePath)
 	messageDock->clear();
 }
 
-void MainWindow::buildFinished(bool successed)
+void MainWindow::buildFinished(int buildOrder, bool successed)
 {
 	// ビルド処理完了
 
 	taskProgress->setVisible(false);
 
+	QString outputContents = QString("%1>").arg(buildOrder + 1);
+
 	if( !successed )
 	{
-	//	QMessageBox::warning(this, windowTitle(), "erro waitForStarted");
-
-		outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build failed"));
+		outputContents += tr("Build failed");
 	}
 	else
 	{
-		outputDock->outputCrLf(COutputDock::BuildOutput, tr("Build complete"));
+		outputContents += tr("Build complete");
 	}
+
+	outputDock->outputCrLf(COutputDock::BuildOutput, outputContents);
 }
 
 // ビルド中の出力を取得
-void MainWindow::buildOutput(const QString & output)
+void MainWindow::buildOutput(int buildOrder, const QString & output)
 {
 	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
 
 	QString tmp = QString(output).replace("\r\n", "\n");
 
-	QString outputContents = tmp;
+	QString tmp2 = tmp;
 
 	// uuidをファイル名に変換
 
 	QRegExp reFileName("\\?(\\{[0-9a-fA-F-]+\\})");
 
 	// uuidをファイル名に置換
-	if( 0 <= reFileName.indexIn(outputContents) ) {
+	if( 0 <= reFileName.indexIn(tmp2) ) {
 		QString uuid = reFileName.cap(1);
 		CWorkSpaceItem* item = solutionItem ? solutionItem->search(QUuid(uuid)) : NULL;
 		if( item ) {
-			outputContents.replace(reFileName, item->text());
+			tmp2.replace(reFileName, item->text());
 		}
+	}
+
+	// ビルド順を追加
+	QString outputContents;
+	for(QStringListIterator ite(tmp2.split("\n"));
+		ite.hasNext(); )
+	{
+		QString line = ite.next();
+		line.replace("\r", "");
+		outputContents += QString("%1>%2\n").arg(buildOrder + 1).arg(line);
 	}
 
 	// 出力ドックに内容を送信
@@ -1321,12 +1376,17 @@ void MainWindow::buildOutput(const QString & output)
 	QRegExp preProcessorError("^#Error:(.+) in line ([0-9]+) \\[(.*)\\]$");
 //	QRegExp warning("^(.+):(.+)( 行|at )([0-9]+)\\(.\\[.+\\])$");
 	QRegExp excludeInfo("^#(HSP script preprocessor|HSP code generator)");
+	QRegExp trimBuildOrder("^[0-9]+>(.+)");
 
 	for(QStringListIterator ite(tmp.split("\n"));
 		ite.hasNext(); )
 	{
 		QString line = ite.next();
 		line.replace("\r", "");
+
+		if( 0 <= trimBuildOrder.indexIn(line) ) {
+			line = trimBuildOrder.cap(1);
+		}
 
 		bool accepted = false;
 
@@ -1431,11 +1491,13 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
 	connect(debugger, SIGNAL(destroyed()),                                              this, SLOT(dettachedDebugger()));
 
-	debugRunAct    ->setVisible( !m_debuggers.empty() );
-	noDebugRunAct  ->setVisible( !m_debuggers.empty() );
-	debugSuspendAct->setVisible( m_debuggers.empty() );
-	debugResumeAct ->setVisible( m_debuggers.empty() );
-	debugStopAct   ->setVisible( m_debuggers.empty() );
+	debugRunSolutionAct  ->setVisible( !m_debuggers.empty() );
+	noDebugRunSolutionAct->setVisible( !m_debuggers.empty() );
+	debugRunProjectAct   ->setVisible( !m_debuggers.empty() );
+	noDebugRunProjectAct ->setVisible( !m_debuggers.empty() );
+	debugSuspendAct      ->setVisible(  m_debuggers.empty() );
+	debugResumeAct       ->setVisible(  m_debuggers.empty() );
+	debugStopAct         ->setVisible(  m_debuggers.empty() );
 
 	if( m_debuggers.empty() ) {
 		// デバッグ開始
@@ -1451,11 +1513,13 @@ void MainWindow::dettachedDebugger()
 
 	m_debuggers.remove(debugger);
 
-	debugRunAct    ->setVisible( m_debuggers.empty() );
-	noDebugRunAct  ->setVisible( m_debuggers.empty() );
-	debugSuspendAct->setVisible( !m_debuggers.empty() );
-	debugResumeAct ->setVisible( !m_debuggers.empty() );
-	debugStopAct   ->setVisible( !m_debuggers.empty() );
+	debugRunSolutionAct  ->setVisible(  m_debuggers.empty() );
+	noDebugRunSolutionAct->setVisible(  m_debuggers.empty() );
+	debugRunProjectAct   ->setVisible(  m_debuggers.empty() );
+	noDebugRunProjectAct ->setVisible(  m_debuggers.empty() );
+	debugSuspendAct      ->setVisible( !m_debuggers.empty() );
+	debugResumeAct       ->setVisible( !m_debuggers.empty() );
+	debugStopAct         ->setVisible( !m_debuggers.empty() );
 
 	if( m_debuggers.empty() ) {
 		// デバッグ終了

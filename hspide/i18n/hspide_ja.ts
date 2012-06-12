@@ -285,10 +285,7 @@ p, li { white-space: pre-wrap; }
         <source>Jump</source>
         <translation>移動</translation>
     </message>
-    <message>
-        <source>Debug run</source>
-        <translation>デバッグ開始</translation>
-    </message>
+
     <message>
         <source>Configuration</source>
         <translation>設定</translation>
@@ -304,10 +301,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Compile only</source>
         <translation>コンパイルのみ</translation>
-    </message>
-    <message>
-        <source>No debug run</source>
-        <translation>デバッグなしで実行</translation>
     </message>
     <message>
         <source>Debug suspend</source>
@@ -344,6 +337,26 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Show breakpoints</source>
         <translation>ブレークポイントを表示</translation>
+    </message>
+    <message>
+        <source>Batch build</source>
+        <translation>バッチビルド</translation>
+    </message>
+    <message>
+        <source>Debug run solution</source>
+        <translation>ソリューションのデバッグを開始</translation>
+    </message>
+    <message>
+        <source>No debug run solution</source>
+        <translation>ソリューションをデバッグなしで開始</translation>
+    </message>
+    <message>
+        <source>Debug run project</source>
+        <translation>プロジェクトのデバッグを開始</translation>
+    </message>
+    <message>
+        <source>No debug run project</source>
+        <translation>プロジェクトをデバッグなしで開始</translation>
     </message>
 </context>
 <context>
@@ -845,22 +858,6 @@ p, li { white-space: pre-wrap; }
         <translation>コンパイルのみ</translation>
     </message>
     <message>
-        <source>&amp;Debug run</source>
-        <translation>デバッグ開始(&amp;D)</translation>
-    </message>
-    <message>
-        <source>Run program with debug</source>
-        <translation>プログラムを実行</translation>
-    </message>
-    <message>
-        <source>&amp;NO debug run</source>
-        <translation>デバッグなしで実行(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Run program without debug</source>
-        <translation>デバッグなしでプログラムを実行</translation>
-    </message>
-    <message>
         <source>Project</source>
         <translation>プロジェクト</translation>
     </message>
@@ -1137,14 +1134,6 @@ p, li { white-space: pre-wrap; }
         <translation>変数を表示を表示</translation>
     </message>
     <message>
-        <source>Debug run</source>
-        <translation>デバッグ開始</translation>
-    </message>
-    <message>
-        <source>NO debug run</source>
-        <translation>デバッグなしで実行</translation>
-    </message>
-    <message>
         <source>All suspend</source>
         <translation>全て中断</translation>
     </message>
@@ -1163,6 +1152,62 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>About hspide ...</source>
         <translation>hspideについて</translation>
+    </message>
+    <message>
+        <source>B&amp;atch build</source>
+        <translation>バッチビルド(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Batch build</source>
+        <translation>バッチビルド</translation>
+    </message>
+    <message>
+        <source>&amp;Debug run solution</source>
+        <translation>ソリューションのデバッグを開始(&amp;D)</translation>
+    </message>
+    <message>
+        <source>Debug run solution</source>
+        <translation>ソリューションのデバッグを開始</translation>
+    </message>
+    <message>
+        <source>Run solution with debug</source>
+        <translation>ソリューションのデバッグを開始します</translation>
+    </message>
+    <message>
+        <source>&amp;NO debug run solution</source>
+        <translation>ソリューションをデバッグなしで開始(&amp;N)</translation>
+    </message>
+    <message>
+        <source>NO debug run solution</source>
+        <translation>ソリューションをデバッグなしで開始</translation>
+    </message>
+    <message>
+        <source>Run solution without debug</source>
+        <translation>ソリューションをデバッグなしで開始します</translation>
+    </message>
+    <message>
+        <source>Debug run &amp;project</source>
+        <translation>プロジェクトのデバッグを開始(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Debug run project</source>
+        <translation>プロジェクトのデバッグを開始</translation>
+    </message>
+    <message>
+        <source>Run project with debug</source>
+        <translation>プロジェクトのデバッグを開始します</translation>
+    </message>
+    <message>
+        <source>N&amp;O debug run project</source>
+        <translation>プロジェクトをデバッグなしで開始(&amp;O)</translation>
+    </message>
+    <message>
+        <source>NO debug run project</source>
+        <translation>プロジェクトをデバッグなしで開始</translation>
+    </message>
+    <message>
+        <source>Run project without debug</source>
+        <translation>プロジェクトをデバッグなしで開始</translation>
     </message>
 </context>
 <context>

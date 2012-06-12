@@ -46,9 +46,12 @@ class MainWindow : public QMainWindow
 	QAction* gotoLineAct;
 	QAction* buildSolutionAct;
 	QAction* buildProjectAct;
+	QAction* batchBuildAct;
 	QAction* compileOnlyAct;
-	QAction* debugRunAct;
-	QAction* noDebugRunAct;
+	QAction* debugRunSolutionAct;
+	QAction* noDebugRunSolutionAct;
+	QAction* debugRunProjectAct;
+	QAction* noDebugRunProjectAct;
 	QAction* debugSuspendAct;
 	QAction* debugResumeAct;
 	QAction* debugStopAct;
@@ -101,9 +104,9 @@ public slots:
 
 	void actionTriggered(QAction *action);
 	void updateConfiguration(const Configuration& info);
-	void buildStart(const QString & filePath);
-	void buildFinished(bool successed);
-	void buildOutput(const QString & output);
+	void buildStart(int buildOrder, const QString & filePath);
+	void buildFinished(int buildOrder, bool successed);
+	void buildOutput(int buildOrder, const QString & output);
 	void onUpdatedSymbols();
 	void attachedDebugger(CDebugger* debugger);
 	void dettachedDebugger();
@@ -128,8 +131,11 @@ public slots:
 	void onReqVarInfo(const QString& varName, int* info);
 	void onBuildProject();
 	void onBuildSolution();
-	void onDebugRun();
-	void onNoDebugRun();
+	void onBatchBuild();
+	void onDebugRunSolution();
+	void onNoDebugRunSolution();
+	void onDebugRunProject();
+	void onNoDebugRunProject();
 	void onDebugSuspend();
 	void onDebugResume();
 	void onDebugStop();

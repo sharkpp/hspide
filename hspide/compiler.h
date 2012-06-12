@@ -36,6 +36,8 @@ class CCompiler
 	QMap<quint64, CWorkSpaceItem*> m_targetsTemp;
 	QList<QProcess*> m_compilerProcesses;
 
+	QMap<QProcess*, int> m_buildOrder;
+
 	QLocalServer* m_server;
 
 public:
@@ -43,13 +45,13 @@ public:
 	CCompiler(QObject *parent = 0);
 
 	// シンボル一覧を取得
-	const QVector<QStringList> & symbols() const;
+	const QVector<QStringList>& symbols() const;
 
 	// ビルド
-	bool build(CWorkSpaceItem * targetItem, bool debugMode);
+	bool build(CWorkSpaceItem* targetItem, bool debugMode);
 
 	// 実行
-	bool run(CWorkSpaceItem * targetItem, bool debugMode);
+	bool run(CWorkSpaceItem* targetItem, bool debugMode);
 
 	// 単一ファイルをコンパイル
 	void compile();
@@ -61,6 +63,9 @@ protected:
 	void updateCompilerPath();
 
 	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bool debugMode);
+
+	// ビルド順を取得
+	int buildOrder(QProcess* process) const;
 
 public slots:
 
@@ -77,9 +82,9 @@ public slots:
 
 signals:
 
-	void buildStart(const QString & filePath);
-	void buildFinished(bool status);
-	void buildOutput(const QString & output);
+	void buildStart(int buildOrder, const QString & filePath);
+	void buildFinished(int buildOrder, bool status);
+	void buildOutput(int buildOrder, const QString & output);
 
 	void attachedDebugger(CDebugger* debugger);
 
