@@ -15,9 +15,6 @@ class CDocumentPane;
 class QXmlStreamWriter;
 class QXmlStreamReader;
 
-typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
-typedef QMap<QString, QUuid> CUuidLookupInfo;
-
 class CWorkSpaceItem
 	: public QObject
 {

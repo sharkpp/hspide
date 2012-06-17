@@ -192,7 +192,7 @@ int CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3
 CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
 	, m_socket(new QLocalSocket(this))
-	, m_id(_strtoui64(getenv("hspide#attach"), NULL, 16))
+	, m_id(getenv("hspide#attach"))
 	, m_dbg(NULL)
 	, m_breaked(false)
 	, m_breakedLast(false)

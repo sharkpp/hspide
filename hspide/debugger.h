@@ -29,7 +29,7 @@ class CDebugger
 public:
 
 	CDebugger(QObject *parent, QLocalSocket* socket);
-virtual ~CDebugger();
+	virtual ~CDebugger(){qDebug()<<__FUNCTION__<<this;}
 
 	// デバッグを中断
 	void suspendDebugging();
@@ -47,6 +47,13 @@ virtual ~CDebugger();
 	void updateBreakpoint();
 
 protected:
+
+	void onRecvConnect(const QByteArray& param);
+	void onRecvPutLog(const QByteArray& param);
+	void onRecvStopRunning(const QByteArray& param);
+	void onRecvUpdateDebugInfo(const QByteArray& param);
+	void onRecvPutVarDigest(const QByteArray& param);
+	void onRecvResVarInfo(const QByteArray& param);
 
 public slots:
 

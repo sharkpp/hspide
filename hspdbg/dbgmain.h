@@ -26,7 +26,7 @@ class CDbgMain
 	static HANDLE	m_waitDisconnect;
 
 	QLocalSocket*	m_socket;
-	qint64			m_id;
+	QString			m_id;
 
 	QMutex			m_lock;
 

@@ -3,6 +3,7 @@
 #include <QLocalSocket>
 #include <QLocalServer>
 #include "workspacemodel.h"
+#include "compilerset.h"
 #include "compiler.h"
 #include "debugger.h"
 #include "outputdock.h"
@@ -82,7 +83,8 @@ class MainWindow : public QMainWindow
 	// É\ÉäÉÖÅ[ÉVÉáÉì
 	CWorkSpaceModel* m_workSpace;
 
-	CCompiler* m_compiler;
+	CCompilerSet* m_compilers;
+	CSymbolsList m_symbols;
 
 	QSet<CDebugger*> m_debuggers;
 
@@ -104,8 +106,10 @@ public slots:
 
 	void actionTriggered(QAction *action);
 	void updateConfiguration(const Configuration& info);
-	void buildStart(int buildOrder, const QString & filePath);
-	void buildFinished(int buildOrder, bool successed);
+	void buildStarted();
+	void buildStarted(int buildOrder,const QString & filePath);
+	void buildSuccessful(int buildOrder);
+	void buildFailure(int buildOrder);
 	void buildOutput(int buildOrder, const QString & output);
 	void onUpdatedSymbols();
 	void attachedDebugger(CDebugger* debugger);

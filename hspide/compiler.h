@@ -17,46 +17,47 @@
 class CWorkSpaceItem;
 class CDebugger;
 
-typedef QMap<QUuid, QSet<int> > CBreakPointInfo;
-typedef QMap<QString, QUuid> CUuidLookupInfo;
+typedef QVector<QStringList> CSymbolsList;
 
 class CCompiler
 	: public QObject
 {
 	Q_OBJECT
 
-	QString m_hspCompPath;		// HSPコンパイラDLLへのパス
-	QString m_hspPath;			// HSPインストールディレクトリへのパス
-	QString m_hspCommonPath;	// HSP Commonフォルダへのパス
+	QUuid			m_uuid;
 
-	QString m_buildAfterRunArgs;		// ビルド後に実行を行うか？
+	QString			m_hspCompPath;		// HSPコンパイラDLLへのパス
+	QString			m_hspPath;			// HSPインストールディレクトリへのパス
+	QString			m_hspCommonPath;	// HSP Commonフォルダへのパス
 
-	QVector<QStringList> m_highlightSymbols;	// 取得したシンボルの一覧
+	CSymbolsList	m_highlightSymbols;	// 取得したシンボルの一覧
 
-	QMap<quint64, CWorkSpaceItem*> m_targetsTemp;
-	QList<QProcess*> m_compilerProcesses;
-
-	QMap<QProcess*, int> m_buildOrder;
-
-	QLocalServer* m_server;
+	CWorkSpaceItem*	m_targetItem;
+	QProcess*		m_compiler;
 
 public:
 
 	CCompiler(QObject *parent = 0);
+	virtual ~CCompiler(){qDebug()<<__FUNCTION__<<this;}
+
+	const QUuid& uuid() const;
+
+
+	// シンボル一覧の取得
+	bool collectSymbols();
 
 	// シンボル一覧を取得
-	const QVector<QStringList>& symbols() const;
+	const CSymbolsList& symbols() const;
 
-	// ビルド
-	bool build(CWorkSpaceItem* targetItem, bool debugMode);
 
-	// 実行
-	bool run(CWorkSpaceItem* targetItem, bool debugMode);
+	// コンパイル
+	bool compile(CWorkSpaceItem* targetItem, bool debugMode);
 
-	// 単一ファイルをコンパイル
-	void compile();
+	// コンパイル
+	bool compileCancel();
 
-	CWorkSpaceItem* getTargetItem(qint64 id);
+	// コンパイル対象のアイテムを取得
+	CWorkSpaceItem* compileItem();
 
 protected:
 
@@ -74,22 +75,18 @@ public slots:
 	// シンボルの取得完了
 	void listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-	void buildError(QProcess::ProcessError);
-	void buildFinished(int exitCode, QProcess::ExitStatus exitStatus);
-	void buildReadOutput();
-
-	void attachDebugger();
+	void hspcmpError(QProcess::ProcessError);
+	void hspcmpFinished(int exitCode, QProcess::ExitStatus exitStatus);
+	void hspcmpReadOutput();
 
 signals:
 
-	void buildStart(int buildOrder, const QString & filePath);
-	void buildFinished(int buildOrder, bool status);
-	void buildOutput(int buildOrder, const QString & output);
-
-	void attachedDebugger(CDebugger* debugger);
+	void compileStarted(const QString & filePath);
+	void compileSuccessful();
+	void compileFailure();
+	void compileOutput(const QString & output);
 
 	void updatedSymbols();
-
 };
 
 #endif // !defined(INCLUDE_GUARD_54165F25_45DB_4022_A837_202A7B98EE29)

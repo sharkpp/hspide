@@ -36,17 +36,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setWindowIcon(QIcon(":/images/icons/hspide.png"));
 	resize(800, 600);
 
-	m_compiler = new CCompiler(this);
+	m_compilers = new CCompilerSet(this);
 
 	m_workSpace = new CWorkSpaceModel(this);
 //	m_workSpace->setConfiguration(m_configuration);
 
 	// 処理完了時の通知を登録
-	connect(m_compiler, SIGNAL(buildStart(int, const QString &)),  this, SLOT(buildStart(int, const QString &)));
-	connect(m_compiler, SIGNAL(buildFinished(int, bool)),          this, SLOT(buildFinished(int, bool)));
-	connect(m_compiler, SIGNAL(buildOutput(int, const QString &)), this, SLOT(buildOutput(int, const QString &)));
-	connect(m_compiler, SIGNAL(attachedDebugger(CDebugger*)),      this, SLOT(attachedDebugger(CDebugger*)));
-	connect(m_compiler, SIGNAL(updatedSymbols()),                  this, SLOT(onUpdatedSymbols()));
+	connect(m_compilers, SIGNAL(buildStarted()),                    this, SLOT(buildStarted()));
+	connect(m_compilers, SIGNAL(buildStarted(int,const QString &)), this, SLOT(buildStarted(int,const QString &)));
+	connect(m_compilers, SIGNAL(buildSuccessful(int)),              this, SLOT(buildSuccessful(int)));
+	connect(m_compilers, SIGNAL(buildFailure(int)),                 this, SLOT(buildFailure(int)));
+	connect(m_compilers, SIGNAL(buildOutput(int, const QString &)), this, SLOT(buildOutput(int, const QString &)));
+	connect(m_compilers, SIGNAL(attachedDebugger(CDebugger*)),      this, SLOT(attachedDebugger(CDebugger*)));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
@@ -252,6 +253,7 @@ void MainWindow::setupMenus()
 	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
 		buildMenu->addAction(buildSolutionAct);
 		buildMenu->addAction(buildProjectAct);
+		buildMenu->addAction(compileOnlyAct);
 		buildMenu->addAction(batchBuildAct);
 
 	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
@@ -386,8 +388,7 @@ void MainWindow::setupActions()
 	buildSolutionAct->setEnabled(false);
 	buildProjectAct->setEnabled(false);
 	compileOnlyAct->setEnabled(false);
-//	debugRunAct->setEnabled(false);
-//	noDebugRunAct->setEnabled(false);
+	batchBuildAct->setEnabled(false);
 	debugSuspendAct->setVisible(false);
 	debugResumeAct->setEnabled(false);
 	debugResumeAct->setVisible(false);
@@ -719,6 +720,12 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	theConf.applyShortcut(Configuration::ShortcutShowBreakPoint,		showBreakPointDockAct);
 //	theConf.applyShortcut(Configuration::ShortcutShowSysInfo,			showSysInfoDockAct);
 //	theConf.applyShortcut(Configuration::ShortcutShowVarInfo,			showVarInfoDockAct);
+
+	// シンタックスハイライトシンボル取得
+	CCompiler* compiler = new CCompiler(this);
+	connect(compiler, SIGNAL(updatedSymbols()),  this, SLOT(onUpdatedSymbols()));
+//	connect(compiler, SIGNAL(updatedSymbols()),  this, SLOT(deleteLater()));
+	compiler->collectSymbols();
 }
 
 void MainWindow::closeTab(CWorkSpaceItem* targetItem)
@@ -812,7 +819,7 @@ void MainWindow::onNewFile()
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = m_workSpace->appendProject();
 	CDocumentPane * document    = new CDocumentPane(tabWidget);
-	document->setSymbols(m_compiler->symbols());
+	document->setSymbols(m_symbols);
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
 	tabWidget->addTab(document, document->title());
@@ -894,7 +901,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 
 	// 新たに開く
 	CDocumentPane * document = new CDocumentPane(tabWidget);
-	document->setSymbols(m_compiler->symbols());
+	document->setSymbols(m_symbols);
 	document->setAssignItem(item);
 	document->load(item->path());
 	tabWidget->addTab(document, document->title());
@@ -1030,7 +1037,7 @@ void MainWindow::onBuildProject()
 	if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
-		m_compiler->build(currentProject, true);
+		m_compilers->build(currentProject, true);
 	}
 }
 
@@ -1050,7 +1057,7 @@ void MainWindow::onBuildSolution()
 	if( currentSolution )
 	{
 		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		m_compiler->build(currentSolution, true);
+		m_compilers->build(currentSolution, true);
 	}
 }
 
@@ -1074,7 +1081,7 @@ void MainWindow::onDebugRunSolution()
 	if( currentSolution )
 	{
 		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		m_compiler->run(currentSolution, true);
+		m_compilers->run(currentSolution, true);
 	}
 }
 
@@ -1094,7 +1101,7 @@ void MainWindow::onNoDebugRunSolution()
 	if( currentSolution )
 	{
 		// ソリューションが取得できたらソリューション構成を取得しビルド＆実行
-		m_compiler->run(currentSolution, false);
+		m_compilers->run(currentSolution, false);
 	}
 }
 
@@ -1114,7 +1121,7 @@ void MainWindow::onDebugRunProject()
 	if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
-		m_compiler->run(currentProject, true);
+		m_compilers->run(currentProject, true);
 	}
 }
 
@@ -1134,7 +1141,7 @@ void MainWindow::onNoDebugRunProject()
 	if( currentProject )
 	{
 		// プロジェクトが取得できたらビルド＆実行
-		m_compiler->run(currentProject, false);
+		m_compilers->run(currentProject, false);
 	}
 }
 
@@ -1274,35 +1281,31 @@ void MainWindow::onTabClose()
 	}
 }
 
-void MainWindow::buildStart(int buildOrder, const QString & filePath)
+void MainWindow::buildStarted()
 {
 	// ビルド処理開始
 
-	outputDock->select(COutputDock::BuildOutput);
-	outputDock->outputCrLf(COutputDock::BuildOutput,
-	                       QString("%1>").arg(buildOrder + 1) + tr("Build start"));
+	//CWorkSpaceItem* targetProjectItem
+	//	= projectDock->currentSolution()->search(filePath);
 
-	CWorkSpaceItem* targetProjectItem
-		= projectDock->currentSolution()->search(filePath);
-
-	// ビルドを開始したプロジェクトに関連するファイルを全て保存
-	if( targetProjectItem )
-	{
-		// ファイルを保存
-		for(int index = 0, num = tabWidget->count(); index < num; index++)
-		{
-			CDocumentPane * document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-			CWorkSpaceItem* item = document->assignItem();
-			if( targetProjectItem ==
-					item->ancestor(CWorkSpaceItem::Project) )
-			{
-				if( !document->isUntitled() )
-				{
-					document->save();
-				}
-			}
-		}
-	}
+	//// ビルドを開始したプロジェクトに関連するファイルを全て保存
+	//if( targetProjectItem )
+	//{
+	//	// ファイルを保存
+	//	for(int index = 0, num = tabWidget->count(); index < num; index++)
+	//	{
+	//		CDocumentPane*  document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+	//		CWorkSpaceItem* item = document->assignItem();
+	//		if( targetProjectItem ==
+	//				item->ancestor(CWorkSpaceItem::Project) )
+	//		{
+	//			if( !document->isUntitled() )
+	//			{
+	//				document->save();
+	//			}
+	//		}
+	//	}
+	//}
 
 	// プログラスバーをMarqueeスタイルに
 	taskProgress->setRange(0, 0);
@@ -1313,22 +1316,40 @@ void MainWindow::buildStart(int buildOrder, const QString & filePath)
 	messageDock->clear();
 }
 
-void MainWindow::buildFinished(int buildOrder, bool successed)
+void MainWindow::buildStarted(int buildOrder, const QString & filePath)
+{
+	// ビルド処理開始
+	outputDock->select(COutputDock::BuildOutput);
+	outputDock->outputCrLf(COutputDock::BuildOutput,
+	                       QString("%1>%2")
+								.arg(buildOrder + 1)
+								.arg(tr("Build start")));
+}
+
+void MainWindow::buildSuccessful(int buildOrder)
 {
 	// ビルド処理完了
 
 	taskProgress->setVisible(false);
 
-	QString outputContents = QString("%1>").arg(buildOrder + 1);
+	QString outputContents
+		= QString("%1>%2")
+			.arg(buildOrder + 1)
+			.arg(tr("Build complete"));
 
-	if( !successed )
-	{
-		outputContents += tr("Build failed");
-	}
-	else
-	{
-		outputContents += tr("Build complete");
-	}
+	outputDock->outputCrLf(COutputDock::BuildOutput, outputContents);
+}
+
+void MainWindow::buildFailure(int buildOrder)
+{
+	// ビルド処理完了
+
+	taskProgress->setVisible(false);
+
+	QString outputContents
+		= QString("%1>%2")
+			.arg(buildOrder + 1)
+			.arg(tr("Build failed"));
 
 	outputDock->outputCrLf(COutputDock::BuildOutput, outputContents);
 }
@@ -1471,6 +1492,8 @@ void MainWindow::onUpdatedSymbols()
 {
 	CCompiler* compiler = qobject_cast<CCompiler*>(sender());
 
+	m_symbols = compiler->symbols();
+
 	// 開いているタブ全てにキーワードを再登録
 	for(int index = 0; index < tabWidget->count(); index++)
 	{
@@ -1478,7 +1501,7 @@ void MainWindow::onUpdatedSymbols()
 			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 		if( document )
 		{
-			document->setSymbols(compiler->symbols());
+			document->setSymbols(m_symbols);
 		}
 	}
 }
@@ -1594,12 +1617,9 @@ void MainWindow::onDocumentChanged()
 
 	if( document )
 	{
-	//	saveDocumentAct->setEnabled( document->isModified() );
 		buildSolutionAct->setEnabled(true);
 		buildProjectAct->setEnabled(true);
 		compileOnlyAct->setEnabled(true);
-//		debugRunAct->setEnabled(true);
-//		noDebugRunAct->setEnabled(true);
 	}
 }
 

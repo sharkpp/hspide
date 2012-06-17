@@ -2,7 +2,7 @@
 #include <QTextCodec>
 #include <QDataStream>
 #include "workspaceitem.h"
-#include "compiler.h"
+#include "compilerset.h"
 #include "debugger.h"
 
 CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
@@ -19,11 +19,6 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	updateConfiguration(theConf);
 }
 
-CDebugger::~CDebugger()
-{
-qDebug()<<__FUNCTION__<<this;
-}
-
 void CDebugger::updateConfiguration(const Configuration& info)
 {
 }
@@ -37,67 +32,90 @@ void CDebugger::recvCommand()
 	{
 		switch(cmd_id)
 		{
-		case CMD_CONNECT: { // デバッガに接続
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id;
-			CCompiler* compiler = qobject_cast<CCompiler*>(parent());
-			if( compiler )
-			{
-				// id取得
-				QDataStream in(param);
-				in.setVersion(QDataStream::Qt_4_4);
-				qint64 id;
-				in >> id;
-				// 関連付けられたアイテムを取得
-				m_targetItem = compiler->getTargetItem(id);
-				// ブレークポイントを更新
-				updateBreakpoint();
-			}
-			break; }
-		case CMD_PUT_LOG: { // ログを出力
-			QTextCodec* codec = QTextCodec::codecForLocale();
-			QString s = codec->toUnicode(param);
-#ifdef _DEBUG
-			if( !s.contains("typeinfo_hook::") ) // とりあえず内部用のログはフィルタ
-#endif
-			emit putLog(s);
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << s;
-			break; }
-		case CMD_STOP_RUNNING: { // 実行の停止
-			QDataStream in(param);
-			in.setVersion(QDataStream::Qt_4_4);
-			QUuid uuid;
-			int   lineNo;
-			in >> uuid >> lineNo;
-			emit stopAtBreakPoint(uuid, lineNo);
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << uuid << lineNo;
-			break; }
-		case CMD_UPDATE_DEBUG_INFO: { // デバッグ情報を更新
-			QDataStream in(param);
-			in.setVersion(QDataStream::Qt_4_4);
-			in >> m_debugInfo;
-			emit updateDebugInfo(m_debugInfo);
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << m_debugInfo;
-			break; }
-		case CMD_PUT_VAR_DIGEST: { // 変数情報の概要を通知
-			QDataStream in(param);
-			in.setVersion(QDataStream::Qt_4_4);
-			QVector<VARIABLE_INFO_TYPE> varInfo;
-			in >> varInfo;
-			emit updateVarInfo(varInfo);
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << varInfo;
-			break; }
-		case CMD_RES_VAR_INFO: { // 変数情報を返答
-			QDataStream in(param);
-			in.setVersion(QDataStream::Qt_4_4);
-			QVector<VARIABLE_INFO_TYPE> varInfo(1);
-			in >> varInfo.back();
-			emit updateVarInfo(varInfo);
-			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id << varInfo;
-			break; }
+		case CMD_CONNECT:			onRecvConnect(param);			break;
+		case CMD_PUT_LOG:			onRecvPutLog(param);			break;
+		case CMD_STOP_RUNNING:		onRecvStopRunning(param);		break;
+		case CMD_UPDATE_DEBUG_INFO:	onRecvUpdateDebugInfo(param);	break;
+		case CMD_PUT_VAR_DIGEST:	onRecvPutVarDigest(param);		break;
+		case CMD_RES_VAR_INFO:		onRecvResVarInfo(param);		break;
 		default:
 			qDebug() <<__FUNCTION__<< (void*)m_clientConnection << cmd_id;
 		}
 	}
+}
+
+void CDebugger::onRecvConnect(const QByteArray& param)
+{
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_CONNECT;
+	// デバッガに接続
+	if( CCompilerSet* compilers = qobject_cast<CCompilerSet*>(parent()) )
+	{
+		// id取得
+		QDataStream in(param);
+		in.setVersion(QDataStream::Qt_4_4);
+		QString id;
+		in >> id;
+		// 関連付けられたアイテムを取得
+		m_targetItem = compilers->getTargetItem(id);
+		// ブレークポイントを更新
+		updateBreakpoint();
+	}
+}
+
+void CDebugger::onRecvPutLog(const QByteArray& param)
+{
+	// ログを出力
+	QTextCodec* codec = QTextCodec::codecForLocale();
+	QString s = codec->toUnicode(param);
+#ifdef _DEBUG
+	if( !s.contains("typeinfo_hook::") ) // とりあえず内部用のログはフィルタ
+#endif
+	emit putLog(s);
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_PUT_LOG << s;
+}
+
+void CDebugger::onRecvStopRunning(const QByteArray& param)
+{
+	// 実行の停止
+	QDataStream in(param);
+	in.setVersion(QDataStream::Qt_4_4);
+	QUuid uuid;
+	int   lineNo;
+	in >> uuid >> lineNo;
+	emit stopAtBreakPoint(uuid, lineNo);
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_STOP_RUNNING << uuid << lineNo;
+}
+
+void CDebugger::onRecvUpdateDebugInfo(const QByteArray& param)
+{
+	// デバッグ情報を更新
+	QDataStream in(param);
+	in.setVersion(QDataStream::Qt_4_4);
+	in >> m_debugInfo;
+	emit updateDebugInfo(m_debugInfo);
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_UPDATE_DEBUG_INFO << m_debugInfo;
+}
+
+void CDebugger::onRecvPutVarDigest(const QByteArray& param)
+{
+	// 変数情報の概要を通知
+	QDataStream in(param);
+	in.setVersion(QDataStream::Qt_4_4);
+	QVector<VARIABLE_INFO_TYPE> varInfo;
+	in >> varInfo;
+	emit updateVarInfo(varInfo);
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_PUT_VAR_DIGEST << varInfo;
+}
+
+void CDebugger::onRecvResVarInfo(const QByteArray& param)
+{
+	// 変数情報を返答
+	QDataStream in(param);
+	in.setVersion(QDataStream::Qt_4_4);
+	QVector<VARIABLE_INFO_TYPE> varInfo(1);
+	in >> varInfo.back();
+	emit updateVarInfo(varInfo);
+	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_RES_VAR_INFO << varInfo;
 }
 
 // デバッグを中断
