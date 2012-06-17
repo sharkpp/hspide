@@ -8,7 +8,7 @@ CSearchDock::CSearchDock(QWidget *parent)
 	editorWidget->setReadOnly(true);
 }
 
-void CSearchDock::resizeEvent(QResizeEvent * event)
+void CSearchDock::resizeEvent(QResizeEvent* event)
 {
 	editorWidget->resize(event->size());
 }

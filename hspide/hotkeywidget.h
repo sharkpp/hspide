@@ -29,7 +29,7 @@ protected:
 
 public slots:
 
-	void onTextChanged(const QString & text);
+	void onTextChanged(const QString& text);
 
 private:
 

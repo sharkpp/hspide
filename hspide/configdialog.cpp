@@ -8,7 +8,7 @@ class CExpandedItemHeightDelegate
 {
 public:
 	CExpandedItemHeightDelegate(QObject* parent = 0) : QItemDelegate(parent) {}
-	QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const {
+	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		QSize size = QItemDelegate::sizeHint(option, index);
 		size.setHeight(size.height() + 4);
 		return size;
@@ -251,7 +251,7 @@ void CConfigDialog::onOk()
 	accept();
 }
 
-void CConfigDialog::onPageChanged(const QModelIndex & index)
+void CConfigDialog::onPageChanged(const QModelIndex& index)
 {
 	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());
 	               item = item->child(index.row(), 0);

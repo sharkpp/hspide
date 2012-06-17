@@ -11,7 +11,7 @@ Configuration     theConf;
 FileManager       theFile;
 BreakPointManager theBreakPoint;
 
-QIcon QMultiIcon(const QString & first, const QString & second, const QString & third = QString())
+QIcon QMultiIcon(const QString& first, const QString& second, const QString& third = QString())
 {
 	QIcon icon;
 	if( !first.isEmpty() ) {
@@ -42,20 +42,20 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 //	m_workSpace->setConfiguration(m_configuration);
 
 	// 処理完了時の通知を登録
-	connect(m_compilers, SIGNAL(buildStarted()),                    this, SLOT(buildStarted()));
-	connect(m_compilers, SIGNAL(buildStarted(int,const QString &)), this, SLOT(buildStarted(int,const QString &)));
-	connect(m_compilers, SIGNAL(buildSuccessful(int)),              this, SLOT(buildSuccessful(int)));
-	connect(m_compilers, SIGNAL(buildFailure(int)),                 this, SLOT(buildFailure(int)));
-	connect(m_compilers, SIGNAL(buildOutput(int, const QString &)), this, SLOT(buildOutput(int, const QString &)));
-	connect(m_compilers, SIGNAL(attachedDebugger(CDebugger*)),      this, SLOT(attachedDebugger(CDebugger*)));
+	connect(m_compilers, SIGNAL(buildStarted()),               this, SLOT(buildStarted()));
+	connect(m_compilers, SIGNAL(buildStarted(int,QUuid)),      this, SLOT(buildStarted(int,QUuid)));
+	connect(m_compilers, SIGNAL(buildSuccessful(int)),         this, SLOT(buildSuccessful(int)));
+	connect(m_compilers, SIGNAL(buildFailure(int)),            this, SLOT(buildFailure(int)));
+	connect(m_compilers, SIGNAL(buildOutput(int,QString)),     this, SLOT(buildOutput(int,QString)));
+	connect(m_compilers, SIGNAL(attachedDebugger(CDebugger*)), this, SLOT(attachedDebugger(CDebugger*)));
 
 	tabWidget = new QTabWidget(this);
 	setCentralWidget(tabWidget);
 
 	// タブの一覧と閉じるボタン
-	QToolBar * tabButton = new QToolBar(this);
-	QAction * tabListAct = tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
-	QAction * tabCloseAct= tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
+	QToolBar* tabButton  = new QToolBar(this);
+	QAction*  tabListAct = tabButton->addAction(QIcon(":/images/button-tab-list.png"), tr("Tab list"));
+	QAction*  tabCloseAct= tabButton->addAction(QIcon(":/images/button-tab-close.png"), tr("Close tab"));
 	tabButton->setIconSize(QSize(12, 12));
 	tabButton->setStyleSheet("QToolBar{border:none}");
 	tabWidget->setCornerWidget(tabButton, Qt::TopRightCorner);
@@ -160,8 +160,8 @@ void MainWindow::setupDockWindows()
 
 void MainWindow::setupStatusBar()
 {
-	QStatusBar * statusBar = this->statusBar();
-		QLabel * lable = new QLabel;
+	QStatusBar* statusBar = this->statusBar();
+		QLabel* lable = new QLabel;
 		taskProgress = new QProgressBar;
 		taskProgress->setRange(0, 100);
 		taskProgress->setValue(0);
@@ -184,7 +184,7 @@ void MainWindow::setupStatusBar()
 
 void MainWindow::setupToolBars()
 {
-	QToolBar * generalToolbar = addToolBar(tr("General"));
+	QToolBar* generalToolbar = addToolBar(tr("General"));
 		generalToolbar->setObjectName("General"); // saveState()で警告がトレースで出るため
 		generalToolbar->setIconSize(QSize(16, 16));
 		generalToolbar->addAction(newDocumentAct);
@@ -213,7 +213,7 @@ void MainWindow::setupToolBars()
 
 void MainWindow::setupMenus()
 {
-	QMenu * fileMenu = menuBar()->addMenu(tr("&File"));
+	QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
 		fileMenu->addAction(newDocumentAct);
 		fileMenu->addAction(openDocumentAct);
 		fileMenu->addSeparator();
@@ -223,7 +223,7 @@ void MainWindow::setupMenus()
 		fileMenu->addSeparator();
 		fileMenu->addAction(quitApplicationAct);
 
-	QMenu * editMenu = menuBar()->addMenu(tr("&Edit"));
+	QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
 		editMenu->addAction(editUndoAct);
 		editMenu->addAction(editRedoAct);
 		editMenu->addSeparator();
@@ -234,7 +234,7 @@ void MainWindow::setupMenus()
 		editMenu->addSeparator();
 		editMenu->addAction(selectAllAct);
 
-	QMenu * viewMenu = menuBar()->addMenu(tr("&View"));
+	QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
 		viewMenu->addAction(showProjectDockAct);
 		viewMenu->addAction(showSymbolDockAct);
 		viewMenu->addAction(showOutputDockAct);
@@ -242,7 +242,7 @@ void MainWindow::setupMenus()
 		viewMenu->addAction(showMessageDockAct);
 		viewMenu->addAction(showBreakPointDockAct);
 
-	QMenu * searchMenu = menuBar()->addMenu(tr("&Search"));
+	QMenu* searchMenu = menuBar()->addMenu(tr("&Search"));
 		searchMenu->addAction(findTextAct);
 		searchMenu->addAction(findPrevTextAct);
 		searchMenu->addAction(findNextTextAct);
@@ -250,13 +250,13 @@ void MainWindow::setupMenus()
 		searchMenu->addSeparator();
 		searchMenu->addAction(gotoLineAct);
 
-	QMenu * buildMenu = menuBar()->addMenu(tr("&Build"));
+	QMenu* buildMenu = menuBar()->addMenu(tr("&Build"));
 		buildMenu->addAction(buildSolutionAct);
 		buildMenu->addAction(buildProjectAct);
 		buildMenu->addAction(compileOnlyAct);
 		buildMenu->addAction(batchBuildAct);
 
-	QMenu * debugMenu = menuBar()->addMenu(tr("&Debug"));
+	QMenu* debugMenu = menuBar()->addMenu(tr("&Debug"));
 		debugMenu->addAction(debugRunSolutionAct);
 		debugMenu->addAction(noDebugRunSolutionAct);
 		debugMenu->addSeparator();
@@ -267,11 +267,11 @@ void MainWindow::setupMenus()
 		debugMenu->addAction(debugSuspendAct);
 		debugMenu->addAction(debugStopAct);
 
-	QMenu * toolsMenu = menuBar()->addMenu(tr("&Tools"));
+	QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
 		toolsMenu->addSeparator();
 		toolsMenu->addAction(settingAct);
 
-	QMenu * helpMenu = menuBar()->addMenu(tr("&Help"));
+	QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
 		helpMenu->addSeparator();
 		helpMenu->addAction(aboutAct);
 }
@@ -732,7 +732,7 @@ void MainWindow::closeTab(CWorkSpaceItem* targetItem)
 {
 	for(int index = tabWidget->count() - 1; 0 <= index; index--)
 	{
-		CDocumentPane * document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		CDocumentPane* document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 		CWorkSpaceItem* item = document->assignItem();
 		if( !targetItem || targetItem == item )
 		{
@@ -778,7 +778,7 @@ bool MainWindow::closeSolution()
 
 CWorkSpaceItem* MainWindow::currentItem()
 {
-	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
 	CWorkSpaceItem* item = NULL;
 
 	if( document )
@@ -818,7 +818,7 @@ void MainWindow::onNewFile()
 	// ソリューションにプロジェクトを追加し、
 	// タブで追加したファイルを開く
 	CWorkSpaceItem* projectItem = m_workSpace->appendProject();
-	CDocumentPane * document    = new CDocumentPane(tabWidget);
+	CDocumentPane*  document    = new CDocumentPane(tabWidget);
 	document->setSymbols(m_symbols);
 	document->setAssignItem(projectItem);
 	document->load(dlg.filePath(), dlg.templateFilePath());
@@ -831,7 +831,7 @@ void MainWindow::onOpenFile()
 	onOpenFile(QString());
 }
 
-void MainWindow::onOpenFile(const QString & filePath)
+void MainWindow::onOpenFile(const QString& filePath)
 {
 	QString fileName = filePath;
 
@@ -850,7 +850,7 @@ void MainWindow::onOpenFile(const QString & filePath)
 		QString ext = QFileInfo(fileName).suffix();
 		if( !ext.compare("hspsln", Qt::CaseSensitive) ) {
 			// ソリューションファイルの場合はすでに開いているソリューションを閉じて開く
-			CWorkSpaceItem * solutionItem = projectDock->currentSolution();
+			CWorkSpaceItem* solutionItem = projectDock->currentSolution();
 			// ソリューションを閉じる
 			if( closeSolution() )
 			{
@@ -866,14 +866,14 @@ void MainWindow::onOpenFile(const QString & filePath)
 				}
 			}
 		} else {
-			CWorkSpaceItem * parentItem = projectDock->currentProject();
-			CWorkSpaceItem * fileItem   = m_workSpace->appendFile(fileName, parentItem);
+			CWorkSpaceItem* parentItem = projectDock->currentProject();
+			CWorkSpaceItem* fileItem   = m_workSpace->appendFile(fileName, parentItem);
 			onOpenFile(fileItem);
 		}
 	}
 }
 
-void MainWindow::onOpenFile(CWorkSpaceItem * item)
+void MainWindow::onOpenFile(CWorkSpaceItem* item)
 {
 	if( !item )
 	{
@@ -900,7 +900,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem * item)
 	}
 
 	// 新たに開く
-	CDocumentPane * document = new CDocumentPane(tabWidget);
+	CDocumentPane* document = new CDocumentPane(tabWidget);
 	document->setSymbols(m_symbols);
 	document->setAssignItem(item);
 	document->load(item->path());
@@ -960,7 +960,7 @@ void MainWindow::onGoToLine()
 	}
 }
 
-void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
+void MainWindow::onGoToLine(const QUuid& uuid, int lineNo)
 {
 	CWorkSpaceItem* targetProjectItem
 		= projectDock->currentSolution()->search(uuid);
@@ -982,7 +982,7 @@ void MainWindow::onGoToLine(const QUuid & uuid, int lineNo)
 	}
 }
 
-void MainWindow::onStopAtBreakPoint(const QUuid & uuid, int lineNo)
+void MainWindow::onStopAtBreakPoint(const QUuid& uuid, int lineNo)
 {
 	onGoToLine(uuid, lineNo);
 
@@ -993,7 +993,7 @@ void MainWindow::onStopAtBreakPoint(const QUuid & uuid, int lineNo)
 	sysInfoDock->setEnable(true);
 }
 
-void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info)
+void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> >& info)
 {
 	typedef QPair<QString,QString> string_pair; // 直接だとマクロの展開エラーになるので...
 	foreach(const string_pair& val, info) {
@@ -1001,7 +1001,7 @@ void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info
 	}
 }
 
-void MainWindow::onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> & info)
+void MainWindow::onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE>& info)
 {
 	foreach(const VARIABLE_INFO_TYPE& var, info) {
 		varInfoDock->update(var);
@@ -1261,10 +1261,10 @@ void MainWindow::onTabClose()
 	// 何はともあれ保存
 	onSaveFile();
 
-	CDocumentPane * document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
 
-	CWorkSpaceItem * solutionItem = projectDock->currentSolution();
-	CWorkSpaceItem * currentItem  = document->assignItem();
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* currentItem  = document->assignItem();
 
 	// タブを閉じる
 	closeTab(currentItem);
@@ -1316,7 +1316,7 @@ void MainWindow::buildStarted()
 	messageDock->clear();
 }
 
-void MainWindow::buildStarted(int buildOrder, const QString & filePath)
+void MainWindow::buildStarted(int buildOrder, const QUuid& uuid)
 {
 	// ビルド処理開始
 	outputDock->select(COutputDock::BuildOutput);
@@ -1355,7 +1355,7 @@ void MainWindow::buildFailure(int buildOrder)
 }
 
 // ビルド中の出力を取得
-void MainWindow::buildOutput(int buildOrder, const QString & output)
+void MainWindow::buildOutput(int buildOrder, const QString& output)
 {
 	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
 

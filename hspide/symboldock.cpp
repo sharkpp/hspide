@@ -37,7 +37,7 @@ CSymbolDock::CSymbolDock(QWidget *parent)
 
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
-	QAction * tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("onTest"));
+	QAction* tabListAct = m_toolBar->addAction(QIcon(":/images/tango/small/document-new.png"), tr("onTest"));
 	connect(tabListAct,  SIGNAL(triggered()), this, SLOT(onTest()));
 
 	// ドキュメント内容の変更に遅延してシンボル一覧を更新
@@ -192,7 +192,7 @@ void CSymbolDock::append(const QUuid& uuid, int lineNo, const QString& name, con
 	m_listWidget->expand(scopeItem->index());
 }
 
-void CSymbolDock::onTreeDoubleClicked(const QModelIndex & index)
+void CSymbolDock::onTreeDoubleClicked(const QModelIndex& index)
 {
 	QStandardItem* item = static_cast<QStandardItem*>(index.internalPointer());
 	int indexOfInfo = item->child(index.row(), RefIndexColumn)->data(Qt::UserRole + 1).toInt();

@@ -19,7 +19,7 @@ class CBreakPointDock
 		ColumnCount,
 	} ColumnType;
 
-	QTreeWidget * m_listWidget;
+	QTreeWidget* m_listWidget;
 
 public:
 
@@ -31,7 +31,7 @@ protected:
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 
 public slots:
 
@@ -41,6 +41,6 @@ public slots:
 
 signals:
 
-	void gotoLine(const QUuid & uuid, int lineNo);
+	void gotoLine(const QUuid& uuid, int lineNo);
 
 };

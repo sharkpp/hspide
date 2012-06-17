@@ -86,7 +86,7 @@ protected:
 
 public slots:
 
-	void compileStarted(const QString& filePath);
+	void compileStarted(const QUuid& uuid);
 	void compileSuccessful();
 	void compileFailure();
 	void compileReadOutput(const QString& output);
@@ -99,7 +99,7 @@ public slots:
 signals:
 
 	void buildStarted();
-	void buildStarted(int buildOrder, const QString& filePath);
+	void buildStarted(int buildOrder, const QUuid& uuid);
 	void buildSuccessful();
 	void buildSuccessful(int buildOrder);
 	void buildFailure();

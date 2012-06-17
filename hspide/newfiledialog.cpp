@@ -5,12 +5,12 @@
 #include <QDir>
 #include <QString>
 
-CNameOnlyFileSystemModel::CNameOnlyFileSystemModel(QObject * parent)
+CNameOnlyFileSystemModel::CNameOnlyFileSystemModel(QObject* parent)
 	: QFileSystemModel(parent)
 {
 }
 
-QVariant CNameOnlyFileSystemModel::data(const QModelIndex & index, int role) const
+QVariant CNameOnlyFileSystemModel::data(const QModelIndex& index, int role) const
 {
 	if( Qt::DisplayRole == role &&
 		0 == index.column()) // ファイル名カラム
@@ -34,7 +34,7 @@ CNewFileDialog::CNewFileDialog(QWidget *parent)
 void CNewFileDialog::setupTemplateList()
 {
 	QString path = qApp->applicationDirPath() + "/templates";
-	QFileSystemModel * model = new CNameOnlyFileSystemModel(this);
+	QFileSystemModel* model = new CNameOnlyFileSystemModel(this);
 	QModelIndex parentIndex = model->setRootPath(path);
 
 	ui.templateList->setMovement(QListView::Static);
@@ -54,12 +54,12 @@ void CNewFileDialog::onSelectFileName()
 	}
 }
 
-void CNewFileDialog::onFileNameChanged(const QString & text)
+void CNewFileDialog::onFileNameChanged(const QString& text)
 {
 	m_filePath = text;
 }
 
-void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
+void CNewFileDialog::onChangeTemplate(const QModelIndex& index)
 {
 	QFileSystemModel* model = dynamic_cast<QFileSystemModel*>(ui.templateList->model());
 	QFileInfo path(ui.fileName->text());
@@ -75,7 +75,7 @@ void CNewFileDialog::onChangeTemplate(const QModelIndex & index)
 	m_templateFilePath = model->filePath(index);
 }
 
-void CNewFileDialog::onDoubleClickedTemplate(const QModelIndex & index)
+void CNewFileDialog::onDoubleClickedTemplate(const QModelIndex& index)
 {
 	onChangeTemplate(index);
 

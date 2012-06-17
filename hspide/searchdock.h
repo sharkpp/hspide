@@ -9,15 +9,15 @@ class CSearchDock
 {
 	Q_OBJECT
 
-	QTextEdit * editorWidget;
+	QTextEdit* editorWidget;
 
 public:
 
-	CSearchDock(QWidget *parent = 0);
+	CSearchDock(QWidget* parent = 0);
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 
 public slots:
 

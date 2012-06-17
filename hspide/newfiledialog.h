@@ -9,8 +9,8 @@ class CNameOnlyFileSystemModel
 	: public QFileSystemModel
 {
 public:
-	CNameOnlyFileSystemModel(QObject * parent = 0);
-	virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+	CNameOnlyFileSystemModel(QObject* parent = 0);
+	virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 };
 
 class CNewFileDialog
@@ -27,17 +27,17 @@ public:
 
 	CNewFileDialog(QWidget *parent = 0);
 
-	const QString & filePath() const;
-	const QString & templateFilePath() const;
+	const QString& filePath() const;
+	const QString& templateFilePath() const;
 
 protected:
 
 public slots:
 
 	void onSelectFileName();
-	void onFileNameChanged(const QString & text);
-	void onChangeTemplate(const QModelIndex & index);
-	void onDoubleClickedTemplate(const QModelIndex & index);
+	void onFileNameChanged(const QString& text);
+	void onChangeTemplate(const QModelIndex& index);
+	void onDoubleClickedTemplate(const QModelIndex& index);
 
 private:
 
@@ -45,13 +45,13 @@ private:
 };
 
 inline
-const QString & CNewFileDialog::filePath() const
+const QString& CNewFileDialog::filePath() const
 {
 	return m_filePath;
 }
 
 inline
-const QString & CNewFileDialog::templateFilePath() const
+const QString& CNewFileDialog::templateFilePath() const
 {
 	return m_templateFilePath;
 }

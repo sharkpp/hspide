@@ -45,7 +45,7 @@ protected:
 public slots:
 
 	void onOk();
-	void onPageChanged(const QModelIndex & index);
+	void onPageChanged(const QModelIndex& index);
 	void onClickedInstallDirectoryRef();
 	void onClickedCommonDirectoryRef();
 	void onCurrentMetricsChanged();

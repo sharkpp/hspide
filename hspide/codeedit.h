@@ -18,7 +18,7 @@ class CCodeEdit
 	friend class CLineNumberArea;
 	friend class CRulerArea;
 
-	QWidget *           m_lineNumberWidget;
+	QWidget*            m_lineNumberWidget;
 	QCompleter*         m_completer;
 
 	QPalette::ColorRole m_lineIconBackgroundColorRole;
@@ -41,52 +41,52 @@ public:
 	CCodeEdit(QWidget *parent = 0);
 
 	// ƒVƒ“ƒ{ƒ‹ˆê——‚ðŽw’è
-	void setSymbols(const QVector<QStringList> & symbols);
+	void setSymbols(const QVector<QStringList>& symbols);
 
-	void setLineNumberFont(const QFont & font);
+	void setLineNumberFont(const QFont& font);
 	const QFont& lineNumberFont() const;
 
-	void setLineIconBackgroundColorRole(const QPalette::ColorRole & role);
-	const QPalette::ColorRole & lineIconBackgroundColorRole() const;
+	void setLineIconBackgroundColorRole(const QPalette::ColorRole& role);
+	const QPalette::ColorRole& lineIconBackgroundColorRole() const;
 
-	void setLineNumberBackgroundColorRole(const QPalette::ColorRole & role);
-	const QPalette::ColorRole & lineNumberBackgroundColorRole() const;
+	void setLineNumberBackgroundColorRole(const QPalette::ColorRole& role);
+	const QPalette::ColorRole& lineNumberBackgroundColorRole() const;
 
-	void setLineNumberTextColorRole(const QPalette::ColorRole & role);
-	const QPalette::ColorRole & lineNumberTextColorRole() const;
+	void setLineNumberTextColorRole(const QPalette::ColorRole& role);
+	const QPalette::ColorRole& lineNumberTextColorRole() const;
 
-	void setLineIconBackgroundColor(const QColor & color);
-	const QColor & lineIconBackgroundColor() const;
+	void setLineIconBackgroundColor(const QColor& color);
+	const QColor& lineIconBackgroundColor() const;
 
-	void setLineNumberBackgroundColor(const QColor & color);
-	const QColor & lineNumberBackgroundColor() const;
+	void setLineNumberBackgroundColor(const QColor& color);
+	const QColor& lineNumberBackgroundColor() const;
 
-	void setLineNumberTextColor(const QColor & color);
-	const QColor & lineNumberTextColor() const;
+	void setLineNumberTextColor(const QColor& color);
+	const QColor& lineNumberTextColor() const;
 
 	void setLineNumberVisible(bool visible);
 	bool isLineNumberVisible() const;
 
-	void setLineIcon(int lineNo, const QIcon & icon);
-	const QIcon & lineIcon(int lineNo);
+	void setLineIcon(int lineNo, const QIcon& icon);
+	const QIcon& lineIcon(int lineNo);
 	void clearLineIcon();
-	void clearLineIcon(const QIcon & icon);
+	void clearLineIcon(const QIcon& icon);
 	void clearLineIcon(int lineNo);
-	void clearLineIcon(int lineNo, const QIcon & icon);
+	void clearLineIcon(int lineNo, const QIcon& icon);
 
 	void setTabStopCharWidth(int width);
 	int  tabStopCharWidth() const;
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 	virtual void keyPressEvent(QKeyEvent* event);
 
-	void paintLineNumEvent(QPaintEvent * event);
-	void paintRulerEvent(QPaintEvent * event);
-	void mousePressLineNumEvent(QMouseEvent * event);
-	void mouseReleaseLineNumEvent(QMouseEvent * event);
-	void mouseMoveLineNumEvent(QMouseEvent * event);
+	void paintLineNumEvent(QPaintEvent* event);
+	void paintRulerEvent(QPaintEvent* event);
+	void mousePressLineNumEvent(QMouseEvent* event);
+	void mouseReleaseLineNumEvent(QMouseEvent* event);
+	void mouseMoveLineNumEvent(QMouseEvent* event);
 
 signals:
 
@@ -95,7 +95,7 @@ signals:
 public slots:
 
 	void updateLineNumberWidth(int newBlockCount);
-	void updateLineNumber(const QRect & rect ,int dy);
+	void updateLineNumber(const QRect& rect ,int dy);
 
 	void del();
 
@@ -109,33 +109,33 @@ private:
 
 };
 
-inline const QPalette::ColorRole & CCodeEdit::lineIconBackgroundColorRole() const {
+inline const QPalette::ColorRole& CCodeEdit::lineIconBackgroundColorRole() const {
 	return m_lineIconBackgroundColorRole;
 }
 
-inline const QPalette::ColorRole & CCodeEdit::lineNumberBackgroundColorRole() const {
+inline const QPalette::ColorRole& CCodeEdit::lineNumberBackgroundColorRole() const {
 	return m_lineNumberBackgroundColorRole;
 }
 
-inline const QPalette::ColorRole & CCodeEdit::lineNumberTextColorRole() const {
+inline const QPalette::ColorRole& CCodeEdit::lineNumberTextColorRole() const {
 	return m_lineNumberTextColorRole;
 }
 
-inline const QColor & CCodeEdit::lineIconBackgroundColor() const {
+inline const QColor& CCodeEdit::lineIconBackgroundColor() const {
 	return
 		QPalette::NoRole == m_lineIconBackgroundColorRole
 			? m_lineIconBackgroundColor
 			: palette().color(m_lineIconBackgroundColorRole);
 }
 
-inline const QColor & CCodeEdit::lineNumberBackgroundColor() const {
+inline const QColor& CCodeEdit::lineNumberBackgroundColor() const {
 	return
 		QPalette::NoRole == m_lineNumberBackgroundColorRole
 			? m_lineNumberBackgroundColor
 			: palette().color(m_lineNumberBackgroundColorRole);
 }
 
-inline const QColor & CCodeEdit::lineNumberTextColor() const {
+inline const QColor& CCodeEdit::lineNumberTextColor() const {
 	return
 		QPalette::NoRole == m_lineNumberTextColorRole
 			? m_lineNumberTextColor

@@ -79,7 +79,7 @@ void CMessageDock::clear()
 	updateMessagesCount();
 }
 
-void CMessageDock::addMessage(const QUuid & uuid, int lineNo, CategoryType category, const QString & description)
+void CMessageDock::addMessage(const QUuid& uuid, int lineNo, CategoryType category, const QString& description)
 {
 	QString iconPath, categoryName;
 	switch(category)
@@ -128,14 +128,14 @@ void CMessageDock::addMessage(const QUuid & uuid, int lineNo, CategoryType categ
 	updateMessagesCount();
 }
 
-void CMessageDock::doubleClickedList(const QModelIndex & index)
+void CMessageDock::doubleClickedList(const QModelIndex& index)
 {
 	QSortFilterProxyModel* model
 		= static_cast<QSortFilterProxyModel*>(m_listWidget->model()) ;
 	QModelIndex sourceIndex = model->mapToSource(index);
 	QStandardItem* item = static_cast<QStandardItem*>(sourceIndex.internalPointer());
 	int indexOfInfo = item->child(sourceIndex.row(), RefIndexColumn)->data(Qt::UserRole + 1).toInt();
-	MessageInfoType & info = m_messages[indexOfInfo];
+	MessageInfoType& info = m_messages[indexOfInfo];
 
 	if( 0 < info.lineNo ) {
 		emit gotoLine(info.uuid, info.lineNo);

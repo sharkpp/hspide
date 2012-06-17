@@ -75,13 +75,13 @@ protected:
 
 protected slots:
 
-	void onTreeDoubleClicked(const QModelIndex & inde);
+	void onTreeDoubleClicked(const QModelIndex& inde);
 	void onTest();
 
 	void onDocumentUpdate();
 
 signals:
 
-	void gotoLine(const QUuid & uuid, int lineNo);
+	void gotoLine(const QUuid& uuid, int lineNo);
 
 };

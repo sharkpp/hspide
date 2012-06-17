@@ -20,7 +20,7 @@ CVariableInfoDock::CVariableInfoDock(QWidget *parent)
 	setEnable(false);
 }
 
-void CVariableInfoDock::resizeEvent(QResizeEvent * event)
+void CVariableInfoDock::resizeEvent(QResizeEvent* event)
 {
 	m_listWidget->resize(event->size());
 }
@@ -39,7 +39,7 @@ void CVariableInfoDock::clear()
 	}
 }
 
-void CVariableInfoDock::update(const VARIABLE_INFO_TYPE & varInfo)
+void CVariableInfoDock::update(const VARIABLE_INFO_TYPE& varInfo)
 {
 	QString path = toPath(varInfo);
 	QStandardItem* item = getItem(path);
@@ -80,7 +80,7 @@ void CVariableInfoDock::update(const VARIABLE_INFO_TYPE & varInfo)
 }
 
 // 指定したパスのアイテムを取得
-QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
+QStandardItem* CVariableInfoDock::getItem(const QString& valueName)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* parent = model->invisibleRootItem();
@@ -136,7 +136,7 @@ QStandardItem* CVariableInfoDock::getItem(const QString & valueName)
 }
 
 // アイテムの指定のカラムに値をセット
-void CVariableInfoDock::setItem(QStandardItem* item, ColumnType type, const QString & value)
+void CVariableInfoDock::setItem(QStandardItem* item, ColumnType type, const QString& value)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	model->setData(model->index(item->index().row(), int(type), item->index().parent()), value);

@@ -22,12 +22,12 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
 }
 
-void CDocumentPane::resizeEvent(QResizeEvent * event)
+void CDocumentPane::resizeEvent(QResizeEvent* event)
 {
 	m_editorWidget->resize(event->size());
 }
 
-void CDocumentPane::focusInEvent(QFocusEvent * event)
+void CDocumentPane::focusInEvent(QFocusEvent* event)
 {
 	m_editorWidget->setFocus();
 }
@@ -131,14 +131,14 @@ void CDocumentPane::onBreakPointChanged(const QUuid& uuid, const QList<QPair<int
 }
 
 // シンボル一覧を指定
-void CDocumentPane::setSymbols(const QVector<QStringList> & symbols)
+void CDocumentPane::setSymbols(const QVector<QStringList>& symbols)
 {
 	m_editorWidget->setSymbols(symbols);
 	m_highlighter->setSymbols(symbols);
 }
 
 // ファイルから読み込み
-bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
+bool CDocumentPane::load(const QString& filepath, const QString& tmplFilePath)
 {
 	QFile file(tmplFilePath.isEmpty() ? filepath : tmplFilePath);
 
@@ -170,7 +170,7 @@ bool CDocumentPane::load(const QString & filepath, const QString & tmplFilePath)
 }
 
 // ファイルに保存
-bool CDocumentPane::save(const QString & filePath, bool saveAs)
+bool CDocumentPane::save(const QString& filePath, bool saveAs)
 {
 	QString fileName = filePath;
 	QString lastFilePath = theFile.path(m_uuid);
@@ -246,7 +246,7 @@ bool CDocumentPane::jump(int lineNo)
 }
 
 // アイテムと関連付け
-bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
+bool CDocumentPane::setAssignItem(CWorkSpaceItem* item)
 {
 	if( m_assignItem ) {
 		m_assignItem->setAssignDocument(NULL);
@@ -257,7 +257,7 @@ bool CDocumentPane::setAssignItem(CWorkSpaceItem * item)
 	return true;
 }
 
-CWorkSpaceItem * CDocumentPane::assignItem()
+CWorkSpaceItem* CDocumentPane::assignItem()
 {
 	return m_assignItem;
 }

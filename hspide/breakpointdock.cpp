@@ -13,7 +13,7 @@ class CExpandedItemHeightDelegate
 {
 public:
 	CExpandedItemHeightDelegate(QObject* parent = 0) : QItemDelegate(parent) {}
-	QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const {
+	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		QSize size = QItemDelegate::sizeHint(option, index);
 		size.setHeight(size.height() + 4);
 		return size;
@@ -47,7 +47,7 @@ CBreakPointDock::CBreakPointDock(QWidget *parent)
 			this, SLOT(onBreakPointDoubleClicked(QTreeWidgetItem*,int)));
 }
 
-void CBreakPointDock::resizeEvent(QResizeEvent * event)
+void CBreakPointDock::resizeEvent(QResizeEvent* event)
 {
 	m_listWidget->resize(event->size());
 }

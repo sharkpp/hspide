@@ -18,7 +18,7 @@ CSystemInfoDock::CSystemInfoDock(QWidget *parent)
 	setEnable(false);
 }
 
-void CSystemInfoDock::resizeEvent(QResizeEvent * event)
+void CSystemInfoDock::resizeEvent(QResizeEvent* event)
 {
 	listWidget->resize(event->size());
 }
@@ -37,14 +37,14 @@ void CSystemInfoDock::clear()
 	}
 }
 
-void CSystemInfoDock::update(const QString & valueName, const QString & description)
+void CSystemInfoDock::update(const QString& valueName, const QString& description)
 {
 	QStandardItem* item = getItem(valueName);
 	setItem(item, DescriptionColumn, description);
 }
 
 // 指定したパスのアイテムを取得
-QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
+QStandardItem* CSystemInfoDock::getItem(const QString& valueName)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
 	QStandardItem* parent = model->invisibleRootItem();
@@ -88,7 +88,7 @@ QStandardItem* CSystemInfoDock::getItem(const QString & valueName)
 }
 
 // アイテムの指定のカラムに値をセット
-void CSystemInfoDock::setItem(QStandardItem* item, ColumnType type, const QString & value)
+void CSystemInfoDock::setItem(QStandardItem* item, ColumnType type, const QString& value)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
 	model->setData(model->index(item->index().row(), int(type), item->index().parent()), value);

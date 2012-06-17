@@ -38,10 +38,10 @@ bool CCompilerSet::setCompilerSlotNum(int num)
 	// スロットに関連付けをしてシグナルを受け取れるように
 	foreach(CCompiler* compiler, m_compilers)
 	{
-		connect(compiler, SIGNAL(compileStarted(QString)), this, SLOT(compileStarted(QString)));
-		connect(compiler, SIGNAL(compileFailure()),        this, SLOT(compileFailure()));
-		connect(compiler, SIGNAL(compileSuccessful()),     this, SLOT(compileSuccessful()));
-		connect(compiler, SIGNAL(compileOutput(QString)),  this, SLOT(compileReadOutput(QString)));
+		connect(compiler, SIGNAL(compileStarted(QUuid)),  this, SLOT(compileStarted(QUuid)));
+		connect(compiler, SIGNAL(compileFailure()),       this, SLOT(compileFailure()));
+		connect(compiler, SIGNAL(compileSuccessful()),    this, SLOT(compileSuccessful()));
+		connect(compiler, SIGNAL(compileOutput(QString)), this, SLOT(compileReadOutput(QString)));
 	}
 
 	return true;
@@ -258,12 +258,12 @@ bool CCompilerSet::execBuildDeliverables()
 	return true;
 }
 
-void CCompilerSet::compileStarted(const QString& filePath)
+void CCompilerSet::compileStarted(const QUuid& uuid)
 {
 	if( CCompiler* compiler = qobject_cast<CCompiler*>(sender()) )
 	{
 		if( const BuildOptionType* opt = searchBuildOption(compiler) ) {
-			emit buildStarted(opt->buildOrder, filePath);
+			emit buildStarted(opt->buildOrder, uuid);
 		}
 	}
 }

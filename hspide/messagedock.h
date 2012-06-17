@@ -57,7 +57,7 @@ public:
 	CMessageDock(QWidget *parent = 0);
 
 	void clear();
-	void addMessage(const QUuid & uuid, int lineNo, CategoryType category, const QString & description);
+	void addMessage(const QUuid& uuid, int lineNo, CategoryType category, const QString& description);
 
 protected:
 
@@ -67,12 +67,12 @@ private:
 
 protected slots:
 
-	void doubleClickedList(const QModelIndex & inde);
+	void doubleClickedList(const QModelIndex& inde);
 
 	void onUpdateCategoryVisibled();
 
 signals:
 
-	void gotoLine(const QUuid & uuid, int lineNo);
+	void gotoLine(const QUuid& uuid, int lineNo);
 
 };

@@ -21,22 +21,22 @@ public:
 
 public:
 
-	virtual void paintEvent(QPaintEvent * event)
+	virtual void paintEvent(QPaintEvent* event)
 	{
 		static_cast<CCodeEdit*>(parentWidget())->paintLineNumEvent(event);
 	}
 
-	virtual void mousePressEvent(QMouseEvent * event)
+	virtual void mousePressEvent(QMouseEvent* event)
 	{
 		static_cast<CCodeEdit*>(parentWidget())->mousePressLineNumEvent(event);
 	}
 
-	virtual void mouseReleaseEvent(QMouseEvent * event)
+	virtual void mouseReleaseEvent(QMouseEvent* event)
 	{
 		static_cast<CCodeEdit*>(parentWidget())->mouseReleaseLineNumEvent(event);
 	}
 
-	virtual void mouseMoveEvent(QMouseEvent * event)
+	virtual void mouseMoveEvent(QMouseEvent* event)
 	{
 		static_cast<CCodeEdit*>(parentWidget())->mouseMoveLineNumEvent(event);
 	}
@@ -77,7 +77,7 @@ CCodeEdit::CCodeEdit(QWidget *parent)
 }
 
 // シンボル一覧を指定
-void CCodeEdit::setSymbols(const QVector<QStringList> & symbols)
+void CCodeEdit::setSymbols(const QVector<QStringList>& symbols)
 {
 //	QStandardItemModel* model = new QStandardItemModel(this);
 
@@ -119,7 +119,7 @@ int CCodeEdit::lineNumberWidth()
 // プロパティ
 //////////////////////////////////////////////////////////////////////
 
-void CCodeEdit::setLineNumberFont(const QFont & font)
+void CCodeEdit::setLineNumberFont(const QFont& font)
 {
 	m_lineNumberWidget->setFont(font);
 	updateLineNumberWidth(0);
@@ -130,34 +130,34 @@ const QFont& CCodeEdit::lineNumberFont() const
 	return m_lineNumberWidget->font();
 }
 
-void CCodeEdit::setLineIconBackgroundColorRole(const QPalette::ColorRole & role)
+void CCodeEdit::setLineIconBackgroundColorRole(const QPalette::ColorRole& role)
 {
 	m_lineIconBackgroundColorRole = role;
 }
 
-void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole & role)
+void CCodeEdit::setLineNumberBackgroundColorRole(const QPalette::ColorRole& role)
 {
 	m_lineNumberBackgroundColorRole = role;
 }
 
-void CCodeEdit::setLineNumberTextColorRole(const QPalette::ColorRole & role)
+void CCodeEdit::setLineNumberTextColorRole(const QPalette::ColorRole& role)
 {
 	m_lineNumberTextColorRole = role;
 }
 
-void CCodeEdit::setLineIconBackgroundColor(const QColor & color)
+void CCodeEdit::setLineIconBackgroundColor(const QColor& color)
 {
 	m_lineIconBackgroundColor = color;
 	m_lineIconBackgroundColorRole = QPalette::NoRole;
 }
 
-void CCodeEdit::setLineNumberBackgroundColor(const QColor & color)
+void CCodeEdit::setLineNumberBackgroundColor(const QColor& color)
 {
 	m_lineNumberBackgroundColor = color;
 	m_lineNumberBackgroundColorRole = QPalette::NoRole;
 }
 
-void CCodeEdit::setLineNumberTextColor(const QColor & color)
+void CCodeEdit::setLineNumberTextColor(const QColor& color)
 {
 	m_lineNumberTextColor = color;
 	m_lineNumberTextColorRole = QPalette::NoRole;
@@ -168,13 +168,13 @@ void CCodeEdit::setLineNumberVisible(bool visible)
 	m_visibleLineNumber = visible;
 }
 
-void CCodeEdit::setLineIcon(int lineNo, const QIcon & icon)
+void CCodeEdit::setLineIcon(int lineNo, const QIcon& icon)
 {
 	m_lineIconMap[lineNo] = icon;
 	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
-const QIcon & CCodeEdit::lineIcon(int lineNo)
+const QIcon& CCodeEdit::lineIcon(int lineNo)
 {
 	static QIcon tmp;
 	QMap<int, QIcon>::iterator
@@ -192,7 +192,7 @@ void CCodeEdit::clearLineIcon()
 	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
-void CCodeEdit::clearLineIcon(const QIcon & icon)
+void CCodeEdit::clearLineIcon(const QIcon& icon)
 {
 	qint64 iconHash = icon.cacheKey();
 
@@ -238,7 +238,7 @@ void CCodeEdit::updateLineNumberWidth(int /*newBlockCount*/)
 	setViewportMargins(lineNumberWidth(), 0, 0, 0);
 }
 
-void CCodeEdit::updateLineNumber(const QRect & rect ,int dy)
+void CCodeEdit::updateLineNumber(const QRect& rect ,int dy)
 {
 	m_lineNumberWidget->update(0, rect.y(), m_lineNumberWidget->width(), rect.height());
 }
@@ -441,20 +441,20 @@ qDebug() << __LINE__ << time.elapsed();
 	QPlainTextEdit::keyPressEvent(event);
 }
 
-void CCodeEdit::resizeEvent(QResizeEvent * event)
+void CCodeEdit::resizeEvent(QResizeEvent* event)
 {
 	QPlainTextEdit::resizeEvent(event);
 
-	const QRect & rc = contentsRect();
+	const QRect& rc = contentsRect();
 	m_lineNumberWidget->setGeometry(rc.left(), rc.top(), lineNumberWidth(), rc.height());
 }
 
-void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
+void CCodeEdit::paintLineNumEvent(QPaintEvent* event)
 {
 	QPainter painter(m_lineNumberWidget);
 
 	// 行番号エリアをベタ塗り
-	const QRect & rc = event->rect();
+	const QRect& rc = event->rect();
 	painter.fillRect(rc, lineNumberBackgroundColor());
 	painter.fillRect(QRect(	rc.left(), rc.top(),
 							rc.left() + m_lineIconSize.width(),
@@ -463,7 +463,7 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 	if( m_visibleLineNumber )
 	{
 		// 行番号との区切りを描画
-		const QRect & rcWnd = contentsRect();
+		const QRect& rcWnd = contentsRect();
 		QPen pen;
 		pen.setColor(lineNumberTextColor());
 		pen.setStyle(Qt::DotLine);
@@ -505,7 +505,7 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent * event)
 	}
 }
 
-void CCodeEdit::mousePressLineNumEvent(QMouseEvent * event)
+void CCodeEdit::mousePressLineNumEvent(QMouseEvent* event)
 {
 	if( m_lineIconSize.width() < event->x() )
 	{
@@ -524,16 +524,16 @@ void CCodeEdit::mousePressLineNumEvent(QMouseEvent * event)
 	}
 }
 
-void CCodeEdit::mouseReleaseLineNumEvent(QMouseEvent * event)
+void CCodeEdit::mouseReleaseLineNumEvent(QMouseEvent* event)
 {
 }
 
-void CCodeEdit::mouseMoveLineNumEvent(QMouseEvent * event)
+void CCodeEdit::mouseMoveLineNumEvent(QMouseEvent* event)
 {
 	QPoint pt(0, event->y());
 
 	if( m_lineIconSize.width() < event->x() &&
-		0 != (event->buttons() & Qt::LeftButton) )
+		0 != (event->buttons()& Qt::LeftButton) )
 	{
 		QTextCursor cursor = textCursor();
 		if( cursor.position() == cursor.selectionStart() )

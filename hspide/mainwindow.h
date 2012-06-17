@@ -24,8 +24,8 @@ class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
-	QTabWidget *   tabWidget;
-	QProgressBar * taskProgress;
+	QTabWidget*   tabWidget;
+	QProgressBar* taskProgress;
 
 	QAction* newDocumentAct;
 	QAction* openDocumentAct;
@@ -107,10 +107,10 @@ public slots:
 	void actionTriggered(QAction *action);
 	void updateConfiguration(const Configuration& info);
 	void buildStarted();
-	void buildStarted(int buildOrder,const QString & filePath);
+	void buildStarted(int buildOrder,const QUuid& uuid);
 	void buildSuccessful(int buildOrder);
 	void buildFailure(int buildOrder);
-	void buildOutput(int buildOrder, const QString & output);
+	void buildOutput(int buildOrder, const QString& output);
 	void onUpdatedSymbols();
 	void attachedDebugger(CDebugger* debugger);
 	void dettachedDebugger();
@@ -121,17 +121,17 @@ public slots:
 	void onAboutApp();
 	void onNewFile();
 	void onOpenFile();
-	void onOpenFile(const QString & filePath);
-	void onOpenFile(CWorkSpaceItem * item);
+	void onOpenFile(const QString& filePath);
+	void onOpenFile(CWorkSpaceItem* item);
 	void onSaveFile();
 	void onSaveAsFile();
 	void onSaveAllFile();
 	void onQuit();
 	void onGoToLine();
-	void onGoToLine(const QUuid & uuid, int lineNo);
-	void onStopAtBreakPoint(const QUuid & uuid, int lineNo);
-	void onUpdateDebugInfo(const QVector<QPair<QString,QString> > & info);
-	void onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> & info);
+	void onGoToLine(const QUuid& uuid, int lineNo);
+	void onStopAtBreakPoint(const QUuid& uuid, int lineNo);
+	void onUpdateDebugInfo(const QVector<QPair<QString,QString> >& info);
+	void onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE>& info);
 	void onReqVarInfo(const QString& varName, int* info);
 	void onBuildProject();
 	void onBuildSolution();

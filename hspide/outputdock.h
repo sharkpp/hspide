@@ -37,9 +37,9 @@ public:
 	void clear(OutputType type = AllOutput);
 
 	// 出力に文字列を追記
-	void output(OutputType type, const QString & text);
+	void output(OutputType type, const QString& text);
 	// 出力に文字列を追記(改行付き)
-	void outputCrLf(OutputType type, const QString & text);
+	void outputCrLf(OutputType type, const QString& text);
 
 protected:
 

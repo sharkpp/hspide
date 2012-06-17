@@ -69,16 +69,17 @@ CWorkSpaceItem* CCompiler::compileItem()
 }
 
 // コンパイラ呼び出し
-bool CCompiler::compile(CWorkSpaceItem * targetItem, bool debugMode)
+bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 {
 	QString workDir = QDir::currentPath(); // いらないかも
 
 	QString filename = targetItem->path();
+	QUuid   uuid     = targetItem->uuid();
 
 	m_targetItem = targetItem;
 
 	// シグナル発報
-	emit compileStarted(filename);
+	emit compileStarted(uuid);
 
 	switch( targetItem->type() )
 	{
@@ -220,7 +221,7 @@ void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitSta
 		for(QMutableStringListIterator ite2(keywords);
 			ite2.hasNext(); )
 		{
-			QString & keyword = ite2.next();
+			QString& keyword = ite2.next();
 			keyword = keyword.trimmed();
 		}
 

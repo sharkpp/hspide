@@ -26,7 +26,7 @@ class CVariableInfoDock
 		QString typeName;
 	};
 
-	QTreeView * m_listWidget;
+	QTreeView* m_listWidget;
 
 	QMap<qlonglong, VARIABLE_INFO_TYPE> m_varInfo;
 
@@ -40,19 +40,19 @@ public:
 
 	void clear();
 
-	void update(const VARIABLE_INFO_TYPE & varInfo);
+	void update(const VARIABLE_INFO_TYPE& varInfo);
 
 protected:
 
-	QStandardItem* getItem(const QString & valueName);
+	QStandardItem* getItem(const QString& valueName);
 
-	void setItem(QStandardItem* item, ColumnType type, const QString & value);
+	void setItem(QStandardItem* item, ColumnType type, const QString& value);
 
 	QString toPath(const VARIABLE_INFO_TYPE& varInfo);
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 
 public slots:
 

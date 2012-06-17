@@ -19,7 +19,7 @@ class CDocumentPane
 {
 	Q_OBJECT
 
-	CCodeEdit *			m_editorWidget;
+	CCodeEdit*			m_editorWidget;
 	CHsp3Highlighter*	m_highlighter;
 
 	QUuid				m_uuid;
@@ -30,16 +30,16 @@ public:
 
 	CDocumentPane(QWidget *parent = 0);
 
-	CCodeEdit * editor();
+	CCodeEdit* editor();
 
 	// シンボル一覧を指定
-	void setSymbols(const QVector<QStringList> & symbols);
+	void setSymbols(const QVector<QStringList>& symbols);
 
 	// ファイルから読み込み
-	bool load(const QString & filepath, const QString & tmplFilePath = QString());
+	bool load(const QString& filepath, const QString& tmplFilePath = QString());
 
 	// ファイルに保存
-	bool save(const QString & filepath = QString(), bool saveAs = false);
+	bool save(const QString& filepath = QString(), bool saveAs = false);
 
 //	// 一時ファイルに保存
 //	bool saveTemporary();
@@ -51,8 +51,8 @@ public:
 	bool jump(int lineNo);
 
 	// アイテムと関連付け
-	bool setAssignItem(CWorkSpaceItem * item);
-	CWorkSpaceItem * assignItem();
+	bool setAssignItem(CWorkSpaceItem* item);
+	CWorkSpaceItem* assignItem();
 
 	// uuidを取得
 	const QUuid& uuid() const;
@@ -71,11 +71,11 @@ public:
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
-	virtual void focusInEvent(QFocusEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
+	virtual void focusInEvent(QFocusEvent* event);
 
-	void paintLineNumEvent(QPaintEvent * event);
-	void mousePressLineNumEvent(QMouseEvent * event);
+	void paintLineNumEvent(QPaintEvent* event);
+	void mousePressLineNumEvent(QMouseEvent* event);
 
 public slots:
 
@@ -95,7 +95,7 @@ private:
 };
 
 inline
-CCodeEdit * CDocumentPane::editor()
+CCodeEdit* CDocumentPane::editor()
 {
 	return m_editorWidget;
 }

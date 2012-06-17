@@ -74,8 +74,8 @@ private:
 
 public:
 
-	CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model = NULL);
-	CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model = NULL);
+	CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model = NULL);
+	CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* model = NULL);
 	~CWorkSpaceItem();
 
 	CWorkSpaceModel* model() const;
@@ -88,48 +88,48 @@ public:
 	void setNodeType(NodeType type);
 
 	QString path() const;
-//	void setPath(const QString & path);
+//	void setPath(const QString& path);
 
 	const QString& text() const;
-	void setText(const QString & text = QString());
+	void setText(const QString& text = QString());
 
-	const QIcon & icon() const;
-	void setIcon(const QIcon & icon);
+	const QIcon& icon() const;
+	void setIcon(const QIcon& icon);
 
-	const QStringList & suffixFilter() const;
-	void setSuffixFilter(const QStringList & filter);
+	const QStringList& suffixFilter() const;
+	void setSuffixFilter(const QStringList& filter);
 
-	bool load(const QString & fileName);
-	bool save(const QString & fileName = QString(), SaveType saveType = OverwriteSave, bool noReclusive = false);
+	bool load(const QString& fileName);
+	bool save(const QString& fileName = QString(), SaveType saveType = OverwriteSave, bool noReclusive = false);
 	bool save(SaveType saveType, bool noReclusive = false);
 
 	bool isUntitled() const;
 
-	const QUuid & uuid() const;
-	void setUuid(const QUuid & uuid);
+	const QUuid& uuid() const;
+	void setUuid(const QUuid& uuid);
 
 	// アイテムと関連付け
-	bool setAssignDocument(CDocumentPane * item);
-	CDocumentPane * assignDocument();
+	bool setAssignDocument(CDocumentPane* item);
+	CDocumentPane* assignDocument();
 
 	int count() const;
-	CWorkSpaceItem * at(int index) const;
-	CWorkSpaceItem * parent() const;
-	CWorkSpaceItem * ancestor(Type type);
-	CWorkSpaceItem * search(const QString & path, bool basename = false);
-	CWorkSpaceItem * search(const QUuid & path);
+	CWorkSpaceItem* at(int index) const;
+	CWorkSpaceItem* parent() const;
+	CWorkSpaceItem* ancestor(Type type);
+	CWorkSpaceItem* search(const QString& path, bool basename = false);
+	CWorkSpaceItem* search(const QUuid& path);
 	int parentPosition() const;
 	QModelIndex index() const;
-	bool insert(int position, CWorkSpaceItem * item);
+	bool insert(int position, CWorkSpaceItem* item);
 	bool remove(int position);
 
 private:
 
-	bool saveSolution(const QString & fileName, bool saveAs = false);
-	bool loadSolution(const QString & fileName);
+	bool saveSolution(const QString& fileName, bool saveAs = false);
+	bool loadSolution(const QString& fileName);
 
-	bool serialize(QXmlStreamWriter * xml);
-	bool deserialize(QXmlStreamReader * xml);
+	bool serialize(QXmlStreamWriter* xml);
+	bool deserialize(QXmlStreamReader* xml);
 
 public slots:
 

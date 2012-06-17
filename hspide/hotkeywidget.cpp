@@ -61,7 +61,7 @@ void CHotkeyWidget::showEvent(QShowEvent* event)
 	QLineEdit::showEvent(event);
 }
 
-void CHotkeyWidget::onTextChanged(const QString & text)
+void CHotkeyWidget::onTextChanged(const QString& text)
 {
 	if( text != m_keySequence.toString() ) {
 		setText(m_keySequence.toString());

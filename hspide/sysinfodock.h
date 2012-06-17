@@ -23,7 +23,7 @@ class CSystemInfoDock
 		QString typeName;
 	};
 
-	QTreeView * listWidget;
+	QTreeView* listWidget;
 
 	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
 
@@ -35,17 +35,17 @@ public:
 
 	void clear();
 
-	void update(const QString & valueName, const QString & description);
+	void update(const QString& valueName, const QString& description);
 
 protected:
 
-	QStandardItem* getItem(const QString & valueName);
+	QStandardItem* getItem(const QString& valueName);
 
-	void setItem(QStandardItem* item, ColumnType type, const QString & value);
+	void setItem(QStandardItem* item, ColumnType type, const QString& value);
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 
 public slots:
 

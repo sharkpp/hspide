@@ -38,13 +38,13 @@ CProjectDock::CProjectDock(QWidget *parent)
 	connect(treeWidget, SIGNAL(expanded(const QModelIndex &)),      this, SLOT(expandedTree(const QModelIndex &)));
 }
 
-void CProjectDock::resizeEvent(QResizeEvent * event)
+void CProjectDock::resizeEvent(QResizeEvent* event)
 {
 	treeWidget->resize(event->size());
 }
 
 // ソリューションを結合
-bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
+bool CProjectDock::setWorkSpace(CWorkSpaceModel* workspace)
 {
 	treeWidget->setModel(workspace);
 	treeWidget->expandAll();
@@ -53,7 +53,7 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel * workspace)
 }
 
 // アイテムを選択
-void CProjectDock::selectItem(CWorkSpaceItem * item)
+void CProjectDock::selectItem(CWorkSpaceItem* item)
 {
 	treeWidget->selectionModel()->clear();
 	treeWidget->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
@@ -62,9 +62,9 @@ void CProjectDock::selectItem(CWorkSpaceItem * item)
 }
 
 // 現在のアイテムを取得
-CWorkSpaceItem * CProjectDock::currentItem()
+CWorkSpaceItem* CProjectDock::currentItem()
 {
-	QItemSelectionModel * model = treeWidget->selectionModel();
+	QItemSelectionModel* model = treeWidget->selectionModel();
 
 	if( !model->hasSelection() ) {
 		return NULL;
@@ -77,7 +77,7 @@ CWorkSpaceItem * CProjectDock::currentItem()
 }
 
 // 現在のソリューションを取得
-CWorkSpaceItem * CProjectDock::currentSolution()
+CWorkSpaceItem* CProjectDock::currentSolution()
 {
 	CWorkSpaceModel* model = dynamic_cast<CWorkSpaceModel*>(treeWidget->model());
 
@@ -89,7 +89,7 @@ CWorkSpaceItem * CProjectDock::currentSolution()
 }
 
 // 現在のプロジェクトを取得
-CWorkSpaceItem * CProjectDock::currentProject()
+CWorkSpaceItem* CProjectDock::currentProject()
 {
 	CWorkSpaceItem* item = currentItem();
 
@@ -120,14 +120,14 @@ QList<CWorkSpaceItem*> CProjectDock::projects()
 }
 
 // 現在のファイルを取得
-CWorkSpaceItem * CProjectDock::currentFile()
+CWorkSpaceItem* CProjectDock::currentFile()
 {
 	CWorkSpaceItem* item = currentItem();
 	return CWorkSpaceItem::File != item->type()
 	           ? item : NULL;;
 }
 
-void CProjectDock::doubleClickedTree(const QModelIndex & index)
+void CProjectDock::doubleClickedTree(const QModelIndex& index)
 {
 	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 
@@ -144,7 +144,7 @@ void CProjectDock::doubleClickedTree(const QModelIndex & index)
 	}
 }
 
-void CProjectDock::expandedTree(const QModelIndex & index)
+void CProjectDock::expandedTree(const QModelIndex& index)
 {
 	//CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 

@@ -73,7 +73,7 @@ void COutputDock::clear(OutputType type)
 }
 
 // 出力に文字列を追記
-void COutputDock::output(OutputType type, const QString & text)
+void COutputDock::output(OutputType type, const QString& text)
 {
 	QTextCursor cursor;
 
@@ -93,7 +93,7 @@ void COutputDock::output(OutputType type, const QString & text)
 }
 
 // 出力に文字列を追記(改行付き)
-void COutputDock::outputCrLf(OutputType type, const QString & text)
+void COutputDock::outputCrLf(OutputType type, const QString& text)
 {
 	output(type, text + "\n");
 }

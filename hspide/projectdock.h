@@ -17,43 +17,43 @@ class CProjectDock
 
 public:
 
-	CProjectDock(QWidget *parent = 0);
+	CProjectDock(QWidget* parent = 0);
 
 	// ソリューションを結合
-	bool setWorkSpace(CWorkSpaceModel * workspace);
+	bool setWorkSpace(CWorkSpaceModel* workspace);
 
 	// アイテムを選択
-	void selectItem(CWorkSpaceItem * item);
+	void selectItem(CWorkSpaceItem* item);
 
 	// 現在のアイテムを取得
-	CWorkSpaceItem * currentItem();
+	CWorkSpaceItem* currentItem();
 
 	// 現在のソリューションを取得
-	CWorkSpaceItem * currentSolution();
+	CWorkSpaceItem* currentSolution();
 
 	// 現在のプロジェクトを取得
-	CWorkSpaceItem * currentProject();
+	CWorkSpaceItem* currentProject();
 
 	// プロジェクトを取得
 	QList<CWorkSpaceItem*> projects();
 
 	// 現在のファイルを取得
-	CWorkSpaceItem * currentFile();
+	CWorkSpaceItem* currentFile();
 
 	QTreeView* tree();
 
 protected:
 
-	virtual void resizeEvent(QResizeEvent * event);
+	virtual void resizeEvent(QResizeEvent* event);
 
 protected slots:
 
-	void doubleClickedTree(const QModelIndex & inde);
-	void expandedTree(const QModelIndex & index);
+	void doubleClickedTree(const QModelIndex& inde);
+	void expandedTree(const QModelIndex& index);
 
 signals:
 
-	void oepnItem(CWorkSpaceItem * item);
+	void oepnItem(CWorkSpaceItem* item);
 
 private:
 

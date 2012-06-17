@@ -9,7 +9,7 @@
 #include "documentpane.h"
 #include "global.h"
 
-CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
+CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	: QObject(parent)
 	, m_model(model)
 	, m_parent(NULL)
@@ -44,7 +44,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject * parent, CWorkSpaceModel * model)
 	connect(&theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
 }
 
-CWorkSpaceItem::CWorkSpaceItem(QObject * parent, Type type, CWorkSpaceModel * model)
+CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* model)
 	: QObject(parent)
 	, m_model(NULL)
 	, m_parent(NULL)
@@ -156,7 +156,7 @@ const QString& CWorkSpaceItem::text() const
 	return m_text;
 }
 
-void CWorkSpaceItem::setText(const QString & text)
+void CWorkSpaceItem::setText(const QString& text)
 {
 	m_text = text;
 
@@ -166,12 +166,12 @@ void CWorkSpaceItem::setText(const QString & text)
 	}
 }
 
-const QIcon & CWorkSpaceItem::icon() const
+const QIcon& CWorkSpaceItem::icon() const
 {
 	return m_icon;
 }
 
-void CWorkSpaceItem::setIcon(const QIcon & icon)
+void CWorkSpaceItem::setIcon(const QIcon& icon)
 {
 	m_icon = icon;
 
@@ -181,12 +181,12 @@ void CWorkSpaceItem::setIcon(const QIcon & icon)
 	}
 }
 
-const QStringList & CWorkSpaceItem::suffixFilter() const
+const QStringList& CWorkSpaceItem::suffixFilter() const
 {
 	return m_suffixFilters;
 }
 
-void CWorkSpaceItem::setSuffixFilter(const QStringList & filters)
+void CWorkSpaceItem::setSuffixFilter(const QStringList& filters)
 {
 	m_suffixFilters = filters;
 
@@ -201,7 +201,7 @@ int CWorkSpaceItem::count() const
 	return m_children.size();
 }
 
-CWorkSpaceItem * CWorkSpaceItem::at(int index) const
+CWorkSpaceItem* CWorkSpaceItem::at(int index) const
 {
 	return
 		0 <= index && index < m_children.size()
@@ -209,19 +209,19 @@ CWorkSpaceItem * CWorkSpaceItem::at(int index) const
 			: NULL;
 }
 
-CWorkSpaceItem * CWorkSpaceItem::parent() const
+CWorkSpaceItem* CWorkSpaceItem::parent() const
 {
 	return m_parent;
 }
 
-CWorkSpaceItem * CWorkSpaceItem::ancestor(Type type)
+CWorkSpaceItem* CWorkSpaceItem::ancestor(Type type)
 {
 	return m_parent ? type == m_type ? this
 	                                 : m_parent->ancestor(type)
 	                : NULL;
 }
 
-CWorkSpaceItem * CWorkSpaceItem::search(const QString & path, bool basename)
+CWorkSpaceItem* CWorkSpaceItem::search(const QString& path, bool basename)
 {
 	QString comp = basename ? QFileInfo(m_path).baseName()
 							: m_path;
@@ -244,7 +244,7 @@ CWorkSpaceItem * CWorkSpaceItem::search(const QString & path, bool basename)
 	return NULL;
 }
 
-CWorkSpaceItem * CWorkSpaceItem::search(const QUuid & uuid)
+CWorkSpaceItem* CWorkSpaceItem::search(const QUuid& uuid)
 {
 	if( uuid == m_uuid )
 	{
@@ -276,7 +276,7 @@ QModelIndex CWorkSpaceItem::index() const
 	return QModelIndex();
 }
 
-bool CWorkSpaceItem::insert(int position, CWorkSpaceItem * item)
+bool CWorkSpaceItem::insert(int position, CWorkSpaceItem* item)
 {
 	if( position < 0 || m_children.size() < position ) {
 		return false;
@@ -308,17 +308,17 @@ bool CWorkSpaceItem::isUntitled() const
 	return theFile.isUntitled(m_uuid);
 }
 
-const QUuid & CWorkSpaceItem::uuid() const
+const QUuid& CWorkSpaceItem::uuid() const
 {
 	return m_uuid;
 }
 
-void CWorkSpaceItem::setUuid(const QUuid & uuid)
+void CWorkSpaceItem::setUuid(const QUuid& uuid)
 {
 	m_uuid = uuid;
 }
 
-bool CWorkSpaceItem::load(const QString & fileName)
+bool CWorkSpaceItem::load(const QString& fileName)
 {
 	if( m_assignDocument )
 	{
@@ -351,7 +351,7 @@ bool CWorkSpaceItem::save(SaveType saveType, bool noReclusive)
 	return save(QString(), saveType, noReclusive);
 }
 
-bool CWorkSpaceItem::save(const QString & fileName, SaveType saveType, bool noReclusive)
+bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType, bool noReclusive)
 {
 	if( !noReclusive )
 	{
@@ -383,7 +383,7 @@ bool CWorkSpaceItem::save(const QString & fileName, SaveType saveType, bool noRe
 	return true;
 }
 
-bool CWorkSpaceItem::saveSolution(const QString & fileName, bool saveAs)
+bool CWorkSpaceItem::saveSolution(const QString& fileName, bool saveAs)
 {
 	QXmlStreamWriter xml;
 	QString filePath = fileName;
@@ -436,7 +436,7 @@ bool CWorkSpaceItem::saveSolution(const QString & fileName, bool saveAs)
 	return true;
 }
 
-bool CWorkSpaceItem::loadSolution(const QString & fileName)
+bool CWorkSpaceItem::loadSolution(const QString& fileName)
 {
 	// 読み込み用のファイルをオープン
 	QFile file(fileName);
@@ -578,7 +578,7 @@ bool CWorkSpaceItem::loadSolution(const QString & fileName)
 	return false;
 }
 
-bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
+bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 {
 	bool uuidValid = false;
 
@@ -634,19 +634,19 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter * xml)
 	return true;
 }
 
-bool CWorkSpaceItem::deserialize(QXmlStreamReader * xml)
+bool CWorkSpaceItem::deserialize(QXmlStreamReader* xml)
 {
 	return false;
 }
 
 // アイテムと関連付け
-bool CWorkSpaceItem::setAssignDocument(CDocumentPane * doc)
+bool CWorkSpaceItem::setAssignDocument(CDocumentPane* doc)
 {
 	m_assignDocument = doc;
 	return true;
 }
 
-CDocumentPane * CWorkSpaceItem::assignDocument()
+CDocumentPane* CWorkSpaceItem::assignDocument()
 {
 	return m_assignDocument;
 }

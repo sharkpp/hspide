@@ -63,7 +63,7 @@ protected:
 
 	void updateCompilerPath();
 
-	bool execCompiler(CWorkSpaceItem * targetItem, bool buildAfterRun, bool debugMode);
+	bool execCompiler(CWorkSpaceItem* targetItem, bool buildAfterRun, bool debugMode);
 
 	// ƒrƒ‹ƒh‡‚ğæ“¾
 	int buildOrder(QProcess* process) const;
@@ -81,10 +81,10 @@ public slots:
 
 signals:
 
-	void compileStarted(const QString & filePath);
+	void compileStarted(const QUuid& uuid);
 	void compileSuccessful();
 	void compileFailure();
-	void compileOutput(const QString & output);
+	void compileOutput(const QString& output);
 
 	void updatedSymbols();
 };

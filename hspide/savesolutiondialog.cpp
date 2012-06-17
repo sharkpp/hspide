@@ -49,7 +49,7 @@ public:
 		}
 		return 0;
 	}
- 	QSize sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index ) const {
+ 	QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
 		QSize size = QItemDelegate::sizeHint(option, index);
 		size.setHeight(size.height() + 4);
 		return size;
