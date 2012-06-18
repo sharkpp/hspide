@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QLocalSocket>
+#include <QTemporaryFile>
 #include "compiler.h"
 #include "workspaceitem.h"
 #include "documentpane.h"
@@ -92,6 +93,8 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 
 	bool tempSave = false;
 
+	QProcess* hspcmp = new QProcess(this);
+
 	// 無題の場合は一時的なファイルに保存
 	if( targetItem->isUntitled() )
 	{
@@ -105,11 +108,18 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 
 		// 一時的なファイルに保存
 		tempSave = true;
-		filename = QDir::toNativeSeparators(workDir + "/hsptmp"); //ユニークな名前に変える
+		filename = QDir::toNativeSeparators();
+		QString baseName = QDir(workDir).absoluteFilePath("hsptmp");
+		QTemporaryFile* tempFile = new QTemporaryFile(baseName, hspcmp);
+		tempFile->setAutoRemove(true);
+		if( !tempFile->open() )
+		{
+			emit compileFailure();
+			return false;
+		}
+		filename = tempFile->fileName();
 		document->save(filename);
 	}
-
-	QProcess* hspcmp = new QProcess(this);
 
 	QString program = m_hspCompPath + "hspcmp";
 	QStringList arguments;

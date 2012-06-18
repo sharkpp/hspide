@@ -96,8 +96,9 @@ void usage()
 		strcpy(version, "not found");
 	}
 	static const char * help = 
-		"hspcmp [Hot Soup Processer cui compiler]\n"
-		"  hspcmp.dll(%s)\n"
+		"hspcmp [Hot Soup Processer command line compiler]\n"
+		"  Copyright(c) 2011-2012 by sharkpp All rights reserved.\n"
+		"  [ hspcmp.dll(%s) ]\n"
 		"\n"
 		"usage: hspcmp.exe option filename [packname ...]\n"
 		"  option:\n"
@@ -468,24 +469,26 @@ int main(int argc, char * argv[])
 	}
 
 	// ランタイムを取得
+	tmp.resize(MAX_PATH*2+1);
+	if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) != 0 ) {
+		print_message("can't get runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
+		UninstallAPIHook();
+		return -1;
+	}
+	static const char DEFAULT_RELEASE_RUNTIME[] = "hsprt";
+	static const char DEFAULT_DEBUG_RUNTIME[]   = "hsp3.exe";
+	// デフォルトのランタイム名を指定
+	if( !tmp[0] ) {
+		runtime = option.make || option.auto_make
+			? DEFAULT_RELEASE_RUNTIME : DEFAULT_DEBUG_RUNTIME;
+	} else {
+		runtime = &tmp[0];
+	}
+	print_message("#runtime '%s'\n", runtime.c_str());
+	print_message("#objname '%s'\n", option.objname);
+
 	if( option.make || option.auto_make || option.execute )
 	{
-		tmp.resize(MAX_PATH*2+1);
-		if( (result = cmp.hsc3_getruntime(&tmp[0], option.objname)) != 0 ) {
-			print_message("can't get runtime name!\n"); // 現状、常に正常処理になるので処理を通らない
-			UninstallAPIHook();
-			return -1;
-		}
-		static const char DEFAULT_RELEASE_RUNTIME[] = "hsprt";
-		static const char DEFAULT_DEBUG_RUNTIME[]   = "hsp3.exe";
-		// デフォルトのランタイム名を指定
-		if( !tmp[0] ) {
-			runtime = option.make || option.auto_make
-				? DEFAULT_RELEASE_RUNTIME : DEFAULT_DEBUG_RUNTIME;
-		} else {
-			runtime = &tmp[0];
-		}
-
 		// 実行ファイル名を指定
 		if( !option.exename ) {
 			basename(option.filename, exename, false);

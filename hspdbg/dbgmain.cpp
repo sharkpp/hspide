@@ -1,4 +1,5 @@
 #include <QTextCodec>
+#include <QStringList>
 #include <process.h>
 #include "dbgmain.h"
 #include <spplib/apihook.h>
@@ -192,7 +193,6 @@ int CDbgMain::typeinfo_hook::eventfunc(int event, int prm1, int prm2, void *prm3
 CDbgMain::CDbgMain()
 	: QCoreApplication(argc_, argv_)
 	, m_socket(new QLocalSocket(this))
-	, m_id(getenv("hspide#attach"))
 	, m_dbg(NULL)
 	, m_breaked(false)
 	, m_breakedLast(false)
@@ -207,8 +207,18 @@ CDbgMain::CDbgMain()
 	connect(m_socket, SIGNAL(disconnected()), this, SLOT(quit()));
 //	connect(m_socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 
+	// フォーマット↓
+	// {XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}.{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// サーバーGUID                           アイテムGUID
+
+	QStringList ideInfo = QString(getenv("hspide")).split(".");
+
+	m_id = (3 == ideInfo.size() ? ideInfo[2] : "");
+
 	// デバッガサーバーに接続
-	m_socket->connectToServer("test@hspide");
+	QString serverName = (3 == ideInfo.size() ? QString("hspide.%1").arg(ideInfo[1]) : "");
+	m_socket->connectToServer(serverName);
 
 	// 接続通知送信
 	connectToDebugger();

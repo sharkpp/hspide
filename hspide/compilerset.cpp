@@ -2,11 +2,12 @@
 #include <QDir>
 #include <QLocalSocket>
 #include <QProcessEnvironment>
+#include <QRegExp>
+#include "global.h"
 #include "compilerset.h"
 #include "compiler.h"
 #include "debugger.h"
 #include "workspaceitem.h"
-#include "documentpane.h"
 
 CCompilerSet::CCompilerSet(QObject *parent)
 	: QObject(parent)
@@ -22,6 +23,11 @@ CCompilerSet::CCompilerSet(QObject *parent)
 	connect(m_server, SIGNAL(newConnection()), this, SLOT(attachDebugger()));
 
 	setCompilerSlotNum(1);
+
+	// 設定の変更通史の登録と設定からの初期化処理
+	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
+	        this,  SLOT(updateConfiguration(const Configuration&)));
+	updateConfiguration(theConf);
 }
 
 // コンパイラスロット数を設定
@@ -57,8 +63,7 @@ CWorkSpaceItem* CCompilerSet::getTargetItem(const QString& id) const
 {
 	foreach(const ExecOptionType& opt, m_execItems)
 	{
-		if( QString("hspide.%1.%2").arg(m_server->serverName()).arg(opt.uuid.toString())
-				== id )
+		if( opt.uuid.toString() == id )
 		{
 			return opt.item;
 		}
@@ -221,16 +226,18 @@ bool CCompilerSet::execBuildDeliverables()
 			// デバッガとの通信用の識別子を登録
 			QProcessEnvironment env
 				= QProcessEnvironment::systemEnvironment();
-			env.insert("hspide.",
+			env.insert("hspide",
 			           m_server->serverName() + "." +
 			           opt.uuid.toString());
 			opt.process->setProcessEnvironment(env);
-			//
-			arguments.push_front("");
 		}
-		else
-		{
-			arguments.push_front("");
+		// 実行ファイルを登録
+		if( QFileInfo(opt.runtime).isAbsolute() ) {
+			arguments.push_front(opt.objname);
+			arguments.push_front(opt.runtime);
+		} else {
+			arguments.push_front(opt.objname);
+			arguments.push_front(QDir(m_hspPath).absoluteFilePath(opt.runtime));
 		}
 
 		// 処理完了時の通知を登録
@@ -249,6 +256,7 @@ bool CCompilerSet::execBuildDeliverables()
 		i.hasNext(); )
 	{
 		ExecProcesseInfo& execInfo = i.next();
+qDebug() << execInfo.first;
 		QStringList& arguments = execInfo.first;
 		QString      program   = arguments.front();
 		arguments.pop_front();
@@ -256,6 +264,11 @@ bool CCompilerSet::execBuildDeliverables()
 	}
 
 	return true;
+}
+
+void CCompilerSet::updateConfiguration(const Configuration& info)
+{
+	m_hspPath = QDir::toNativeSeparators(info.hspPath());
 }
 
 void CCompilerSet::compileStarted(const QUuid& uuid)
@@ -283,6 +296,8 @@ void CCompilerSet::compileSuccessful()
 						opt->item,
 						opt->debugMode,
 						QUuid::createUuid(),
+						opt->runtime,
+						opt->objname,
 					};
 				m_execItems.push_back(optExec);
 			}
@@ -329,8 +344,19 @@ void CCompilerSet::compileReadOutput(const QString& output)
 {
 	if( CCompiler* compiler = qobject_cast<CCompiler*>(sender()) )
 	{
-		if( const BuildOptionType* opt = searchBuildOption(compiler) ) {
+		int index = -1;
+		if( const BuildOptionType* opt = searchBuildOption(compiler, &index) )
+		{
 			emit buildOutput(opt->buildOrder, output);
+			// ランタイムを取得
+			QRegExp reRtm("#runtime\\s+'([^']+)'");
+			if( 0 <= reRtm.indexIn(output) ) {
+				m_buildingItems[index].runtime = reRtm.cap(1);
+			}
+			QRegExp reObj("#objname\\s+'([^']+)'");
+			if( 0 <= reObj.indexIn(output) ) {
+				m_buildingItems[index].objname = reObj.cap(1);
+			}
 		}
 	}
 }

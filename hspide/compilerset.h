@@ -28,15 +28,20 @@ class CCompilerSet
 		bool			buildAfterRun;
 		int				buildOrder;
 		QUuid			uuid;
+		QString			runtime;
+		QString			objname;
 	} BuildOptionType;
 
 	typedef struct {
 		CWorkSpaceItem*	item;
 		bool			debugMode;
 		QUuid			uuid;
+		QString			runtime;
+		QString			objname;
 		QProcess*		process;
 	} ExecOptionType;
 
+	QString					m_hspPath;
 	QLocalServer*			m_server;
 	QList<CCompiler*>		m_compilers;
 	QList<BuildOptionType>	m_buildItems;
@@ -85,6 +90,8 @@ protected:
 	const ExecOptionType* searchExecOption(QProcess* process, int* index = NULL) const;
 
 public slots:
+
+	void updateConfiguration(const Configuration& info);
 
 	void compileStarted(const QUuid& uuid);
 	void compileSuccessful();
