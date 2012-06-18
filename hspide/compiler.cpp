@@ -108,8 +108,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 
 		// 一時的なファイルに保存
 		tempSave = true;
-		filename = QDir::toNativeSeparators();
-		QString baseName = QDir(workDir).absoluteFilePath("hsptmp");
+		QString baseName = QDir::toNativeSeparators(QDir(workDir).absoluteFilePath("hsptmp"));
 		QTemporaryFile* tempFile = new QTemporaryFile(baseName, hspcmp);
 		tempFile->setAutoRemove(true);
 		if( !tempFile->open() )
