@@ -16,6 +16,7 @@
 
 class CWorkSpaceItem;
 class CDebugger;
+class QTemporaryFile;
 
 typedef QVector<QStringList> CSymbolsList;
 
@@ -35,6 +36,8 @@ class CCompiler
 	CWorkSpaceItem*	m_targetItem;
 	QProcess*		m_compiler;
 
+	QTemporaryFile*	m_objTemp;
+
 public:
 
 	CCompiler(QObject *parent = 0);
@@ -42,6 +45,7 @@ public:
 
 	const QUuid& uuid() const;
 
+	QTemporaryFile*	objTemp();
 
 	// ƒVƒ“ƒ{ƒ‹ˆê——‚ÌŽæ“¾
 	bool collectSymbols();

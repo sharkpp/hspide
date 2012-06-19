@@ -10,11 +10,12 @@
 CCompiler::CCompiler(QObject *parent)
 	: QObject(parent)
 	, m_uuid(QUuid::createUuid())
-	, m_targetItem(NULL)
-	, m_compiler(NULL)
 	, m_hspCompPath(QDir::toNativeSeparators("./"))
 	, m_hspPath(QDir::toNativeSeparators("./"))
 	, m_hspCommonPath(QDir::toNativeSeparators("./common/"))
+	, m_targetItem(NULL)
+	, m_compiler(NULL)
+	, m_objTemp(NULL)
 {
 	updateCompilerPath();
 
@@ -27,6 +28,11 @@ CCompiler::CCompiler(QObject *parent)
 const QUuid& CCompiler::uuid() const
 {
 	return m_uuid;
+}
+
+QTemporaryFile*	CCompiler::objTemp()
+{
+	return m_objTemp;
 }
 
 // シンボル一覧の取得
@@ -78,6 +84,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 	QUuid   uuid     = targetItem->uuid();
 
 	m_targetItem = targetItem;
+	m_objTemp = NULL;
 
 	// シグナル発報
 	emit compileStarted(uuid);
@@ -128,7 +135,13 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 		arguments << "-d";
 	}
 	if( tempSave ) { // 一時的なファイルに保存
-		arguments << "-o" << "obj"
+		QString baseName = QDir::toNativeSeparators(QDir(workDir).absoluteFilePath("obj"));
+		m_objTemp = new QTemporaryFile(baseName, parent());
+		m_objTemp->setAutoRemove(true);
+		if( !m_objTemp->open() )
+		{
+		}
+		arguments << "-o" << m_objTemp->fileName()
 		          << "-r" << QString("?%1").arg(targetItem->uuid().toString());
 	} else {
 		arguments << "-r" << QString("?%1").arg(targetItem->uuid().toString());

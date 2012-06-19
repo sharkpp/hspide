@@ -16,6 +16,7 @@
 class CWorkSpaceItem;
 class CDebugger;
 class CCompiler;
+class QTemporaryFile;
 
 class CCompilerSet
 	: public QObject
@@ -29,7 +30,8 @@ class CCompilerSet
 		int				buildOrder;
 		QUuid			uuid;
 		QString			runtime;
-		QString			objname;
+		QString			objName;
+		QTemporaryFile*	objTemp;
 	} BuildOptionType;
 
 	typedef struct {
@@ -37,7 +39,8 @@ class CCompilerSet
 		bool			debugMode;
 		QUuid			uuid;
 		QString			runtime;
-		QString			objname;
+		QString			objName;
+		QTemporaryFile*	objTemp;
 		QProcess*		process;
 	} ExecOptionType;
 

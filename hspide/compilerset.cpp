@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QLocalSocket>
 #include <QProcessEnvironment>
+#include <QTemporaryFile>
 #include <QRegExp>
 #include "global.h"
 #include "compilerset.h"
@@ -81,6 +82,9 @@ bool CCompilerSet::assignBuildItem(CCompiler* compiler)
 		m_buildingItems.push_back(opt);
 		if( !(result = compiler->compile(opt.item, opt.debugMode)) ) {
 			m_buildingItems.pop_back();
+		} else {
+			m_buildingItems.back().objTemp
+				 = compiler->objTemp();
 		}
 		m_buildItems.pop_front();
 	}
@@ -221,6 +225,9 @@ bool CCompilerSet::execBuildDeliverables()
 
 		opt.process = new QProcess(this);
 
+		// 親を置き換えてプロセスが動作しているときのみ存在するようにする
+		opt.objTemp->setParent(opt.process);
+
 		if( opt.debugMode )
 		{
 			// デバッガとの通信用の識別子を登録
@@ -233,10 +240,10 @@ bool CCompilerSet::execBuildDeliverables()
 		}
 		// 実行ファイルを登録
 		if( QFileInfo(opt.runtime).isAbsolute() ) {
-			arguments.push_front(opt.objname);
+			arguments.push_front(opt.objName);
 			arguments.push_front(opt.runtime);
 		} else {
-			arguments.push_front(opt.objname);
+			arguments.push_front(opt.objName);
 			arguments.push_front(QDir(m_hspPath).absoluteFilePath(opt.runtime));
 		}
 
@@ -297,7 +304,8 @@ void CCompilerSet::compileSuccessful()
 						opt->debugMode,
 						QUuid::createUuid(),
 						opt->runtime,
-						opt->objname,
+						opt->objName,
+						opt->objTemp,
 					};
 				m_execItems.push_back(optExec);
 			}
@@ -355,7 +363,7 @@ void CCompilerSet::compileReadOutput(const QString& output)
 			}
 			QRegExp reObj("#objname\\s+'([^']+)'");
 			if( 0 <= reObj.indexIn(output) ) {
-				m_buildingItems[index].objname = reObj.cap(1);
+				m_buildingItems[index].objName = reObj.cap(1);
 			}
 		}
 	}
@@ -374,6 +382,7 @@ void CCompilerSet::execError(QProcess::ProcessError)
 				emit debugFinished();
 			}
 		}
+		process->deleteLater();
 	}
 }
 
@@ -390,6 +399,7 @@ void CCompilerSet::execFinished(int exitCode, QProcess::ExitStatus exitStatus)
 				emit debugFinished();
 			}
 		}
+		process->deleteLater();
 	}
 }
 
