@@ -778,7 +778,11 @@ OutputDebugStringA("CDbgMain::disconnected\n");
 	m_quit = true;
 	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
 	BMSCR*  bmscr  = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
-	::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+	if( bmscr ) {
+		::PostMessage((HWND)bmscr->hwnd, WM_QUIT, 0, 0);
+	} else { // ウインドウなし
+		TerminateProcess(GetCurrentProcess(), 0);
+	}
 	::SetEvent(m_waitDisconnect);
 }
 

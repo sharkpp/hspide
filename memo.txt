@@ -170,3 +170,16 @@
 		HSPでの拡張
 		QApplication::winEventFilter(MSG*)
 
+.ランタイム
+	hsp3
+		問題なし
+	hsp3c
+		問題なし
+	hsp3cl
+		ウインドウが出てこない
+		デバッグの終了方法がTerminateProcess()
+	hsp3hg
+		アクセス違反で落ちる
+		※hgimg3の前にプラグインが読み込まれるから
+		　hgimg3.as の中で #regcmd 18 とかしているので先にプラグインを
+		　読み込むとソースコード上と実際とで番号が変わってしまうから
