@@ -54,6 +54,17 @@ public slots:
 	void onChangedMetricsFontBold(int);
 	void onChangedMetricsBgcolor();
 	void onChangedMetricsFgcolor();
+	void onKeyAsignPresetChanged(int);
+	void onKeyAsignPresetRemove();
+	void onKeyAsignPresetSave();
+	void onToolbarPresetChanged(int);
+	void onToolbarPresetSave();
+	void onToolbarPresetRemove();
+	void onToolbarAppendButton();
+	void onToolbarAppendSeparator();
+	void onToolbarRemoveButton();
+	void onToolbarButtonGoTop();
+	void onToolbarButtonGoBottom();
 
 private:
 

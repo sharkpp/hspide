@@ -1,5 +1,6 @@
 #include "configdialog.h"
 #include "hotkeywidget.h"
+#include "savepresetdialog.h"
 #include "global.h"
 #include <QtGui>
 
@@ -54,8 +55,10 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 			item2->setData(ui.stackedWidget->indexOf(ui.editorColorPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Tools")));
 		item->setData(ui.stackedWidget->indexOf(ui.toolsPage));
-	rootItem->appendRow(item = new QStandardItem(tr("Shortcut key")));
+	rootItem->appendRow(item = new QStandardItem(tr("Key assign")));
 		item->setData(ui.stackedWidget->indexOf(ui.keyAssignPage));
+	rootItem->appendRow(item = new QStandardItem(tr("Toolbar")));
+		item->setData(ui.stackedWidget->indexOf(ui.toolbarPage));
 	ui.category->expandAll();
 
 	QVector<QPair<Qt::GlobalColor, QString> > colorValues;
@@ -219,6 +222,13 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
+
+	ui.keyAssignPresetList->addItem(tr("Current setting"));
+	for(int i = 0; i < m_configuration.shortcutPresetNum(); i++)
+	{
+		ui.keyAssignPresetList->addItem(m_configuration.shortcutPresetName(i));
+	}
+	ui.keyAssignPresetList->setCurrentIndex(m_configuration.currentShortcutPreset() + 1);
 }
 
 const Configuration& CConfigDialog::configuration() const
@@ -402,4 +412,55 @@ void CConfigDialog::onChangedMetricsFgcolor()
 	}
 
 	onCurrentMetricsChanged();
+}
+
+void CConfigDialog::onKeyAsignPresetChanged(int)
+{
+}
+
+void CConfigDialog::onKeyAsignPresetRemove()
+{
+}
+
+void CConfigDialog::onKeyAsignPresetSave()
+{
+	CSavePresetDialog dlg(this);
+
+	bool currentPreset = 0 == ui.keyAssignPresetList->currentIndex();
+	dlg.setNewTitlePresent(currentPreset);
+	dlg.setNewTitle(currentPreset ? "" : ui.keyAssignPresetList->itemText(ui.keyAssignPresetList->currentIndex()));
+
+	if( QDialog::Accepted != dlg.exec() )
+	{
+		return;
+	}
+
+}
+
+void CConfigDialog::onToolbarPresetChanged(int)
+{
+}
+
+void CConfigDialog::onToolbarPresetSave()
+{
+}
+
+void CConfigDialog::onToolbarPresetRemove()
+{
+}
+
+void CConfigDialog::onToolbarAppendButton()
+{
+}
+void CConfigDialog::onToolbarAppendSeparator()
+{
+}
+void CConfigDialog::onToolbarRemoveButton()
+{
+}
+void CConfigDialog::onToolbarButtonGoTop()
+{
+}
+void CConfigDialog::onToolbarButtonGoBottom()
+{
 }

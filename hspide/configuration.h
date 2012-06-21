@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QAction>
 #include <QKeySequence>
+#include <QSettings>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -111,13 +112,25 @@ private:
 
 	QVector<ToolInfoType> m_tools;
 
-	ShortcutInfoType m_shortcutInfo[ShortcutNum];
+	typedef struct {
+		QString name;
+		QVector<ShortcutInfoType> shortcut;
+	} ShortcutPresetInfoType;
+
+	QVector<ShortcutPresetInfoType> m_shortcutInfo;
+
+	friend bool operator == (const Configuration::ShortcutPresetInfoType& lhs, const Configuration::ShortcutPresetInfoType& rhs);
 
 public:
 
 	Configuration();
 	Configuration(const Configuration& info);
 	Configuration& operator = (const Configuration& info);
+
+
+	bool load(const QSettings& settings);
+	bool save(QSettings& settings) const;
+
 
 	void setHspPath(const QString& path)
 		{ m_hspPath = path; }
@@ -173,12 +186,23 @@ public:
 		{ return m_colorMetrics[type]; }
 
 
+	int shortcutPresetNum() const
+		{ return m_shortcutInfo.size() - 1; }
+	const QString& shortcutPresetName(int index) const
+		{ return m_shortcutInfo[index+1].name; }
+	int currentShortcutPreset() const;
+	void setShortcut(int index, ShortcutEnum type, const ShortcutInfoType& info)
+		{ m_shortcutInfo[index+1].shortcut[type] = info; }
+	const ShortcutInfoType& shortcut(int index, ShortcutEnum type) const
+		{ return m_shortcutInfo[index+1].shortcut[type]; }
+	void applyShortcut(int index, ShortcutEnum type, QAction* action) const
+		{ action->setShortcut(m_shortcutInfo[index+1].shortcut[type].keys); }
 	void setShortcut(ShortcutEnum type, const ShortcutInfoType& info)
-		{ m_shortcutInfo[type] = info; }
+		{ setShortcut(-1, type, info); }
 	const ShortcutInfoType& shortcut(ShortcutEnum type) const
-		{ return m_shortcutInfo[type]; }
+		{ return shortcut(-1, type); }
 	void applyShortcut(ShortcutEnum type, QAction* action) const
-		{ action->setShortcut(m_shortcutInfo[type].keys); }
+		{ action->setShortcut(m_shortcutInfo[0].shortcut[type].keys); }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)
@@ -192,6 +216,11 @@ public:
 		{ return m_tools[index]; }
 	int toolCount() const
 		{ return m_tools.size(); }
+
+private:
+
+	static QStringList colorMetricsItemNames();
+	static QStringList shortcutItemNames();
 
 signals:
 
