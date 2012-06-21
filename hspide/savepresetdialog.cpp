@@ -39,3 +39,7 @@ void CSavePresetDialog::onOk()
 	accept();
 }
 
+void CSavePresetDialog::onEnablePresetNameUI(bool checked)
+{
+	ui.newTitle->setDisabled(!checked);
+}

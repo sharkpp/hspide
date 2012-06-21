@@ -28,6 +28,7 @@ protected:
 public slots:
 
 	void onOk();
+	void onEnablePresetNameUI(bool checked);
 
 private:
 
