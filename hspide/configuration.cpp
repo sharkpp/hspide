@@ -82,7 +82,7 @@ Configuration::Configuration()
 //	m_keyAssignInfo[0].keyAssign[ShortcutShowVarInfo].keys        = 
 	m_keyAssignInfo[1].keyAssign.resize(ShortcutNum);
 	m_keyAssignInfo[1] = m_keyAssignInfo[0];
-	m_keyAssignInfo[1].name = tr("HSPED like");
+	m_keyAssignInfo[1].name = tr("hsed3 like");
 }
 
 Configuration::Configuration(const Configuration& info)
