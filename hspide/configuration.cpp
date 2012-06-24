@@ -297,7 +297,7 @@ bool Configuration::save(QSettings& settings) const
 		else
 		{
 			QString key = QString("key-assign/%1/preset-name").arg(i - 1);
-			settings.setValue(key, m_shortcutInfo[i+1].name);
+			settings.setValue(key, m_shortcutInfo[i].name);
 		}
 
 		for(int j = 0; j < listShortcutItems.size(); j++)
@@ -327,4 +327,21 @@ int Configuration::currentShortcutPreset() const
 		}
 	}
 	return -1;
+}
+
+void Configuration::appendShortcutPreset(const QString& name, const QVector<ShortcutInfoType>& info)
+{
+	ShortcutPresetInfoType newInfo = {
+			name, info
+		};
+	m_shortcutInfo.append(newInfo);
+}
+
+void Configuration::removeShortcutPreset(int index)
+{
+	if( 0 <= index &&
+		index < m_shortcutInfo.size() )
+	{
+		m_shortcutInfo.remove(index);
+	}
 }

@@ -32,6 +32,7 @@ public:
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
 	, m_lastIndexOfColorMetrics(Configuration::ColorMetricsNum)
+	, m_blockUpdateShortcut(false)
 {
 	ui.setupUi(this);
 
@@ -172,63 +173,117 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	ui.editorColorList->resizeColumnToContents(ColorListFontBoldColumn);
 	ui.editorColorList->setCurrentItem(ui.editorColorList->topLevelItem(0));
 
-	QVector<QPair<Configuration::ShortcutEnum, QString> > scValues;
-	scValues	<< qMakePair(Configuration::ShortcutNew,               tr("New"))
-				<< qMakePair(Configuration::ShortcutOpen,              tr("Open"))
-				<< qMakePair(Configuration::ShortcutSave,              tr("Save"))
-				<< qMakePair(Configuration::ShortcutSaveAs,            tr("Save as"))
-				<< qMakePair(Configuration::ShortcutSaveAll,           tr("Save all"))
-				<< qMakePair(Configuration::ShortcutQuit,              tr("Quit"))
-				<< qMakePair(Configuration::ShortcutUndo,              tr("Undo"))
-				<< qMakePair(Configuration::ShortcutRedo,              tr("Redo"))
-				<< qMakePair(Configuration::ShortcutCut,               tr("Cut"))
-				<< qMakePair(Configuration::ShortcutCopy,              tr("Copy"))
-				<< qMakePair(Configuration::ShortcutPaste,             tr("Paste"))
-				<< qMakePair(Configuration::ShortcutClear,             tr("Clear"))
-				<< qMakePair(Configuration::ShortcutSelectAll,         tr("Select all"))
-				<< qMakePair(Configuration::ShortcutFind,              tr("Find"))
-				<< qMakePair(Configuration::ShortcutFindNext,          tr("Find next"))
-				<< qMakePair(Configuration::ShortcutFindPrev,          tr("Find previous"))
-				<< qMakePair(Configuration::ShortcutReplace,           tr("Replace"))
-				<< qMakePair(Configuration::ShortcutJump,              tr("Jump"))
-				<< qMakePair(Configuration::ShortcutBuildSolution,     tr("Build solution"))
-				<< qMakePair(Configuration::ShortcutBuildProject,      tr("Build project"))
-				<< qMakePair(Configuration::ShortcutCompileOnly,       tr("Compile only"))
-				<< qMakePair(Configuration::ShortcutBatchBuild,        tr("Batch build"))
-				<< qMakePair(Configuration::ShortcutDebugRunSolution,  tr("Debug run solution"))
-				<< qMakePair(Configuration::ShortcutNoDebugRunSolution,tr("No debug run solution"))
-				<< qMakePair(Configuration::ShortcutDebugRunProject,   tr("Debug run project"))
-				<< qMakePair(Configuration::ShortcutNoDebugRunProject, tr("No debug run project"))
-				<< qMakePair(Configuration::ShortcutDebugSuspend,      tr("Debug suspend"))
-				<< qMakePair(Configuration::ShortcutDebugResume,       tr("Debug resume"))
-				<< qMakePair(Configuration::ShortcutDebugStop,         tr("Debug stop"))
-				<< qMakePair(Configuration::ShortcutConfig,            tr("Configuration"))
-				<< qMakePair(Configuration::ShortcutShowProject,       tr("Show project"))
-				<< qMakePair(Configuration::ShortcutShowSymbol,        tr("Show symbols"))
-				<< qMakePair(Configuration::ShortcutShowOutput,        tr("Show output"))
-				<< qMakePair(Configuration::ShortcutShowSearch,        tr("Show search"))
-				<< qMakePair(Configuration::ShortcutShowMessage,       tr("Show messages"))
-				<< qMakePair(Configuration::ShortcutShowBreakPoint,    tr("Show breakpoints"))
-//				<< qMakePair(Configuration::ShortcutShowSysInfo,       tr("Show system variables"))
-//				<< qMakePair(Configuration::ShortcutShowVarInfo,       tr("Show variables"))
+	QStringList scValues;
+	scValues	<< tr("New")
+				<< tr("Open")
+				<< tr("Save")
+				<< tr("Save as")
+				<< tr("Save all")
+				<< tr("Quit")
+				<< tr("Undo")
+				<< tr("Redo")
+				<< tr("Cut")
+				<< tr("Copy")
+				<< tr("Paste")
+				<< tr("Clear")
+				<< tr("Select all")
+				<< tr("Find")
+				<< tr("Find next")
+				<< tr("Find previous")
+				<< tr("Replace")
+				<< tr("Jump")
+				<< tr("Build solution")
+				<< tr("Build project")
+				<< tr("Compile only")
+				<< tr("Batch build")
+				<< tr("Debug run solution")
+				<< tr("No debug run solution")
+				<< tr("Debug run project")
+				<< tr("No debug run project")
+				<< tr("Debug suspend")
+				<< tr("Debug resume")
+				<< tr("Debug stop")
+				<< tr("Configuration")
+				<< tr("Show project")
+				<< tr("Show symbols")
+				<< tr("Show output")
+				<< tr("Show search")
+				<< tr("Show messages")
+				<< tr("Show breakpoints")
+				<< tr("Show system variables")
+				<< tr("Show variables")
 				;
 	ui.keyAssignList->clear();
 	for(int i = 0; i < scValues.size(); i++)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(ui.keyAssignList);
-		const Configuration::ShortcutInfoType& sc = m_configuration.shortcut(scValues[i].first);
-		item->setText(KeyAssignListNameColumn,        scValues[i].second);
-		item->setData(KeyAssignListNameColumn,        Qt::UserRole + 1, int(scValues[i].first));
-		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
+		item->setText(KeyAssignListNameColumn, scValues[i]);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
+	updateShortcut(m_configuration.shortcut());
 
-	ui.keyAssignPresetList->addItem(tr("Current setting"));
-	for(int i = 0; i < m_configuration.shortcutPresetNum(); i++)
+	updateShortcutPresetList();
+}
+
+void CConfigDialog::updateShortcut(const QVector<Configuration::ShortcutInfoType>& shortcut)
+{
+	m_blockUpdateShortcut = true;
+	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
 	{
-		ui.keyAssignPresetList->addItem(m_configuration.shortcutPresetName(i));
+		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
+		const Configuration::ShortcutInfoType& sc = shortcut[i];
+		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
 	}
-	ui.keyAssignPresetList->setCurrentIndex(m_configuration.currentShortcutPreset() + 1);
+	m_blockUpdateShortcut = false;
+}
+
+void CConfigDialog::applyShortcut(QVector<Configuration::ShortcutInfoType>& shortcut)
+{
+	shortcut.resize(ui.keyAssignList->topLevelItemCount());
+	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
+	{
+		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
+		Configuration::ShortcutInfoType& sc = shortcut[i];
+		sc.keys = QKeySequence(item->data(KeyAssignListShortcutKeyColumn, Qt::DisplayRole).toString());
+	}
+}
+
+void CConfigDialog::updateShortcutPresetList()
+{
+	for(int i = ui.keyAssignPresetList->count();
+		i < 1 + m_configuration.shortcutPresetNum(); i++)
+	{
+		ui.keyAssignPresetList->addItem("");
+	}
+	for(int i = 1 + m_configuration.shortcutPresetNum();
+		i < ui.keyAssignPresetList->count(); i++)
+	{
+		ui.keyAssignPresetList->removeItem(ui.keyAssignPresetList->count() - 1);
+	}
+
+	// 選択が無ければ「現在の設定」を選択
+	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	if( curPreset < 0 ) {
+		ui.keyAssignPresetList->setCurrentIndex(0);
+		curPreset = -1;
+	}
+
+	// 変更をチェック
+	QVector<Configuration::ShortcutInfoType> shortcut;
+	applyShortcut(shortcut);
+	bool presetModified = shortcut != m_configuration.shortcut(curPreset);
+
+	ui.keyAssignPresetRemove->setDisabled(curPreset < 0 && !presetModified);
+
+	QString presetName = tr("Current setting");
+	for(int i = -1; i < m_configuration.shortcutPresetNum(); i++)
+	{
+		if( 0 <= i )
+		{
+			presetName = m_configuration.shortcutPresetName(i);
+		}
+		ui.keyAssignPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
+	}
 }
 
 const Configuration& CConfigDialog::configuration() const
@@ -248,15 +303,9 @@ void CConfigDialog::onOk()
 	m_configuration.setEditorFontName(ui.editorFont->currentFont().family());
 	m_configuration.setEditorFontSize(ui.editorFontSize->value());
 
-	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
-	{
-		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
-		Configuration::ShortcutEnum type
-			= Configuration::ShortcutEnum(item->data(KeyAssignListNameColumn, Qt::UserRole+1).toInt());
-		Configuration::ShortcutInfoType sc = m_configuration.shortcut(type);
-		sc.keys = QKeySequence((item->data(KeyAssignListShortcutKeyColumn, Qt::DisplayRole).toString()));
-		m_configuration.setShortcut(type, sc);
-	}
+	QVector<Configuration::ShortcutInfoType> shortcut;
+	applyShortcut(shortcut);
+	m_configuration.setShortcut(shortcut);
 
 	accept();
 }
@@ -267,6 +316,16 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 	               item = item->child(index.row(), 0);
 	if( item->data().isValid() )
 	{
+		//// 未保存のデータを保存
+		//if( ui.keyAssignPage == ui.stackedWidget->widget(ui.stackedWidget->currentIndex()) )
+		//{
+		//	QVector<Configuration::ShortcutInfoType> shortcut;
+		//	applyShortcut(shortcut);
+		//	m_configuration.setShortcut(
+		//		ui.keyAssignPresetList->currentIndex() - 1,
+		//		shortcut);
+		//}
+		// ページ切り替え
 		ui.stackedWidget->setCurrentIndex(item->data().toInt());
 	}
 	else
@@ -414,30 +473,110 @@ void CConfigDialog::onChangedMetricsFgcolor()
 	onCurrentMetricsChanged();
 }
 
-void CConfigDialog::onKeyAsignPresetChanged(int)
+void CConfigDialog::onKeyAsignPresetChanged(int index)
 {
+	updateShortcut(m_configuration.shortcut(index - 1));
+	updateShortcutPresetList();
 }
 
 void CConfigDialog::onKeyAsignPresetRemove()
 {
+	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+
+	if( curPreset < 0 )
+	{
+		updateShortcut(m_configuration.shortcut());
+	}
+	else
+	{
+		m_configuration.removeShortcutPreset(curPreset);
+	}
+
+	updateShortcutPresetList();
+}
+
+void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
+{
+	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+
+	if( KeyAssignListShortcutKeyColumn != column ||
+		curPreset < -1 ||
+		m_blockUpdateShortcut )
+	{
+		return;
+	}
+
+	const QVector<Configuration::ShortcutInfoType>& shortcutBase = m_configuration.shortcut(curPreset);
+	QVector<Configuration::ShortcutInfoType> shortcut;
+	applyShortcut(shortcut);
+
+	// プリセットに変更が加えられたら「現在の設定」と置き換える
+	ui.keyAssignPresetList->setCurrentIndex(0);
+
+	updateShortcut(shortcut);
+
+	updateShortcutPresetList();
 }
 
 void CConfigDialog::onKeyAsignPresetSave()
 {
 	CSavePresetDialog dlg(this);
 
-	bool currentPreset = 0 == ui.keyAssignPresetList->currentIndex();
-	dlg.setNewTitlePresent(currentPreset);
-	dlg.setNewTitle(currentPreset ? "" : ui.keyAssignPresetList->itemText(ui.keyAssignPresetList->currentIndex()));
+	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	bool presetCurrent = curPreset < 0;
+	dlg.setNewTitlePresent(presetCurrent);
+	dlg.setNewTitle(presetCurrent ? "" : m_configuration.shortcutPresetName(curPreset));
 
 	if( QDialog::Accepted != dlg.exec() )
 	{
 		return;
 	}
 
+	int newSelectPreset = -1;
+
+	//if( presetCurrent )
+	//{
+	//	if( dlg.newTitlePresent() )
+	//	{
+	//		// プリセットを新たに追加
+	//		QVector<Configuration::ShortcutInfoType> shortcut;
+	//		applyShortcut(shortcut);
+	//		m_configuration.appendShortcutPreset(dlg.newTitle(), shortcut);
+	//		newSelectPreset = m_configuration.shortcutPresetNum();
+	//	}
+	//	else
+	//	{
+	//		return;
+	//	}
+	//}
+	//else
+	//{
+		if( dlg.newTitlePresent() )
+		{
+			// 別名でプリセットを追加
+			QVector<Configuration::ShortcutInfoType> shortcut;
+			applyShortcut(shortcut);
+			m_configuration.appendShortcutPreset(dlg.newTitle(), shortcut);
+			newSelectPreset = m_configuration.shortcutPresetNum();
+		}
+		else
+		{
+			// 上書き保存
+			QVector<Configuration::ShortcutInfoType> shortcut;
+			applyShortcut(shortcut);
+			m_configuration.setShortcut(
+				ui.keyAssignPresetList->currentIndex() - 1,
+				shortcut);
+			newSelectPreset = ui.keyAssignPresetList->currentIndex();
+		}
+	//}
+
+	updateShortcutPresetList();
+	// 追加したプリセットに変更
+	ui.keyAssignPresetList->setCurrentIndex(newSelectPreset);
 }
 
-void CConfigDialog::onToolbarPresetChanged(int)
+void CConfigDialog::onToolbarPresetChanged(int index)
 {
 }
 

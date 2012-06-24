@@ -131,9 +131,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>newTitle</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>SavePresetDialog</receiver>
+   <slot>onChangedPresetName(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>257</x>
+     <y>1</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onEnablePresetNameUI(bool)</slot>
   <slot>onOk()</slot>
+  <slot>onChangedPresetName(QString)</slot>
  </slots>
 </ui>

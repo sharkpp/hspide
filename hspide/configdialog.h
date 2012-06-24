@@ -28,9 +28,12 @@ class CConfigDialog
 	Ui::ConfigDialog ui;
 
 	Configuration m_configuration;
+	QVector<Configuration::ShortcutInfoType> m_currentShortcut;
 
 	Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
 	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
+
+	bool m_blockUpdateShortcut;
 
 public:
 
@@ -41,6 +44,10 @@ public:
 protected:
 
 	void setConfiguration(const Configuration& info);
+
+	void updateShortcut(const QVector<Configuration::ShortcutInfoType>& shortcut);
+	void applyShortcut(QVector<Configuration::ShortcutInfoType>& shortcut);
+	void updateShortcutPresetList();
 
 public slots:
 
@@ -54,6 +61,7 @@ public slots:
 	void onChangedMetricsFontBold(int);
 	void onChangedMetricsBgcolor();
 	void onChangedMetricsFgcolor();
+	void onKeyAssignChanged(QTreeWidgetItem * item, int column);
 	void onKeyAsignPresetChanged(int);
 	void onKeyAsignPresetRemove();
 	void onKeyAsignPresetSave();

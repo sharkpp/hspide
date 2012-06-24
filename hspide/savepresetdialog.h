@@ -29,6 +29,7 @@ public slots:
 
 	void onOk();
 	void onEnablePresetNameUI(bool checked);
+	void onChangedPresetName(const QString& text);
 
 private:
 

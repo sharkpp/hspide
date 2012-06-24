@@ -164,15 +164,18 @@ public:
 	const QString& editorLineNumberFontName() const
 		{ return m_editorLineNumberFontName; }
 
+
 	void setEditorLineNumberFontSize(int size)
 		{ m_editorLineNumberFontSize = size; }
 	int editorLineNumberFontSize() const
 		{ return m_editorLineNumberFontSize; }
 
+
 	void setEditorFontName(const QString& fontName)
 		{ m_editorFontName = fontName; }
 	const QString& editorFontName() const
 		{ return m_editorFontName; }
+
 
 	void setEditorFontSize(int size)
 		{ m_editorFontSize = size; }
@@ -191,14 +194,23 @@ public:
 	const QString& shortcutPresetName(int index) const
 		{ return m_shortcutInfo[index+1].name; }
 	int currentShortcutPreset() const;
+	void appendShortcutPreset(const QString& name, const QVector<ShortcutInfoType>& info);
+	void removeShortcutPreset(int index);
+
 	void setShortcut(int index, ShortcutEnum type, const ShortcutInfoType& info)
 		{ m_shortcutInfo[index+1].shortcut[type] = info; }
+	void setShortcut(int index, const QVector<ShortcutInfoType>& info)
+		{ m_shortcutInfo[index+1].shortcut = info; }
+	const QVector<ShortcutInfoType>& shortcut(int index) const
+		{ return m_shortcutInfo[index+1].shortcut; }
 	const ShortcutInfoType& shortcut(int index, ShortcutEnum type) const
 		{ return m_shortcutInfo[index+1].shortcut[type]; }
-	void applyShortcut(int index, ShortcutEnum type, QAction* action) const
-		{ action->setShortcut(m_shortcutInfo[index+1].shortcut[type].keys); }
 	void setShortcut(ShortcutEnum type, const ShortcutInfoType& info)
 		{ setShortcut(-1, type, info); }
+	void setShortcut(const QVector<ShortcutInfoType>& info)
+		{ setShortcut(-1, info); }
+	const QVector<ShortcutInfoType>& shortcut() const
+		{ return shortcut(-1); }
 	const ShortcutInfoType& shortcut(ShortcutEnum type) const
 		{ return shortcut(-1, type); }
 	void applyShortcut(ShortcutEnum type, QAction* action) const
@@ -209,6 +221,7 @@ public:
 		{ m_tools = info; }
 	const QVector<ToolInfoType>& toolInfo() const
 		{ return m_tools; }
+
 
 	void setToolInfo(int index, const ToolInfoType& info)
 		{ m_tools[index] = info; }
@@ -227,3 +240,5 @@ signals:
 	void updateConfiguration(const Configuration& info);
 
 };
+
+bool operator == (const Configuration::ShortcutInfoType& lhs, const Configuration::ShortcutInfoType& rhs);

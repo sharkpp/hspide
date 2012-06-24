@@ -41,7 +41,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>5</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1412,8 +1412,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onClickedInstallDirectoryRef()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>520</x>
-     <y>87</y>
+     <x>265</x>
+     <y>54</y>
     </hint>
     <hint type="destinationlabel">
      <x>498</x>
@@ -1428,8 +1428,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onClickedCommonDirectoryRef()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>518</x>
-     <y>123</y>
+     <x>265</x>
+     <y>54</y>
     </hint>
     <hint type="destinationlabel">
      <x>495</x>
@@ -1444,8 +1444,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onCurrentMetricsChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>396</x>
-     <y>174</y>
+     <x>265</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>496</x>
@@ -1460,8 +1460,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>460</x>
-     <y>176</y>
+     <x>265</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1476,8 +1476,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsEnable(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>177</x>
-     <y>237</y>
+     <x>265</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1492,8 +1492,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsFontBold(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>238</x>
-     <y>237</y>
+     <x>265</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1677,6 +1677,22 @@ color: rgb(255, 255, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>keyAssignList</sender>
+   <signal>itemChanged(QTreeWidgetItem*,int)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>330</x>
+     <y>208</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>363</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
@@ -1698,5 +1714,6 @@ color: rgb(255, 255, 255);</string>
   <slot>onToolbarRemoveButton()</slot>
   <slot>onToolbarButtonGoTop()</slot>
   <slot>onToolbarButtonGoBottom()</slot>
+  <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
  </slots>
 </ui>
