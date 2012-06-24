@@ -1,14 +1,14 @@
 #include "configuration.h"
 #include <QtGui>
 
-bool operator == (const Configuration::ShortcutInfoType& lhs, const Configuration::ShortcutInfoType& rhs)
+bool operator == (const Configuration::KeyAssignInfoType& lhs, const Configuration::KeyAssignInfoType& rhs)
 {
 	return lhs.keys == rhs.keys;
 }
 
-bool operator == (const Configuration::ShortcutPresetInfoType& lhs, const Configuration::ShortcutPresetInfoType& rhs)
+bool operator == (const Configuration::KeyAssignPresetInfoType& lhs, const Configuration::KeyAssignPresetInfoType& rhs)
 {
-	return lhs.name == rhs.name && lhs.shortcut == rhs.shortcut;
+	return lhs.name == rhs.name && lhs.keyAssign == rhs.keyAssign;
 }
 
 Configuration::Configuration()
@@ -40,49 +40,49 @@ Configuration::Configuration()
 	m_colorMetrics[EofMetrics].foregroundColor          = Qt::white;
 	m_colorMetrics[EofMetrics].backgroundColor          = Qt::black;
 
-	m_shortcutInfo.resize(2);
-	m_shortcutInfo[0].shortcut.resize(ShortcutNum);
-	m_shortcutInfo[0].shortcut[ShortcutNew].keys                = QKeySequence::New;
-	m_shortcutInfo[0].shortcut[ShortcutOpen].keys               = QKeySequence::Open;
-	m_shortcutInfo[0].shortcut[ShortcutSave].keys               = QKeySequence::Save;
-	m_shortcutInfo[0].shortcut[ShortcutSaveAs].keys             = QKeySequence::SaveAs;
-//	m_shortcutInfo[0].shortcut[ShortcutSaveAll].keys            = 
-	m_shortcutInfo[0].shortcut[ShortcutQuit].keys               = QKeySequence::Quit;
-	m_shortcutInfo[0].shortcut[ShortcutUndo].keys               = QKeySequence::Undo;
-	m_shortcutInfo[0].shortcut[ShortcutRedo].keys               = QKeySequence::Redo;
-	m_shortcutInfo[0].shortcut[ShortcutCut].keys                = QKeySequence::Cut;
-	m_shortcutInfo[0].shortcut[ShortcutCopy].keys               = QKeySequence::Copy;
-	m_shortcutInfo[0].shortcut[ShortcutPaste].keys              = QKeySequence::Paste;
-	m_shortcutInfo[0].shortcut[ShortcutClear].keys              = QKeySequence::Delete;
-	m_shortcutInfo[0].shortcut[ShortcutSelectAll].keys          = QKeySequence::SelectAll;
-	m_shortcutInfo[0].shortcut[ShortcutFind].keys               = QKeySequence::Find;
-	m_shortcutInfo[0].shortcut[ShortcutFindNext].keys           = QKeySequence::FindNext;
-	m_shortcutInfo[0].shortcut[ShortcutFindPrev].keys           = QKeySequence::FindPrevious;
-	m_shortcutInfo[0].shortcut[ShortcutReplace].keys            = QKeySequence::Replace;
-	m_shortcutInfo[0].shortcut[ShortcutJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
-	m_shortcutInfo[0].shortcut[ShortcutBuildSolution].keys      = QKeySequence(Qt::Key_F7);
-	m_shortcutInfo[0].shortcut[ShortcutBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
-//	m_shortcutInfo[0].shortcut[ShortcutCompileOnly].keys        = 
-//	m_shortcutInfo[0].shortcut[ShortcutBatchBuild].keys         = 
-	m_shortcutInfo[0].shortcut[ShortcutDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
-	m_shortcutInfo[0].shortcut[ShortcutNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
-	m_shortcutInfo[0].shortcut[ShortcutDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
-//	m_shortcutInfo[0].shortcut[ShortcutNoDebugRunProject].keys  = 
-	m_shortcutInfo[0].shortcut[ShortcutDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
-	m_shortcutInfo[0].shortcut[ShortcutDebugResume].keys        = QKeySequence(Qt::Key_F5);
-	m_shortcutInfo[0].shortcut[ShortcutDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
-	m_shortcutInfo[0].shortcut[ShortcutConfig].keys             = QKeySequence::Preferences;
-	m_shortcutInfo[0].shortcut[ShortcutShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
-	m_shortcutInfo[0].shortcut[ShortcutShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
-	m_shortcutInfo[0].shortcut[ShortcutShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
-	m_shortcutInfo[0].shortcut[ShortcutShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
-	m_shortcutInfo[0].shortcut[ShortcutShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
-	m_shortcutInfo[0].shortcut[ShortcutShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
-//	m_shortcutInfo[0].shortcut[ShortcutShowSysInfo].keys        = 
-//	m_shortcutInfo[0].shortcut[ShortcutShowVarInfo].keys        = 
-	m_shortcutInfo[1].shortcut.resize(ShortcutNum);
-	m_shortcutInfo[1] = m_shortcutInfo[0];
-	m_shortcutInfo[1].name = tr("HSPED like");
+	m_keyAssignInfo.resize(2);
+	m_keyAssignInfo[0].keyAssign.resize(ShortcutNum);
+	m_keyAssignInfo[0].keyAssign[ShortcutNew].keys                = QKeySequence::New;
+	m_keyAssignInfo[0].keyAssign[ShortcutOpen].keys               = QKeySequence::Open;
+	m_keyAssignInfo[0].keyAssign[ShortcutSave].keys               = QKeySequence::Save;
+	m_keyAssignInfo[0].keyAssign[ShortcutSaveAs].keys             = QKeySequence::SaveAs;
+//	m_keyAssignInfo[0].keyAssign[ShortcutSaveAll].keys            = 
+	m_keyAssignInfo[0].keyAssign[ShortcutQuit].keys               = QKeySequence::Quit;
+	m_keyAssignInfo[0].keyAssign[ShortcutUndo].keys               = QKeySequence::Undo;
+	m_keyAssignInfo[0].keyAssign[ShortcutRedo].keys               = QKeySequence::Redo;
+	m_keyAssignInfo[0].keyAssign[ShortcutCut].keys                = QKeySequence::Cut;
+	m_keyAssignInfo[0].keyAssign[ShortcutCopy].keys               = QKeySequence::Copy;
+	m_keyAssignInfo[0].keyAssign[ShortcutPaste].keys              = QKeySequence::Paste;
+	m_keyAssignInfo[0].keyAssign[ShortcutClear].keys              = QKeySequence::Delete;
+	m_keyAssignInfo[0].keyAssign[ShortcutSelectAll].keys          = QKeySequence::SelectAll;
+	m_keyAssignInfo[0].keyAssign[ShortcutFind].keys               = QKeySequence::Find;
+	m_keyAssignInfo[0].keyAssign[ShortcutFindNext].keys           = QKeySequence::FindNext;
+	m_keyAssignInfo[0].keyAssign[ShortcutFindPrev].keys           = QKeySequence::FindPrevious;
+	m_keyAssignInfo[0].keyAssign[ShortcutReplace].keys            = QKeySequence::Replace;
+	m_keyAssignInfo[0].keyAssign[ShortcutJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
+	m_keyAssignInfo[0].keyAssign[ShortcutBuildSolution].keys      = QKeySequence(Qt::Key_F7);
+	m_keyAssignInfo[0].keyAssign[ShortcutBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
+//	m_keyAssignInfo[0].keyAssign[ShortcutCompileOnly].keys        = 
+//	m_keyAssignInfo[0].keyAssign[ShortcutBatchBuild].keys         = 
+	m_keyAssignInfo[0].keyAssign[ShortcutDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ShortcutNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ShortcutDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
+//	m_keyAssignInfo[0].keyAssign[ShortcutNoDebugRunProject].keys  = 
+	m_keyAssignInfo[0].keyAssign[ShortcutDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
+	m_keyAssignInfo[0].keyAssign[ShortcutDebugResume].keys        = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ShortcutDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ShortcutConfig].keys             = QKeySequence::Preferences;
+	m_keyAssignInfo[0].keyAssign[ShortcutShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
+	m_keyAssignInfo[0].keyAssign[ShortcutShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
+	m_keyAssignInfo[0].keyAssign[ShortcutShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
+	m_keyAssignInfo[0].keyAssign[ShortcutShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
+	m_keyAssignInfo[0].keyAssign[ShortcutShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+	m_keyAssignInfo[0].keyAssign[ShortcutShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
+//	m_keyAssignInfo[0].keyAssign[ShortcutShowSysInfo].keys        = 
+//	m_keyAssignInfo[0].keyAssign[ShortcutShowVarInfo].keys        = 
+	m_keyAssignInfo[1].keyAssign.resize(ShortcutNum);
+	m_keyAssignInfo[1] = m_keyAssignInfo[0];
+	m_keyAssignInfo[1].name = tr("HSPED like");
 }
 
 Configuration::Configuration(const Configuration& info)
@@ -108,7 +108,7 @@ Configuration& Configuration::operator = (const Configuration& info)
 		m_colorMetrics[i] = info.m_colorMetrics[i];
 	}
 
-	m_shortcutInfo  = info.m_shortcutInfo;
+	m_keyAssignInfo  = info.m_keyAssignInfo;
 
 	m_tools = info.m_tools;
 
@@ -136,7 +136,7 @@ QStringList Configuration::colorMetricsItemNames()
 	return listItems;
 }
 
-QStringList Configuration::shortcutItemNames()
+QStringList Configuration::keyAssignItemNames()
 {
 	QStringList listItems;
 	listItems	<< "new"
@@ -213,15 +213,15 @@ bool Configuration::load(const QSettings& settings)
 	}
 
 	// キー割り当て
-	QVector<ShortcutPresetInfoType> oldShortcutInfo = m_shortcutInfo;
-	QStringList listShortcutItems = shortcutItemNames();
+	QVector<KeyAssignPresetInfoType> oldKeyAssignInfo = m_keyAssignInfo;
+	QStringList listKeyAssignItems = keyAssignItemNames();
 	for(int i = 0, presetNum = 0; i < 1 + presetNum; i++)
 	{
 		QString presetTitle;
 		if( 0 == i )
 		{
 			presetNum = settings.value("key-assign/preset-num", 0).toInt();
-			m_shortcutInfo.resize(1 + presetNum);
+			m_keyAssignInfo.resize(1 + presetNum);
 		}
 		else
 		{
@@ -229,23 +229,23 @@ bool Configuration::load(const QSettings& settings)
 			presetTitle = settings.value(key, tr("untitled")).toString();
 		}
 
-		m_shortcutInfo[i].name = presetTitle;
-		m_shortcutInfo[i].shortcut.resize(ShortcutNum);
+		m_keyAssignInfo[i].name = presetTitle;
+		m_keyAssignInfo[i].keyAssign.resize(ShortcutNum);
 
-		for(int j = 0; j < listShortcutItems.size(); j++)
+		for(int j = 0; j < listKeyAssignItems.size(); j++)
 		{
 			QString key = 0 == i
 							? QString("key-assign/%1")
-								.arg(listShortcutItems.at(j))
+								.arg(listKeyAssignItems.at(j))
 							: QString("key-assign/%1/%2")
 								.arg(i - 1)
-								.arg(listShortcutItems.at(j));
-			QString value = i < oldShortcutInfo.size()
-								? oldShortcutInfo[i].shortcut[j].keys.toString()
+								.arg(listKeyAssignItems.at(j));
+			QString value = i < oldKeyAssignInfo.size()
+								? oldKeyAssignInfo[i].keyAssign[j].keys.toString()
 								: "";
-			ShortcutInfoType info;
+			KeyAssignInfoType info;
 			info.keys = QKeySequence(settings.value(key, value).toString());
-			setShortcut(i - 1, Configuration::ShortcutEnum(j), info);
+			setKeyAssign(i - 1, Configuration::ShortcutEnum(j), info);
 		}
 	}
 
@@ -285,8 +285,8 @@ bool Configuration::save(QSettings& settings) const
 	}
 
 	// キー割り当て
-	QStringList listShortcutItems = shortcutItemNames();
-	for(int i = 0, presetNum = m_shortcutInfo.size() - 1;
+	QStringList listKeyAssignItems = keyAssignItemNames();
+	for(int i = 0, presetNum = m_keyAssignInfo.size() - 1;
 		i < 1 + presetNum; i++)
 	{
 		QString presetTitle;
@@ -297,18 +297,18 @@ bool Configuration::save(QSettings& settings) const
 		else
 		{
 			QString key = QString("key-assign/%1/preset-name").arg(i - 1);
-			settings.setValue(key, m_shortcutInfo[i].name);
+			settings.setValue(key, m_keyAssignInfo[i].name);
 		}
 
-		for(int j = 0; j < listShortcutItems.size(); j++)
+		for(int j = 0; j < listKeyAssignItems.size(); j++)
 		{
-			const Configuration::ShortcutInfoType& info = m_shortcutInfo[i].shortcut[j];
+			const Configuration::KeyAssignInfoType& info = m_keyAssignInfo[i].keyAssign[j];
 			QString key = 0 == i
 							? QString("key-assign/%1")
-								.arg(listShortcutItems.at(j))
+								.arg(listKeyAssignItems.at(j))
 							: QString("key-assign/%1/%2")
 								.arg(i - 1)
-								.arg(listShortcutItems.at(j));
+								.arg(listKeyAssignItems.at(j));
 			settings.setValue(key, info.keys.toString());
 		}
 	}
@@ -316,12 +316,12 @@ bool Configuration::save(QSettings& settings) const
 	return true;
 }
 
-int Configuration::currentShortcutPreset() const
+int Configuration::currentKeyAssignPreset() const
 {
-	for(int i = 1, presetNum = m_shortcutInfo.size() - 1;
+	for(int i = 1, presetNum = m_keyAssignInfo.size() - 1;
 		i < presetNum; i++)
 	{
-		if( m_shortcutInfo[0] == m_shortcutInfo[i] ) 
+		if( m_keyAssignInfo[0] == m_keyAssignInfo[i] ) 
 		{
 			return i - 1;
 		}
@@ -329,19 +329,19 @@ int Configuration::currentShortcutPreset() const
 	return -1;
 }
 
-void Configuration::appendShortcutPreset(const QString& name, const QVector<ShortcutInfoType>& info)
+void Configuration::appendKeyAssignPreset(const QString& name, const QVector<KeyAssignInfoType>& info)
 {
-	ShortcutPresetInfoType newInfo = {
+	KeyAssignPresetInfoType newInfo = {
 			name, info
 		};
-	m_shortcutInfo.append(newInfo);
+	m_keyAssignInfo.append(newInfo);
 }
 
-void Configuration::removeShortcutPreset(int index)
+void Configuration::removeKeyAssignPreset(int index)
 {
 	if( 0 <= index &&
-		index < m_shortcutInfo.size() )
+		index < m_keyAssignInfo.size() )
 	{
-		m_shortcutInfo.remove(index);
+		m_keyAssignInfo.remove(index);
 	}
 }

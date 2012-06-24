@@ -32,7 +32,10 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Line number(&amp;L):</string>
+      <string>&amp;Line number:</string>
+     </property>
+     <property name="buddy">
+      <cstring>lineNumber</cstring>
      </property>
     </widget>
    </item>

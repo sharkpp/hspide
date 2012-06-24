@@ -39,7 +39,7 @@
    <item>
     <widget class="QCheckBox" name="newTitlePresent">
      <property name="text">
-      <string>Save as...</string>
+      <string>&amp;Save as...</string>
      </property>
     </widget>
    </item>
@@ -48,7 +48,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Name:</string>
+        <string>&amp;Name:</string>
        </property>
        <property name="buddy">
         <cstring>newTitle</cstring>

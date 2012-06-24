@@ -82,7 +82,7 @@ public:
 
 	typedef struct {
 		QKeySequence keys;
-	} ShortcutInfoType;
+	} KeyAssignInfoType;
 
 	typedef struct {
 		bool    enable;
@@ -114,12 +114,12 @@ private:
 
 	typedef struct {
 		QString name;
-		QVector<ShortcutInfoType> shortcut;
-	} ShortcutPresetInfoType;
+		QVector<KeyAssignInfoType> keyAssign;
+	} KeyAssignPresetInfoType;
 
-	QVector<ShortcutPresetInfoType> m_shortcutInfo;
+	QVector<KeyAssignPresetInfoType> m_keyAssignInfo;
 
-	friend bool operator == (const Configuration::ShortcutPresetInfoType& lhs, const Configuration::ShortcutPresetInfoType& rhs);
+	friend bool operator == (const Configuration::KeyAssignPresetInfoType& lhs, const Configuration::KeyAssignPresetInfoType& rhs);
 
 public:
 
@@ -189,32 +189,32 @@ public:
 		{ return m_colorMetrics[type]; }
 
 
-	int shortcutPresetNum() const
-		{ return m_shortcutInfo.size() - 1; }
-	const QString& shortcutPresetName(int index) const
-		{ return m_shortcutInfo[index+1].name; }
-	int currentShortcutPreset() const;
-	void appendShortcutPreset(const QString& name, const QVector<ShortcutInfoType>& info);
-	void removeShortcutPreset(int index);
+	int keyAssignPresetNum() const
+		{ return m_keyAssignInfo.size() - 1; }
+	const QString& keyAssignPresetName(int index) const
+		{ return m_keyAssignInfo[index+1].name; }
+	int currentKeyAssignPreset() const;
+	void appendKeyAssignPreset(const QString& name, const QVector<KeyAssignInfoType>& info);
+	void removeKeyAssignPreset(int index);
 
-	void setShortcut(int index, ShortcutEnum type, const ShortcutInfoType& info)
-		{ m_shortcutInfo[index+1].shortcut[type] = info; }
-	void setShortcut(int index, const QVector<ShortcutInfoType>& info)
-		{ m_shortcutInfo[index+1].shortcut = info; }
-	const QVector<ShortcutInfoType>& shortcut(int index) const
-		{ return m_shortcutInfo[index+1].shortcut; }
-	const ShortcutInfoType& shortcut(int index, ShortcutEnum type) const
-		{ return m_shortcutInfo[index+1].shortcut[type]; }
-	void setShortcut(ShortcutEnum type, const ShortcutInfoType& info)
-		{ setShortcut(-1, type, info); }
-	void setShortcut(const QVector<ShortcutInfoType>& info)
-		{ setShortcut(-1, info); }
-	const QVector<ShortcutInfoType>& shortcut() const
-		{ return shortcut(-1); }
-	const ShortcutInfoType& shortcut(ShortcutEnum type) const
-		{ return shortcut(-1, type); }
+	void setKeyAssign(int index, ShortcutEnum type, const KeyAssignInfoType& info)
+		{ m_keyAssignInfo[index+1].keyAssign[type] = info; }
+	void setKeyAssign(int index, const QVector<KeyAssignInfoType>& info)
+		{ m_keyAssignInfo[index+1].keyAssign = info; }
+	const QVector<KeyAssignInfoType>& keyAssign(int index) const
+		{ return m_keyAssignInfo[index+1].keyAssign; }
+	const KeyAssignInfoType& keyAssign(int index, ShortcutEnum type) const
+		{ return m_keyAssignInfo[index+1].keyAssign[type]; }
+	void setKeyAssign(ShortcutEnum type, const KeyAssignInfoType& info)
+		{ setKeyAssign(-1, type, info); }
+	void setKeyAssign(const QVector<KeyAssignInfoType>& info)
+		{ setKeyAssign(-1, info); }
+	const QVector<KeyAssignInfoType>& keyAssign() const
+		{ return keyAssign(-1); }
+	const KeyAssignInfoType& keyAssign(ShortcutEnum type) const
+		{ return keyAssign(-1, type); }
 	void applyShortcut(ShortcutEnum type, QAction* action) const
-		{ action->setShortcut(m_shortcutInfo[0].shortcut[type].keys); }
+		{ action->setShortcut(m_keyAssignInfo[0].keyAssign[type].keys); }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)
@@ -233,7 +233,7 @@ public:
 private:
 
 	static QStringList colorMetricsItemNames();
-	static QStringList shortcutItemNames();
+	static QStringList keyAssignItemNames();
 
 signals:
 
@@ -241,4 +241,4 @@ signals:
 
 };
 
-bool operator == (const Configuration::ShortcutInfoType& lhs, const Configuration::ShortcutInfoType& rhs);
+bool operator == (const Configuration::KeyAssignInfoType& lhs, const Configuration::KeyAssignInfoType& rhs);

@@ -41,7 +41,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -96,7 +96,7 @@ color: rgb(255, 255, 255);</string>
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Install directory</string>
+               <string>&amp;Install directory</string>
               </property>
               <property name="buddy">
                <cstring>installDirectoryPath</cstring>
@@ -145,7 +145,7 @@ color: rgb(255, 255, 255);</string>
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Common directory</string>
+               <string>&amp;Common directory</string>
               </property>
               <property name="buddy">
                <cstring>commonDirectoryPath</cstring>
@@ -221,7 +221,7 @@ color: rgb(255, 255, 255);</string>
            <item>
             <widget class="QLabel" name="editorTabWidthLabel">
              <property name="text">
-              <string>Tab width:</string>
+              <string>&amp;Tab width:</string>
              </property>
              <property name="buddy">
               <cstring>editorTabWidth</cstring>
@@ -261,7 +261,7 @@ color: rgb(255, 255, 255);</string>
            <item>
             <widget class="QCheckBox" name="editorEnableLineNumber">
              <property name="text">
-              <string>Enable line number</string>
+              <string>Enable line &amp;number</string>
              </property>
             </widget>
            </item>
@@ -294,7 +294,7 @@ color: rgb(255, 255, 255);</string>
               <item>
                <widget class="QLabel" name="editorLineNumberLabel">
                 <property name="text">
-                 <string>Line number font</string>
+                 <string>&amp;Line number font</string>
                 </property>
                 <property name="buddy">
                  <cstring>editorLineNumberFont</cstring>
@@ -337,7 +337,7 @@ color: rgb(255, 255, 255);</string>
               <item>
                <widget class="QLabel" name="editorFontLabel">
                 <property name="text">
-                 <string>Editor font</string>
+                 <string>&amp;Editor font</string>
                 </property>
                 <property name="buddy">
                  <cstring>editorFont</cstring>
@@ -454,14 +454,14 @@ color: rgb(255, 255, 255);</string>
            <item>
             <widget class="QCheckBox" name="editorColorItemEnable">
              <property name="text">
-              <string>Enable</string>
+              <string>&amp;Enable</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="editorColorItemBold">
              <property name="text">
-              <string>Bold</string>
+              <string>&amp;Bold</string>
              </property>
             </widget>
            </item>
@@ -485,7 +485,7 @@ color: rgb(255, 255, 255);</string>
            <item>
             <widget class="QLabel" name="editorColorItemBgcolorLabel">
              <property name="text">
-              <string>Background color:</string>
+              <string>Background &amp;color:</string>
              </property>
              <property name="buddy">
               <cstring>editorColorItemBgcolor</cstring>
@@ -525,7 +525,7 @@ color: rgb(255, 255, 255);</string>
            <item>
             <widget class="QLabel" name="editorColorItemFgcolorLabel">
              <property name="text">
-              <string>Foreground color:</string>
+              <string>&amp;Foreground color:</string>
              </property>
              <property name="buddy">
               <cstring>editorColorItemFgcolor</cstring>
@@ -807,7 +807,10 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Preset:</string>
+              <string>&amp;Preset:</string>
+             </property>
+             <property name="buddy">
+              <cstring>keyAssignPresetList</cstring>
              </property>
             </widget>
            </item>
@@ -830,7 +833,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Save</string>
+              <string>&amp;Save</string>
              </property>
             </widget>
            </item>
@@ -843,7 +846,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Remove</string>
+              <string>&amp;Remove</string>
              </property>
             </widget>
            </item>
@@ -921,7 +924,10 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Preset:</string>
+              <string>&amp;Preset:</string>
+             </property>
+             <property name="buddy">
+              <cstring>toolbarPresetList</cstring>
              </property>
             </widget>
            </item>
@@ -937,7 +943,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Save</string>
+              <string>&amp;Save</string>
              </property>
             </widget>
            </item>
@@ -950,7 +956,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Remove</string>
+              <string>&amp;Remove</string>
              </property>
             </widget>
            </item>
@@ -1004,7 +1010,7 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Append</string>
+                <string>&amp;Append</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
@@ -1056,7 +1062,7 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Remove</string>
+                <string>&amp;Remove</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
@@ -1098,7 +1104,7 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Go top</string>
+                <string>Go &amp;top</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
@@ -1124,7 +1130,7 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Go bottom</string>
+                <string>Go &amp;bottom</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
@@ -1213,7 +1219,10 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Preset:</string>
+              <string>&amp;Preset:</string>
+             </property>
+             <property name="buddy">
+              <cstring>layoutPresetList</cstring>
              </property>
             </widget>
            </item>
@@ -1229,7 +1238,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Save</string>
+              <string>&amp;Save</string>
              </property>
             </widget>
            </item>
@@ -1242,7 +1251,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Remove</string>
+              <string>&amp;Remove</string>
              </property>
             </widget>
            </item>

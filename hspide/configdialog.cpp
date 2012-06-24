@@ -32,7 +32,7 @@ public:
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
 	, m_lastIndexOfColorMetrics(Configuration::ColorMetricsNum)
-	, m_blockUpdateShortcut(false)
+	, m_blockUpdateKeyAssign(false)
 {
 	ui.setupUi(this);
 
@@ -116,7 +116,7 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	// ショートカットの一覧を初期化
 	ui.keyAssignList->setColumnCount(KeyAssignListColumnNum);
 	ui.keyAssignList->header()->setResizeMode(KeyAssignListNameColumn,        QHeaderView::Stretch);
-	ui.keyAssignList->header()->setResizeMode(KeyAssignListShortcutKeyColumn, QHeaderView::ResizeToContents);
+	ui.keyAssignList->header()->setResizeMode(KeyAssignListKeyAssignKeyColumn, QHeaderView::ResizeToContents);
 	ui.keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
 		itemDelegate->setItemEditorFactory(factory = new QItemEditorFactory);
 			factory->registerEditor(QVariant::KeySequence, new QStandardItemEditorCreator<CHotkeyWidget>());
@@ -132,8 +132,12 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 {
 	m_configuration = info;
 
+	// 「ディレクトリ」ページ初期化
+
 	ui.installDirectoryPath->setText(m_configuration.hspPath());
 	ui.commonDirectoryPath->setText(m_configuration.hspCommonPath());
+
+	// 「エディタ - 一般」ページ初期化
 
 	ui.editorTabWidth->setValue(m_configuration.editorTabWidth());
 	ui.editorEnableLineNumber->setCheckState(m_configuration.editorLineNumberVisibled() ? Qt::Checked : Qt::Unchecked);
@@ -141,6 +145,8 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	ui.editorLineNumberFontSize->setValue(m_configuration.editorLineNumberFontSize());
 	ui.editorFont->setCurrentFont(QFont(m_configuration.editorFontName()));
 	ui.editorFontSize->setValue(m_configuration.editorFontSize());
+
+	// 「エディタ - 色」ページ初期化
 
 	m_lastIndexOfColorMetrics = Configuration::ColorMetricsNum;
 	QPixmap bmp(12, 12);
@@ -172,6 +178,8 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 	ui.editorColorList->resizeColumnToContents(ColorListEnableColumn);
 	ui.editorColorList->resizeColumnToContents(ColorListFontBoldColumn);
 	ui.editorColorList->setCurrentItem(ui.editorColorList->topLevelItem(0));
+
+	// 「キー割り当て」ページ初期化
 
 	QStringList scValues;
 	scValues	<< tr("New")
@@ -220,42 +228,44 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		item->setText(KeyAssignListNameColumn, scValues[i]);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
-	updateShortcut(m_configuration.shortcut());
+	updateKeyAssign(m_configuration.keyAssign());
 
-	updateShortcutPresetList();
+	updateKeyAssignPresetList();
+
+	//
 }
 
-void CConfigDialog::updateShortcut(const QVector<Configuration::ShortcutInfoType>& shortcut)
+void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
-	m_blockUpdateShortcut = true;
+	m_blockUpdateKeyAssign = true;
 	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
 	{
 		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
-		const Configuration::ShortcutInfoType& sc = shortcut[i];
-		item->setData(KeyAssignListShortcutKeyColumn, Qt::DisplayRole, sc.keys);
+		const Configuration::KeyAssignInfoType& sc = keyAssign[i];
+		item->setData(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole, sc.keys);
 	}
-	m_blockUpdateShortcut = false;
+	m_blockUpdateKeyAssign = false;
 }
 
-void CConfigDialog::applyShortcut(QVector<Configuration::ShortcutInfoType>& shortcut)
+void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
-	shortcut.resize(ui.keyAssignList->topLevelItemCount());
+	keyAssign.resize(ui.keyAssignList->topLevelItemCount());
 	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
 	{
 		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
-		Configuration::ShortcutInfoType& sc = shortcut[i];
-		sc.keys = QKeySequence(item->data(KeyAssignListShortcutKeyColumn, Qt::DisplayRole).toString());
+		Configuration::KeyAssignInfoType& sc = keyAssign[i];
+		sc.keys = QKeySequence(item->data(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole).toString());
 	}
 }
 
-void CConfigDialog::updateShortcutPresetList()
+void CConfigDialog::updateKeyAssignPresetList()
 {
 	for(int i = ui.keyAssignPresetList->count();
-		i < 1 + m_configuration.shortcutPresetNum(); i++)
+		i < 1 + m_configuration.keyAssignPresetNum(); i++)
 	{
 		ui.keyAssignPresetList->addItem("");
 	}
-	for(int i = 1 + m_configuration.shortcutPresetNum();
+	for(int i = 1 + m_configuration.keyAssignPresetNum();
 		i < ui.keyAssignPresetList->count(); i++)
 	{
 		ui.keyAssignPresetList->removeItem(ui.keyAssignPresetList->count() - 1);
@@ -269,18 +279,18 @@ void CConfigDialog::updateShortcutPresetList()
 	}
 
 	// 変更をチェック
-	QVector<Configuration::ShortcutInfoType> shortcut;
-	applyShortcut(shortcut);
-	bool presetModified = shortcut != m_configuration.shortcut(curPreset);
+	QVector<Configuration::KeyAssignInfoType> keyAssign;
+	applyKeyAssign(keyAssign);
+	bool presetModified = keyAssign != m_configuration.keyAssign(curPreset);
 
 	ui.keyAssignPresetRemove->setDisabled(curPreset < 0 && !presetModified);
 
 	QString presetName = tr("Current setting");
-	for(int i = -1; i < m_configuration.shortcutPresetNum(); i++)
+	for(int i = -1; i < m_configuration.keyAssignPresetNum(); i++)
 	{
 		if( 0 <= i )
 		{
-			presetName = m_configuration.shortcutPresetName(i);
+			presetName = m_configuration.keyAssignPresetName(i);
 		}
 		ui.keyAssignPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
 	}
@@ -303,9 +313,9 @@ void CConfigDialog::onOk()
 	m_configuration.setEditorFontName(ui.editorFont->currentFont().family());
 	m_configuration.setEditorFontSize(ui.editorFontSize->value());
 
-	QVector<Configuration::ShortcutInfoType> shortcut;
-	applyShortcut(shortcut);
-	m_configuration.setShortcut(shortcut);
+	QVector<Configuration::KeyAssignInfoType> keyAssign;
+	applyKeyAssign(keyAssign);
+	m_configuration.setKeyAssign(keyAssign);
 
 	accept();
 }
@@ -316,15 +326,12 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 	               item = item->child(index.row(), 0);
 	if( item->data().isValid() )
 	{
-		//// 未保存のデータを保存
-		//if( ui.keyAssignPage == ui.stackedWidget->widget(ui.stackedWidget->currentIndex()) )
-		//{
-		//	QVector<Configuration::ShortcutInfoType> shortcut;
-		//	applyShortcut(shortcut);
-		//	m_configuration.setShortcut(
-		//		ui.keyAssignPresetList->currentIndex() - 1,
-		//		shortcut);
-		//}
+		// 変更破棄
+		if( ui.keyAssignPage == ui.stackedWidget->widget(ui.stackedWidget->currentIndex()) )
+		{
+			int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+			updateKeyAssign(m_configuration.keyAssign(curPreset));
+		}
 		// ページ切り替え
 		ui.stackedWidget->setCurrentIndex(item->data().toInt());
 	}
@@ -475,8 +482,8 @@ void CConfigDialog::onChangedMetricsFgcolor()
 
 void CConfigDialog::onKeyAsignPresetChanged(int index)
 {
-	updateShortcut(m_configuration.shortcut(index - 1));
-	updateShortcutPresetList();
+	updateKeyAssign(m_configuration.keyAssign(index - 1));
+	updateKeyAssignPresetList();
 }
 
 void CConfigDialog::onKeyAsignPresetRemove()
@@ -485,37 +492,37 @@ void CConfigDialog::onKeyAsignPresetRemove()
 
 	if( curPreset < 0 )
 	{
-		updateShortcut(m_configuration.shortcut());
+		updateKeyAssign(m_configuration.keyAssign());
 	}
 	else
 	{
-		m_configuration.removeShortcutPreset(curPreset);
+		m_configuration.removeKeyAssignPreset(curPreset);
 	}
 
-	updateShortcutPresetList();
+	updateKeyAssignPresetList();
 }
 
 void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 {
 	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
 
-	if( KeyAssignListShortcutKeyColumn != column ||
+	if( KeyAssignListKeyAssignKeyColumn != column ||
 		curPreset < -1 ||
-		m_blockUpdateShortcut )
+		m_blockUpdateKeyAssign )
 	{
 		return;
 	}
 
-	const QVector<Configuration::ShortcutInfoType>& shortcutBase = m_configuration.shortcut(curPreset);
-	QVector<Configuration::ShortcutInfoType> shortcut;
-	applyShortcut(shortcut);
+	const QVector<Configuration::KeyAssignInfoType>& keyAssignBase = m_configuration.keyAssign(curPreset);
+	QVector<Configuration::KeyAssignInfoType> keyAssign;
+	applyKeyAssign(keyAssign);
 
 	// プリセットに変更が加えられたら「現在の設定」と置き換える
 	ui.keyAssignPresetList->setCurrentIndex(0);
 
-	updateShortcut(shortcut);
+	updateKeyAssign(keyAssign);
 
-	updateShortcutPresetList();
+	updateKeyAssignPresetList();
 }
 
 void CConfigDialog::onKeyAsignPresetSave()
@@ -525,7 +532,7 @@ void CConfigDialog::onKeyAsignPresetSave()
 	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
 	bool presetCurrent = curPreset < 0;
 	dlg.setNewTitlePresent(presetCurrent);
-	dlg.setNewTitle(presetCurrent ? "" : m_configuration.shortcutPresetName(curPreset));
+	dlg.setNewTitle(presetCurrent ? "" : m_configuration.keyAssignPresetName(curPreset));
 
 	if( QDialog::Accepted != dlg.exec() )
 	{
@@ -534,44 +541,26 @@ void CConfigDialog::onKeyAsignPresetSave()
 
 	int newSelectPreset = -1;
 
-	//if( presetCurrent )
-	//{
-	//	if( dlg.newTitlePresent() )
-	//	{
-	//		// プリセットを新たに追加
-	//		QVector<Configuration::ShortcutInfoType> shortcut;
-	//		applyShortcut(shortcut);
-	//		m_configuration.appendShortcutPreset(dlg.newTitle(), shortcut);
-	//		newSelectPreset = m_configuration.shortcutPresetNum();
-	//	}
-	//	else
-	//	{
-	//		return;
-	//	}
-	//}
-	//else
-	//{
-		if( dlg.newTitlePresent() )
-		{
-			// 別名でプリセットを追加
-			QVector<Configuration::ShortcutInfoType> shortcut;
-			applyShortcut(shortcut);
-			m_configuration.appendShortcutPreset(dlg.newTitle(), shortcut);
-			newSelectPreset = m_configuration.shortcutPresetNum();
-		}
-		else
-		{
-			// 上書き保存
-			QVector<Configuration::ShortcutInfoType> shortcut;
-			applyShortcut(shortcut);
-			m_configuration.setShortcut(
-				ui.keyAssignPresetList->currentIndex() - 1,
-				shortcut);
-			newSelectPreset = ui.keyAssignPresetList->currentIndex();
-		}
-	//}
+	if( dlg.newTitlePresent() )
+	{
+		// 別名でプリセットを追加
+		QVector<Configuration::KeyAssignInfoType> keyAssign;
+		applyKeyAssign(keyAssign);
+		m_configuration.appendKeyAssignPreset(dlg.newTitle(), keyAssign);
+		newSelectPreset = m_configuration.keyAssignPresetNum();
+	}
+	else
+	{
+		// 上書き保存
+		QVector<Configuration::KeyAssignInfoType> keyAssign;
+		applyKeyAssign(keyAssign);
+		m_configuration.setKeyAssign(
+			ui.keyAssignPresetList->currentIndex() - 1,
+			keyAssign);
+		newSelectPreset = ui.keyAssignPresetList->currentIndex();
+	}
 
-	updateShortcutPresetList();
+	updateKeyAssignPresetList();
 	// 追加したプリセットに変更
 	ui.keyAssignPresetList->setCurrentIndex(newSelectPreset);
 }

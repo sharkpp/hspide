@@ -90,10 +90,6 @@ p, li { white-space: pre-wrap; }
         <translation>ツール</translation>
     </message>
     <message>
-        <source>Shortcut key</source>
-        <translation>ショートカットキー</translation>
-    </message>
-    <message>
         <source>White</source>
         <translation>白色</translation>
     </message>
@@ -285,7 +281,6 @@ p, li { white-space: pre-wrap; }
         <source>Jump</source>
         <translation>移動</translation>
     </message>
-
     <message>
         <source>Configuration</source>
         <translation>設定</translation>
@@ -357,6 +352,26 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>No debug run project</source>
         <translation>プロジェクトをデバッグなしで開始</translation>
+    </message>
+    <message>
+        <source>Key assign</source>
+        <translation>キー割り当て</translation>
+    </message>
+    <message>
+        <source>Toolbar</source>
+        <translation>ツールバー</translation>
+    </message>
+    <message>
+        <source>Show system variables</source>
+        <translation>システム変数を表示</translation>
+    </message>
+    <message>
+        <source>Show variables</source>
+        <translation>変数を表示</translation>
+    </message>
+    <message>
+        <source>Current setting</source>
+        <translation>現在の設定</translation>
     </message>
 </context>
 <context>
@@ -581,56 +596,16 @@ p, li { white-space: pre-wrap; }
         <translation>HSPディレクトリ</translation>
     </message>
     <message>
-        <source>Install directory</source>
-        <translation>インストールディレクトリ</translation>
-    </message>
-    <message>
-        <source>Common directory</source>
-        <translation>common ディレクトリ</translation>
-    </message>
-    <message>
         <source>Editor general</source>
         <translation>エディタ一般</translation>
-    </message>
-    <message>
-        <source>Tab width:</source>
-        <translation>タブ幅:</translation>
-    </message>
-    <message>
-        <source>Enable line number</source>
-        <translation>行番号を有効</translation>
     </message>
     <message>
         <source>Fonts</source>
         <translation>フォント</translation>
     </message>
     <message>
-        <source>Line number font</source>
-        <translation>行番号フォント</translation>
-    </message>
-    <message>
-        <source>Editor font</source>
-        <translation>エディタフォント</translation>
-    </message>
-    <message>
         <source>Editor color</source>
         <translation>エディタ色</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation>有効</translation>
-    </message>
-    <message>
-        <source>Bold</source>
-        <translation>太字</translation>
-    </message>
-    <message>
-        <source>Background color:</source>
-        <translation>背景色:</translation>
-    </message>
-    <message>
-        <source>Foreground color:</source>
-        <translation>前景色:</translation>
     </message>
     <message>
         <source>Tool</source>
@@ -660,6 +635,97 @@ p, li { white-space: pre-wrap; }
         <source>Key assign</source>
         <translation>キー割り当て</translation>
     </message>
+    <message>
+        <source>Save</source>
+        <translation type="obsolete">保存</translation>
+    </message>
+    <message>
+        <source>Toolbar</source>
+        <translation>ツールバー</translation>
+    </message>
+    <message>
+        <source>-----</source>
+        <translation>-----</translation>
+    </message>
+    <message>
+        <source>Layout</source>
+        <translation>レイアウト</translation>
+    </message>
+    <message>
+        <source>&amp;Install directory</source>
+        <translation>インストールディレクトリ(&amp;I)</translation>
+    </message>
+    <message>
+        <source>&amp;Common directory</source>
+        <translation>common ディレクトリ(&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;Tab width:</source>
+        <translation>タブ幅(&amp;T):</translation>
+    </message>
+    <message>
+        <source>Enable line &amp;number</source>
+        <translation>行番号を有効(&amp;N)</translation>
+    </message>
+    <message>
+        <source>&amp;Line number font</source>
+        <translation>行番号フォント(&amp;L)</translation>
+    </message>
+    <message>
+        <source>&amp;Editor font</source>
+        <translation>エディタフォント(&amp;E)</translation>
+    </message>
+    <message>
+        <source>&amp;Enable</source>
+        <translation>有効(&amp;E)</translation>
+    </message>
+    <message>
+        <source>&amp;Bold</source>
+        <translation>太字(&amp;B)</translation>
+    </message>
+    <message>
+        <source>Background &amp;color:</source>
+        <translation>背景色(&amp;C):</translation>
+    </message>
+    <message>
+        <source>&amp;Foreground color:</source>
+        <translation>前景色(&amp;F):</translation>
+    </message>
+    <message>
+        <source>&amp;Preset:</source>
+        <translation>プリセット(&amp;P):</translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation>保存(&amp;S)</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation>削除(&amp;R)</translation>
+    </message>
+    <message>
+        <source>&amp;Append</source>
+        <translation>追加(&amp;A)</translation>
+    </message>
+    <message>
+        <source>Go &amp;top</source>
+        <translation>最初に移動(&amp;T)</translation>
+    </message>
+    <message>
+        <source>Go &amp;bottom</source>
+        <translation>最後に移動(&amp;B)</translation>
+    </message>
+</context>
+<context>
+    <name>Configuration</name>
+    <message>
+        <source>hsed3 like</source>
+        <translation>hsed3風</translation>
+    </message>
+    <message>
+        <source>untitled</source>
+        <translation>無題</translation>
+    </message>
 </context>
 <context>
     <name>FileManager</name>
@@ -675,7 +741,7 @@ p, li { white-space: pre-wrap; }
         <translation>指定行へ移動</translation>
     </message>
     <message>
-        <source>Line number(&amp;L):</source>
+        <source>&amp;Line number:</source>
         <translation>行番号(&amp;L):</translation>
     </message>
 </context>
@@ -1131,7 +1197,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Show variables</source>
-        <translation>変数を表示を表示</translation>
+        <translation>変数を表示</translation>
     </message>
     <message>
         <source>All suspend</source>
@@ -1217,12 +1283,12 @@ p, li { white-space: pre-wrap; }
         <translation>新規作成</translation>
     </message>
     <message>
-        <source>File name:</source>
-        <translation>ファイル名:</translation>
-    </message>
-    <message>
         <source>...</source>
         <translation>...</translation>
+    </message>
+    <message>
+        <source>&amp;File name:</source>
+        <translation>ファイル名(&amp;F):</translation>
     </message>
 </context>
 <context>
@@ -1277,6 +1343,25 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Select All</source>
         <translation>すべてを選択</translation>
+    </message>
+</context>
+<context>
+    <name>SavePresetDialog</name>
+    <message>
+        <source>Save preset</source>
+        <translation>プリセットを保存</translation>
+    </message>
+    <message>
+        <source>Do you want to save the preset?</source>
+        <translation>プリセットを保存しますか？</translation>
+    </message>
+    <message>
+        <source>&amp;Save as...</source>
+        <translation>名前を付けて保存をする(&amp;S)</translation>
+    </message>
+    <message>
+        <source>&amp;Name:</source>
+        <translation>名称(&amp;N)</translation>
     </message>
 </context>
 <context>

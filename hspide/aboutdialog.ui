@@ -224,7 +224,7 @@ p, li { white-space: pre-wrap; }
  </widget>
  <resources>
   <include location="hspide.qrc"/>
-  <include location="C:/Documents and Settings/Administrator/.designer/backup/hspide.qrc"/>
+  <include location="hspide.qrc"/>
  </resources>
  <connections>
   <connection>

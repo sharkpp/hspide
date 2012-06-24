@@ -21,19 +21,19 @@ class CConfigDialog
 
 	typedef enum {
 		KeyAssignListNameColumn = 0,
-		KeyAssignListShortcutKeyColumn,
+		KeyAssignListKeyAssignKeyColumn,
 		KeyAssignListColumnNum,
 	};
 
 	Ui::ConfigDialog ui;
 
 	Configuration m_configuration;
-	QVector<Configuration::ShortcutInfoType> m_currentShortcut;
+	QVector<Configuration::KeyAssignInfoType> m_currentKeyAssign;
 
 	Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
 	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
 
-	bool m_blockUpdateShortcut;
+	bool m_blockUpdateKeyAssign;
 
 public:
 
@@ -45,9 +45,9 @@ protected:
 
 	void setConfiguration(const Configuration& info);
 
-	void updateShortcut(const QVector<Configuration::ShortcutInfoType>& shortcut);
-	void applyShortcut(QVector<Configuration::ShortcutInfoType>& shortcut);
-	void updateShortcutPresetList();
+	void updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign);
+	void applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign);
+	void updateKeyAssignPresetList();
 
 public slots:
 

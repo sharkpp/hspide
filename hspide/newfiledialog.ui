@@ -38,10 +38,13 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>File name:</string>
+        <string>&amp;File name:</string>
        </property>
        <property name="textFormat">
         <enum>Qt::AutoText</enum>
+       </property>
+       <property name="buddy">
+        <cstring>fileName</cstring>
        </property>
       </widget>
      </item>
