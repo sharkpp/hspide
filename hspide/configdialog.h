@@ -33,8 +33,6 @@ class CConfigDialog
 	Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
 	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
 
-	bool m_blockUpdateKeyAssign;
-
 public:
 
 	CConfigDialog(QWidget *parent = 0);

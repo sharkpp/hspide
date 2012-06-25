@@ -32,7 +32,6 @@ public:
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
 	, m_lastIndexOfColorMetrics(Configuration::ColorMetricsNum)
-	, m_blockUpdateKeyAssign(false)
 {
 	ui.setupUi(this);
 
@@ -240,14 +239,14 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
-	m_blockUpdateKeyAssign = true;
+	ui.keyAssignList->blockSignals(true);
 	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
 	{
 		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
 		const Configuration::KeyAssignInfoType& sc = keyAssign[i];
 		item->setData(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole, sc.keys);
 	}
-	m_blockUpdateKeyAssign = false;
+	ui.keyAssignList->blockSignals(false);
 }
 
 void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign)
@@ -510,8 +509,7 @@ void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
 
 	if( KeyAssignListKeyAssignKeyColumn != column ||
-		curPreset < -1 ||
-		m_blockUpdateKeyAssign )
+		curPreset < -1 )
 	{
 		return;
 	}
