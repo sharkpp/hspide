@@ -184,31 +184,10 @@ void MainWindow::setupStatusBar()
 
 void MainWindow::setupToolBars()
 {
-	QToolBar* generalToolbar = addToolBar(tr("General"));
-		generalToolbar->setObjectName("General"); // saveState()で警告がトレースで出るため
-		generalToolbar->setIconSize(QSize(16, 16));
-		generalToolbar->addAction(newDocumentAct);
-		generalToolbar->addAction(openDocumentAct);
-		generalToolbar->addAction(saveDocumentAct);
-		generalToolbar->addAction(saveAllDocumentAct);
-		generalToolbar->addSeparator();
-		generalToolbar->addAction(editCutAct);
-		generalToolbar->addAction(editCopyAct);
-		generalToolbar->addAction(editPasteAct);
-		generalToolbar->addSeparator();
-		generalToolbar->addAction(editUndoAct);
-		generalToolbar->addAction(editRedoAct);
-		generalToolbar->addSeparator();
-		generalToolbar->addAction(findTextAct);
-		generalToolbar->addAction(findPrevTextAct);
-		generalToolbar->addAction(findNextTextAct);
-		generalToolbar->addAction(replaceTextAct);
-		generalToolbar->addSeparator();
-		generalToolbar->addAction(debugRunSolutionAct);
-		generalToolbar->addAction(debugResumeAct);
-		generalToolbar->addAction(debugSuspendAct);
-		generalToolbar->addAction(debugStopAct);
-//		generalToolbar->addWidget(new QComboBox(generalToolbar));
+	m_generalToolbar = addToolBar(tr("General"));
+		m_generalToolbar->setObjectName("General"); // saveState()で警告がトレースで出るため
+		m_generalToolbar->setIconSize(QSize(16, 16));
+		m_generalToolbar->addAction(newDocumentAct);
 }
 
 void MainWindow::setupMenus()
@@ -303,14 +282,6 @@ void MainWindow::setupActions()
 		{ &findNextTextAct,       ":/images/tango/middle/edit-select-all.png",      ":/images/tango/small/edit-select-all.png",       tr("Find &previous"),        tr("Find previous"),        tr("Find previous text")        },
 		{ &replaceTextAct,        ":/images/tango/middle/edit-find-replace.png",    ":/images/tango/small/edit-find-replace.png",     tr("&Replace"),              tr("Replace"),              tr("Replace text")              },
 		{ &gotoLineAct,           ":/images/tango/middle/go-jump.png",              ":/images/tango/small/go-jump.png",               tr("&Go to line"),           tr("Go to line"),           tr("Go to line")                },
-		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
-		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
-		{ &showOutputDockAct,     "",                                               "",                                               tr("&Output"),               tr("Show output"),          tr("Show output")               },
-		{ &showSearchDockAct,     "",                                               "",                                               tr("&Search"),               tr("Show search"),          tr("Show search")               },
-		{ &showMessageDockAct,    "",                                               "",                                               tr("&Messages"),             tr("Show messages"),        tr("Show messages")             },
-		{ &showBreakPointDockAct, "",                                            "",                                                  tr("&Breakpoints"),          tr("Show breakpoints"),     tr("Show breakpoints")          },
-		{ &showSysInfoDockAct,    "",                                               "",                                               tr("&System variables"),     tr("Show system variables"),tr("Show system variables")     },
-		{ &showVarInfoDockAct,    "",                                               "",                                               tr("&Variables"),            tr("Show variables"),       tr("Show variables")            },
 		{ &buildSolutionAct,      "",                                               "",                                               tr("Build &solution"),       tr("Build solution"),       tr("Build solution")            },
 		{ &buildProjectAct,       "",                                               "",                                               tr("&Build project"),        tr("Build project"),        tr("Build project")             },
 		{ &batchBuildAct,         "",                                               "",                                               tr("B&atch build"),          tr("Batch build"),          tr("Batch build")               },
@@ -323,6 +294,14 @@ void MainWindow::setupActions()
 		{ &debugResumeAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),           tr("All resume"),           tr("Resume debugging")          },
 		{ &debugStopAct,          ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),       tr("Stop debugging"),       tr("Abort debugging")           },
 		{ &settingAct,            ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),              tr("Setting"),              tr("Application settings")      },
+		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
+		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
+		{ &showOutputDockAct,     "",                                               "",                                               tr("&Output"),               tr("Show output"),          tr("Show output")               },
+		{ &showSearchDockAct,     "",                                               "",                                               tr("&Search"),               tr("Show search"),          tr("Show search")               },
+		{ &showMessageDockAct,    "",                                               "",                                               tr("&Messages"),             tr("Show messages"),        tr("Show messages")             },
+		{ &showBreakPointDockAct, "",                                               "",                                               tr("&Breakpoints"),          tr("Show breakpoints"),     tr("Show breakpoints")          },
+		{ &showSysInfoDockAct,    "",                                               "",                                               tr("&System variables"),     tr("Show system variables"),tr("Show system variables")     },
+		{ &showVarInfoDockAct,    "",                                               "",                                               tr("&Variables"),            tr("Show variables"),       tr("Show variables")            },
 		{ &aboutAct,              ":/images/tango/middle/dialog-information.png",   ":/images/tango/small/dialog-information.png",    tr("&About hspide ..."),     tr("About hspide ..."),     tr("About hspide")              },
 	};
 
@@ -505,50 +484,116 @@ void MainWindow::actionTriggered(QAction *action)
 
 void MainWindow::updateConfiguration(const Configuration& info)
 {
-	theConf.applyShortcut(Configuration::ShortcutNew,					newDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutOpen,					openDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSave,					saveDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAs,				saveAsDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutSaveAll,				saveAllDocumentAct);
-	theConf.applyShortcut(Configuration::ShortcutQuit,					quitApplicationAct);
-	theConf.applyShortcut(Configuration::ShortcutUndo,					editUndoAct);
-	theConf.applyShortcut(Configuration::ShortcutRedo,					editRedoAct);
-	theConf.applyShortcut(Configuration::ShortcutCut,					editCutAct);
-	theConf.applyShortcut(Configuration::ShortcutCopy,					editCopyAct);
-	theConf.applyShortcut(Configuration::ShortcutPaste,					editPasteAct);
-	theConf.applyShortcut(Configuration::ShortcutClear,					editClearAct);
-	theConf.applyShortcut(Configuration::ShortcutSelectAll,				selectAllAct);
-	theConf.applyShortcut(Configuration::ShortcutFind,					findTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindNext,				findPrevTextAct);
-	theConf.applyShortcut(Configuration::ShortcutFindPrev,				findNextTextAct);
-	theConf.applyShortcut(Configuration::ShortcutReplace,				replaceTextAct);
-	theConf.applyShortcut(Configuration::ShortcutJump,					gotoLineAct);
-	theConf.applyShortcut(Configuration::ShortcutBuildSolution,			buildSolutionAct);
-	theConf.applyShortcut(Configuration::ShortcutBuildProject,			buildProjectAct);
-	theConf.applyShortcut(Configuration::ShortcutCompileOnly,			compileOnlyAct);
-	theConf.applyShortcut(Configuration::ShortcutBatchBuild,			batchBuildAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugRunSolution,		debugRunSolutionAct);
-	theConf.applyShortcut(Configuration::ShortcutNoDebugRunSolution,	noDebugRunSolutionAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugRunProject,		debugRunProjectAct);
-	theConf.applyShortcut(Configuration::ShortcutNoDebugRunProject,		noDebugRunProjectAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugSuspend,			debugSuspendAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugResume,			debugResumeAct);
-	theConf.applyShortcut(Configuration::ShortcutDebugStop,				debugStopAct);
-	theConf.applyShortcut(Configuration::ShortcutConfig,				settingAct);
-	theConf.applyShortcut(Configuration::ShortcutShowProject,			showProjectDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowSymbol,			showSymbolDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowOutput,			showOutputDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowSearch,			showSearchDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowMessage,			showMessageDockAct);
-	theConf.applyShortcut(Configuration::ShortcutShowBreakPoint,		showBreakPointDockAct);
-//	theConf.applyShortcut(Configuration::ShortcutShowSysInfo,			showSysInfoDockAct);
-//	theConf.applyShortcut(Configuration::ShortcutShowVarInfo,			showVarInfoDockAct);
-
 	// シンタックスハイライトシンボル取得
 	CCompiler* compiler = new CCompiler(this);
 	connect(compiler, SIGNAL(updatedSymbols()),  this, SLOT(onUpdatedSymbols()));
 //	connect(compiler, SIGNAL(updatedSymbols()),  this, SLOT(deleteLater()));
 	compiler->collectSymbols();
+
+	// ショートカットキーの更新
+
+	theConf.applyShortcut(Configuration::ActionNew,					newDocumentAct);
+	theConf.applyShortcut(Configuration::ActionOpen,				openDocumentAct);
+	theConf.applyShortcut(Configuration::ActionSave,				saveDocumentAct);
+	theConf.applyShortcut(Configuration::ActionSaveAs,				saveAsDocumentAct);
+	theConf.applyShortcut(Configuration::ActionSaveAll,				saveAllDocumentAct);
+	theConf.applyShortcut(Configuration::ActionQuit,				quitApplicationAct);
+	theConf.applyShortcut(Configuration::ActionUndo,				editUndoAct);
+	theConf.applyShortcut(Configuration::ActionRedo,				editRedoAct);
+	theConf.applyShortcut(Configuration::ActionCut,					editCutAct);
+	theConf.applyShortcut(Configuration::ActionCopy,				editCopyAct);
+	theConf.applyShortcut(Configuration::ActionPaste,				editPasteAct);
+	theConf.applyShortcut(Configuration::ActionClear,				editClearAct);
+	theConf.applyShortcut(Configuration::ActionSelectAll,			selectAllAct);
+	theConf.applyShortcut(Configuration::ActionFind,				findTextAct);
+	theConf.applyShortcut(Configuration::ActionFindNext,			findPrevTextAct);
+	theConf.applyShortcut(Configuration::ActionFindPrev,			findNextTextAct);
+	theConf.applyShortcut(Configuration::ActionReplace,				replaceTextAct);
+	theConf.applyShortcut(Configuration::ActionJump,				gotoLineAct);
+	theConf.applyShortcut(Configuration::ActionBuildSolution,		buildSolutionAct);
+	theConf.applyShortcut(Configuration::ActionBuildProject,		buildProjectAct);
+	theConf.applyShortcut(Configuration::ActionCompileOnly,			compileOnlyAct);
+	theConf.applyShortcut(Configuration::ActionBatchBuild,			batchBuildAct);
+	theConf.applyShortcut(Configuration::ActionDebugRunSolution,	debugRunSolutionAct);
+	theConf.applyShortcut(Configuration::ActionNoDebugRunSolution,	noDebugRunSolutionAct);
+	theConf.applyShortcut(Configuration::ActionDebugRunProject,		debugRunProjectAct);
+	theConf.applyShortcut(Configuration::ActionNoDebugRunProject,	noDebugRunProjectAct);
+	theConf.applyShortcut(Configuration::ActionDebugSuspend,		debugSuspendAct);
+	theConf.applyShortcut(Configuration::ActionDebugResume,			debugResumeAct);
+	theConf.applyShortcut(Configuration::ActionDebugStop,			debugStopAct);
+	theConf.applyShortcut(Configuration::ActionConfig,				settingAct);
+	theConf.applyShortcut(Configuration::ActionShowProject,			showProjectDockAct);
+	theConf.applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
+	theConf.applyShortcut(Configuration::ActionShowOutput,			showOutputDockAct);
+	theConf.applyShortcut(Configuration::ActionShowSearch,			showSearchDockAct);
+	theConf.applyShortcut(Configuration::ActionShowMessage,			showMessageDockAct);
+	theConf.applyShortcut(Configuration::ActionShowBreakPoint,		showBreakPointDockAct);
+//	theConf.applyShortcut(Configuration::ActionShowSysInfo,			showSysInfoDockAct);
+//	theConf.applyShortcut(Configuration::ActionShowVarInfo,			showVarInfoDockAct);
+
+	// ツールバーの更新
+
+	struct {
+		QAction** action;
+	} actionLookupTable[] = {
+		{ &newDocumentAct,        },
+		{ &openDocumentAct,       },
+		{ &saveDocumentAct,       },
+		{ &saveAsDocumentAct,     },
+		{ &saveAllDocumentAct,    },
+		{ &quitApplicationAct,    },
+		{ &editUndoAct,           },
+		{ &editRedoAct,           },
+		{ &editCutAct,            },
+		{ &editCopyAct,           },
+		{ &editPasteAct,          },
+		{ &editClearAct,          },
+		{ &selectAllAct,          },
+		{ &findTextAct,           },
+		{ &findPrevTextAct,       },
+		{ &findNextTextAct,       },
+		{ &replaceTextAct,        },
+		{ &gotoLineAct,           },
+		{ &buildSolutionAct,      },
+		{ &buildProjectAct,       },
+		{ &batchBuildAct,         },
+		{ &compileOnlyAct,        },
+		{ &debugRunSolutionAct,   },
+		{ &noDebugRunSolutionAct, },
+		{ &debugRunProjectAct,    },
+		{ &noDebugRunProjectAct,  },
+		{ &debugSuspendAct,       },
+		{ &debugResumeAct,        },
+		{ &debugStopAct,          },
+		{ &settingAct,            },
+		{ &showProjectDockAct,    },
+		{ &showSymbolDockAct,     },
+		{ &showOutputDockAct,     },
+		{ &showSearchDockAct,     },
+		{ &showMessageDockAct,    },
+		{ &showBreakPointDockAct, },
+		{ &showSysInfoDockAct,    },
+		{ &showVarInfoDockAct,    },
+		{ &aboutAct,              },
+		{ NULL,                   },
+	};
+
+	m_generalToolbar->clear();
+
+	for(int i = 0; i < theConf.toolbarPresetNum(); i++)
+	{
+		Configuration::ActionEnum actionType = theConf.toolbarPreset(i);
+
+		if( QAction** action = actionLookupTable[actionType].action )
+		{
+			m_generalToolbar->addAction(*action);
+		}
+		else
+		{
+			m_generalToolbar->addSeparator();
+		}
+	}
+
 }
 
 void MainWindow::closeTab(CWorkSpaceItem* targetItem)

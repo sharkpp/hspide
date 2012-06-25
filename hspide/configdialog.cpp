@@ -220,6 +220,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 				<< tr("Show breakpoints")
 				<< tr("Show system variables")
 				<< tr("Show variables")
+				<< tr("About")
 				;
 	ui.keyAssignList->clear();
 	for(int i = 0; i < scValues.size(); i++)
@@ -232,7 +233,9 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 	updateKeyAssignPresetList();
 
-	//
+	// ツールバー初期化
+
+	
 }
 
 void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)

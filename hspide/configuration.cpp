@@ -41,48 +41,69 @@ Configuration::Configuration()
 	m_colorMetrics[EofMetrics].backgroundColor          = Qt::black;
 
 	m_keyAssignInfo.resize(2);
-	m_keyAssignInfo[0].keyAssign.resize(ShortcutNum);
-	m_keyAssignInfo[0].keyAssign[ShortcutNew].keys                = QKeySequence::New;
-	m_keyAssignInfo[0].keyAssign[ShortcutOpen].keys               = QKeySequence::Open;
-	m_keyAssignInfo[0].keyAssign[ShortcutSave].keys               = QKeySequence::Save;
-	m_keyAssignInfo[0].keyAssign[ShortcutSaveAs].keys             = QKeySequence::SaveAs;
-//	m_keyAssignInfo[0].keyAssign[ShortcutSaveAll].keys            = 
-	m_keyAssignInfo[0].keyAssign[ShortcutQuit].keys               = QKeySequence::Quit;
-	m_keyAssignInfo[0].keyAssign[ShortcutUndo].keys               = QKeySequence::Undo;
-	m_keyAssignInfo[0].keyAssign[ShortcutRedo].keys               = QKeySequence::Redo;
-	m_keyAssignInfo[0].keyAssign[ShortcutCut].keys                = QKeySequence::Cut;
-	m_keyAssignInfo[0].keyAssign[ShortcutCopy].keys               = QKeySequence::Copy;
-	m_keyAssignInfo[0].keyAssign[ShortcutPaste].keys              = QKeySequence::Paste;
-	m_keyAssignInfo[0].keyAssign[ShortcutClear].keys              = QKeySequence::Delete;
-	m_keyAssignInfo[0].keyAssign[ShortcutSelectAll].keys          = QKeySequence::SelectAll;
-	m_keyAssignInfo[0].keyAssign[ShortcutFind].keys               = QKeySequence::Find;
-	m_keyAssignInfo[0].keyAssign[ShortcutFindNext].keys           = QKeySequence::FindNext;
-	m_keyAssignInfo[0].keyAssign[ShortcutFindPrev].keys           = QKeySequence::FindPrevious;
-	m_keyAssignInfo[0].keyAssign[ShortcutReplace].keys            = QKeySequence::Replace;
-	m_keyAssignInfo[0].keyAssign[ShortcutJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
-	m_keyAssignInfo[0].keyAssign[ShortcutBuildSolution].keys      = QKeySequence(Qt::Key_F7);
-	m_keyAssignInfo[0].keyAssign[ShortcutBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
-//	m_keyAssignInfo[0].keyAssign[ShortcutCompileOnly].keys        = 
-//	m_keyAssignInfo[0].keyAssign[ShortcutBatchBuild].keys         = 
-	m_keyAssignInfo[0].keyAssign[ShortcutDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ShortcutNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ShortcutDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
-//	m_keyAssignInfo[0].keyAssign[ShortcutNoDebugRunProject].keys  = 
-	m_keyAssignInfo[0].keyAssign[ShortcutDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
-	m_keyAssignInfo[0].keyAssign[ShortcutDebugResume].keys        = QKeySequence(Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ShortcutDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ShortcutConfig].keys             = QKeySequence::Preferences;
-	m_keyAssignInfo[0].keyAssign[ShortcutShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
-	m_keyAssignInfo[0].keyAssign[ShortcutShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
-	m_keyAssignInfo[0].keyAssign[ShortcutShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
-	m_keyAssignInfo[0].keyAssign[ShortcutShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
-	m_keyAssignInfo[0].keyAssign[ShortcutShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
-	m_keyAssignInfo[0].keyAssign[ShortcutShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
-//	m_keyAssignInfo[0].keyAssign[ShortcutShowSysInfo].keys        = 
-//	m_keyAssignInfo[0].keyAssign[ShortcutShowVarInfo].keys        = 
-	m_keyAssignInfo[1].keyAssign.resize(ShortcutNum);
+	m_keyAssignInfo[0].keyAssign.resize(ActionNum);
+	m_keyAssignInfo[0].keyAssign[ActionNew].keys                = QKeySequence::New;
+	m_keyAssignInfo[0].keyAssign[ActionOpen].keys               = QKeySequence::Open;
+	m_keyAssignInfo[0].keyAssign[ActionSave].keys               = QKeySequence::Save;
+	m_keyAssignInfo[0].keyAssign[ActionSaveAs].keys             = QKeySequence::SaveAs;
+//	m_keyAssignInfo[0].keyAssign[ActionSaveAll].keys            = 
+	m_keyAssignInfo[0].keyAssign[ActionQuit].keys               = QKeySequence::Quit;
+	m_keyAssignInfo[0].keyAssign[ActionUndo].keys               = QKeySequence::Undo;
+	m_keyAssignInfo[0].keyAssign[ActionRedo].keys               = QKeySequence::Redo;
+	m_keyAssignInfo[0].keyAssign[ActionCut].keys                = QKeySequence::Cut;
+	m_keyAssignInfo[0].keyAssign[ActionCopy].keys               = QKeySequence::Copy;
+	m_keyAssignInfo[0].keyAssign[ActionPaste].keys              = QKeySequence::Paste;
+	m_keyAssignInfo[0].keyAssign[ActionClear].keys              = QKeySequence::Delete;
+	m_keyAssignInfo[0].keyAssign[ActionSelectAll].keys          = QKeySequence::SelectAll;
+	m_keyAssignInfo[0].keyAssign[ActionFind].keys               = QKeySequence::Find;
+	m_keyAssignInfo[0].keyAssign[ActionFindNext].keys           = QKeySequence::FindNext;
+	m_keyAssignInfo[0].keyAssign[ActionFindPrev].keys           = QKeySequence::FindPrevious;
+	m_keyAssignInfo[0].keyAssign[ActionReplace].keys            = QKeySequence::Replace;
+	m_keyAssignInfo[0].keyAssign[ActionJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
+	m_keyAssignInfo[0].keyAssign[ActionBuildSolution].keys      = QKeySequence(Qt::Key_F7);
+	m_keyAssignInfo[0].keyAssign[ActionBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
+//	m_keyAssignInfo[0].keyAssign[ActionCompileOnly].keys        = 
+//	m_keyAssignInfo[0].keyAssign[ActionBatchBuild].keys         = 
+	m_keyAssignInfo[0].keyAssign[ActionDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ActionNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ActionDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
+//	m_keyAssignInfo[0].keyAssign[ActionNoDebugRunProject].keys  = 
+	m_keyAssignInfo[0].keyAssign[ActionDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
+	m_keyAssignInfo[0].keyAssign[ActionDebugResume].keys        = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ActionDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
+	m_keyAssignInfo[0].keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
+	m_keyAssignInfo[0].keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
+	m_keyAssignInfo[0].keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
+	m_keyAssignInfo[0].keyAssign[ActionShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
+	m_keyAssignInfo[0].keyAssign[ActionShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
+	m_keyAssignInfo[0].keyAssign[ActionShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+	m_keyAssignInfo[0].keyAssign[ActionShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
+//	m_keyAssignInfo[0].keyAssign[ActionShowSysInfo].keys        = 
+//	m_keyAssignInfo[0].keyAssign[ActionShowVarInfo].keys        = 
+	m_keyAssignInfo[1].keyAssign.resize(ActionNum);
 	m_keyAssignInfo[1] = m_keyAssignInfo[0];
 	m_keyAssignInfo[1].name = tr("hsed3 like");
+
+	m_toolbarInfo.push_back(ActionOpen);
+	m_toolbarInfo.push_back(ActionSave);
+	m_toolbarInfo.push_back(ActionSaveAll);
+	m_toolbarInfo.push_back(ActionSeparator);
+	m_toolbarInfo.push_back(ActionCut);
+	m_toolbarInfo.push_back(ActionCopy);
+	m_toolbarInfo.push_back(ActionPaste);
+	m_toolbarInfo.push_back(ActionSeparator);
+	m_toolbarInfo.push_back(ActionUndo);
+	m_toolbarInfo.push_back(ActionRedo);
+	m_toolbarInfo.push_back(ActionSeparator);
+	m_toolbarInfo.push_back(ActionFind);
+	m_toolbarInfo.push_back(ActionFindNext);
+	m_toolbarInfo.push_back(ActionFindPrev);
+	m_toolbarInfo.push_back(ActionReplace);
+	m_toolbarInfo.push_back(ActionSeparator);
+	m_toolbarInfo.push_back(ActionDebugRunSolution);
+	m_toolbarInfo.push_back(ActionDebugSuspend);
+	m_toolbarInfo.push_back(ActionDebugResume);
+	m_toolbarInfo.push_back(ActionDebugStop);
 }
 
 Configuration::Configuration(const Configuration& info)
@@ -177,6 +198,7 @@ QStringList Configuration::keyAssignItemNames()
 				<< "show-breakpoints"
 				<< "show-system-variables"
 				<< "show-variables"
+				<< "about"
 				;
 	return listItems;
 }
@@ -230,7 +252,7 @@ bool Configuration::load(const QSettings& settings)
 		}
 
 		m_keyAssignInfo[i].name = presetTitle;
-		m_keyAssignInfo[i].keyAssign.resize(ShortcutNum);
+		m_keyAssignInfo[i].keyAssign.resize(ActionNum);
 
 		for(int j = 0; j < listKeyAssignItems.size(); j++)
 		{
@@ -245,7 +267,7 @@ bool Configuration::load(const QSettings& settings)
 								: "";
 			KeyAssignInfoType info;
 			info.keys = QKeySequence(settings.value(key, value).toString());
-			setKeyAssign(i - 1, Configuration::ShortcutEnum(j), info);
+			setKeyAssign(i - 1, Configuration::ActionEnum(j), info);
 		}
 	}
 

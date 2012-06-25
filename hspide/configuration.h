@@ -32,46 +32,48 @@ public:
 	} ColorMetricsEnum;
 
 	typedef enum {
-		ShortcutNew,				// 新規作成
-		ShortcutOpen,				// 開く
-		ShortcutSave,				// 保存
-		ShortcutSaveAs,				// 名前をつけて保存
-		ShortcutSaveAll,			// 全て保存
-		ShortcutQuit,				// 終了
-		ShortcutUndo,				// 元に戻す
-		ShortcutRedo,				// やり直す
-		ShortcutCut,				// 切り取り
-		ShortcutCopy,				// コピー
-		ShortcutPaste,				// ペースト
-		ShortcutClear,				// 削除
-		ShortcutSelectAll,			// 全て選択
-		ShortcutFind,				// 検索
-		ShortcutFindNext,			// 次を検索
-		ShortcutFindPrev,			// 前を検索
-		ShortcutReplace,			// 置換
-		ShortcutJump,				// 指定行へ移動
-		ShortcutBuildSolution,		// ソリューションをビルド
-		ShortcutBuildProject,		// プロジェクトをビルド
-		ShortcutCompileOnly,		// コンパイル
-		ShortcutBatchBuild,			// バッチビルド
-		ShortcutDebugRunSolution,	// ソリューションをデバッグ開始
-		ShortcutNoDebugRunSolution,	// ソリューションをデバッグなしで開始
-		ShortcutDebugRunProject,	// プロジェクトをデバッグ開始
-		ShortcutNoDebugRunProject,	// プロジェクトをデバッグなしで開始
-		ShortcutDebugSuspend,		// デバック中断
-		ShortcutDebugResume,		// デバッグ再開
-		ShortcutDebugStop,			// デバッグ中止
-		ShortcutConfig,				// 設定
-		ShortcutShowProject,		// プロジェクトを表示
-		ShortcutShowSymbol,			// シンボル一覧を表示
-		ShortcutShowOutput,			// 出力を表示
-		ShortcutShowSearch,			// 検索結果を表示
-		ShortcutShowMessage,		// メッセージを表示
-		ShortcutShowBreakPoint,		// ブレークポイントを表示
-		ShortcutShowSysInfo,		// システム情報を表示
-		ShortcutShowVarInfo,		// 変数情報を表示
-		ShortcutNum,
-	} ShortcutEnum;
+		ActionNew,					// 新規作成
+		ActionOpen,					// 開く
+		ActionSave,					// 保存
+		ActionSaveAs,				// 名前をつけて保存
+		ActionSaveAll,				// 全て保存
+		ActionQuit,					// 終了
+		ActionUndo,					// 元に戻す
+		ActionRedo,					// やり直す
+		ActionCut,					// 切り取り
+		ActionCopy,					// コピー
+		ActionPaste,				// ペースト
+		ActionClear,				// 削除
+		ActionSelectAll,			// 全て選択
+		ActionFind,					// 検索
+		ActionFindNext,				// 次を検索
+		ActionFindPrev,				// 前を検索
+		ActionReplace,				// 置換
+		ActionJump,					// 指定行へ移動
+		ActionBuildSolution,		// ソリューションをビルド
+		ActionBuildProject,			// プロジェクトをビルド
+		ActionCompileOnly,			// コンパイル
+		ActionBatchBuild,			// バッチビルド
+		ActionDebugRunSolution,		// ソリューションをデバッグ開始
+		ActionNoDebugRunSolution,	// ソリューションをデバッグなしで開始
+		ActionDebugRunProject,		// プロジェクトをデバッグ開始
+		ActionNoDebugRunProject,	// プロジェクトをデバッグなしで開始
+		ActionDebugSuspend,			// デバック中断
+		ActionDebugResume,			// デバッグ再開
+		ActionDebugStop,			// デバッグ中止
+		ActionConfig,				// 設定
+		ActionShowProject,			// プロジェクトを表示
+		ActionShowSymbol,			// シンボル一覧を表示
+		ActionShowOutput,			// 出力を表示
+		ActionShowSearch,			// 検索結果を表示
+		ActionShowMessage,			// メッセージを表示
+		ActionShowBreakPoint,		// ブレークポイントを表示
+		ActionShowSysInfo,			// システム情報を表示
+		ActionShowVarInfo,			// 変数情報を表示
+		ActionAbout,				// バージョン情報
+		ActionNum,
+		ActionSeparator = ActionNum,
+	} ActionEnum;
 
 	typedef struct {
 		bool   enable;
@@ -120,6 +122,8 @@ private:
 	QVector<KeyAssignPresetInfoType> m_keyAssignInfo;
 
 	friend bool operator == (const Configuration::KeyAssignPresetInfoType& lhs, const Configuration::KeyAssignPresetInfoType& rhs);
+
+	QVector<ActionEnum> m_toolbarInfo;
 
 public:
 
@@ -197,24 +201,30 @@ public:
 	void appendKeyAssignPreset(const QString& name, const QVector<KeyAssignInfoType>& info);
 	void removeKeyAssignPreset(int index);
 
-	void setKeyAssign(int index, ShortcutEnum type, const KeyAssignInfoType& info)
+	void setKeyAssign(int index, ActionEnum type, const KeyAssignInfoType& info)
 		{ m_keyAssignInfo[index+1].keyAssign[type] = info; }
 	void setKeyAssign(int index, const QVector<KeyAssignInfoType>& info)
 		{ m_keyAssignInfo[index+1].keyAssign = info; }
 	const QVector<KeyAssignInfoType>& keyAssign(int index) const
 		{ return m_keyAssignInfo[index+1].keyAssign; }
-	const KeyAssignInfoType& keyAssign(int index, ShortcutEnum type) const
+	const KeyAssignInfoType& keyAssign(int index, ActionEnum type) const
 		{ return m_keyAssignInfo[index+1].keyAssign[type]; }
-	void setKeyAssign(ShortcutEnum type, const KeyAssignInfoType& info)
+	void setKeyAssign(ActionEnum type, const KeyAssignInfoType& info)
 		{ setKeyAssign(-1, type, info); }
 	void setKeyAssign(const QVector<KeyAssignInfoType>& info)
 		{ setKeyAssign(-1, info); }
 	const QVector<KeyAssignInfoType>& keyAssign() const
 		{ return keyAssign(-1); }
-	const KeyAssignInfoType& keyAssign(ShortcutEnum type) const
+	const KeyAssignInfoType& keyAssign(ActionEnum type) const
 		{ return keyAssign(-1, type); }
-	void applyShortcut(ShortcutEnum type, QAction* action) const
+	void applyShortcut(ActionEnum type, QAction* action) const
 		{ action->setShortcut(m_keyAssignInfo[0].keyAssign[type].keys); }
+
+
+	int toolbarPresetNum() const
+		{ return m_toolbarInfo.size() - 1; }
+	ActionEnum toolbarPreset(int index) const
+		{ return m_toolbarInfo[index]; }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)

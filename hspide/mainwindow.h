@@ -76,9 +76,11 @@ class MainWindow : public QMainWindow
 	CMessageDock*      messageDock;
 	CBreakPointDock*   breakPointDock;
 
-	QWidget*			m_lastActivatedDocument;
+	QToolBar*	m_generalToolbar;
 
-	QMenu*				m_tabListMenu;
+	QWidget*	m_lastActivatedDocument;
+
+	QMenu*		m_tabListMenu;
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CWorkSpaceModel* m_workSpace;
