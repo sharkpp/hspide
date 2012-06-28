@@ -263,7 +263,7 @@ void MainWindow::setupActions()
 		QAction** action;
 		QString   middleIcon, smallIcon;
 		QString   text, tooltipText, statusText;
-	} menuInitTable[] = {
+	} actionInitTable[] = {
 		{ &newDocumentAct,        ":/images/tango/middle/document-new.png",         ":/images/tango/small/document-new.png",          tr("&New"),                  tr("New"),                  tr("Create a new file")         },
 		{ &openDocumentAct,       ":/images/tango/middle/document-open.png",        ":/images/tango/small/document-open.png",         tr("&Open"),                 tr("Open"),                 tr("Open file")                 },
 		{ &saveDocumentAct,       ":/images/tango/middle/document-save.png",        ":/images/tango/small/document-save.png",         tr("&Save"),                 tr("Save"),                 tr("Save file")                 },
@@ -305,17 +305,17 @@ void MainWindow::setupActions()
 		{ &aboutAct,              ":/images/tango/middle/dialog-information.png",   ":/images/tango/small/dialog-information.png",    tr("&About hspide ..."),     tr("About hspide ..."),     tr("About hspide")              },
 	};
 
-	for(size_t i = 0; i < _countof(menuInitTable); i++)
+	for(size_t i = 0; i < _countof(actionInitTable); i++)
 	{
 		QAction* action;
-		if( menuInitTable[i].middleIcon.isEmpty() ) {
-			action = *menuInitTable[i].action = new QAction(menuInitTable[i].text, this);
+		if( actionInitTable[i].middleIcon.isEmpty() ) {
+			action = *actionInitTable[i].action = new QAction(actionInitTable[i].text, this);
 		} else {
-			action = *menuInitTable[i].action = new QAction(QMultiIcon(menuInitTable[i].middleIcon,
-			                                                           menuInitTable[i].smallIcon), menuInitTable[i].text, this);
+			action = *actionInitTable[i].action = new QAction(QMultiIcon(actionInitTable[i].middleIcon,
+			                                                             actionInitTable[i].smallIcon), actionInitTable[i].text, this);
 		}
-		action->setToolTip(menuInitTable[i].tooltipText);
-		action->setStatusTip(menuInitTable[i].statusText);
+		action->setToolTip(actionInitTable[i].tooltipText);
+		action->setStatusTip(actionInitTable[i].statusText);
 	}
 
 	connect(newDocumentAct,            SIGNAL(triggered()), this, SLOT(onNewFile()));
@@ -578,18 +578,15 @@ void MainWindow::updateConfiguration(const Configuration& info)
 		{ NULL,                   },
 	};
 
+	QVector<Configuration::ActionEnum> actionTypes = theConf.toolbar();
+
 	m_generalToolbar->clear();
 
-	for(int i = 0; i < theConf.toolbarPresetNum(); i++)
+	for(int i = 0; i < actionTypes.size(); i++)
 	{
-		Configuration::ActionEnum actionType = theConf.toolbarPreset(i);
-
-		if( QAction** action = actionLookupTable[actionType].action )
-		{
+		if( QAction** action = actionLookupTable[actionTypes[i]].action ) {
 			m_generalToolbar->addAction(*action);
-		}
-		else
-		{
+		} else {
 			m_generalToolbar->addSeparator();
 		}
 	}

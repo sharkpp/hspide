@@ -11,6 +11,11 @@ bool operator == (const Configuration::KeyAssignPresetInfoType& lhs, const Confi
 	return lhs.name == rhs.name && lhs.keyAssign == rhs.keyAssign;
 }
 
+bool operator == (const Configuration::ToolbarPresetInfoType& lhs, const Configuration::ToolbarPresetInfoType& rhs)
+{
+	return lhs.toolbar == rhs.toolbar;
+}
+
 Configuration::Configuration()
 	: m_hspPath("./")
 	, m_hspCommonPath("./common/")
@@ -84,26 +89,29 @@ Configuration::Configuration()
 	m_keyAssignInfo[1] = m_keyAssignInfo[0];
 	m_keyAssignInfo[1].name = tr("hsed3 like");
 
-	m_toolbarInfo.push_back(ActionOpen);
-	m_toolbarInfo.push_back(ActionSave);
-	m_toolbarInfo.push_back(ActionSaveAll);
-	m_toolbarInfo.push_back(ActionSeparator);
-	m_toolbarInfo.push_back(ActionCut);
-	m_toolbarInfo.push_back(ActionCopy);
-	m_toolbarInfo.push_back(ActionPaste);
-	m_toolbarInfo.push_back(ActionSeparator);
-	m_toolbarInfo.push_back(ActionUndo);
-	m_toolbarInfo.push_back(ActionRedo);
-	m_toolbarInfo.push_back(ActionSeparator);
-	m_toolbarInfo.push_back(ActionFind);
-	m_toolbarInfo.push_back(ActionFindNext);
-	m_toolbarInfo.push_back(ActionFindPrev);
-	m_toolbarInfo.push_back(ActionReplace);
-	m_toolbarInfo.push_back(ActionSeparator);
-	m_toolbarInfo.push_back(ActionDebugRunSolution);
-	m_toolbarInfo.push_back(ActionDebugSuspend);
-	m_toolbarInfo.push_back(ActionDebugResume);
-	m_toolbarInfo.push_back(ActionDebugStop);
+	m_toolbarInfo.resize(2);
+	m_toolbarInfo[0].toolbar.push_back(ActionOpen);
+	m_toolbarInfo[0].toolbar.push_back(ActionSave);
+	m_toolbarInfo[0].toolbar.push_back(ActionSaveAll);
+	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
+	m_toolbarInfo[0].toolbar.push_back(ActionCut);
+	m_toolbarInfo[0].toolbar.push_back(ActionCopy);
+	m_toolbarInfo[0].toolbar.push_back(ActionPaste);
+	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
+	m_toolbarInfo[0].toolbar.push_back(ActionUndo);
+	m_toolbarInfo[0].toolbar.push_back(ActionRedo);
+	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
+	m_toolbarInfo[0].toolbar.push_back(ActionFind);
+	m_toolbarInfo[0].toolbar.push_back(ActionFindNext);
+	m_toolbarInfo[0].toolbar.push_back(ActionFindPrev);
+	m_toolbarInfo[0].toolbar.push_back(ActionReplace);
+	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
+	m_toolbarInfo[0].toolbar.push_back(ActionDebugRunSolution);
+	m_toolbarInfo[0].toolbar.push_back(ActionDebugSuspend);
+	m_toolbarInfo[0].toolbar.push_back(ActionDebugResume);
+	m_toolbarInfo[0].toolbar.push_back(ActionDebugStop);
+	m_toolbarInfo[1] = m_toolbarInfo[0];
+	m_toolbarInfo[1].name = tr("hsed3 like");
 }
 
 Configuration::Configuration(const Configuration& info)
@@ -157,7 +165,7 @@ QStringList Configuration::colorMetricsItemNames()
 	return listItems;
 }
 
-QStringList Configuration::keyAssignItemNames()
+QStringList Configuration::actionItemNames()
 {
 	QStringList listItems;
 	listItems	<< "new"
@@ -236,13 +244,21 @@ bool Configuration::load(const QSettings& settings)
 
 	// キー割り当て
 	QVector<KeyAssignPresetInfoType> oldKeyAssignInfo = m_keyAssignInfo;
-	QStringList listKeyAssignItems = keyAssignItemNames();
+	QStringList listKeyAssignItems = actionItemNames();
 	for(int i = 0, presetNum = 0; i < 1 + presetNum; i++)
 	{
+		QString keyBase = 0 == i
+						? "key-assign"
+						: QString("key-assign/%1")
+							.arg(i - 1);
 		QString presetTitle;
 		if( 0 == i )
 		{
-			presetNum = settings.value("key-assign/preset-num", 0).toInt();
+			QVariant value = settings.value("key-assign/preset-num");
+			if( !value.isValid() ) {
+				break; // 設定が存在しない
+			}
+			presetNum = value.toInt();
 			m_keyAssignInfo.resize(1 + presetNum);
 		}
 		else
@@ -256,20 +272,63 @@ bool Configuration::load(const QSettings& settings)
 
 		for(int j = 0; j < listKeyAssignItems.size(); j++)
 		{
-			QString key = 0 == i
-							? QString("key-assign/%1")
-								.arg(listKeyAssignItems.at(j))
-							: QString("key-assign/%1/%2")
-								.arg(i - 1)
+			QString key = QString("%1/%2")
+								.arg(keyBase)
 								.arg(listKeyAssignItems.at(j));
-			QString value = i < oldKeyAssignInfo.size()
-								? oldKeyAssignInfo[i].keyAssign[j].keys.toString()
-								: "";
+			QString defaultValue = i < oldKeyAssignInfo.size()
+										? oldKeyAssignInfo[i].keyAssign[j].keys.toString()
+										: "";
 			KeyAssignInfoType info;
-			info.keys = QKeySequence(settings.value(key, value).toString());
+			info.keys = QKeySequence(settings.value(key, defaultValue).toString());
 			setKeyAssign(i - 1, Configuration::ActionEnum(j), info);
 		}
 	}
+
+	// ツールバー
+	QVector<ToolbarPresetInfoType> oldToolbarInfo = m_toolbarInfo;
+	listKeyAssignItems.push_back("----"); // セパレータ
+	for(int i = 0, presetNum = 0; i < 1 + presetNum; i++)
+	{
+		QString keyBase = 0 == i
+						? "toolbar"
+						: QString("toolbar/%1")
+							.arg(i - 1);
+		QString presetTitle;
+		int buttonNum = 0;
+		if( 0 == i )
+		{
+			QVariant value = settings.value("toolbar/preset-num");
+			if( !value.isValid() ) {
+				break; // 設定が存在しない
+			}
+			presetNum = value.toInt();
+			m_toolbarInfo.resize(1 + presetNum);
+		}
+		else
+		{
+			QString key = QString("toolbar/%1/preset-name").arg(i - 1);
+			presetTitle = settings.value(key, tr("untitled")).toString();
+		}
+
+		buttonNum = settings.value(QString("%1/button-num").arg(keyBase), 0).toInt();
+
+		m_toolbarInfo[i].name = presetTitle;
+		m_toolbarInfo[i].toolbar.clear();
+
+		for(int j = 0; j < buttonNum; j++)
+		{
+			QString key = QString("%1/button-%2")
+								.arg(keyBase)
+								.arg(j);
+			QString defaultValue = i < oldToolbarInfo.size() && j < oldToolbarInfo[i].toolbar.size()
+										? listKeyAssignItems[oldToolbarInfo[i].toolbar[j]]
+										: "";
+			QString value = QKeySequence(settings.value(key, defaultValue).toString());
+			int k = listKeyAssignItems.indexOf(value);
+			m_toolbarInfo[i].toolbar.push_back(Configuration::ActionEnum(k));
+		}
+	}
+
 
 	emit updateConfiguration(*this);
 
@@ -307,10 +366,14 @@ bool Configuration::save(QSettings& settings) const
 	}
 
 	// キー割り当て
-	QStringList listKeyAssignItems = keyAssignItemNames();
+	QStringList listKeyAssignItems = actionItemNames();
 	for(int i = 0, presetNum = m_keyAssignInfo.size() - 1;
 		i < 1 + presetNum; i++)
 	{
+		QString keyBase = 0 == i
+						? "key-assign"
+						: QString("key-assign/%1")
+							.arg(i - 1);
 		QString presetTitle;
 		if( 0 == i )
 		{
@@ -325,13 +388,43 @@ bool Configuration::save(QSettings& settings) const
 		for(int j = 0; j < listKeyAssignItems.size(); j++)
 		{
 			const Configuration::KeyAssignInfoType& info = m_keyAssignInfo[i].keyAssign[j];
-			QString key = 0 == i
-							? QString("key-assign/%1")
-								.arg(listKeyAssignItems.at(j))
-							: QString("key-assign/%1/%2")
-								.arg(i - 1)
+			QString key = QString("%1/%2")
+								.arg(keyBase)
 								.arg(listKeyAssignItems.at(j));
 			settings.setValue(key, info.keys.toString());
+		}
+	}
+
+	// ツールバー
+	listKeyAssignItems.push_back("----"); // セパレータ
+	for(int i = 0, presetNum = m_toolbarInfo.size() - 1;
+		i < 1 + presetNum; i++)
+	{
+		QString keyBase = 0 == i
+						? "toolbar"
+						: QString("toolbar/%1")
+							.arg(i - 1);
+		QString presetTitle;
+		if( 0 == i )
+		{
+			settings.setValue("toolbar/preset-num", presetNum);
+		}
+		else
+		{
+			settings.setValue(QString("toolbar/%1/preset-name").arg(i - 1),
+			                  m_toolbarInfo[i].name);
+		}
+
+		settings.setValue(QString("%1/button-num").arg(keyBase),
+		                  m_toolbarInfo[i].toolbar.size());
+
+		for(int j = 0; j < m_toolbarInfo[i].toolbar.size(); j++)
+		{
+			ActionEnum action = m_toolbarInfo[i].toolbar[j];
+			QString key = QString("%1/button-%2")
+								.arg(keyBase)
+								.arg(j);
+			settings.setValue(key, listKeyAssignItems[action]);
 		}
 	}
 
@@ -361,9 +454,39 @@ void Configuration::appendKeyAssignPreset(const QString& name, const QVector<Key
 
 void Configuration::removeKeyAssignPreset(int index)
 {
-	if( 0 <= index &&
+	if( 0 < index &&
 		index < m_keyAssignInfo.size() )
 	{
 		m_keyAssignInfo.remove(index);
+	}
+}
+
+int Configuration::currentToolbarPreset() const
+{
+	for(int i = 1, presetNum = m_toolbarInfo.size() - 1;
+		i < presetNum; i++)
+	{
+		if( m_toolbarInfo[0] == m_toolbarInfo[i] ) 
+		{
+			return i - 1;
+		}
+	}
+	return -1;
+}
+
+void Configuration::appendToolbarPreset(const QString& name, const QVector<ActionEnum>& info)
+{
+	ToolbarPresetInfoType newInfo = {
+			name, info
+		};
+	m_toolbarInfo.append(newInfo);
+}
+
+void Configuration::removeToolbarPreset(int index)
+{
+	if( 0 < index &&
+		index < m_toolbarInfo.size() )
+	{
+		m_toolbarInfo.remove(index);
 	}
 }

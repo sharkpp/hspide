@@ -71,7 +71,9 @@
 	<file>images/tango/small/preferences-system.png</file>
 	<file>images/tango/small/system-log-out.png</file>
 	<file>images/tango/small/text-x-generic.png</file>
+	<file>images/icons/middle/blank.png</file>
 	<file>images/icons/middle/document-save-all.png</file>
+	<file>images/icons/small/blank.png</file>
 	<file>images/icons/small/document-save-all.png</file>
 	<file>images/icons/small/media-record-blue.png</file>
 	<file>images/icons/small/software-update-urgent-yellow.png</file>

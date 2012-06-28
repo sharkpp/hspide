@@ -123,7 +123,14 @@ private:
 
 	friend bool operator == (const Configuration::KeyAssignPresetInfoType& lhs, const Configuration::KeyAssignPresetInfoType& rhs);
 
-	QVector<ActionEnum> m_toolbarInfo;
+	typedef struct {
+		QString name;
+		QVector<ActionEnum> toolbar;
+	} ToolbarPresetInfoType;
+
+	QVector<ToolbarPresetInfoType> m_toolbarInfo;
+
+	friend bool operator == (const Configuration::ToolbarPresetInfoType& lhs, const Configuration::ToolbarPresetInfoType& rhs);
 
 public:
 
@@ -223,8 +230,20 @@ public:
 
 	int toolbarPresetNum() const
 		{ return m_toolbarInfo.size() - 1; }
-	ActionEnum toolbarPreset(int index) const
-		{ return m_toolbarInfo[index]; }
+	const QString& toolbarPresetName(int index) const
+		{ return m_toolbarInfo[index+1].name; }
+	int currentToolbarPreset() const;
+	void appendToolbarPreset(const QString& name, const QVector<ActionEnum>& info);
+	void removeToolbarPreset(int index);
+
+	void setToolbar(int index, const QVector<ActionEnum>& info)
+		{ m_toolbarInfo[index+1].toolbar = info; }
+	const QVector<ActionEnum>& toolbar(int index) const
+		{ return m_toolbarInfo[index+1].toolbar; }
+	void setToolbar(const QVector<ActionEnum>& info)
+		{ setToolbar(-1, info); }
+	const QVector<ActionEnum>& toolbar() const
+		{ return toolbar(-1); }
 
 
 	void setToolInfo(const QVector<ToolInfoType>& info)
@@ -243,7 +262,7 @@ public:
 private:
 
 	static QStringList colorMetricsItemNames();
-	static QStringList keyAssignItemNames();
+	static QStringList actionItemNames();
 
 signals:
 

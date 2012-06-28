@@ -41,7 +41,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>5</number>
        </property>
        <widget class="QWidget" name="directoryPage">
         <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1023,7 +1023,7 @@ color: rgb(255, 255, 255);</string>
                 </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -1049,7 +1049,7 @@ color: rgb(255, 255, 255);</string>
                 </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -1075,7 +1075,7 @@ color: rgb(255, 255, 255);</string>
                 </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -1117,7 +1117,7 @@ color: rgb(255, 255, 255);</string>
                 </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -1143,7 +1143,7 @@ color: rgb(255, 255, 255);</string>
                 </size>
                </property>
                <property name="toolButtonStyle">
-                <enum>Qt::ToolButtonTextBesideIcon</enum>
+                <enum>Qt::ToolButtonTextUnderIcon</enum>
                </property>
               </widget>
              </item>
@@ -1421,8 +1421,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onClickedInstallDirectoryRef()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>54</y>
+     <x>527</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
      <x>498</x>
@@ -1437,8 +1437,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onClickedCommonDirectoryRef()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>54</y>
+     <x>527</x>
+     <y>131</y>
     </hint>
     <hint type="destinationlabel">
      <x>495</x>
@@ -1453,7 +1453,7 @@ color: rgb(255, 255, 255);</string>
    <slot>onCurrentMetricsChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
+     <x>262</x>
      <y>39</y>
     </hint>
     <hint type="destinationlabel">
@@ -1469,7 +1469,7 @@ color: rgb(255, 255, 255);</string>
    <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
+     <x>262</x>
      <y>39</y>
     </hint>
     <hint type="destinationlabel">
@@ -1485,7 +1485,7 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsEnable(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
+     <x>262</x>
      <y>39</y>
     </hint>
     <hint type="destinationlabel">
@@ -1501,7 +1501,7 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsFontBold(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
+     <x>262</x>
      <y>39</y>
     </hint>
     <hint type="destinationlabel">
@@ -1517,8 +1517,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>49</y>
+     <x>262</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1581,8 +1581,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetRemove()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>494</x>
-     <y>45</y>
+     <x>262</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1597,8 +1597,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>389</x>
-     <y>55</y>
+     <x>262</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1613,8 +1613,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onToolbarAppendButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>354</x>
-     <y>131</y>
+     <x>384</x>
+     <y>124</y>
     </hint>
     <hint type="destinationlabel">
      <x>541</x>
@@ -1677,8 +1677,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onToolbarButtonGoBottom()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>367</x>
-     <y>290</y>
+     <x>384</x>
+     <y>343</y>
     </hint>
     <hint type="destinationlabel">
      <x>545</x>
@@ -1693,8 +1693,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>330</x>
-     <y>208</y>
+     <x>262</x>
+     <y>39</y>
     </hint>
     <hint type="destinationlabel">
      <x>371</x>
@@ -1724,5 +1724,6 @@ color: rgb(255, 255, 255);</string>
   <slot>onToolbarButtonGoTop()</slot>
   <slot>onToolbarButtonGoBottom()</slot>
   <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
+  <slot>onToolbarPartsListSelectChanged(int)</slot>
  </slots>
 </ui>

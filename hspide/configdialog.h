@@ -47,6 +47,10 @@ protected:
 	void applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign);
 	void updateKeyAssignPresetList();
 
+	void updateToolbar(const QVector<Configuration::ActionEnum>& toolbar);
+	void applyToolbar(QVector<Configuration::ActionEnum>& toolbar);
+	void updateToolbarPresetList();
+
 public slots:
 
 	void onOk();

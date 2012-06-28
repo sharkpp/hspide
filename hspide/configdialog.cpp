@@ -124,11 +124,62 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	ui.stackedWidget->setCurrentIndex(0);
 
+	// ツールバー
+	ui.toolbarPartsList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
+	ui.toolbarCurrentList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
+
 	setConfiguration(theConf);
 }
 
 void CConfigDialog::setConfiguration(const Configuration& info)
 {
+	struct {
+		QString   iconPath;
+		QString   text;
+	} actionInitTable[Configuration::ActionNum + 1] = {
+		/* ActionNew                 */{ ":/images/tango/small/document-new.png",          tr("New")                   },
+		/* ActionOpen                */{ ":/images/tango/small/document-open.png",         tr("Open")                  },
+		/* ActionSave                */{ ":/images/tango/small/document-save.png",         tr("Save")                  },
+		/* ActionSaveAs              */{ ":/images/tango/small/document-save-as.png",      tr("Save as")               },
+		/* ActionSaveAll             */{ ":/images/icons/small/document-save-all.png",     tr("Save all")              },
+		/* ActionQuit                */{ ":/images/tango/small/system-log-out.png",        tr("Quit")                  },
+		/* ActionUndo                */{ ":/images/tango/small/edit-undo.png",             tr("Undo")                  },
+		/* ActionRedo                */{ ":/images/tango/small/edit-redo.png",             tr("Redo")                  },
+		/* ActionCut                 */{ ":/images/tango/small/edit-cut.png",              tr("Cut")                   },
+		/* ActionCopy                */{ ":/images/tango/small/edit-copy.png",             tr("Copy")                  },
+		/* ActionPaste               */{ ":/images/tango/small/edit-paste.png",            tr("Paste")                 },
+		/* ActionClear               */{ ":/images/tango/small/edit-clear.png",            tr("Clear")                 },
+		/* ActionSelectAll           */{ ":/images/tango/small/edit-select-all.png",       tr("Select all")            },
+		/* ActionFind                */{ ":/images/tango/small/edit-find.png",             tr("Find")                  },
+		/* ActionFindNext            */{ ":/images/tango/small/edit-select-all.png",       tr("Find next")             },
+		/* ActionFindPrev            */{ ":/images/tango/small/edit-select-all.png",       tr("Find previous")         },
+		/* ActionReplace             */{ ":/images/tango/small/edit-find-replace.png",     tr("Replace")               },
+		/* ActionJump                */{ ":/images/tango/small/go-jump.png",               tr("Jump")                  },
+		/* ActionBuildSolution       */{ "",                                               tr("Build solution")        },
+		/* ActionBuildProject        */{ "",                                               tr("Build project")         },
+		/* ActionCompileOnly         */{ "",                                               tr("Compile only")          },
+		/* ActionBatchBuild          */{ "",                                               tr("Batch build")           },
+		/* ActionDebugRunSolution    */{ ":/images/tango/small/media-playback-start.png",  tr("Debug run solution")    },
+		/* ActionNoDebugRunSolution  */{ "",                                               tr("No debug run solution") },
+		/* ActionDebugRunProject     */{ "",                                               tr("Debug run project")     },
+		/* ActionNoDebugRunProject   */{ "",                                               tr("No debug run project")  },
+		/* ActionDebugSuspend        */{ ":/images/tango/small/media-playback-pause.png",  tr("Debug suspend")         },
+		/* ActionDebugResume         */{ ":/images/tango/small/media-playback-start.png",  tr("Debug resume")          },
+		/* ActionDebugStop           */{ ":/images/tango/small/media-playback-stop.png",   tr("Debug stop")            },
+		/* ActionConfig              */{ ":/images/tango/small/preferences-system.png",    tr("Configuration")         },
+		/* ActionShowProject         */{ "",                                               tr("Show project")          },
+		/* ActionShowSymbol          */{ "",                                               tr("Show symbols")          },
+		/* ActionShowOutput          */{ "",                                               tr("Show output")           },
+		/* ActionShowSearch          */{ "",                                               tr("Show search")           },
+		/* ActionShowMessage         */{ "",                                               tr("Show messages")         },
+		/* ActionShowBreakPoint      */{ "",                                               tr("Show breakpoints")      },
+		/* ActionShowSysInfo         */{ "",                                               tr("Show system variables") },
+		/* ActionShowVarInfo         */{ "",                                               tr("Show variables")        },
+		/* ActionAbout               */{ ":/images/tango/small/dialog-information.png",    tr("About")                 },
+	// 区切り ----------------
+		/*                           */{ "",                                               tr("----")                  },
+	};
+
 	m_configuration = info;
 
 	// 「ディレクトリ」ページ初期化
@@ -180,61 +231,37 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 	// 「キー割り当て」ページ初期化
 
-	QStringList scValues;
-	scValues	<< tr("New")
-				<< tr("Open")
-				<< tr("Save")
-				<< tr("Save as")
-				<< tr("Save all")
-				<< tr("Quit")
-				<< tr("Undo")
-				<< tr("Redo")
-				<< tr("Cut")
-				<< tr("Copy")
-				<< tr("Paste")
-				<< tr("Clear")
-				<< tr("Select all")
-				<< tr("Find")
-				<< tr("Find next")
-				<< tr("Find previous")
-				<< tr("Replace")
-				<< tr("Jump")
-				<< tr("Build solution")
-				<< tr("Build project")
-				<< tr("Compile only")
-				<< tr("Batch build")
-				<< tr("Debug run solution")
-				<< tr("No debug run solution")
-				<< tr("Debug run project")
-				<< tr("No debug run project")
-				<< tr("Debug suspend")
-				<< tr("Debug resume")
-				<< tr("Debug stop")
-				<< tr("Configuration")
-				<< tr("Show project")
-				<< tr("Show symbols")
-				<< tr("Show output")
-				<< tr("Show search")
-				<< tr("Show messages")
-				<< tr("Show breakpoints")
-				<< tr("Show system variables")
-				<< tr("Show variables")
-				<< tr("About")
-				;
 	ui.keyAssignList->clear();
-	for(int i = 0; i < scValues.size(); i++)
+	for(size_t i = 0; i < _countof(actionInitTable) - 1; i++)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(ui.keyAssignList);
-		item->setText(KeyAssignListNameColumn, scValues[i]);
+		item->setText(KeyAssignListNameColumn, actionInitTable[i].text);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
-	updateKeyAssign(m_configuration.keyAssign());
 
+	updateKeyAssign(m_configuration.keyAssign());
 	updateKeyAssignPresetList();
 
 	// ツールバー初期化
 
-	
+	ui.toolbarPartsList->clear();
+	for(size_t i = 0; i < _countof(actionInitTable); i++)
+	{
+		QListWidgetItem *item = new QListWidgetItem(ui.toolbarPartsList);
+		item->setText(actionInitTable[i].text);
+		if( !actionInitTable[i].iconPath.isEmpty() ) {
+			item->setIcon(QIcon(actionInitTable[i].iconPath));
+		} else {
+			item->setIcon(QIcon(":/images/icons/small/blank.png"));
+		}
+		item->setData(Qt::UserRole + 1, (int)Configuration::ActionEnum(i));
+	//	item->setHidden(Configuration::ActionNum <= i);
+	}
+	ui.toolbarPartsList->setCurrentRow(0);
+
+	updateToolbar(m_configuration.toolbar());
+	updateToolbarPresetList();
+
 }
 
 void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)
@@ -251,12 +278,14 @@ void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoTy
 
 void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
-	keyAssign.resize(ui.keyAssignList->topLevelItemCount());
-	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
+	keyAssign.clear();
+	for(int i = 0, num = ui.keyAssignList->topLevelItemCount();
+		i < num; i++)
 	{
 		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
-		Configuration::KeyAssignInfoType& sc = keyAssign[i];
+		Configuration::KeyAssignInfoType sc;
 		sc.keys = QKeySequence(item->data(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole).toString());
+		keyAssign.push_back(sc);
 	}
 }
 
@@ -295,6 +324,73 @@ void CConfigDialog::updateKeyAssignPresetList()
 			presetName = m_configuration.keyAssignPresetName(i);
 		}
 		ui.keyAssignPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
+	}
+}
+
+void CConfigDialog::updateToolbar(const QVector<Configuration::ActionEnum>& toolbar)
+{
+	ui.toolbarCurrentList->blockSignals(true);
+	ui.toolbarCurrentList->clear();
+	for(int i = 0; i < toolbar.size(); i++)
+	{
+		QListWidgetItem* item = new QListWidgetItem(ui.toolbarCurrentList);
+		QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)toolbar[i]);
+		item->setText(itemBase->text());
+		item->setIcon(itemBase->icon());
+		item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
+	}
+	ui.toolbarCurrentList->setCurrentRow(0);
+	ui.toolbarCurrentList->blockSignals(false);
+}
+
+void CConfigDialog::applyToolbar(QVector<Configuration::ActionEnum>& toolbar)
+{
+	toolbar.clear();
+	for(int i = 0, num = ui.toolbarCurrentList->count();
+		i < num; i++)
+	{
+		QListWidgetItem *item = ui.toolbarCurrentList->item(i);
+		Configuration::ActionEnum action;
+		action = Configuration::ActionEnum(item->data(Qt::UserRole + 1).toInt());
+		toolbar.push_back(action);
+	}
+}
+
+void CConfigDialog::updateToolbarPresetList()
+{
+	for(int i = ui.toolbarPresetList->count();
+		i < 1 + m_configuration.toolbarPresetNum(); i++)
+	{
+		ui.toolbarPresetList->addItem("");
+	}
+	for(int i = 1 + m_configuration.toolbarPresetNum();
+		i < ui.toolbarPresetList->count(); i++)
+	{
+		ui.toolbarPresetList->removeItem(ui.toolbarPresetList->count() - 1);
+	}
+
+	// 選択が無ければ「現在の設定」を選択
+	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	if( curPreset < 0 ) {
+		ui.toolbarPresetList->setCurrentIndex(0);
+		curPreset = -1;
+	}
+
+	// 変更をチェック
+	QVector<Configuration::ActionEnum> toolbar;
+	applyToolbar(toolbar);
+	bool presetModified = toolbar != m_configuration.toolbar(curPreset);
+
+	ui.toolbarPresetRemove->setDisabled(curPreset < 0 && !presetModified);
+
+	QString presetName = tr("Current setting");
+	for(int i = -1; i < m_configuration.toolbarPresetNum(); i++)
+	{
+		if( 0 <= i )
+		{
+			presetName = m_configuration.toolbarPresetName(i);
+		}
+		ui.toolbarPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
 	}
 }
 
@@ -514,7 +610,6 @@ void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 		return;
 	}
 
-	const QVector<Configuration::KeyAssignInfoType>& keyAssignBase = m_configuration.keyAssign(curPreset);
 	QVector<Configuration::KeyAssignInfoType> keyAssign;
 	applyKeyAssign(keyAssign);
 
@@ -568,28 +663,76 @@ void CConfigDialog::onKeyAsignPresetSave()
 
 void CConfigDialog::onToolbarPresetChanged(int index)
 {
+	updateToolbar(m_configuration.toolbar(index - 1));
+	updateToolbarPresetList();
 }
 
 void CConfigDialog::onToolbarPresetSave()
 {
+	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+
+	if( curPreset < 0 )
+	{
+		updateToolbar(m_configuration.toolbar());
+	}
+	else
+	{
+		m_configuration.removeToolbarPreset(curPreset);
+	}
+
+	updateToolbarPresetList();
 }
 
 void CConfigDialog::onToolbarPresetRemove()
 {
+	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+
+	if( curPreset < 0 )
+	{
+		updateToolbar(m_configuration.toolbar());
+	}
+	else
+	{
+		m_configuration.removeToolbarPreset(curPreset);
+	}
+
+	updateToolbarPresetList();
 }
 
 void CConfigDialog::onToolbarAppendButton()
 {
+	Configuration::ActionEnum action
+		= Configuration::ActionEnum(ui.toolbarPartsList->currentRow());
+	QListWidgetItem* item = new QListWidgetItem(ui.toolbarCurrentList);
+	QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)action);
+	item->setText(itemBase->text());
+	item->setIcon(itemBase->icon());
+	item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
+	ui.toolbarCurrentList->setCurrentItem(item);
 }
+
 void CConfigDialog::onToolbarAppendSeparator()
 {
 }
+
 void CConfigDialog::onToolbarRemoveButton()
 {
+	int row = ui.toolbarCurrentList->currentRow();
+	ui.toolbarCurrentList->takeItem(row);
 }
+
 void CConfigDialog::onToolbarButtonGoTop()
 {
+	int row = ui.toolbarCurrentList->currentRow();
+	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
+	ui.toolbarCurrentList->insertItem(0, item);
+	ui.toolbarCurrentList->setCurrentItem(item);
 }
+
 void CConfigDialog::onToolbarButtonGoBottom()
 {
+	int row = ui.toolbarCurrentList->currentRow();
+	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
+	ui.toolbarCurrentList->addItem(item);
+	ui.toolbarCurrentList->setCurrentItem(item);
 }
