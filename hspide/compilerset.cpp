@@ -72,6 +72,21 @@ CWorkSpaceItem* CCompilerSet::getTargetItem(const QString& id) const
 	return NULL;
 }
 
+// エラー文字列を取得
+QString CCompilerSet::hspErrorText(int errorNo)
+{
+	if( !m_compilers.isEmpty() )
+	{
+		QStringList hspErrorTexts = m_compilers.front()->hspErrorTexts();
+		if( 0 <= errorNo && errorNo < hspErrorTexts.size() )
+		{
+			return hspErrorTexts[errorNo];
+		}
+	}
+
+	return tr("Unknown error");
+}
+
 // ビルド待ちのアイテムからコンパイラに関連付け
 bool CCompilerSet::assignBuildItem(CCompiler* compiler)
 {

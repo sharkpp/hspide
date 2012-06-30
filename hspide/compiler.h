@@ -38,6 +38,8 @@ class CCompiler
 
 	QTemporaryFile*	m_objTemp;
 
+	QStringList		m_hspErrorText;
+
 public:
 
 	CCompiler(QObject *parent = 0);
@@ -52,6 +54,9 @@ public:
 
 	// シンボル一覧を取得
 	const CSymbolsList& symbols() const;
+
+	// エラー文字列を取得
+	const QStringList& hspErrorTexts() const;
 
 
 	// コンパイル

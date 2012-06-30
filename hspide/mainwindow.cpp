@@ -1519,7 +1519,9 @@ void MainWindow::onPutDebugLog(const QString& text)
 		fileName = runtimeError.cap(3);
 		errorNo  = runtimeError.cap(1).toInt();
 		lineNo   = runtimeError.cap(2).toInt();
-		desc     = QString(tr("[%1]")).arg(errorNo);
+		desc     = QString(tr("Error %1: %2"))
+						.arg(errorNo)
+						.arg(m_compilers->hspErrorText(errorNo));
 		type     = CMessageDock::ErrorCategory;
 		raiseDock= true;
 

@@ -23,6 +23,52 @@ CCompiler::CCompiler(QObject *parent)
 	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
 	        this,  SLOT(updateConfiguration(const Configuration&)));
 	updateConfiguration(theConf);
+
+	m_hspErrorText
+		<< ""									// 0
+		<< tr("Unknown system error")			// 1
+		<< tr("Syntax error")					// 2
+		<< tr("Illegal function call")			// 3
+		<< tr("Wrong expression")				// 4
+		<< tr("Default parameter not allowed")	// 5
+		<< tr("Type mismatch")					// 6
+		<< tr("Array overflow")					// 7
+		<< tr("Not a label object")				// 8
+		<< tr("Too many nesting")				// 9
+		<< tr("Return without gosub")			// 10
+		<< tr("Loop without repeat")			// 11
+		<< tr("File I/O error")					// 12
+		<< tr("Picture file missing")			// 13
+		<< tr("External execute error")			// 14
+		<< tr("Priority error")					// 15
+		<< tr("Too many parameters")			// 16
+		<< tr("Temporary buffer overflow")		// 17
+		<< tr("Wrong valiable name")			// 18
+		<< tr("Divided by zero")				// 19
+		<< tr("Buffer Overflow")				// 20
+		<< tr("Unsupported function")			// 21
+		<< tr("Expression too complex")			// 22
+		<< tr("Variable required")				// 23
+		<< tr("Integer value required")			// 24
+		<< tr("Bad array expression")			// 25
+		<< tr("Out of memory")					// 26
+		<< tr("Type initalization failed")		// 27
+		<< tr("No Function parameters")			// 28
+		<< tr("Stack overflow")					// 29
+		<< tr("Invalid parameter name")			// 30
+		<< tr("Invalid type of array")			// 31
+		<< tr("Invalid function parameter")		// 32
+		<< tr("Too many window objects")		// 33
+		<< tr("Invalid Array/Function")			// 34
+		<< tr("Structure required")				// 35
+		<< tr("Illegal structure call")			// 36
+		<< tr("Invalid type of variable")		// 37
+		<< tr("DLL call failed")				// 38
+		<< tr("External COM call failed")		// 39
+		<< tr("No function result")				// 40
+		<< tr("Invalid syntax for function")	// 41
+		;
+
 }
 
 const QUuid& CCompiler::uuid() const
@@ -68,6 +114,12 @@ bool CCompiler::collectSymbols()
 const CSymbolsList& CCompiler::symbols() const
 {
 	return m_highlightSymbols;
+}
+
+// ƒGƒ‰[•¶Žš—ñ‚ðŽæ“¾
+const QStringList& CCompiler::hspErrorTexts() const
+{
+	return m_hspErrorText;
 }
 
 CWorkSpaceItem* CCompiler::compileItem()

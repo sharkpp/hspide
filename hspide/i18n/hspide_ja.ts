@@ -68,6 +68,181 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>CCompiler</name>
+    <message>
+        <source>Unknown system error</source>
+        <translation>システムエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Syntax error</source>
+        <translation>文法が間違っています</translation>
+    </message>
+    <message>
+        <source>Illegal function call</source>
+        <translation>パラメータの値が異常です</translation>
+    </message>
+    <message>
+        <source>Wrong expression</source>
+        <translation>計算式でエラーが発生しました</translation>
+    </message>
+    <message>
+        <source>Default parameter not allowed</source>
+        <translation>パラメータの省略はできません</translation>
+    </message>
+    <message>
+        <source>Type mismatch</source>
+        <translation>パラメータの型が違います</translation>
+    </message>
+    <message>
+        <source>Array overflow</source>
+        <translation>配列の要素が無効です</translation>
+    </message>
+    <message>
+        <source>Not a label object</source>
+        <translation>有効なラベルが指定されていません</translation>
+    </message>
+    <message>
+        <source>Too many nesting</source>
+        <translation>サブルーチンやループのネストが深すぎます</translation>
+    </message>
+    <message>
+        <source>Return without gosub</source>
+        <translation>サブルーチン外のreturnは無効です</translation>
+    </message>
+    <message>
+        <source>Loop without repeat</source>
+        <translation>repeat外でのloopは無効です</translation>
+    </message>
+    <message>
+        <source>File I/O error</source>
+        <translation>ファイルが見つからないか無効な名前です</translation>
+    </message>
+    <message>
+        <source>Picture file missing</source>
+        <translation>画像ファイルがありません</translation>
+    </message>
+    <message>
+        <source>External execute error</source>
+        <translation>外部ファイル呼び出し中のエラーです</translation>
+    </message>
+    <message>
+        <source>Priority error</source>
+        <translation>計算式でカッコの記述が違います</translation>
+    </message>
+    <message>
+        <source>Too many parameters</source>
+        <translation>パラメータの数が多すぎます</translation>
+    </message>
+    <message>
+        <source>Temporary buffer overflow</source>
+        <translation>文字列式で扱える文字数を越えました</translation>
+    </message>
+    <message>
+        <source>Wrong valiable name</source>
+        <translation>代入できない変数名を指定しています</translation>
+    </message>
+    <message>
+        <source>Divided by zero</source>
+        <translation>0で除算しました</translation>
+    </message>
+    <message>
+        <source>Buffer Overflow</source>
+        <translation>バッファオーバーフローが発生しました</translation>
+    </message>
+    <message>
+        <source>Unsupported function</source>
+        <translation>サポートされない機能を選択しました</translation>
+    </message>
+    <message>
+        <source>Expression too complex</source>
+        <translation>計算式のカッコが深すぎます</translation>
+    </message>
+    <message>
+        <source>Variable required</source>
+        <translation>変数名が指定されていません</translation>
+    </message>
+    <message>
+        <source>Integer value required</source>
+        <translation>整数以外が指定されています</translation>
+    </message>
+    <message>
+        <source>Bad array expression</source>
+        <translation>配列の要素書式が間違っています</translation>
+    </message>
+    <message>
+        <source>Out of memory</source>
+        <translation>メモリの確保ができませんでした</translation>
+    </message>
+    <message>
+        <source>Type initalization failed</source>
+        <translation>タイプの初期化に失敗しました</translation>
+    </message>
+    <message>
+        <source>No Function parameters</source>
+        <translation>関数に引数が設定されていません</translation>
+    </message>
+    <message>
+        <source>Stack overflow</source>
+        <translation>スタック領域のオーバーフローです</translation>
+    </message>
+    <message>
+        <source>Invalid parameter name</source>
+        <translation>無効な名前がパラメーターに指定されています</translation>
+    </message>
+    <message>
+        <source>Invalid type of array</source>
+        <translation>異なる型を持つ配列変数に代入しました</translation>
+    </message>
+    <message>
+        <source>Invalid function parameter</source>
+        <translation>関数のパラメーター記述が不正です</translation>
+    </message>
+    <message>
+        <source>Too many window objects</source>
+        <translation>オブジェクト数が多すぎます</translation>
+    </message>
+    <message>
+        <source>Invalid Array/Function</source>
+        <translation>配列・関数として使用できない型です</translation>
+    </message>
+    <message>
+        <source>Structure required</source>
+        <translation>モジュール変数が指定されていません</translation>
+    </message>
+    <message>
+        <source>Illegal structure call</source>
+        <translation>モジュール変数の指定が無効です</translation>
+    </message>
+    <message>
+        <source>Invalid type of variable</source>
+        <translation>変数型の変換に失敗しました</translation>
+    </message>
+    <message>
+        <source>DLL call failed</source>
+        <translation>外部DLLの呼び出しに失敗しました</translation>
+    </message>
+    <message>
+        <source>External COM call failed</source>
+        <translation>外部オブジェクトの呼び出しに失敗しました</translation>
+    </message>
+    <message>
+        <source>No function result</source>
+        <translation>関数の戻り値が設定されていません</translation>
+    </message>
+    <message>
+        <source>Invalid syntax for function</source>
+        <translation>関数を命令として記述しています。
+(HSP2から関数化された名前を使用している可能性があります)</translation>
+    </message>
+</context>
+<context>
+    <name>CCompilerSet</name>
+    <message>
+        <source>Unknown error</source>
+        <translation>不明なエラーです</translation>
+    </message>
+</context>
+<context>
     <name>CConfigDialog</name>
     <message>
         <source>Directory</source>
@@ -1286,6 +1461,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Run project without debug</source>
         <translation>プロジェクトをデバッグなしで開始</translation>
+    </message>
+    <message>
+        <source>Error %1: %2</source>
+        <translation>エラー %1: %2</translation>
     </message>
 </context>
 <context>

@@ -77,6 +77,9 @@ public:
 
 	CWorkSpaceItem* getTargetItem(const QString& id) const;
 
+	// ƒGƒ‰[•¶š—ñ‚ğæ“¾
+	QString hspErrorText(int errorNo);
+
 protected:
 
 	bool execCompiler(CWorkSpaceItem* targetItem, bool buildAfterRun, bool debugMode);
