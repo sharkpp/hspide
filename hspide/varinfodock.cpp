@@ -84,7 +84,7 @@ QStandardItem* CVariableInfoDock::getItem(const QString& valueName)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(m_listWidget->model());
 	QStandardItem* parent = model->invisibleRootItem();
-	QStandardItem* item;
+	QStandardItem* item = NULL;
 	QStringList key = valueName.split("/");
 	QList<QStandardItem*> itemPath;
 	QStandardItem* rootItem = NULL;

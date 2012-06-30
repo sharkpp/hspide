@@ -48,7 +48,7 @@ QStandardItem* CSystemInfoDock::getItem(const QString& valueName)
 {
 	QStandardItemModel* model = qobject_cast<QStandardItemModel*>(listWidget->model());
 	QStandardItem* parent = model->invisibleRootItem();
-	QStandardItem* item;
+	QStandardItem* item = NULL;
 	QStringList key = valueName.split("/");
 	QList<QStandardItem*> itemPath;
 

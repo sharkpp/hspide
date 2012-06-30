@@ -1278,7 +1278,7 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 
 		for(int i = 0; i < 3 && !accepted; i++)
 		{
-			CMessageDock::CategoryType type;
+			CMessageDock::CategoryType type = CMessageDock::NoneCategory;
 			QString fileName, lineNo, desc;
 			QUuid uuid;
 

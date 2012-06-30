@@ -734,6 +734,10 @@ p, li { white-space: pre-wrap; }
         <source>untitled</source>
         <translation>無題</translation>
     </message>
+    <message>
+        <source>Visual Studio like</source>
+        <translation>Visual Studio風</translation>
+    </message>
 </context>
 <context>
     <name>FileManager</name>

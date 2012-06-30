@@ -45,73 +45,100 @@ Configuration::Configuration()
 	m_colorMetrics[EofMetrics].foregroundColor          = Qt::white;
 	m_colorMetrics[EofMetrics].backgroundColor          = Qt::black;
 
-	m_keyAssignInfo.resize(2);
-	m_keyAssignInfo[0].keyAssign.resize(ActionNum);
-	m_keyAssignInfo[0].keyAssign[ActionNew].keys                = QKeySequence::New;
-	m_keyAssignInfo[0].keyAssign[ActionOpen].keys               = QKeySequence::Open;
-	m_keyAssignInfo[0].keyAssign[ActionSave].keys               = QKeySequence::Save;
-	m_keyAssignInfo[0].keyAssign[ActionSaveAs].keys             = QKeySequence::SaveAs;
-//	m_keyAssignInfo[0].keyAssign[ActionSaveAll].keys            = 
-	m_keyAssignInfo[0].keyAssign[ActionQuit].keys               = QKeySequence::Quit;
-	m_keyAssignInfo[0].keyAssign[ActionUndo].keys               = QKeySequence::Undo;
-	m_keyAssignInfo[0].keyAssign[ActionRedo].keys               = QKeySequence::Redo;
-	m_keyAssignInfo[0].keyAssign[ActionCut].keys                = QKeySequence::Cut;
-	m_keyAssignInfo[0].keyAssign[ActionCopy].keys               = QKeySequence::Copy;
-	m_keyAssignInfo[0].keyAssign[ActionPaste].keys              = QKeySequence::Paste;
-	m_keyAssignInfo[0].keyAssign[ActionClear].keys              = QKeySequence::Delete;
-	m_keyAssignInfo[0].keyAssign[ActionSelectAll].keys          = QKeySequence::SelectAll;
-	m_keyAssignInfo[0].keyAssign[ActionFind].keys               = QKeySequence::Find;
-	m_keyAssignInfo[0].keyAssign[ActionFindNext].keys           = QKeySequence::FindNext;
-	m_keyAssignInfo[0].keyAssign[ActionFindPrev].keys           = QKeySequence::FindPrevious;
-	m_keyAssignInfo[0].keyAssign[ActionReplace].keys            = QKeySequence::Replace;
-	m_keyAssignInfo[0].keyAssign[ActionJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
-	m_keyAssignInfo[0].keyAssign[ActionBuildSolution].keys      = QKeySequence(Qt::Key_F7);
-	m_keyAssignInfo[0].keyAssign[ActionBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
-//	m_keyAssignInfo[0].keyAssign[ActionCompileOnly].keys        = 
-//	m_keyAssignInfo[0].keyAssign[ActionBatchBuild].keys         = 
-	m_keyAssignInfo[0].keyAssign[ActionDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ActionNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ActionDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
-//	m_keyAssignInfo[0].keyAssign[ActionNoDebugRunProject].keys  = 
-	m_keyAssignInfo[0].keyAssign[ActionDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
-	m_keyAssignInfo[0].keyAssign[ActionDebugResume].keys        = QKeySequence(Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ActionDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
-	m_keyAssignInfo[0].keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
-	m_keyAssignInfo[0].keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
-	m_keyAssignInfo[0].keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
-	m_keyAssignInfo[0].keyAssign[ActionShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
-	m_keyAssignInfo[0].keyAssign[ActionShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
-	m_keyAssignInfo[0].keyAssign[ActionShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
-	m_keyAssignInfo[0].keyAssign[ActionShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
-//	m_keyAssignInfo[0].keyAssign[ActionShowSysInfo].keys        = 
-//	m_keyAssignInfo[0].keyAssign[ActionShowVarInfo].keys        = 
-	m_keyAssignInfo[1].keyAssign.resize(ActionNum);
-	m_keyAssignInfo[1] = m_keyAssignInfo[0];
-	m_keyAssignInfo[1].name = tr("hsed3 like");
+	// åªç›ÇÃê›íË
+	m_keyAssignInfo.push_back(KeyAssignPresetInfoType());
+	// HSED3ïó
+	m_keyAssignInfo.push_back(KeyAssignPresetInfoType());
+	m_keyAssignInfo.back().name = tr("hsed3 like");
+	m_keyAssignInfo.back().keyAssign.resize(ActionNum);
+	m_keyAssignInfo.back().keyAssign[ActionNew].keys                = QKeySequence::New;
+	m_keyAssignInfo.back().keyAssign[ActionOpen].keys               = QKeySequence::Open;
+	m_keyAssignInfo.back().keyAssign[ActionSave].keys               = QKeySequence::Save;
+	m_keyAssignInfo.back().keyAssign[ActionSaveAs].keys             = QKeySequence::SaveAs;
+//	m_keyAssignInfo.back().keyAssign[ActionSaveAll].keys            = 
+	m_keyAssignInfo.back().keyAssign[ActionQuit].keys               = QKeySequence::Quit;
+	m_keyAssignInfo.back().keyAssign[ActionUndo].keys               = QKeySequence::Undo;
+	m_keyAssignInfo.back().keyAssign[ActionRedo].keys               = QKeySequence::Redo;
+	m_keyAssignInfo.back().keyAssign[ActionCut].keys                = QKeySequence::Cut;
+	m_keyAssignInfo.back().keyAssign[ActionCopy].keys               = QKeySequence::Copy;
+	m_keyAssignInfo.back().keyAssign[ActionPaste].keys              = QKeySequence::Paste;
+	m_keyAssignInfo.back().keyAssign[ActionClear].keys              = QKeySequence::Delete;
+	m_keyAssignInfo.back().keyAssign[ActionSelectAll].keys          = QKeySequence::SelectAll;
+	m_keyAssignInfo.back().keyAssign[ActionFind].keys               = QKeySequence::Find;
+	m_keyAssignInfo.back().keyAssign[ActionFindNext].keys           = QKeySequence::FindNext;
+	m_keyAssignInfo.back().keyAssign[ActionFindPrev].keys           = QKeySequence::FindPrevious;
+	m_keyAssignInfo.back().keyAssign[ActionReplace].keys            = QKeySequence::Replace;
+	m_keyAssignInfo.back().keyAssign[ActionJump].keys               = QKeySequence(Qt::CTRL + Qt::Key_J);
+	m_keyAssignInfo.back().keyAssign[ActionBuildSolution].keys      = QKeySequence(Qt::Key_F7);
+	m_keyAssignInfo.back().keyAssign[ActionBuildProject].keys       = QKeySequence(Qt::CTRL + Qt::Key_F7);
+//	m_keyAssignInfo.back().keyAssign[ActionCompileOnly].keys        = 
+//	m_keyAssignInfo.back().keyAssign[ActionBatchBuild].keys         = 
+	m_keyAssignInfo.back().keyAssign[ActionDebugRunSolution].keys   = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo.back().keyAssign[ActionNoDebugRunSolution].keys = QKeySequence(Qt::CTRL + Qt::Key_F5);
+	m_keyAssignInfo.back().keyAssign[ActionDebugRunProject].keys    = QKeySequence(Qt::ALT + Qt::Key_F5);
+//	m_keyAssignInfo.back().keyAssign[ActionNoDebugRunProject].keys  = 
+	m_keyAssignInfo.back().keyAssign[ActionDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
+	m_keyAssignInfo.back().keyAssign[ActionDebugResume].keys        = QKeySequence(Qt::Key_F5);
+	m_keyAssignInfo.back().keyAssign[ActionDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
+	m_keyAssignInfo.back().keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
+	m_keyAssignInfo.back().keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
+	m_keyAssignInfo.back().keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
+	m_keyAssignInfo.back().keyAssign[ActionShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
+	m_keyAssignInfo.back().keyAssign[ActionShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
+	m_keyAssignInfo.back().keyAssign[ActionShowMessage].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+	m_keyAssignInfo.back().keyAssign[ActionShowBreakPoint].keys     = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_B);
+//	m_keyAssignInfo.back().keyAssign[ActionShowSysInfo].keys        = 
+//	m_keyAssignInfo.back().keyAssign[ActionShowVarInfo].keys        = 
+//	m_keyAssignInfo.back().keyAssign[ActionAbout].keys              = 
+	// HSED3ïóÇåªç›ÇÃê›íËÇ…
+	m_keyAssignInfo[0] = m_keyAssignInfo[1];
 
-	m_toolbarInfo.resize(2);
-	m_toolbarInfo[0].toolbar.push_back(ActionOpen);
-	m_toolbarInfo[0].toolbar.push_back(ActionSave);
-	m_toolbarInfo[0].toolbar.push_back(ActionSaveAll);
-	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
-	m_toolbarInfo[0].toolbar.push_back(ActionCut);
-	m_toolbarInfo[0].toolbar.push_back(ActionCopy);
-	m_toolbarInfo[0].toolbar.push_back(ActionPaste);
-	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
-	m_toolbarInfo[0].toolbar.push_back(ActionUndo);
-	m_toolbarInfo[0].toolbar.push_back(ActionRedo);
-	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
-	m_toolbarInfo[0].toolbar.push_back(ActionFind);
-	m_toolbarInfo[0].toolbar.push_back(ActionFindNext);
-	m_toolbarInfo[0].toolbar.push_back(ActionFindPrev);
-	m_toolbarInfo[0].toolbar.push_back(ActionReplace);
-	m_toolbarInfo[0].toolbar.push_back(ActionSeparator);
-	m_toolbarInfo[0].toolbar.push_back(ActionDebugRunSolution);
-	m_toolbarInfo[0].toolbar.push_back(ActionDebugSuspend);
-	m_toolbarInfo[0].toolbar.push_back(ActionDebugResume);
-	m_toolbarInfo[0].toolbar.push_back(ActionDebugStop);
-	m_toolbarInfo[1] = m_toolbarInfo[0];
-	m_toolbarInfo[1].name = tr("hsed3 like");
+	// åªç›ÇÃê›íË
+	m_toolbarInfo.push_back(ToolbarPresetInfoType());
+	// HSED3ïó
+	m_toolbarInfo.push_back(ToolbarPresetInfoType());
+	m_toolbarInfo.back().name = tr("hsed3 like");
+	m_toolbarInfo.back().toolbar.push_back(ActionNew);
+	m_toolbarInfo.back().toolbar.push_back(ActionOpen);
+	m_toolbarInfo.back().toolbar.push_back(ActionSave);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionCut);
+	m_toolbarInfo.back().toolbar.push_back(ActionCopy);
+	m_toolbarInfo.back().toolbar.push_back(ActionPaste);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionUndo);
+	m_toolbarInfo.back().toolbar.push_back(ActionSaveAll);
+	m_toolbarInfo.back().toolbar.push_back(ActionFind);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionFind);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugRunSolution);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugSuspend);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugResume);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStop);
+	// Visual Studioïó
+	m_toolbarInfo.push_back(ToolbarPresetInfoType());
+	m_toolbarInfo.back().name = tr("Visual Studio like");
+	m_toolbarInfo.back().toolbar.push_back(ActionNew);
+	m_toolbarInfo.back().toolbar.push_back(ActionOpen);
+	m_toolbarInfo.back().toolbar.push_back(ActionSave);
+	m_toolbarInfo.back().toolbar.push_back(ActionSaveAll);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionCut);
+	m_toolbarInfo.back().toolbar.push_back(ActionCopy);
+	m_toolbarInfo.back().toolbar.push_back(ActionPaste);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionUndo);
+	m_toolbarInfo.back().toolbar.push_back(ActionSaveAll);
+	m_toolbarInfo.back().toolbar.push_back(ActionFindNext);
+	m_toolbarInfo.back().toolbar.push_back(ActionFindPrev);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugRunSolution);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugSuspend);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugResume);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStop);
+	// HSED3ïóÇåªç›ÇÃê›íËÇ…
+	m_toolbarInfo[0] = m_toolbarInfo[1];
 }
 
 Configuration::Configuration(const Configuration& info)

@@ -291,6 +291,7 @@ void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& ke
 
 void CConfigDialog::updateKeyAssignPresetList()
 {
+	ui.keyAssignPresetList->blockSignals(true);
 	for(int i = ui.keyAssignPresetList->count();
 		i < 1 + m_configuration.keyAssignPresetNum(); i++)
 	{
@@ -301,6 +302,7 @@ void CConfigDialog::updateKeyAssignPresetList()
 	{
 		ui.keyAssignPresetList->removeItem(ui.keyAssignPresetList->count() - 1);
 	}
+	ui.keyAssignPresetList->blockSignals(false);
 
 	// 選択が無ければ「現在の設定」を選択
 	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
@@ -358,6 +360,7 @@ void CConfigDialog::applyToolbar(QVector<Configuration::ActionEnum>& toolbar)
 
 void CConfigDialog::updateToolbarPresetList()
 {
+	ui.toolbarPresetList->blockSignals(true);
 	for(int i = ui.toolbarPresetList->count();
 		i < 1 + m_configuration.toolbarPresetNum(); i++)
 	{
@@ -368,6 +371,7 @@ void CConfigDialog::updateToolbarPresetList()
 	{
 		ui.toolbarPresetList->removeItem(ui.toolbarPresetList->count() - 1);
 	}
+	ui.toolbarPresetList->blockSignals(false);
 
 	// 選択が無ければ「現在の設定」を選択
 	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
