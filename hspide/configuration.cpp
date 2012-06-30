@@ -139,6 +139,8 @@ Configuration& Configuration::operator = (const Configuration& info)
 
 	m_keyAssignInfo  = info.m_keyAssignInfo;
 
+	m_toolbarInfo = info.m_toolbarInfo;
+
 	m_tools = info.m_tools;
 
 	emit updateConfiguration(*this);
@@ -323,12 +325,13 @@ bool Configuration::load(const QSettings& settings)
 			QString defaultValue = i < oldToolbarInfo.size() && j < oldToolbarInfo[i].toolbar.size()
 										? listKeyAssignItems[oldToolbarInfo[i].toolbar[j]]
 										: "";
-			QString value = QKeySequence(settings.value(key, defaultValue).toString());
+			QString value = settings.value(key, defaultValue).toString();
 			int k = listKeyAssignItems.indexOf(value);
-			m_toolbarInfo[i].toolbar.push_back(Configuration::ActionEnum(k));
+			if( 0 <= k && k <= Configuration::ActionNum ) {
+				m_toolbarInfo[i].toolbar.push_back(Configuration::ActionEnum(k));
+			}
 		}
 	}
-
 
 	emit updateConfiguration(*this);
 

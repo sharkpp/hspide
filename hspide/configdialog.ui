@@ -1028,7 +1028,7 @@ color: rgb(255, 255, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolbarSeparator">
+              <widget class="QToolButton" name="toolbarAppendLast">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1036,11 +1036,11 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>-----</string>
+                <string>A&amp;ppend Last</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/middle/list-add.png</normaloff>:/images/tango/middle/list-add.png</iconset>
+                 <normaloff>:/images/tango/middle/go-last.png</normaloff>:/images/tango/middle/go-last.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1320,7 +1320,6 @@ color: rgb(255, 255, 255);</string>
   <tabstop>toolbarPresetRemove</tabstop>
   <tabstop>toolbarPartsList</tabstop>
   <tabstop>toolbarAppend</tabstop>
-  <tabstop>toolbarSeparator</tabstop>
   <tabstop>toolbarRemove</tabstop>
   <tabstop>toolbarGoTop</tabstop>
   <tabstop>toolbarGoButton</tabstop>
@@ -1453,8 +1452,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onCurrentMetricsChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>265</x>
+     <y>18</y>
     </hint>
     <hint type="destinationlabel">
      <x>496</x>
@@ -1469,8 +1468,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>265</x>
+     <y>18</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1485,8 +1484,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsEnable(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>209</x>
+     <y>23</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1501,8 +1500,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsFontBold(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>258</x>
+     <y>23</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1517,8 +1516,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>214</x>
+     <y>27</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1581,8 +1580,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetRemove()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>264</x>
+     <y>27</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1597,8 +1596,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAsignPresetSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>239</x>
+     <y>27</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1619,22 +1618,6 @@ color: rgb(255, 255, 255);</string>
     <hint type="destinationlabel">
      <x>541</x>
      <y>208</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>toolbarSeparator</sender>
-   <signal>clicked()</signal>
-   <receiver>ConfigDialog</receiver>
-   <slot>onToolbarAppendSeparator()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>333</x>
-     <y>167</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>544</x>
-     <y>139</y>
     </hint>
    </hints>
   </connection>
@@ -1702,6 +1685,22 @@ color: rgb(255, 255, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>toolbarAppendLast</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onToolbarAppendButtonLast()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>363</x>
+     <y>156</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>543</x>
+     <y>156</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
@@ -1719,7 +1718,7 @@ color: rgb(255, 255, 255);</string>
   <slot>onToolbarPresetSave()</slot>
   <slot>onToolbarPresetRemove()</slot>
   <slot>onToolbarAppendButton()</slot>
-  <slot>onToolbarAppendSeparator()</slot>
+  <slot>onToolbarAppendButtonLast()</slot>
   <slot>onToolbarRemoveButton()</slot>
   <slot>onToolbarButtonGoTop()</slot>
   <slot>onToolbarButtonGoBottom()</slot>

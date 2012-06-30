@@ -50,6 +50,7 @@ protected:
 	void updateToolbar(const QVector<Configuration::ActionEnum>& toolbar);
 	void applyToolbar(QVector<Configuration::ActionEnum>& toolbar);
 	void updateToolbarPresetList();
+	void checkUpdateToolbarPresetList();
 
 public slots:
 
@@ -71,7 +72,7 @@ public slots:
 	void onToolbarPresetSave();
 	void onToolbarPresetRemove();
 	void onToolbarAppendButton();
-	void onToolbarAppendSeparator();
+	void onToolbarAppendButtonLast();
 	void onToolbarRemoveButton();
 	void onToolbarButtonGoTop();
 	void onToolbarButtonGoBottom();

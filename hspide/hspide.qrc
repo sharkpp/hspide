@@ -21,7 +21,9 @@
 	<file>images/tango/middle/edit-undo.png</file>
 	<file>images/tango/middle/go-bottom.png</file>
 	<file>images/tango/middle/go-down.png</file>
+	<file>images/tango/middle/go-first.png</file>
 	<file>images/tango/middle/go-jump.png</file>
+	<file>images/tango/middle/go-last.png</file>
 	<file>images/tango/middle/go-next.png</file>
 	<file>images/tango/middle/go-previous.png</file>
 	<file>images/tango/middle/go-top.png</file>
@@ -57,7 +59,9 @@
 	<file>images/tango/small/folder.png</file>
 	<file>images/tango/small/go-bottom.png</file>
 	<file>images/tango/small/go-down.png</file>
+	<file>images/tango/small/go-first.png</file>
 	<file>images/tango/small/go-jump.png</file>
+	<file>images/tango/small/go-last.png</file>
 	<file>images/tango/small/go-next.png</file>
 	<file>images/tango/small/go-previous.png</file>
 	<file>images/tango/small/go-top.png</file>

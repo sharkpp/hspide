@@ -394,6 +394,26 @@ void CConfigDialog::updateToolbarPresetList()
 	}
 }
 
+void CConfigDialog::checkUpdateToolbarPresetList()
+{
+	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+
+	if( curPreset < -1 )
+	{
+		return;
+	}
+
+	QVector<Configuration::ActionEnum> toolbar;
+	applyToolbar(toolbar);
+
+	// プリセットに変更が加えられたら「現在の設定」と置き換える
+	ui.toolbarPresetList->setCurrentIndex(0);
+
+	updateToolbar(toolbar);
+
+	updateToolbarPresetList();
+}
+
 const Configuration& CConfigDialog::configuration() const
 {
 	return m_configuration;
@@ -415,6 +435,10 @@ void CConfigDialog::onOk()
 	applyKeyAssign(keyAssign);
 	m_configuration.setKeyAssign(keyAssign);
 
+	QVector<Configuration::ActionEnum> toolbar;
+	applyToolbar(toolbar);
+	m_configuration.setToolbar(toolbar);
+
 	accept();
 }
 
@@ -425,10 +449,16 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 	if( item->data().isValid() )
 	{
 		// 変更破棄
-		if( ui.keyAssignPage == ui.stackedWidget->widget(ui.stackedWidget->currentIndex()) )
+		QWidget* currentPage = ui.stackedWidget->widget(ui.stackedWidget->currentIndex());
+		if( ui.keyAssignPage == currentPage )
 		{
 			int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
 			updateKeyAssign(m_configuration.keyAssign(curPreset));
+		}
+		else if( ui.toolbarPage == currentPage )
+		{
+			int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+			updateToolbar(m_configuration.toolbar(curPreset));
 		}
 		// ページ切り替え
 		ui.stackedWidget->setCurrentIndex(item->data().toInt());
@@ -669,18 +699,42 @@ void CConfigDialog::onToolbarPresetChanged(int index)
 
 void CConfigDialog::onToolbarPresetSave()
 {
-	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	CSavePresetDialog dlg(this);
 
-	if( curPreset < 0 )
+	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	bool presetCurrent = curPreset < 0;
+	dlg.setNewTitlePresent(presetCurrent);
+	dlg.setNewTitle(presetCurrent ? "" : m_configuration.toolbarPresetName(curPreset));
+
+	if( QDialog::Accepted != dlg.exec() )
 	{
-		updateToolbar(m_configuration.toolbar());
+		return;
+	}
+
+	int newSelectPreset = -1;
+
+	if( dlg.newTitlePresent() )
+	{
+		// 別名でプリセットを追加
+		QVector<Configuration::ActionEnum> toolbar;
+		applyToolbar(toolbar);
+		m_configuration.appendToolbarPreset(dlg.newTitle(), toolbar);
+		newSelectPreset = m_configuration.toolbarPresetNum();
 	}
 	else
 	{
-		m_configuration.removeToolbarPreset(curPreset);
+		// 上書き保存
+		QVector<Configuration::ActionEnum> toolbar;
+		applyToolbar(toolbar);
+		m_configuration.setToolbar(
+			ui.toolbarPresetList->currentIndex() - 1,
+			toolbar);
+		newSelectPreset = ui.toolbarPresetList->currentIndex();
 	}
 
 	updateToolbarPresetList();
+	// 追加したプリセットに変更
+	ui.toolbarPresetList->setCurrentIndex(newSelectPreset);
 }
 
 void CConfigDialog::onToolbarPresetRemove()
@@ -703,22 +757,40 @@ void CConfigDialog::onToolbarAppendButton()
 {
 	Configuration::ActionEnum action
 		= Configuration::ActionEnum(ui.toolbarPartsList->currentRow());
-	QListWidgetItem* item = new QListWidgetItem(ui.toolbarCurrentList);
+	int row = ui.toolbarCurrentList->currentRow();
+	QListWidgetItem* item     = new QListWidgetItem();
 	QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)action);
 	item->setText(itemBase->text());
 	item->setIcon(itemBase->icon());
 	item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
-	ui.toolbarCurrentList->setCurrentItem(item);
+	ui.toolbarCurrentList->insertItem(row, item);
+	row = ui.toolbarCurrentList->row(item);
+	checkUpdateToolbarPresetList();
+	ui.toolbarCurrentList->setCurrentRow(row);
 }
 
-void CConfigDialog::onToolbarAppendSeparator()
+void CConfigDialog::onToolbarAppendButtonLast()
 {
+	Configuration::ActionEnum action
+		= Configuration::ActionEnum(ui.toolbarPartsList->currentRow());
+	QListWidgetItem* item     = new QListWidgetItem();
+	QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)action);
+	item->setText(itemBase->text());
+	item->setIcon(itemBase->icon());
+	item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
+	ui.toolbarCurrentList->addItem(item);
+	int row = ui.toolbarCurrentList->row(item);
+	checkUpdateToolbarPresetList();
+	ui.toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarRemoveButton()
 {
 	int row = ui.toolbarCurrentList->currentRow();
 	ui.toolbarCurrentList->takeItem(row);
+	row = ui.toolbarCurrentList->currentRow();
+	checkUpdateToolbarPresetList();
+	ui.toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarButtonGoTop()
@@ -726,7 +798,9 @@ void CConfigDialog::onToolbarButtonGoTop()
 	int row = ui.toolbarCurrentList->currentRow();
 	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
 	ui.toolbarCurrentList->insertItem(0, item);
-	ui.toolbarCurrentList->setCurrentItem(item);
+	row = ui.toolbarCurrentList->row(item);
+	checkUpdateToolbarPresetList();
+	ui.toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarButtonGoBottom()
@@ -734,5 +808,7 @@ void CConfigDialog::onToolbarButtonGoBottom()
 	int row = ui.toolbarCurrentList->currentRow();
 	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
 	ui.toolbarCurrentList->addItem(item);
-	ui.toolbarCurrentList->setCurrentItem(item);
+	row = ui.toolbarCurrentList->row(item);
+	checkUpdateToolbarPresetList();
+	ui.toolbarCurrentList->setCurrentRow(row);
 }
