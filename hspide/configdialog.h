@@ -74,8 +74,8 @@ public slots:
 	void onToolbarAppendButton();
 	void onToolbarAppendButtonLast();
 	void onToolbarRemoveButton();
-	void onToolbarButtonGoTop();
-	void onToolbarButtonGoBottom();
+	void onToolbarButtonGoUp();
+	void onToolbarButtonGoDown();
 
 private:
 

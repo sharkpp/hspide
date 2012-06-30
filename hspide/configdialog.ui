@@ -1096,7 +1096,7 @@ color: rgb(255, 255, 255);</string>
               </spacer>
              </item>
              <item>
-              <widget class="QToolButton" name="toolbarGoTop">
+              <widget class="QToolButton" name="toolbarGoUp">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1104,11 +1104,11 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Go &amp;top</string>
+                <string>Go &amp;up</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/middle/go-top.png</normaloff>:/images/tango/middle/go-top.png</iconset>
+                 <normaloff>:/images/tango/middle/go-up.png</normaloff>:/images/tango/middle/go-up.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1122,7 +1122,7 @@ color: rgb(255, 255, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="toolbarGoButton">
+              <widget class="QToolButton" name="toolbarGoDown">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1130,11 +1130,11 @@ color: rgb(255, 255, 255);</string>
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Go &amp;bottom</string>
+                <string>Go &amp;down</string>
                </property>
                <property name="icon">
                 <iconset resource="hspide.qrc">
-                 <normaloff>:/images/tango/middle/go-bottom.png</normaloff>:/images/tango/middle/go-bottom.png</iconset>
+                 <normaloff>:/images/tango/middle/go-down.png</normaloff>:/images/tango/middle/go-down.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -1321,8 +1321,8 @@ color: rgb(255, 255, 255);</string>
   <tabstop>toolbarPartsList</tabstop>
   <tabstop>toolbarAppend</tabstop>
   <tabstop>toolbarRemove</tabstop>
-  <tabstop>toolbarGoTop</tabstop>
-  <tabstop>toolbarGoButton</tabstop>
+  <tabstop>toolbarGoUp</tabstop>
+  <tabstop>toolbarGoDown</tabstop>
   <tabstop>toolbarCurrentList</tabstop>
   <tabstop>layoutPresetList</tabstop>
   <tabstop>layoutPresetSave</tabstop>
@@ -1638,10 +1638,10 @@ color: rgb(255, 255, 255);</string>
    </hints>
   </connection>
   <connection>
-   <sender>toolbarGoTop</sender>
+   <sender>toolbarGoUp</sender>
    <signal>clicked()</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>onToolbarButtonGoTop()</slot>
+   <slot>onToolbarButtonGoUp()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>360</x>
@@ -1654,10 +1654,10 @@ color: rgb(255, 255, 255);</string>
    </hints>
   </connection>
   <connection>
-   <sender>toolbarGoButton</sender>
+   <sender>toolbarGoDown</sender>
    <signal>clicked()</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>onToolbarButtonGoBottom()</slot>
+   <slot>onToolbarButtonGoDown()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>384</x>
@@ -1720,8 +1720,8 @@ color: rgb(255, 255, 255);</string>
   <slot>onToolbarAppendButton()</slot>
   <slot>onToolbarAppendButtonLast()</slot>
   <slot>onToolbarRemoveButton()</slot>
-  <slot>onToolbarButtonGoTop()</slot>
-  <slot>onToolbarButtonGoBottom()</slot>
+  <slot>onToolbarButtonGoUp()</slot>
+  <slot>onToolbarButtonGoDown()</slot>
   <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
   <slot>onToolbarPartsListSelectChanged(int)</slot>
  </slots>

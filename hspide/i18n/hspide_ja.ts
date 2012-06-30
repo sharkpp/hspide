@@ -373,6 +373,14 @@ p, li { white-space: pre-wrap; }
         <source>Current setting</source>
         <translation>現在の設定</translation>
     </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>----</source>
+        <translation>----</translation>
+    </message>
 </context>
 <context>
     <name>CDocumentPane</name>
@@ -644,10 +652,6 @@ p, li { white-space: pre-wrap; }
         <translation>ツールバー</translation>
     </message>
     <message>
-        <source>-----</source>
-        <translation>-----</translation>
-    </message>
-    <message>
         <source>Layout</source>
         <translation>レイアウト</translation>
     </message>
@@ -708,12 +712,16 @@ p, li { white-space: pre-wrap; }
         <translation>追加(&amp;A)</translation>
     </message>
     <message>
-        <source>Go &amp;top</source>
-        <translation>最初に移動(&amp;T)</translation>
+        <source>A&amp;ppend Last</source>
+        <translation>最後に追加(&amp;P)</translation>
     </message>
     <message>
-        <source>Go &amp;bottom</source>
-        <translation>最後に移動(&amp;B)</translation>
+        <source>Go &amp;up</source>
+        <translation>上に移動(&amp;U)</translation>
+    </message>
+    <message>
+        <source>Go &amp;down</source>
+        <translation>下に移動(&amp;D)</translation>
     </message>
 </context>
 <context>

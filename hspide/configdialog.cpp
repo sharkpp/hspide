@@ -448,20 +448,27 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 	               item = item->child(index.row(), 0);
 	if( item->data().isValid() )
 	{
+		int oldPageIndex = ui.stackedWidget->currentIndex();
+		int newPageIndex = item->data().toInt();
 		// 変更破棄
-		QWidget* currentPage = ui.stackedWidget->widget(ui.stackedWidget->currentIndex());
-		if( ui.keyAssignPage == currentPage )
+		if( oldPageIndex != newPageIndex )
 		{
-			int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
-			updateKeyAssign(m_configuration.keyAssign(curPreset));
-		}
-		else if( ui.toolbarPage == currentPage )
-		{
-			int curPreset = ui.toolbarPresetList->currentIndex() - 1;
-			updateToolbar(m_configuration.toolbar(curPreset));
+			QWidget* currentPage = ui.stackedWidget->widget(oldPageIndex);
+			if( ui.keyAssignPage == currentPage )
+			{
+				int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+				updateKeyAssign(m_configuration.keyAssign(curPreset));
+				updateKeyAssignPresetList();
+			}
+			else if( ui.toolbarPage == currentPage )
+			{
+				int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+				updateToolbar(m_configuration.toolbar(curPreset));
+				updateToolbarPresetList();
+			}
 		}
 		// ページ切り替え
-		ui.stackedWidget->setCurrentIndex(item->data().toInt());
+		ui.stackedWidget->setCurrentIndex(newPageIndex);
 	}
 	else
 	{
@@ -793,22 +800,22 @@ void CConfigDialog::onToolbarRemoveButton()
 	ui.toolbarCurrentList->setCurrentRow(row);
 }
 
-void CConfigDialog::onToolbarButtonGoTop()
+void CConfigDialog::onToolbarButtonGoUp()
 {
-	int row = ui.toolbarCurrentList->currentRow();
-	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
-	ui.toolbarCurrentList->insertItem(0, item);
-	row = ui.toolbarCurrentList->row(item);
+	int rowOld = ui.toolbarCurrentList->currentRow();
+	int rowNew = (std::max)(0, rowOld - 1);
+	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(rowOld);
+	ui.toolbarCurrentList->insertItem(rowNew, item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(row);
+	ui.toolbarCurrentList->setCurrentRow(rowNew);
 }
 
-void CConfigDialog::onToolbarButtonGoBottom()
+void CConfigDialog::onToolbarButtonGoDown()
 {
-	int row = ui.toolbarCurrentList->currentRow();
-	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(row);
-	ui.toolbarCurrentList->addItem(item);
-	row = ui.toolbarCurrentList->row(item);
+	int rowOld = ui.toolbarCurrentList->currentRow();
+	int rowNew = (std::min)(ui.toolbarCurrentList->count() - 1, rowOld + 1);
+	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(rowOld);
+	ui.toolbarCurrentList->insertItem(rowNew, item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(row);
+	ui.toolbarCurrentList->setCurrentRow(rowNew);
 }
