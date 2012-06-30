@@ -1329,7 +1329,6 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 			}
 			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
 			if( 0 <= reFileName.indexIn(fileName) ) {
-qDebug()<<">>"<<reFileName.cap(1);
 				uuid = theFile.uuidFromFilename(reFileName.cap(1));
 			} else {
 				if( CWorkSpaceItem* item
@@ -1470,8 +1469,81 @@ void MainWindow::endDebugging()
 
 void MainWindow::onPutDebugLog(const QString& text)
 {
+	if( 0 != text.indexOf("#Error ") )
+	{
+		// 出力ドックに内容を送信
+		outputDock->outputCrLf(COutputDock::DebugOutput, text);
+
+		return;
+	}
+
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+
+	QString tmp = text;
+
+	QRegExp reFileName("\\?(\\{[0-9a-fA-F-]+\\})");
+
+	// uuidをファイル名に置換
+	if( 0 <= reFileName.indexIn(tmp) ) {
+		QString uuid = reFileName.cap(1);
+		CWorkSpaceItem* item = solutionItem ? solutionItem->search(QUuid(uuid)) : NULL;
+		if( item ) {
+			tmp.replace(reFileName, item->text());
+		}
+	}
+
 	// 出力ドックに内容を送信
-	outputDock->outputCrLf(COutputDock::DebugOutput, text);
+	outputDock->outputCrLf(COutputDock::DebugOutput, tmp);
+
+	// メッセージドックに出力する内容を生成
+
+	bool raiseDock = false;
+
+	QRegExp runtimeError("^#Error (.+) in line ([0-9]+) \\((.*)\\)$");
+
+	for(QStringListIterator ite(tmp.split("\n"));
+		ite.hasNext(); )
+	{
+		QString line = ite.next();
+		line.replace("\r", "");
+
+		CMessageDock::CategoryType type = CMessageDock::NoneCategory;
+		QString fileName, desc;
+		QUuid uuid;
+		int errorNo, lineNo;
+
+		if( runtimeError.indexIn(line) < 0 ) {
+			continue;
+		}
+
+		fileName = runtimeError.cap(3);
+		errorNo  = runtimeError.cap(1).toInt();
+		lineNo   = runtimeError.cap(2).toInt();
+		desc     = QString(tr("[%1]")).arg(errorNo);
+		type     = CMessageDock::ErrorCategory;
+		raiseDock= true;
+
+		// UUIDをファイル名に変換 or ファイル名をUUIDに変換
+		if( 0 <= reFileName.indexIn(fileName) ) {
+			uuid = theFile.uuidFromFilename(reFileName.cap(1));
+		} else {
+			if( CWorkSpaceItem* item
+					= solutionItem ? solutionItem->search(fileName)
+								   : NULL )
+			{
+				uuid = item->uuid();
+			}
+		}
+		// メッセージを追加
+		messageDock->addMessage(uuid, lineNo, type, desc);
+	}
+
+	// ドックが隠れていたら表に表示
+	if( raiseDock )
+	{
+		QDockWidget* dock = qobject_cast<QDockWidget*>(messageDock->parentWidget());
+		dock->raise();
+	}
 }
 
 // 編集された

@@ -107,9 +107,7 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionPaste);
 	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
 	m_toolbarInfo.back().toolbar.push_back(ActionUndo);
-	m_toolbarInfo.back().toolbar.push_back(ActionSaveAll);
-	m_toolbarInfo.back().toolbar.push_back(ActionFind);
-	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionRedo);
 	m_toolbarInfo.back().toolbar.push_back(ActionFind);
 	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugRunSolution);
@@ -129,7 +127,7 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionPaste);
 	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
 	m_toolbarInfo.back().toolbar.push_back(ActionUndo);
-	m_toolbarInfo.back().toolbar.push_back(ActionSaveAll);
+	m_toolbarInfo.back().toolbar.push_back(ActionRedo);
 	m_toolbarInfo.back().toolbar.push_back(ActionFindNext);
 	m_toolbarInfo.back().toolbar.push_back(ActionFindPrev);
 	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);

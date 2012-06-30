@@ -69,6 +69,7 @@ class CDbgMain
 	typeinfo_hook*	m_typeinfo_hook;
 
 public:
+
 	CDbgMain();
 	virtual ~CDbgMain();
 
@@ -98,9 +99,13 @@ public:
 	static void create();
 	static void destroy();
 
+	int MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
+
 protected:
 
 	static unsigned __stdcall runStatic(void* this_);
+
+	static int WINAPI HookMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType);
 
 	void run();
 
@@ -116,6 +121,8 @@ protected:
 	QString getVariableName(int index);
 
 	QString loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx);
+
+	void installHook();
 
 public slots:
 

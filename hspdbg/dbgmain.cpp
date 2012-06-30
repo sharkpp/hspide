@@ -24,6 +24,9 @@ HANDLE	CDbgMain::m_handle = NULL;
 HANDLE	CDbgMain::m_waitThread = NULL;
 HANDLE	CDbgMain::m_waitDisconnect = NULL;
 
+// フックを行うAPIのオリジナルを保存しておく変数
+static int (WINAPI * MessageBoxA_)(HWND,LPCSTR,LPCSTR,UINT) = NULL;
+
 //--------------------------------------------------------------------
 // typeinfo_hookクラス
 
@@ -208,9 +211,9 @@ CDbgMain::CDbgMain()
 //	connect(m_socket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 
 	// フォーマット↓
-	// {XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}.{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	// サーバーGUID                           アイテムGUID
+	// hspide.{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}.{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}
+	//        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	//        サーバーGUID                           アイテムGUID
 
 	QStringList ideInfo = QString(getenv("hspide")).split(".");
 
@@ -224,6 +227,8 @@ CDbgMain::CDbgMain()
 	connectToDebugger();
 
 	m_typeinfo_hook = new typeinfo_hook[1024];
+
+	installHook();
 }
 
 CDbgMain::~CDbgMain()
@@ -256,12 +261,16 @@ OutputDebugStringA("CDbgMain::destroy #1\n");
 	g_app->disconnectFromDebugger();
 OutputDebugStringA("CDbgMain::destroy #2\n");
 	// 終了待機
-	::WaitForSingleObject(m_waitThread, INFINITE);
+	DWORD dwResult = ::WaitForSingleObject(m_waitThread, 10000);
 OutputDebugStringA("CDbgMain::destroy #3\n");
 	// リソース解放
 	::CloseHandle(m_waitDisconnect);
 	::CloseHandle(m_waitThread);
 	::CloseHandle(m_handle);
+	// 強制終了
+	if( WAIT_TIMEOUT == dwResult ) {
+		::TerminateProcess(m_waitThread, -1);
+	}
 }
 
 unsigned CDbgMain::runStatic(void* p)
@@ -286,6 +295,66 @@ OutputDebugStringA("CDbgMain::runStatic #4\n");
 
 	// 終了完了を通知
 	::SetEvent(m_waitThread);
+
+	return 0;
+}
+
+void CDbgMain::installHook()
+{
+	// オリジナルのAPIを保存
+	if( !MessageBoxA_ ) {
+		MessageBoxA_ = ::MessageBoxA;
+	}
+
+	INSTALL_HOOK("user32.dll", "MessageBoxA", HookMessageBoxA, NULL);
+}
+
+int CDbgMain::HookMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
+{
+	return g_app->MessageBoxA(hWnd, lpText, lpCaption, uType);
+}
+
+int CDbgMain::MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType)
+{
+	if( 0 != lstrcmpiA("Error", lpCaption) ||
+		(MB_ICONEXCLAMATION|MB_OK) != uType )
+	{
+		return MessageBoxA_(hWnd, lpText, lpCaption, uType);
+	}
+
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	HSPCTX*    ctx = (HSPCTX*)dbg->hspctx;
+
+	if( 0 == ctx->err )
+	{
+		return MessageBoxA_(hWnd, lpText, lpCaption, uType);
+	}
+
+	// エラーで中断
+
+	putLog(lpText, lstrlenA(lpText));
+
+	dbg->dbg_curinf();
+
+	QString fname = dbg->fname ? dbg->fname : "";
+	QUuid uuid;
+
+	if( '?' == fname[0] )
+	{
+		// UUID直接指定
+		uuid = QUuid(fname.mid(1));
+	}
+	else
+	{
+		// 名前引き
+		uuid = m_lookup.uuidFromFilename(fname);
+	}
+	if( !uuid.isNull() )
+	{
+		breakRunning(uuid, dbg->line);
+	}
+
+	::WaitForSingleObject(m_waitDisconnect, INFINITE);
 
 	return 0;
 }
