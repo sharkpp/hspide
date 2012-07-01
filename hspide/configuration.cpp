@@ -110,7 +110,7 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionRedo);
 	m_toolbarInfo.back().toolbar.push_back(ActionFind);
 	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
-	m_toolbarInfo.back().toolbar.push_back(ActionDebugRunSolution);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugRunProject);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugSuspend);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugResume);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugStop);

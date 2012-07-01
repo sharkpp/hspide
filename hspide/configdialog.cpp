@@ -161,7 +161,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		/* ActionBatchBuild          */{ "",                                               tr("Batch build")           },
 		/* ActionDebugRunSolution    */{ ":/images/tango/small/media-playback-start.png",  tr("Debug run solution")    },
 		/* ActionNoDebugRunSolution  */{ "",                                               tr("No debug run solution") },
-		/* ActionDebugRunProject     */{ "",                                               tr("Debug run project")     },
+		/* ActionDebugRunProject     */{ ":/images/tango/small/media-playback-start.png",  tr("Debug run project")     },
 		/* ActionNoDebugRunProject   */{ "",                                               tr("No debug run project")  },
 		/* ActionDebugSuspend        */{ ":/images/tango/small/media-playback-pause.png",  tr("Debug suspend")         },
 		/* ActionDebugResume         */{ ":/images/tango/small/media-playback-start.png",  tr("Debug resume")          },
