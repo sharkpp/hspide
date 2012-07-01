@@ -237,13 +237,12 @@ bool CDocumentPane::save(const QString& filePath, bool saveAs)
 	return true;
 }
 
-// s‚ÉˆÚ“®
+// Žw’ès‚ÉˆÚ“®
 bool CDocumentPane::jump(int lineNo)
 {
 	QTextCursor cursor = m_editorWidget->textCursor();
 	cursor.setPosition(0, QTextCursor::MoveAnchor);
 	cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNo - 1);
-//	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
 	m_editorWidget->setTextCursor(cursor);
 	setFocus();
 	return true;
@@ -298,7 +297,7 @@ bool CDocumentPane::isModified() const
 		m_editorWidget->document()->isModified();
 }
 
-void CDocumentPane::markCursorine(const QUuid& uuid, int lineNo)
+void CDocumentPane::markCursorLine(const QUuid& uuid, int lineNo)
 {
 	if( m_uuid != uuid ) {
 		return;
@@ -308,7 +307,7 @@ void CDocumentPane::markCursorine(const QUuid& uuid, int lineNo)
 	m_editorWidget->setLineIcon(lineNo - 1, m_cursorIcon);
 }
 
-void CDocumentPane::unmarkCursorine()
+void CDocumentPane::unmarkCursorLine()
 {
 	m_editorWidget->clearLineIcon(-1, m_cursorIcon);
 }

@@ -72,8 +72,8 @@ public:
 	// •ÏX‚³‚ê‚Ä‚¢‚é‚©
 	bool isModified() const;
 
-	void markCursorine(const QUuid& uuid, int lineNo);
-	void unmarkCursorine();
+	void markCursorLine(const QUuid& uuid, int lineNo);
+	void unmarkCursorLine();
 
 protected:
 

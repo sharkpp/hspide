@@ -288,7 +288,7 @@ void MainWindow::setupActions()
 		{ &compileOnlyAct,        "",                                               "",                                               tr("&Compile only"),         tr("Compile only"),         tr("Compile only")              },
 		{ &debugRunSolutionAct,   ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("&Debug run solution"),   tr("Debug run solution"),   tr("Run solution with debug")   },
 		{ &noDebugRunSolutionAct, "",                                               "",                                               tr("&NO debug run solution"),tr("NO debug run solution"),tr("Run solution without debug")},
-		{ &debugRunProjectAct,    "",                                               "",                                               tr("Debug run &project"),    tr("Debug run project"),    tr("Run project with debug")    },
+		{ &debugRunProjectAct,    ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("Debug run &project"),    tr("Debug run project"),    tr("Run project with debug")    },
 		{ &noDebugRunProjectAct,  "",                                               "",                                               tr("N&O debug run project"), tr("NO debug run project"), tr("Run project without debug") },
 		{ &debugSuspendAct,       ":/images/tango/middle/media-playback-pause.png", ":/images/tango/small/media-playback-pause.png",  tr("All &suspend"),          tr("All suspend"),          tr("Suspend debugging")         },
 		{ &debugResumeAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),           tr("All resume"),           tr("Resume debugging")          },
@@ -309,7 +309,7 @@ void MainWindow::setupActions()
 	{
 		QAction* action;
 		if( actionInitTable[i].middleIcon.isEmpty() ) {
-			action = *actionInitTable[i].action = new QAction(actionInitTable[i].text, this);
+			action = *actionInitTable[i].action = new QAction(QIcon(":/images/icons/small/blank.png"), actionInitTable[i].text, this);
 		} else {
 			action = *actionInitTable[i].action = new QAction(QMultiIcon(actionInitTable[i].middleIcon,
 			                                                             actionInitTable[i].smallIcon), actionInitTable[i].text, this);
@@ -403,6 +403,23 @@ void MainWindow::saveSettings()
 	settings.setValue("window/geometry",        saveGeometry());
 	settings.setValue("window/state",           saveState());
 	settings.setValue("window/state-debugging", m_stateDebugging);
+}
+
+void MainWindow::updateTextCursorLine(const QUuid& uuid, int lineNo)
+{
+	// カーソル位置からアイコン削除
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document ) {
+			if( !uuid.isNull() ) {
+				document->markCursorLine(uuid, lineNo);
+			} else {
+				document->unmarkCursorLine();
+			}
+		}
+	}
 }
 
 void MainWindow::showEvent(QShowEvent *event)
@@ -861,14 +878,7 @@ void MainWindow::onStopCode(const QUuid& uuid, int lineNo)
 	onGoToLine(uuid, lineNo);
 
 	// カーソル位置にアイコン追加
-	for(int index = 0; index < tabWidget->count(); index++)
-	{
-		CDocumentPane* document
-			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-		if( document ) {
-			document->markCursorine(uuid, lineNo);
-		}
-	}
+	updateTextCursorLine(uuid, lineNo);
 }
 
 void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> >& info)
@@ -1045,14 +1055,7 @@ void MainWindow::onDebugResume()
 	}
 
 	// カーソル位置からアイコン削除
-	for(int index = 0; index < tabWidget->count(); index++)
-	{
-		CDocumentPane* document
-			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-		if( document ) {
-			document->unmarkCursorine();
-		}
-	}
+	updateTextCursorLine();
 
 	// メニューを変更
 	debugResumeAct->setEnabled(false);
@@ -1402,14 +1405,6 @@ void MainWindow::attachedDebugger(CDebugger* debugger)
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
 	connect(debugger, SIGNAL(destroyed()),                                              this, SLOT(dettachedDebugger()));
 
-	debugRunSolutionAct  ->setVisible( !m_debuggers.empty() );
-	noDebugRunSolutionAct->setVisible( !m_debuggers.empty() );
-	debugRunProjectAct   ->setVisible( !m_debuggers.empty() );
-	noDebugRunProjectAct ->setVisible( !m_debuggers.empty() );
-	debugSuspendAct      ->setVisible(  m_debuggers.empty() );
-	debugResumeAct       ->setVisible(  m_debuggers.empty() );
-	debugStopAct         ->setVisible(  m_debuggers.empty() );
-
 	if( m_debuggers.empty() ) {
 		// デバッグ開始
 		beginDebugging();
@@ -1453,7 +1448,15 @@ void MainWindow::beginDebugging()
 	sysInfoDock->setEnable(false);
 	varInfoDock->clear();
 	varInfoDock->setEnable(false);
+
 	// メニューを変更
+	debugRunSolutionAct  ->setVisible(false);
+	noDebugRunSolutionAct->setVisible(false);
+	debugRunProjectAct   ->setVisible(false);
+	noDebugRunProjectAct ->setVisible(false);
+	debugSuspendAct      ->setVisible(true);
+	debugResumeAct       ->setVisible(true);
+	debugStopAct         ->setVisible(true);
 	debugResumeAct->setEnabled(false);
 	debugSuspendAct->setEnabled(true);
 
@@ -1475,18 +1478,21 @@ void MainWindow::beginDebugging()
 
 void MainWindow::endDebugging()
 {
+	// カーソル位置からアイコン削除
+	updateTextCursorLine();
+
+	// メニューを変更
+	debugRunSolutionAct  ->setVisible(true);
+	noDebugRunSolutionAct->setVisible(true);
+	debugRunProjectAct   ->setVisible(true);
+	noDebugRunProjectAct ->setVisible(true);
+	debugSuspendAct      ->setVisible(false);
+	debugResumeAct       ->setVisible(false);
+	debugStopAct         ->setVisible(false);
+
+	// デバッグ時のみ有効なドックを向こうか
 	sysInfoDock->setEnable(false);
 	varInfoDock->setEnable(false);
-
-	// カーソル位置からアイコン削除
-	for(int index = 0; index < tabWidget->count(); index++)
-	{
-		CDocumentPane* document
-			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-		if( document ) {
-			document->unmarkCursorine();
-		}
-	}
 
 	// 現在のレイアウトを保存
 	m_stateDebugging = saveState();

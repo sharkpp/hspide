@@ -167,6 +167,8 @@ private:
 	void loadSettings();
 	void saveSettings();
 
+	void updateTextCursorLine(const QUuid& uuid = QUuid(), int lineNo = -1);
+
 	bool isDebugging() const;
 	void beginDebugging();
 	void endDebugging();
