@@ -162,6 +162,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 		if( !document )
 		{
 			emit compileFailure();
+			delete hspcmp;
 			return false;
 		}
 
@@ -173,13 +174,14 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 		if( !tempFile->open() )
 		{
 			emit compileFailure();
+			delete hspcmp;
 			return false;
 		}
 		filename = tempFile->fileName();
 		document->save(filename);
 	}
 
-	QString program = m_hspCompPath + "hspcmp";
+	QString program = QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe"));
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
 	          << "-H" << m_hspPath;
@@ -212,9 +214,11 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 
 	if( !hspcmp->waitForStarted() )
 	{
+		delete m_objTemp;
 		delete hspcmp;
 		emit compileFailure();
 		m_compiler   = NULL;
+		m_objTemp    = NULL;
 		return false;
 	}
 
