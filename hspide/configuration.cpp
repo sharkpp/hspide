@@ -80,6 +80,9 @@ Configuration::Configuration()
 	m_keyAssignInfo.back().keyAssign[ActionDebugSuspend].keys       = QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Pause);
 	m_keyAssignInfo.back().keyAssign[ActionDebugResume].keys        = QKeySequence(Qt::Key_F5);
 	m_keyAssignInfo.back().keyAssign[ActionDebugStop].keys          = QKeySequence(Qt::SHIFT + Qt::Key_F5);
+//	m_keyAssignInfo.back().keyAssign[ActionDebugStepIn].keys        = 
+//	m_keyAssignInfo.back().keyAssign[ActionDebugStepOver].keys      = 
+//	m_keyAssignInfo.back().keyAssign[ActionDebugStepOut].keys       = 
 	m_keyAssignInfo.back().keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
 	m_keyAssignInfo.back().keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
 	m_keyAssignInfo.back().keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
@@ -114,6 +117,9 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugSuspend);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugResume);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugStop);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStepIn);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStepOver);
 	// Visual Studioïó
 	m_toolbarInfo.push_back(ToolbarPresetInfoType());
 	m_toolbarInfo.back().name = tr("Visual Studio like");
@@ -135,6 +141,9 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugSuspend);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugResume);
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugStop);
+	m_toolbarInfo.back().toolbar.push_back(ActionSeparator);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStepIn);
+	m_toolbarInfo.back().toolbar.push_back(ActionDebugStepOver);
 	// HSED3ïóÇåªç›ÇÃê›íËÇ…
 	m_toolbarInfo[0] = m_toolbarInfo[1];
 }
@@ -224,6 +233,9 @@ QStringList Configuration::actionItemNames()
 				<< "debug-suspend"
 				<< "debug-resume"
 				<< "debug-stop"
+				<< "debug-step-in"
+				<< "debug-step-over"
+				<< "debug-step-out"
 				<< "config"
 				<< "show-project"
 				<< "show-symbols"

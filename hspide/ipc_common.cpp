@@ -58,6 +58,7 @@ QDebug& operator<<(QDebug& debug, const CMD_ID& v)
 	case CMD_SUSPEND_DEBUG:		debug << "CMD_SUSPEND_DEBUG"; break;
 	case CMD_RESUME_DEBUG:		debug << "CMD_RESUME_DEBUG"; break;
 	case CMD_STOP_DEBUG:		debug << "CMD_STOP_DEBUG"; break;
+	case CMD_STEP_IN_DEBUG:		debug << "CMD_STEP_IN_DEBUG"; break;
 	case CMD_UPDATE_DEBUG_INFO:	debug << "CMD_UPDATE_DEBUG_INFO"; break;
 	case CMD_PUT_VAR_DIGEST:	debug << "CMD_PUT_VAR_DIGEST"; break;
 	case CMD_REQ_VAR_INFO:		debug << "CMD_REQ_VAR_INFO"; break;

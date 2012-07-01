@@ -77,10 +77,16 @@
 	<file>images/tango/small/text-x-generic.png</file>
 	<file>images/icons/middle/blank.png</file>
 	<file>images/icons/middle/document-save-all.png</file>
+	<file>images/icons/middle/run-project.png</file>
+	<file>images/icons/middle/step-in.png</file>
+	<file>images/icons/middle/step-over.png</file>
 	<file>images/icons/small/blank.png</file>
 	<file>images/icons/small/document-save-all.png</file>
 	<file>images/icons/small/media-record-blue.png</file>
+	<file>images/icons/small/run-project.png</file>
 	<file>images/icons/small/software-update-urgent-yellow.png</file>
+	<file>images/icons/small/step-in.png</file>
+	<file>images/icons/small/step-over.png</file>
 	<file>images/icons/hspide.png</file>
 	<file>images/button-tab-close.png</file>
 	<file>images/button-tab-list.png</file>

@@ -245,6 +245,10 @@ void MainWindow::setupMenus()
 		debugMenu->addAction(debugResumeAct);
 		debugMenu->addAction(debugSuspendAct);
 		debugMenu->addAction(debugStopAct);
+		debugMenu->addSeparator();
+		debugMenu->addAction(debugStepInAct);
+		debugMenu->addAction(debugStepOverAct);
+		debugMenu->addAction(debugStepOutAct);
 
 	QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
 		toolsMenu->addSeparator();
@@ -288,11 +292,14 @@ void MainWindow::setupActions()
 		{ &compileOnlyAct,        "",                                               "",                                               tr("&Compile only"),         tr("Compile only"),         tr("Compile only")              },
 		{ &debugRunSolutionAct,   ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("&Debug run solution"),   tr("Debug run solution"),   tr("Run solution with debug")   },
 		{ &noDebugRunSolutionAct, "",                                               "",                                               tr("&NO debug run solution"),tr("NO debug run solution"),tr("Run solution without debug")},
-		{ &debugRunProjectAct,    ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("Debug run &project"),    tr("Debug run project"),    tr("Run project with debug")    },
+		{ &debugRunProjectAct,    ":/images/icons/middle/run-project.png",          ":/images/icons/small/run-project.png",           tr("Debug run &project"),    tr("Debug run project"),    tr("Run project with debug")    },
 		{ &noDebugRunProjectAct,  "",                                               "",                                               tr("N&O debug run project"), tr("NO debug run project"), tr("Run project without debug") },
 		{ &debugSuspendAct,       ":/images/tango/middle/media-playback-pause.png", ":/images/tango/small/media-playback-pause.png",  tr("All &suspend"),          tr("All suspend"),          tr("Suspend debugging")         },
 		{ &debugResumeAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),           tr("All resume"),           tr("Resume debugging")          },
 		{ &debugStopAct,          ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),       tr("Stop debugging"),       tr("Abort debugging")           },
+		{ &debugStepInAct,        ":/images/icons/middle/step-in.png",              ":/images/icons/small/step-in.png",               tr("Step in"),               tr("Step in"),              tr("Step in next code")         },
+		{ &debugStepOverAct,      ":/images/icons/middle/step-over.png",            ":/images/icons/small/step-over.png",             tr("Step over"),             tr("Step over"),            tr("Step over next code")        },
+		{ &debugStepOutAct,       "",                                               "",                                               tr("Step out"),              tr("Step out"),             tr("Step out next code")        },
 		{ &settingAct,            ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),              tr("Setting"),              tr("Application settings")      },
 		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
 		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
@@ -336,6 +343,9 @@ void MainWindow::setupActions()
 	connect(debugSuspendAct,           SIGNAL(triggered()), this, SLOT(onDebugSuspend()));
 	connect(debugResumeAct,            SIGNAL(triggered()), this, SLOT(onDebugResume()));
 	connect(debugStopAct,              SIGNAL(triggered()), this, SLOT(onDebugStop()));
+	connect(debugStepInAct,            SIGNAL(triggered()), this, SLOT(onDebugStepIn()));
+	connect(debugStepOverAct,          SIGNAL(triggered()), this, SLOT(onDebugStepOver()));
+	connect(debugStepOutAct,           SIGNAL(triggered()), this, SLOT(onDebugStepOut()));
 	connect(settingAct,                SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
 	connect(aboutAct,                  SIGNAL(triggered()), this, SLOT(onAboutApp()));
 	connect(showProjectDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
@@ -372,6 +382,9 @@ void MainWindow::setupActions()
 	debugResumeAct->setEnabled(false);
 	debugResumeAct->setVisible(false);
 	debugStopAct->setVisible(false);
+	debugStepInAct->setVisible(false);
+	debugStepOverAct->setVisible(false);
+	debugStepOutAct->setVisible(false);
 }
 
 void MainWindow::loadSettings()
@@ -538,6 +551,9 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	theConf.applyShortcut(Configuration::ActionDebugSuspend,		debugSuspendAct);
 	theConf.applyShortcut(Configuration::ActionDebugResume,			debugResumeAct);
 	theConf.applyShortcut(Configuration::ActionDebugStop,			debugStopAct);
+	theConf.applyShortcut(Configuration::ActionDebugStepIn,			debugStepInAct);
+	theConf.applyShortcut(Configuration::ActionDebugStepOver,		debugStepOverAct);
+	theConf.applyShortcut(Configuration::ActionDebugStepOut,		debugStepOutAct);
 	theConf.applyShortcut(Configuration::ActionConfig,				settingAct);
 	theConf.applyShortcut(Configuration::ActionShowProject,			showProjectDockAct);
 	theConf.applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
@@ -553,45 +569,48 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	struct {
 		QAction** action;
 	} actionLookupTable[] = {
-		{ &newDocumentAct,        },
-		{ &openDocumentAct,       },
-		{ &saveDocumentAct,       },
-		{ &saveAsDocumentAct,     },
-		{ &saveAllDocumentAct,    },
-		{ &quitApplicationAct,    },
-		{ &editUndoAct,           },
-		{ &editRedoAct,           },
-		{ &editCutAct,            },
-		{ &editCopyAct,           },
-		{ &editPasteAct,          },
-		{ &editClearAct,          },
-		{ &selectAllAct,          },
-		{ &findTextAct,           },
-		{ &findPrevTextAct,       },
-		{ &findNextTextAct,       },
-		{ &replaceTextAct,        },
-		{ &gotoLineAct,           },
-		{ &buildSolutionAct,      },
-		{ &buildProjectAct,       },
-		{ &batchBuildAct,         },
-		{ &compileOnlyAct,        },
-		{ &debugRunSolutionAct,   },
-		{ &noDebugRunSolutionAct, },
-		{ &debugRunProjectAct,    },
-		{ &noDebugRunProjectAct,  },
-		{ &debugSuspendAct,       },
-		{ &debugResumeAct,        },
-		{ &debugStopAct,          },
-		{ &settingAct,            },
-		{ &showProjectDockAct,    },
-		{ &showSymbolDockAct,     },
-		{ &showOutputDockAct,     },
-		{ &showSearchDockAct,     },
-		{ &showMessageDockAct,    },
-		{ &showBreakPointDockAct, },
-		{ &showSysInfoDockAct,    },
-		{ &showVarInfoDockAct,    },
-		{ &aboutAct,              },
+		{ &newDocumentAct,        }, // ActionNew
+		{ &openDocumentAct,       }, // ActionOpen
+		{ &saveDocumentAct,       }, // ActionSave
+		{ &saveAsDocumentAct,     }, // ActionSaveAs
+		{ &saveAllDocumentAct,    }, // ActionSaveAll
+		{ &quitApplicationAct,    }, // ActionQuit
+		{ &editUndoAct,           }, // ActionUndo
+		{ &editRedoAct,           }, // ActionRedo
+		{ &editCutAct,            }, // ActionCut
+		{ &editCopyAct,           }, // ActionCopy
+		{ &editPasteAct,          }, // ActionPaste
+		{ &editClearAct,          }, // ActionClear
+		{ &selectAllAct,          }, // ActionSelectAll
+		{ &findTextAct,           }, // ActionFind
+		{ &findPrevTextAct,       }, // ActionFindNext
+		{ &findNextTextAct,       }, // ActionFindPrev
+		{ &replaceTextAct,        }, // ActionReplace
+		{ &gotoLineAct,           }, // ActionJump
+		{ &buildSolutionAct,      }, // ActionBuildSolution
+		{ &buildProjectAct,       }, // ActionBuildProject
+		{ &batchBuildAct,         }, // ActionCompileOnly
+		{ &compileOnlyAct,        }, // ActionBatchBuild
+		{ &debugRunSolutionAct,   }, // ActionDebugRunSolution
+		{ &noDebugRunSolutionAct, }, // ActionNoDebugRunSolution
+		{ &debugRunProjectAct,    }, // ActionDebugRunProject
+		{ &noDebugRunProjectAct,  }, // ActionNoDebugRunProject
+		{ &debugSuspendAct,       }, // ActionDebugSuspend
+		{ &debugResumeAct,        }, // ActionDebugResume
+		{ &debugStopAct,          }, // ActionDebugStop
+		{ &debugStepInAct,        }, // ActionDebugStepIn
+		{ &debugStepOverAct,      }, // ActionDebugStepOver
+		{ &debugStepOutAct,       }, // ActionDebugStepOut
+		{ &settingAct,            }, // ActionConfig
+		{ &showProjectDockAct,    }, // ActionShowProject
+		{ &showSymbolDockAct,     }, // ActionShowSymbol
+		{ &showOutputDockAct,     }, // ActionShowOutput
+		{ &showSearchDockAct,     }, // ActionShowSearch
+		{ &showMessageDockAct,    }, // ActionShowMessage
+		{ &showBreakPointDockAct, }, // ActionShowBreakPoint
+		{ &showSysInfoDockAct,    }, // ActionShowSysInfo
+		{ &showVarInfoDockAct,    }, // ActionShowVarInfo
+		{ &aboutAct,              }, // ActionAbout
 		{ NULL,                   },
 	};
 
@@ -867,8 +886,11 @@ void MainWindow::onGoToLine(const QUuid& uuid, int lineNo)
 void MainWindow::onStopAtBreakPoint(const QUuid& uuid, int lineNo)
 {
 	// メニューを変更
-	debugResumeAct->setEnabled(true);
-	debugSuspendAct->setEnabled(false);
+	debugResumeAct  ->setEnabled(true);
+	debugSuspendAct ->setEnabled(false);
+	debugStepInAct  ->setEnabled(true);
+	debugStepOverAct->setEnabled(true);
+	debugStepOutAct ->setEnabled(true);
 	varInfoDock->setEnable(true);
 	sysInfoDock->setEnable(true);
 }
@@ -1041,8 +1063,11 @@ void MainWindow::onDebugSuspend()
 	}
 
 	// メニューを変更
-	debugResumeAct->setEnabled(true);
-	debugSuspendAct->setEnabled(false);
+	debugResumeAct  ->setEnabled(true);
+	debugSuspendAct ->setEnabled(false);
+	debugStepInAct  ->setEnabled(true);
+	debugStepOverAct->setEnabled(true);
+	debugStepOutAct ->setEnabled(true);
 	varInfoDock->setEnable(true);
 	sysInfoDock->setEnable(true);
 }
@@ -1058,8 +1083,11 @@ void MainWindow::onDebugResume()
 	updateTextCursorLine();
 
 	// メニューを変更
-	debugResumeAct->setEnabled(false);
-	debugSuspendAct->setEnabled(true);
+	debugResumeAct  ->setEnabled(false);
+	debugSuspendAct ->setEnabled(true);
+	debugStepInAct  ->setEnabled(false);
+	debugStepOverAct->setEnabled(false);
+	debugStepOutAct ->setEnabled(false);
 	varInfoDock->setEnable(false);
 	sysInfoDock->setEnable(false);
 }
@@ -1070,6 +1098,29 @@ void MainWindow::onDebugStop()
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->stopDebugging();
 	}
+
+	debugStopAct    ->setEnabled(false);
+	debugResumeAct  ->setEnabled(false);
+	debugSuspendAct ->setEnabled(false);
+	debugStepInAct  ->setEnabled(false);
+	debugStepOverAct->setEnabled(false);
+	debugStepOutAct ->setEnabled(false);
+}
+
+void MainWindow::onDebugStepIn()
+{
+	// 全てのデバッグを停止
+	foreach(CDebugger* debugger, m_debuggers) {
+		debugger->stepIn();
+	}
+}
+
+void MainWindow::onDebugStepOver()
+{
+}
+
+void MainWindow::onDebugStepOut()
+{
 }
 
 void MainWindow::onOpenSettingDialog()
@@ -1419,14 +1470,6 @@ void MainWindow::dettachedDebugger()
 
 	m_debuggers.remove(debugger);
 
-	debugRunSolutionAct  ->setVisible(  m_debuggers.empty() );
-	noDebugRunSolutionAct->setVisible(  m_debuggers.empty() );
-	debugRunProjectAct   ->setVisible(  m_debuggers.empty() );
-	noDebugRunProjectAct ->setVisible(  m_debuggers.empty() );
-	debugSuspendAct      ->setVisible( !m_debuggers.empty() );
-	debugResumeAct       ->setVisible( !m_debuggers.empty() );
-	debugStopAct         ->setVisible( !m_debuggers.empty() );
-
 	if( m_debuggers.empty() ) {
 		// デバッグ終了
 		endDebugging();
@@ -1457,8 +1500,15 @@ void MainWindow::beginDebugging()
 	debugSuspendAct      ->setVisible(true);
 	debugResumeAct       ->setVisible(true);
 	debugStopAct         ->setVisible(true);
-	debugResumeAct->setEnabled(false);
-	debugSuspendAct->setEnabled(true);
+	debugStepInAct       ->setVisible(true);
+	debugStepOverAct     ->setVisible(true);
+	debugStepOutAct      ->setVisible(true);
+	debugStopAct         ->setEnabled(true);
+	debugResumeAct       ->setEnabled(false);
+	debugSuspendAct      ->setEnabled(true);
+	debugStepInAct       ->setEnabled(false);
+	debugStepOverAct     ->setEnabled(false);
+	debugStepOutAct      ->setEnabled(false);
 
 	// 現在のレイアウトを保存
 	m_stateDefault = saveState();
@@ -1489,6 +1539,9 @@ void MainWindow::endDebugging()
 	debugSuspendAct      ->setVisible(false);
 	debugResumeAct       ->setVisible(false);
 	debugStopAct         ->setVisible(false);
+	debugStepInAct       ->setVisible(false);
+	debugStepOverAct     ->setVisible(false);
+	debugStepOutAct      ->setVisible(false);
 
 	// デバッグ時のみ有効なドックを向こうか
 	sysInfoDock->setEnable(false);

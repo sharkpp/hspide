@@ -1915,11 +1915,11 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\document-print.png"
+				RelativePath="images\tango\middle\document-print.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\document-print.png"
+				RelativePath="images\tango\small\document-print.png"
 				>
 			</File>
 			<File
@@ -1931,19 +1931,19 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\document-save-as.png"
-				>
-			</File>
-			<File
 				RelativePath="images\tango\small\document-save-as.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\document-save.png"
+				RelativePath="images\tango\middle\document-save-as.png"
 				>
 			</File>
 			<File
 				RelativePath="images\tango\middle\document-save.png"
+				>
+			</File>
+			<File
+				RelativePath="images\tango\small\document-save.png"
 				>
 			</File>
 			<File
@@ -1955,19 +1955,19 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\edit-copy.png"
-				>
-			</File>
-			<File
 				RelativePath="images\tango\small\edit-copy.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\edit-cut.png"
+				RelativePath="images\tango\middle\edit-copy.png"
 				>
 			</File>
 			<File
 				RelativePath="images\tango\middle\edit-cut.png"
+				>
+			</File>
+			<File
+				RelativePath="images\tango\small\edit-cut.png"
 				>
 			</File>
 			<File
@@ -1979,19 +1979,19 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\edit-find-replace.png"
-				>
-			</File>
-			<File
 				RelativePath="images\tango\small\edit-find-replace.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\edit-find.png"
+				RelativePath="images\tango\middle\edit-find-replace.png"
 				>
 			</File>
 			<File
 				RelativePath="images\tango\middle\edit-find.png"
+				>
+			</File>
+			<File
+				RelativePath="images\tango\small\edit-find.png"
 				>
 			</File>
 			<File
@@ -2011,15 +2011,11 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\edit-select-all.png"
-				>
-			</File>
-			<File
 				RelativePath="images\tango\middle\edit-select-all.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\edit-undo.png"
+				RelativePath="images\tango\small\edit-select-all.png"
 				>
 			</File>
 			<File
@@ -2027,11 +2023,11 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\folder.png"
+				RelativePath="images\tango\middle\edit-undo.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\go-bottom.png"
+				RelativePath="images\tango\small\folder.png"
 				>
 			</File>
 			<File
@@ -2039,11 +2035,15 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\go-down.png"
+				RelativePath="images\tango\small\go-bottom.png"
 				>
 			</File>
 			<File
 				RelativePath="images\tango\small\go-down.png"
+				>
+			</File>
+			<File
+				RelativePath="images\tango\middle\go-down.png"
 				>
 			</File>
 			<File
@@ -2055,19 +2055,19 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\go-jump.png"
-				>
-			</File>
-			<File
 				RelativePath="images\tango\middle\go-jump.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\go-last.png"
+				RelativePath="images\tango\small\go-jump.png"
 				>
 			</File>
 			<File
 				RelativePath="images\tango\small\go-last.png"
+				>
+			</File>
+			<File
+				RelativePath="images\tango\middle\go-last.png"
 				>
 			</File>
 			<File
@@ -2079,11 +2079,11 @@
 				>
 			</File>
 			<File
-				RelativePath="images\tango\small\go-previous.png"
+				RelativePath="images\tango\middle\go-previous.png"
 				>
 			</File>
 			<File
-				RelativePath="images\tango\middle\go-previous.png"
+				RelativePath="images\tango\small\go-previous.png"
 				>
 			</File>
 			<File
@@ -2124,7 +2124,7 @@
 						Name="VCCustomBuildTool"
 						Description="RCC hspide.qrc"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\document-save-all.png;images\icons\small\blank.png;images\icons\small\document-save-all.png;images\icons\small\media-record-blue.png;images\icons\small\software-update-urgent-yellow.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\document-save-all.png;images\icons\small\media-record-blue.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
 						Outputs="debug\qrc_hspide.cpp"
 					/>
 				</FileConfiguration>
@@ -2135,7 +2135,7 @@
 						Name="VCCustomBuildTool"
 						Description="RCC hspide.qrc"
 						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\document-save-all.png;images\icons\small\blank.png;images\icons\small\document-save-all.png;images\icons\small\media-record-blue.png;images\icons\small\software-update-urgent-yellow.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
+						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\document-save-all.png;images\icons\small\media-record-blue.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
 						Outputs="release\qrc_hspide.cpp"
 					/>
 				</FileConfiguration>
@@ -2197,7 +2197,31 @@
 				>
 			</File>
 			<File
+				RelativePath="images\icons\small\run-project.png"
+				>
+			</File>
+			<File
+				RelativePath="images\icons\middle\run-project.png"
+				>
+			</File>
+			<File
 				RelativePath="images\icons\small\software-update-urgent-yellow.png"
+				>
+			</File>
+			<File
+				RelativePath="images\icons\small\step-in.png"
+				>
+			</File>
+			<File
+				RelativePath="images\icons\middle\step-in.png"
+				>
+			</File>
+			<File
+				RelativePath="images\icons\middle\step-over.png"
+				>
+			</File>
+			<File
+				RelativePath="images\icons\small\step-over.png"
 				>
 			</File>
 			<File

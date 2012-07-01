@@ -140,6 +140,13 @@ void CDebugger::stopDebugging()
 	IpcSend(*m_clientConnection, CMD_STOP_DEBUG);
 }
 
+// ステップIn
+void CDebugger::stepIn()
+{
+	qDebug() <<__FUNCTION__<< CMD_STEP_IN_DEBUG;
+	IpcSend(*m_clientConnection, CMD_STEP_IN_DEBUG);
+}
+
 // 変数情報を要求
 void CDebugger::reqVariableInfo(const QString& varName, int info[])
 {

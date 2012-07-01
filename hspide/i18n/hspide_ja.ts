@@ -556,6 +556,18 @@ p, li { white-space: pre-wrap; }
         <source>----</source>
         <translation>----</translation>
     </message>
+    <message>
+        <source>Step in</source>
+        <translation>ステップイン</translation>
+    </message>
+    <message>
+        <source>Step over</source>
+        <translation>ステップオーバー</translation>
+    </message>
+    <message>
+        <source>Step out</source>
+        <translation>ステップアウト</translation>
+    </message>
 </context>
 <context>
     <name>CDocumentPane</name>
@@ -1465,6 +1477,30 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Error %1: %2</source>
         <translation>エラー %1: %2</translation>
+    </message>
+    <message>
+        <source>Step in</source>
+        <translation>ステップイン</translation>
+    </message>
+    <message>
+        <source>Step in next code</source>
+        <translation>次のコードにステップイン</translation>
+    </message>
+    <message>
+        <source>Step over</source>
+        <translation>ステップオーバー</translation>
+    </message>
+    <message>
+        <source>Step over next code</source>
+        <translation>次のコードにステップオーバー</translation>
+    </message>
+    <message>
+        <source>Step out</source>
+        <translation>ステップアウト</translation>
+    </message>
+    <message>
+        <source>Step out next code</source>
+        <translation>次のコードにステップアウト</translation>
     </message>
 </context>
 <context>

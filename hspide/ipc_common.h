@@ -32,6 +32,7 @@ typedef enum {
 	CMD_SUSPEND_DEBUG,		// デバッグを停止
 	CMD_RESUME_DEBUG,		// デバッグを再開
 	CMD_STOP_DEBUG,			// デバッグを中止
+	CMD_STEP_IN_DEBUG,		// ステップIN
 	CMD_UPDATE_DEBUG_INFO,	// デバッグ情報を更新
 	CMD_PUT_VAR_DIGEST,		// 変数情報の概要を通知
 	CMD_REQ_VAR_INFO,		// 変数情報を要求

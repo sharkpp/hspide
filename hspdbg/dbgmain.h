@@ -35,6 +35,7 @@ class CDbgMain
 	bool			m_breaked;	// デバッグの一時中断中か？
 	bool			m_breakedLast; // 前回の状態
 	bool			m_resumed;	// デバッグの再開直後か？
+	bool			m_stepIn;	// デバッグの再開直後か？
 	bool			m_quit;		// 終了要求が出ているか？
 
 	BreakPointManager m_bp;
@@ -86,6 +87,8 @@ public:
 	void updateInfo();
 
 	bool isQuitRequested();
+
+	bool isDebugging();
 
 	bool isDebugPaused();
 	bool isDebugResumed();

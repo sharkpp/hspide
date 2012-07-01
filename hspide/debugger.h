@@ -40,6 +40,9 @@ public:
 	// デバッグを停止
 	void stopDebugging();
 
+	// ステップIn
+	void stepIn();
+
 	// 変数情報を要求
 	void reqVariableInfo(const QString& varName, int info[]);
 

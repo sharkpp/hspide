@@ -56,6 +56,9 @@ class MainWindow : public QMainWindow
 	QAction* debugSuspendAct;
 	QAction* debugResumeAct;
 	QAction* debugStopAct;
+	QAction* debugStepInAct;
+	QAction* debugStepOverAct;
+	QAction* debugStepOutAct;
 	QAction* settingAct;
 	QAction* aboutAct;
 	QAction* showProjectDockAct;
@@ -146,6 +149,9 @@ public slots:
 	void onDebugSuspend();
 	void onDebugResume();
 	void onDebugStop();
+	void onDebugStepIn();
+	void onDebugStepOver();
+	void onDebugStepOut();
 	void onOpenSettingDialog();
 	void onTabListShow();
 	void onTabListClicked();

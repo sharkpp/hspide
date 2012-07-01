@@ -61,6 +61,9 @@ public:
 		ActionDebugSuspend,			// デバック中断
 		ActionDebugResume,			// デバッグ再開
 		ActionDebugStop,			// デバッグ中止
+		ActionDebugStepIn,			// ステップIn
+		ActionDebugStepOver,		// ステップOver
+		ActionDebugStepOut,			// ステップOut
 		ActionConfig,				// 設定
 		ActionShowProject,			// プロジェクトを表示
 		ActionShowSymbol,			// シンボル一覧を表示

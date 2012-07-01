@@ -92,43 +92,18 @@ void CDbgMain::typeinfo_hook::uninstall_hook()
 
 int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 {
-	HSP3DEBUG* dbg = g_app->debugInfo();
-	HSPCTX*    ctx = (HSPCTX*)dbg->hspctx;
-
-	dbg->dbg_curinf();
-
-	// デバッグの一時中断中か？
-	if( g_app->isDebugPaused() )
+	if( g_app->isDebugging() )
 	{
-		// 終了要求が出ているか？
-		if( g_app->isQuitRequested() )
-		{
-			ctx->endcode = 0;
-			ctx->runmode = RUNMODE_END;
-			return 1;
-		}
-		// ぐるぐる回るのでCPUを奪わないようにスリープ
-		Sleep(100);
 		return 0;
 	}
 
 #ifdef _DEBUG
+	HSP3DEBUG* dbg = g_app->debugInfo();
+	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 #endif
-
-	bool breaked = g_app->isBreak(dbg->fname, dbg->line);
-	// デバッグの一時中断指示が来たか？
-	if( breaked &&
-		!g_app->isDebugResumed() )
-	{
-		g_app->debugSuspend();
-
-		g_app->updateInfo();
-
-		return 0;
-	}
 
 	return m_typeinfo_old.cmdfunc(cmd);
 }
@@ -200,6 +175,7 @@ CDbgMain::CDbgMain()
 	, m_breaked(false)
 	, m_breakedLast(false)
 	, m_resumed(false)
+	, m_stepIn(false)
 	, m_quit(false)
 	, m_typeinfo_hook(NULL)
 {
@@ -334,8 +310,6 @@ int CDbgMain::MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType
 
 	putLog(lpText, lstrlenA(lpText));
 
-	dbg->dbg_curinf();
-
 	QString fname = dbg->fname ? dbg->fname : "";
 	QUuid uuid;
 
@@ -388,46 +362,80 @@ bool CDbgMain::isQuitRequested()
 	return m_quit;
 }
 
-// デバッグの一時中断中か？
-bool CDbgMain::isDebugPaused()
+bool CDbgMain::isDebugging()
 {
+	HSP3DEBUG* dbg = debugInfo();
+	HSPCTX*    ctx = (HSPCTX*)dbg->hspctx;
+
+	dbg->dbg_curinf();
+
+	// ブレークポイントあり？
+	bool breaked = isBreak(dbg->fname, dbg->line);
+
 	QMutexLocker lck(&m_lock);
 
-	if( m_breakedLast != m_breaked &&
-		m_breaked )
+	breaked |= m_breaked;
+
+	// 再開指示？
+	if( m_resumed )
 	{
-		HSP3DEBUG* dbg = debugInfo();
-
-		QString fname = dbg->fname ? dbg->fname : "";
-		QUuid uuid;
-
-		if( '?' == fname[0] )
-		{
-			// UUID直接指定
-			uuid = QUuid(fname.mid(1));
-		}
-		else
-		{
-			// 名前引き
-			uuid = m_lookup.uuidFromFilename(fname);
-		}
-		if( !uuid.isNull() )
-		{
-			breakRunning(uuid, dbg->line);
-		}
+		m_breaked = false;
+		m_resumed = false;
+		m_breakedLast = false;
+		return false;
 	}
 
-	m_breakedLast = m_breaked;
-	return m_breaked;
-}
+	// ステップINが指示された場合は一回のみコードを実行
+	if( m_stepIn )
+	{
+		m_stepIn  = false;
+		m_breaked = true;
+		m_breakedLast = false;
+		return false;
+	}
 
-// デバッグが直前で再開されたか？
-bool CDbgMain::isDebugResumed()
-{
-	QMutexLocker lck(&m_lock);
-	bool resumed = m_resumed;
-	m_resumed = false;
-	return resumed;
+	// 一時停止中の場合はコードを読み取らずに戻る
+	if( breaked )
+	{
+		// 終了要求が出ているか？
+		if( m_quit )
+		{
+			ctx->endcode = 0;
+			ctx->runmode = RUNMODE_END;
+			return true; // return 1;
+		}
+		//
+		if( breaked != m_breakedLast )
+		{
+			m_breakedLast = breaked;
+
+			QString fname = dbg->fname ? dbg->fname : "";
+			QUuid uuid;
+
+			if( '?' == fname[0] )
+			{
+				// UUID直接指定
+				uuid = QUuid(fname.mid(1));
+			}
+			else
+			{
+				// 名前引き
+				uuid = m_lookup.uuidFromFilename(fname);
+			}
+			if( !uuid.isNull() )
+			{
+				lck.unlock(); // デッドロックするのでここでロックを解除
+				breakRunning(uuid, dbg->line);
+				return true;
+			}
+		}
+		lck.unlock();
+		// ぐるぐる回るのでCPUを奪わないようにスリープ
+		Sleep(100);
+		return true; // return 0;
+	}
+
+	return false;
 }
 
 // デバッグを中断
@@ -448,9 +456,7 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 {
 	QMutexLocker lck(&m_lock);
 
-	// デバッガからの停止指示
-	bool breaked = m_breaked;
-	m_breaked = false;
+	bool breaked = false;
 
 	// ブレークポイントに引っかかるか調べる
 	QString fname = filename ? filename : "";
@@ -476,7 +482,6 @@ bool CDbgMain::isBreak(const char* filename, int lineNo)
 
 	if( breaked )
 	{
-		breakRunning(uuid, lineNo);
 		return true;
 	}
 
@@ -888,6 +893,10 @@ void CDbgMain::recvCommand()
 			break; }
 		case CMD_STOP_DEBUG: { // デバッグを中止
 			disconnectFromDebugger();
+			break; }
+		case CMD_STEP_IN_DEBUG: { // ステップIN
+			QMutexLocker lck(&m_lock);
+			m_stepIn = true;
 			break; }
 		case CMD_REQ_VAR_INFO: { // 変数情報を要求
 			QMutexLocker lck(&m_lock);
