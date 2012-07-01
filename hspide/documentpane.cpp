@@ -13,6 +13,9 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	connect(m_editorWidget,             SIGNAL(pressIconArea(int)),        this, SLOT(onPressEditorIconArea(int)));
 	connect(m_editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
+	m_breakPointIcon = m_editorWidget->registLineIcon(QIcon(":/images/icons/small/media-record-blue.png"));
+	m_cursorIcon     = m_editorWidget->registLineIcon(QIcon(":/images/tango/small/go-next.png"));
+
 	// 設定の変更通史の登録と設定からの初期化処理
 	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
 	        this,  SLOT(updateConfiguration(const Configuration&)));
@@ -39,7 +42,7 @@ void CDocumentPane::onModificationChanged(bool changed)
 
 void CDocumentPane::onPressEditorIconArea(int lineNo)
 {
-	if( m_editorWidget->lineIcon(lineNo).isNull() &&
+	if( !m_editorWidget->lineIcon(lineNo, m_breakPointIcon) &&
 		!m_uuid.isNull() )
 	{
 		// ブレークポイントをセット
@@ -123,9 +126,9 @@ void CDocumentPane::onBreakPointChanged(const QUuid& uuid, const QList<QPair<int
 		ite != last; ++ite)
 	{
 		if( ite->second ) {
-			m_editorWidget->setLineIcon(ite->first - 1, QIcon(":/images/icons/small/media-record-blue.png"));
+			m_editorWidget->setLineIcon(ite->first - 1, m_breakPointIcon);
 		} else {
-			m_editorWidget->clearLineIcon(ite->first - 1);
+			m_editorWidget->clearLineIcon(ite->first - 1, m_breakPointIcon);
 		}
 	}
 }
@@ -240,8 +243,9 @@ bool CDocumentPane::jump(int lineNo)
 	QTextCursor cursor = m_editorWidget->textCursor();
 	cursor.setPosition(0, QTextCursor::MoveAnchor);
 	cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNo - 1);
-	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+//	cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
 	m_editorWidget->setTextCursor(cursor);
+	setFocus();
 	return true;
 }
 
@@ -292,4 +296,19 @@ bool CDocumentPane::isModified() const
 	return
 		m_editorWidget->document() &&
 		m_editorWidget->document()->isModified();
+}
+
+void CDocumentPane::markCursorine(const QUuid& uuid, int lineNo)
+{
+	if( m_uuid != uuid ) {
+		return;
+	}
+
+	m_editorWidget->clearLineIcon(-1, m_cursorIcon);
+	m_editorWidget->setLineIcon(lineNo - 1, m_cursorIcon);
+}
+
+void CDocumentPane::unmarkCursorine()
+{
+	m_editorWidget->clearLineIcon(-1, m_cursorIcon);
 }

@@ -849,13 +849,26 @@ void MainWindow::onGoToLine(const QUuid& uuid, int lineNo)
 
 void MainWindow::onStopAtBreakPoint(const QUuid& uuid, int lineNo)
 {
-	onGoToLine(uuid, lineNo);
-
 	// メニューを変更
 	debugResumeAct->setEnabled(true);
 	debugSuspendAct->setEnabled(false);
 	varInfoDock->setEnable(true);
 	sysInfoDock->setEnable(true);
+}
+
+void MainWindow::onStopCode(const QUuid& uuid, int lineNo)
+{
+	onGoToLine(uuid, lineNo);
+
+	// カーソル位置にアイコン追加
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document ) {
+			document->markCursorine(uuid, lineNo);
+		}
+	}
 }
 
 void MainWindow::onUpdateDebugInfo(const QVector<QPair<QString,QString> >& info)
@@ -1029,6 +1042,16 @@ void MainWindow::onDebugResume()
 	// 全てのデバッグを再開
 	foreach(CDebugger* debugger, m_debuggers) {
 		debugger->resumeDebugging();
+	}
+
+	// カーソル位置からアイコン削除
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document ) {
+			document->unmarkCursorine();
+		}
 	}
 
 	// メニューを変更
@@ -1373,6 +1396,7 @@ void MainWindow::onUpdatedSymbols()
 void MainWindow::attachedDebugger(CDebugger* debugger)
 {
 	connect(debugger, SIGNAL(stopAtBreakPoint(const QUuid&,int)),                       this, SLOT(onStopAtBreakPoint(const QUuid &,int)));
+	connect(debugger, SIGNAL(stopCode(const QUuid&,int)),                               this, SLOT(onStopCode(const QUuid &,int)));
 	connect(debugger, SIGNAL(putLog(const QString&)),                                   this, SLOT(onPutDebugLog(const QString&)));
 	connect(debugger, SIGNAL(updateDebugInfo(const QVector<QPair<QString,QString> >&)), this, SLOT(onUpdateDebugInfo(const QVector<QPair<QString,QString> > &)));
 	connect(debugger, SIGNAL(updateVarInfo(const QVector<VARIABLE_INFO_TYPE>&)),        this, SLOT(onUpdateVarInfo(const QVector<VARIABLE_INFO_TYPE> &)));
@@ -1453,6 +1477,16 @@ void MainWindow::endDebugging()
 {
 	sysInfoDock->setEnable(false);
 	varInfoDock->setEnable(false);
+
+	// カーソル位置からアイコン削除
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document ) {
+			document->unmarkCursorine();
+		}
+	}
 
 	// 現在のレイアウトを保存
 	m_stateDebugging = saveState();

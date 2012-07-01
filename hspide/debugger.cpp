@@ -83,6 +83,7 @@ void CDebugger::onRecvStopRunning(const QByteArray& param)
 	int   lineNo;
 	in >> uuid >> lineNo;
 	emit stopAtBreakPoint(uuid, lineNo);
+	emit stopCode(uuid, lineNo);
 	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_STOP_RUNNING << uuid << lineNo;
 }
 

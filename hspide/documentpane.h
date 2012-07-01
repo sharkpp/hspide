@@ -26,6 +26,9 @@ class CDocumentPane
 
 	CWorkSpaceItem*		m_assignItem;
 
+	int					m_breakPointIcon;
+	int					m_cursorIcon;
+
 public:
 
 	CDocumentPane(QWidget *parent = 0);
@@ -69,6 +72,9 @@ public:
 	// ïœçXÇ≥ÇÍÇƒÇ¢ÇÈÇ©
 	bool isModified() const;
 
+	void markCursorine(const QUuid& uuid, int lineNo);
+	void unmarkCursorine();
+
 protected:
 
 	virtual void resizeEvent(QResizeEvent* event);
@@ -87,6 +93,7 @@ public slots:
 	void onBreakPointChanged(const QUuid& uuid, const QList<QPair<int, bool> >& modifiedLineNumberes);
 
 signals:
+
 	void modificationChanged(bool changed);
 	void updateBreakpoint();
 

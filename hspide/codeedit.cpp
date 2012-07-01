@@ -168,22 +168,38 @@ void CCodeEdit::setLineNumberVisible(bool visible)
 	m_visibleLineNumber = visible;
 }
 
-void CCodeEdit::setLineIcon(int lineNo, const QIcon& icon)
+int CCodeEdit::registLineIcon(const QIcon& icon)
 {
-	m_lineIconMap[lineNo] = icon;
-	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
+	int no = !m_iconMap.isEmpty() ? m_iconMap.keys().back() + 1 : 0;
+	m_iconMap[no] = icon;
+	return no;
 }
 
-const QIcon& CCodeEdit::lineIcon(int lineNo)
+void CCodeEdit::unregistLineIcon(int iconNo)
 {
-	static QIcon tmp;
-	QMap<int, QIcon>::iterator
+	m_iconMap.remove(iconNo);
+}
+
+bool CCodeEdit::lineIcon(int lineNo, int iconNo) const
+{
+	QMap<int, QSet<int> >::iterator
 		ite = m_lineIconMap.find(lineNo);
 	if( m_lineIconMap.end() != ite )
 	{
-		return ite.value();
+		QSet<int>::iterator
+			ite2 = ite.value().find(iconNo);
+		if( ite.value().end() != ite2 )
+		{
+			return true;
+		}
 	}
-	return tmp;
+	return false;
+}
+
+void CCodeEdit::setLineIcon(int lineNo, int iconNo)
+{
+	m_lineIconMap[lineNo].insert(iconNo);
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
 void CCodeEdit::clearLineIcon()
@@ -192,33 +208,38 @@ void CCodeEdit::clearLineIcon()
 	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
 
-void CCodeEdit::clearLineIcon(const QIcon& icon)
-{
-	qint64 iconHash = icon.cacheKey();
-
-	for(QMap<int, QIcon>::iterator
-			ite = m_lineIconMap.begin();
-		ite != m_lineIconMap.end(); )
-	{
-		if( iconHash == ite.value().cacheKey() )
-		{
-			m_lineIconMap.erase(ite++);
-		}
-		else
-		{
-			++ite;
-		}
-	}
-	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
-}
-
 void CCodeEdit::clearLineIcon(int lineNo)
 {
-	QMap<int, QIcon>::iterator
+	QMap<int, QSet<int> >::iterator
 		ite = m_lineIconMap.find(lineNo);
 	if( m_lineIconMap.end() != ite )
 	{
 		m_lineIconMap.erase(ite);
+	}
+	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
+}
+
+void CCodeEdit::clearLineIcon(int lineNo, int iconNo)
+{
+	for(QMap<int, QSet<int> >::iterator
+			ite = m_lineIconMap.begin();
+		ite != m_lineIconMap.end(); )
+	{
+		if( lineNo < 0 ||
+			lineNo == ite.key() )
+		{
+			QSet<int>::iterator
+				ite2 = ite.value().find(iconNo);
+			if( ite.value().end() != ite2 )
+			{
+				ite.value().erase(ite2);
+				if( ite.value().isEmpty() ) {
+					m_lineIconMap.erase(ite++);
+					continue;
+				}
+			}
+		}
+		++ite;
 	}
 	m_lineNumberWidget->update(0, contentsRect().y(), m_lineNumberWidget->width(), contentsRect().height());
 }
@@ -495,12 +516,19 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent* event)
 							 Qt::AlignRight, QString::number(lineNo + 1));
 		}
 		// ƒAƒCƒRƒ“‚ð•`‰æ
-		QMap<int, QIcon>::iterator
+		QMap<int, QSet<int> >::iterator
 			ite = m_lineIconMap.find(lineNo);
 		if( m_lineIconMap.end() != ite )
 		{
-			QPixmap pixmap = ite.value().pixmap(QSize(m_lineIconSize.width() - 2, m_lineIconSize.height() - 2), QIcon::Normal);
-			painter.drawPixmap(QPoint(1, y + int(rect.height() - m_lineIconSize.height()) + 1), pixmap);
+			for(QSet<int>::iterator
+					ite2 = ite.value().begin(),
+					last2= ite.value().end();
+				ite2 != last2; ++ite2)
+			{
+				QIcon& icon = m_iconMap[*ite2];
+				QPixmap pixmap = icon.pixmap(QSize(m_lineIconSize.width() - 2, m_lineIconSize.height() - 2), QIcon::Normal);
+				painter.drawPixmap(QPoint(1, y + int(rect.height() - m_lineIconSize.height()) + 1), pixmap);
+			}
 		}
 	}
 }

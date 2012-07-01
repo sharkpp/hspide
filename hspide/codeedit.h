@@ -32,7 +32,8 @@ class CCodeEdit
 	bool                m_visibleLineNumber;
 
 	QSize               m_lineIconSize;
-	QMap<int, QIcon>    m_lineIconMap;
+	QMap<int, QSet<int> >m_lineIconMap;
+	QMap<int, QIcon>    m_iconMap;
 
 	int                 m_tabStopCharWidth;
 
@@ -67,12 +68,13 @@ public:
 	void setLineNumberVisible(bool visible);
 	bool isLineNumberVisible() const;
 
-	void setLineIcon(int lineNo, const QIcon& icon);
-	const QIcon& lineIcon(int lineNo);
+	int registLineIcon(const QIcon& icon);
+	void unregistLineIcon(int iconNo);
+	bool lineIcon(int lineNo, int iconNo) const;
+	void setLineIcon(int lineNo, int iconNo);
 	void clearLineIcon();
-	void clearLineIcon(const QIcon& icon);
 	void clearLineIcon(int lineNo);
-	void clearLineIcon(int lineNo, const QIcon& icon);
+	void clearLineIcon(int lineNo, int iconNo);
 
 	void setTabStopCharWidth(int width);
 	int  tabStopCharWidth() const;

@@ -62,6 +62,7 @@ public slots:
 
 signals:
 
+	void stopCode(const QUuid& uuid, int lineNo);
 	void stopAtBreakPoint(const QUuid& uuid, int lineNo);
 	void updateDebugInfo(const QVector<QPair<QString,QString> >& info);
 	void updateVarInfo(const QVector<VARIABLE_INFO_TYPE>& info);
