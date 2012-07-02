@@ -184,7 +184,9 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 	QString program = QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe"));
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
-	          << "-H" << m_hspPath;
+	          << "-H" << m_hspPath
+	          << "--hspide-fix" // HSPIDE用補正
+			  ;
 	if( debugMode ) { // デバッグモード
 		arguments << "-d";
 	}

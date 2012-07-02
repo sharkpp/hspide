@@ -33,6 +33,7 @@ struct option {
 	bool		execute;			// コンパイルが正常終了した場合、実行
 	bool		symbol_put;			// 定義済みシンボルの表示
 	bool		redirect;			// オブジェクトファイルなどをファイルに書き込まず標準エラー出力にリダイレクト
+	bool		hspide_fix;			// hspide用に色々修正
 	const char * refname;			// コンパイル結果などに表示するファイル名
 	const char * objname;			// オブジェクトファイル名
 	const char * common_path;		// commonフォルダのパス
@@ -48,6 +49,7 @@ struct option {
 		, auto_make(false), make(false), execute(false)
 		, symbol_put(false)
 		, redirect(false)
+		, hspide_fix(false)
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 		, cmdline(NULL)
 		, attach(NULL)
@@ -77,13 +79,14 @@ struct option {
 		printf("!!! option.cmdline = \"%s\"\n", cmdline);
 		printf("!!! option.symbol_put = %s\n", symbol_put ? "true" : "false");
 		printf("!!! option.redirect = %s\n", redirect ? "true" : "false");
+		printf("!!! option.hspide_fix = %s\n", hspide_fix ? "true" : "false");
 		printf("!!! option.attach = \"%s\"\n", attach);
 		packfile.dump();
 	}
 #endif
 } option;
 
-void InstallAPIHook();
+void InstallAPIHook(bool redirect, bool hspide_fix);
 void UninstallAPIHook();
 
 void usage()
@@ -216,6 +219,9 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "--redirect") ) {
 				// オブジェクトファイルなどをファイルに書き込まず標準エラー出力にリダイレクト
 				option.redirect = true;
+			} else if(  !strcmp(argv[i], "--hspide-fix") ) {
+				// hspide用に色々修正
+				option.hspide_fix = true;
 			} else if(  !strcmp(argv[i], "-v") || !strcmp(argv[i], "--version") ) {
 				// バージョンの表示
 				option.version = true;
@@ -344,9 +350,7 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 
-	if( option.redirect ) {
-		InstallAPIHook();
-	}
+	InstallAPIHook(option.redirect, option.hspide_fix);
 
 	hspcmp cmp;
 	std::vector<char> tmp;
