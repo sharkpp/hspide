@@ -169,6 +169,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		/* ActionDebugStepIn         */{ ":/images/icons/small/step-in.png",               tr("Step in")               },
 		/* ActionDebugStepOver       */{ ":/images/icons/small/step-over.png",             tr("Step over")             },
 		/* ActionDebugStepOut        */{ "",                                               tr("Step out")              },
+		/* ActionBreakpointSet       */{ ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint")  },
 		/* ActionConfig              */{ ":/images/tango/small/preferences-system.png",    tr("Configuration")         },
 		/* ActionShowProject         */{ "",                                               tr("Show project")          },
 		/* ActionShowSymbol          */{ "",                                               tr("Show symbols")          },

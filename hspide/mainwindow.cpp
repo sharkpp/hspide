@@ -242,6 +242,8 @@ void MainWindow::setupMenus()
 		debugMenu->addAction(debugRunProjectAct);
 		debugMenu->addAction(noDebugRunProjectAct);
 		debugMenu->addSeparator();
+		debugMenu->addAction(breakpointSetAct);
+		debugMenu->addSeparator();
 		debugMenu->addAction(debugResumeAct);
 		debugMenu->addAction(debugSuspendAct);
 		debugMenu->addAction(debugStopAct);
@@ -298,8 +300,9 @@ void MainWindow::setupActions()
 		{ &debugResumeAct,        ":/images/tango/middle/media-playback-start.png", ":/images/tango/small/media-playback-start.png",  tr("All &resume"),           tr("All resume"),           tr("Resume debugging")          },
 		{ &debugStopAct,          ":/images/tango/middle/media-playback-stop.png",  ":/images/tango/small/media-playback-stop.png",   tr("Stop &debugging"),       tr("Stop debugging"),       tr("Abort debugging")           },
 		{ &debugStepInAct,        ":/images/icons/middle/step-in.png",              ":/images/icons/small/step-in.png",               tr("Step in"),               tr("Step in"),              tr("Step in next code")         },
-		{ &debugStepOverAct,      ":/images/icons/middle/step-over.png",            ":/images/icons/small/step-over.png",             tr("Step over"),             tr("Step over"),            tr("Step over next code")        },
+		{ &debugStepOverAct,      ":/images/icons/middle/step-over.png",            ":/images/icons/small/step-over.png",             tr("Step over"),             tr("Step over"),            tr("Step over next code")       },
 		{ &debugStepOutAct,       "",                                               "",                                               tr("Step out"),              tr("Step out"),             tr("Step out next code")        },
+		{ &breakpointSetAct,      ":/images/icons/middle/breakpoint.png",           ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint"),  tr("Set/reset breakpoint"), tr("Set/reset breakpoint")      },
 		{ &settingAct,            ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),              tr("Setting"),              tr("Application settings")      },
 		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
 		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
@@ -346,6 +349,7 @@ void MainWindow::setupActions()
 	connect(debugStepInAct,            SIGNAL(triggered()), this, SLOT(onDebugStepIn()));
 	connect(debugStepOverAct,          SIGNAL(triggered()), this, SLOT(onDebugStepOver()));
 	connect(debugStepOutAct,           SIGNAL(triggered()), this, SLOT(onDebugStepOut()));
+	connect(breakpointSetAct,          SIGNAL(triggered()), this, SLOT(onBreakpointSet()));
 	connect(settingAct,                SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
 	connect(aboutAct,                  SIGNAL(triggered()), this, SLOT(onAboutApp()));
 	connect(showProjectDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
@@ -554,6 +558,7 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	theConf.applyShortcut(Configuration::ActionDebugStepIn,			debugStepInAct);
 	theConf.applyShortcut(Configuration::ActionDebugStepOver,		debugStepOverAct);
 	theConf.applyShortcut(Configuration::ActionDebugStepOut,		debugStepOutAct);
+	theConf.applyShortcut(Configuration::ActionBreakpointSet,		breakpointSetAct);
 	theConf.applyShortcut(Configuration::ActionConfig,				settingAct);
 	theConf.applyShortcut(Configuration::ActionShowProject,			showProjectDockAct);
 	theConf.applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
@@ -601,6 +606,7 @@ void MainWindow::updateConfiguration(const Configuration& info)
 		{ &debugStepInAct,        }, // ActionDebugStepIn
 		{ &debugStepOverAct,      }, // ActionDebugStepOver
 		{ &debugStepOutAct,       }, // ActionDebugStepOut
+		{ &breakpointSetAct,      }, // ActionBreakpointSet
 		{ &settingAct,            }, // ActionConfig
 		{ &showProjectDockAct,    }, // ActionShowProject
 		{ &showSymbolDockAct,     }, // ActionShowSymbol
@@ -1121,6 +1127,18 @@ void MainWindow::onDebugStepOver()
 
 void MainWindow::onDebugStepOut()
 {
+}
+
+void MainWindow::onBreakpointSet()
+{
+	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+
+	if( document )
+	{
+		QTextCursor tc = document->editor()->textCursor();
+		QTextBlock  tb = document->editor()->document()->findBlock(tc.position());
+		document->onPressEditorIconArea(tb.firstLineNumber());
+	}
 }
 
 void MainWindow::onOpenSettingDialog()

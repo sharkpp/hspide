@@ -64,6 +64,7 @@ public:
 		ActionDebugStepIn,			// ステップIn
 		ActionDebugStepOver,		// ステップOver
 		ActionDebugStepOut,			// ステップOut
+		ActionBreakpointSet,		// ブレークポイントの設定/解除
 		ActionConfig,				// 設定
 		ActionShowProject,			// プロジェクトを表示
 		ActionShowSymbol,			// シンボル一覧を表示

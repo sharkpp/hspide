@@ -13,7 +13,7 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	connect(m_editorWidget,             SIGNAL(pressIconArea(int)),        this, SLOT(onPressEditorIconArea(int)));
 	connect(m_editorWidget->document(), SIGNAL(modificationChanged(bool)), this, SLOT(onModificationChanged(bool)));
 
-	m_breakPointIcon = m_editorWidget->registLineIcon(QIcon(":/images/icons/small/media-record-blue.png"));
+	m_breakPointIcon = m_editorWidget->registLineIcon(QIcon(":/images/icons/small/breakpoint.png"));
 	m_cursorIcon     = m_editorWidget->registLineIcon(QIcon(":/images/tango/small/go-next.png"));
 
 	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—

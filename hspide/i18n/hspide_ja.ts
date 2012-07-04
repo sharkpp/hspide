@@ -568,6 +568,10 @@ p, li { white-space: pre-wrap; }
         <source>Step out</source>
         <translation>ステップアウト</translation>
     </message>
+    <message>
+        <source>Set/reset breakpoint</source>
+        <translation>ブレークポイントの指定/解除</translation>
+    </message>
 </context>
 <context>
     <name>CDocumentPane</name>
@@ -1501,6 +1505,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Step out next code</source>
         <translation>次のコードにステップアウト</translation>
+    </message>
+    <message>
+        <source>Set/reset breakpoint</source>
+        <translation>ブレークポイントの指定/解除</translation>
     </message>
 </context>
 <context>
