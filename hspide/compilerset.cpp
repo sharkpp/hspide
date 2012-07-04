@@ -257,9 +257,13 @@ bool CCompilerSet::execBuildDeliverables()
 		if( QFileInfo(opt.runtime).isAbsolute() ) {
 			arguments.push_front(opt.objName);
 			arguments.push_front(opt.runtime);
+			arguments.push_front("--thunk-call");
+			arguments.push_front(QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe")));
 		} else {
 			arguments.push_front(opt.objName);
 			arguments.push_front(QDir(m_hspPath).absoluteFilePath(opt.runtime));
+			arguments.push_front("--thunk-call");
+			arguments.push_front(QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe")));
 		}
 
 		// ˆ—Š®—¹‚Ì’Ê’m‚ğ“o˜^
@@ -290,7 +294,8 @@ qDebug() << execInfo.first;
 
 void CCompilerSet::updateConfiguration(const Configuration& info)
 {
-	m_hspPath = QDir::toNativeSeparators(info.hspPath());
+	m_hspPath     = QDir::toNativeSeparators(info.hspPath());
+	m_hspCompPath = QDir::toNativeSeparators(info.compilerPath());
 }
 
 void CCompilerSet::compileStarted(const QUuid& uuid)

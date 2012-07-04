@@ -45,6 +45,7 @@ class CCompilerSet
 	} ExecOptionType;
 
 	QString					m_hspPath;
+	QString					m_hspCompPath;
 	QLocalServer*			m_server;
 	QList<CCompiler*>		m_compilers;
 	QList<BuildOptionType>	m_buildItems;

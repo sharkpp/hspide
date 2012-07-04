@@ -41,6 +41,7 @@ struct option {
 	const char * work_path;			// 作業ディレクトリのパス
 	const char * cmdline;			// EXE実行時にコマンドラインへ渡す内容
 	const char * attach;			// デバッガとの関連付けの情報
+	int			thunk_call;			// クッションとして呼び出し
 	option()
 		: version(false), help(false)
 		, exename(NULL), filename(NULL)
@@ -53,6 +54,7 @@ struct option {
 		, refname(NULL), objname(NULL), common_path(NULL), hsp_path(NULL), work_path(NULL)
 		, cmdline(NULL)
 		, attach(NULL)
+		, thunk_call(-1)
 	{}
 #ifdef _DEBUG
 	void dump() {
@@ -81,6 +83,7 @@ struct option {
 		printf("!!! option.redirect = %s\n", redirect ? "true" : "false");
 		printf("!!! option.hspide_fix = %s\n", hspide_fix ? "true" : "false");
 		printf("!!! option.attach = \"%s\"\n", attach);
+		printf("!!! option.thunk_call = %d\n", thunk_call);
 		packfile.dump();
 	}
 #endif
@@ -222,6 +225,10 @@ bool read_args(int argc, char * argv[])
 			} else if(  !strcmp(argv[i], "--hspide-fix") ) {
 				// hspide用に色々修正
 				option.hspide_fix = true;
+			} else if(  !strcmp(argv[i], "--thunk-call") ) {
+				// hspide用に色々修正
+				option.thunk_call = i;
+				break;
 			} else if(  !strcmp(argv[i], "-v") || !strcmp(argv[i], "--version") ) {
 				// バージョンの表示
 				option.version = true;
@@ -341,13 +348,50 @@ int main(int argc, char * argv[])
 
 	// 引数解析
 	if( !read_args(argc, argv) ||
-		((!option.filename || option.help) && !option.version && !option.symbol_put) )
+		((!option.filename || option.help) && !option.version && !option.symbol_put && !option.thunk_call) )
 	{
 #ifdef _DEBUG
 		option.dump();
 #endif
 		usage();
 		return -1;
+	}
+
+	// コンソールの表示のためのクッション処理
+	if( 0 <= option.thunk_call )
+	{
+		if( option.thunk_call + 1 < argc )
+		{
+			// 引数構築
+			std::string args;
+			args += "\"";
+			args += argv[option.thunk_call+1];
+			args += "\"";
+			for(int i = option.thunk_call + 2; i < argc; i++) {
+				args += " ";
+				if( strchr(argv[i], ' ') ) { // \のエスケープとかもう少し処理が必要
+					args += "\"";
+					args += argv[i];
+					args += "\"";
+				} else {
+					args += argv[i];
+				}
+			}
+			std::vector<char> tmp(args.c_str(), args.c_str() + args.size() + 1);
+
+			STARTUPINFO si = { sizeof(STARTUPINFO) };
+			PROCESS_INFORMATION pi = {};
+
+			// 実行
+			if( CreateProcess(NULL, &tmp[0], NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi) )
+			{
+				// 終了まで待機
+				::WaitForSingleObject(pi.hProcess, INFINITE);
+				::CloseHandle(pi.hThread);
+				::CloseHandle(pi.hProcess);
+			}
+		}
+		return 0;
 	}
 
 	InstallAPIHook(option.redirect, option.hspide_fix);

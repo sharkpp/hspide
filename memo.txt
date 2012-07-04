@@ -178,7 +178,6 @@
 	hsp3c
 		問題なし
 	hsp3cl
-		ウインドウが出てこない
 		デバッグの終了方法がTerminateProcess()
 	hsp3hg
 		アクセス違反で落ちる
