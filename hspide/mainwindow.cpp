@@ -237,9 +237,8 @@ void MainWindow::setupMenus()
 
 	QMenu* debugMenu = menuBar()->addMenu(tr("&Debug"));
 		debugMenu->addAction(debugRunSolutionAct);
-		debugMenu->addAction(noDebugRunSolutionAct);
-		debugMenu->addSeparator();
 		debugMenu->addAction(debugRunProjectAct);
+		debugMenu->addAction(noDebugRunSolutionAct);
 		debugMenu->addAction(noDebugRunProjectAct);
 		debugMenu->addSeparator();
 		debugMenu->addAction(breakpointSetAct);

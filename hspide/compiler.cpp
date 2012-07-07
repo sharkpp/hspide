@@ -185,24 +185,28 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 	QStringList arguments;
 	arguments << "-C" << m_hspCommonPath
 	          << "-H" << m_hspPath
-	          << "--hspide-fix" // HSPIDE用補正
 			  ;
 	if( debugMode ) { // デバッグモード
-		arguments << "-d";
+		arguments << "-d"
+			      << "--hspide-fix" // HSPIDE用補正
+				  ;
+	} else {
+		arguments << "-m";
 	}
 	if( tempSave ) { // 一時的なファイルに保存
 		QString baseName = QDir::toNativeSeparators(QDir(workDir).absoluteFilePath("obj"));
 		m_objTemp = new QTemporaryFile(baseName, parent());
 		m_objTemp->setAutoRemove(true);
-		if( !m_objTemp->open() )
-		{
-		}
+		m_objTemp->open();
 		arguments << "-o" << m_objTemp->fileName()
 		          << "-r" << QString("?%1").arg(targetItem->uuid().toString());
 	} else {
 		arguments << "-r" << QString("?%1").arg(targetItem->uuid().toString());
 	}
 	arguments << filename;
+	if( !debugMode ) { 
+		arguments << "start.ax";
+	}
 
 	// 処理完了時の通知を登録
 	connect(hspcmp, SIGNAL(error(QProcess::ProcessError)),      this, SLOT(hspcmpError(QProcess::ProcessError)));
@@ -211,6 +215,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 
 	m_compiler   = hspcmp;
 
+qDebug() << program << arguments;
 	hspcmp->setWorkingDirectory(workDir);
 	hspcmp->start(program, arguments);
 

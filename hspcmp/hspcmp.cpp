@@ -435,7 +435,10 @@ int main(int argc, char * argv[])
 	}
 
 	if( !option.work_path ) {
-		work_path = ".\\";
+		tmp.resize(MAX_PATH*2+1);
+		tmp.resize(::GetCurrentDirectoryA(tmp.size(), &tmp[0]) + 1);
+		work_path = &tmp[0];
+		work_path+= "\\";
 		option.work_path = work_path.c_str();
 	}
 
@@ -532,8 +535,6 @@ int main(int argc, char * argv[])
 	} else {
 		runtime = &tmp[0];
 	}
-	print_message("#runtime '%s'\n", runtime.c_str());
-	print_message("#objname '%s'\n", option.objname);
 
 	if( option.make || option.auto_make || option.execute )
 	{
@@ -543,7 +544,15 @@ int main(int argc, char * argv[])
 		} else {
 			basename(option.exename, exename, false);
 		}
+		exename += ".exe";
 		option.exename = exename.c_str();
+	}
+
+	if( !option.make && !option.auto_make ) {
+		print_message("#runtime '%s'\n", runtime.c_str());
+		print_message("#objname '%s'\n", option.objname);
+	} else {
+		print_message("#runtime '%s\\%s'\n", option.work_path, option.exename);
 	}
 
 	if( option.make )

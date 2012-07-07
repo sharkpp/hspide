@@ -254,17 +254,16 @@ bool CCompilerSet::execBuildDeliverables()
 			opt.process->setProcessEnvironment(env);
 		}
 		// Àsƒtƒ@ƒCƒ‹‚ğ“o˜^
-		if( QFileInfo(opt.runtime).isAbsolute() ) {
+		if( !opt.objName.isEmpty() ) {
 			arguments.push_front(opt.objName);
-			arguments.push_front(opt.runtime);
-			arguments.push_front("--thunk-call");
-			arguments.push_front(QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe")));
-		} else {
-			arguments.push_front(opt.objName);
-			arguments.push_front(QDir(m_hspPath).absoluteFilePath(opt.runtime));
-			arguments.push_front("--thunk-call");
-			arguments.push_front(QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe")));
 		}
+		if( QFileInfo(opt.runtime).isAbsolute() ) {
+			arguments.push_front(opt.runtime);
+		} else {
+			arguments.push_front(QDir(m_hspPath).absoluteFilePath(opt.runtime));
+		}
+		arguments.push_front("--thunk-call");
+		arguments.push_front(QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe")));
 
 		// ˆ—Š®—¹‚Ì’Ê’m‚ğ“o˜^
 		connect(opt.process, SIGNAL(error(QProcess::ProcessError)),      this, SLOT(execError(QProcess::ProcessError)));
