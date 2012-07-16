@@ -24,7 +24,7 @@ HEADERS += outputdock.h varinfodock.h sysinfodock.h projectdock.h searchdock.h s
            messagedock.h breakpointdock.h \
            documentpane.h mainwindow.h workspaceitem.h workspacemodel.h codeedit.h \
            newfiledialog.h jumpdialog.h configdialog.h savesolutiondialog.h \
-           savepresetdialog.h \
+           savepresetdialog.h buildconfigurationspage.h \
            compiler.h compilerset.h debugger.h \
            global.h configuration.h filemanager.h breakpointmanager.h  \
            ipc_common.h hsp3lexer.h hsp3highlighter.h hotkeywidget.h
@@ -33,12 +33,12 @@ SOURCES += main.cpp \
            messagedock.cpp breakpointdock.cpp \
            documentpane.cpp mainwindow.cpp workspaceitem.cpp workspacemodel.cpp codeedit.cpp \
            newfiledialog.cpp jumpdialog.cpp configdialog.cpp savesolutiondialog.cpp \
-           savepresetdialog.cpp \
+           savepresetdialog.cpp buildconfigurationspage.cpp \
            compiler.cpp compilerset.cpp debugger.cpp \
            configuration.cpp filemanager.cpp breakpointmanager.cpp \
            ipc_common.cpp hsp3highlighter.cpp hotkeywidget.cpp
 RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts
 FORMS    = newfiledialog.ui jumpdialog.ui configdialog.ui aboutdialog.ui savesolutiondialog.ui \
-           savepresetdialog.ui
+           savepresetdialog.ui buildconfigurationspage.ui
 
