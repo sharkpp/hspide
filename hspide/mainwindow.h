@@ -60,6 +60,7 @@ class MainWindow : public QMainWindow
 	QAction* debugStepOverAct;
 	QAction* debugStepOutAct;
 	QAction* breakpointSetAct;
+	QAction* buildTargetAct;
 	QAction* settingAct;
 	QAction* aboutAct;
 	QAction* showProjectDockAct;
@@ -85,6 +86,8 @@ class MainWindow : public QMainWindow
 	QWidget*	m_lastActivatedDocument;
 
 	QMenu*		m_tabListMenu;
+
+	QComboBox*	m_buildTarget;
 
 	// É\ÉäÉÖÅ[ÉVÉáÉì
 	CWorkSpaceModel* m_workSpace;
@@ -163,6 +166,7 @@ public slots:
 	void onDocumentChanged(bool);
 	void onSymbolDockVisibilityChanged(bool visible);
 	void onShowDock();
+	void onBuildTargetChanged(int index);
 
 private:
 

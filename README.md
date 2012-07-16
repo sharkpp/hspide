@@ -1,6 +1,6 @@
 # the Hot Soup Processer™ integrated development environment
 
-このソフトは [Hot Soup Processer™](http://hsp.tv/) の総合開発環境です。
+このソフトは [Hot Soup Processer™](http://hsp.tv/) の統合開発環境です。
 
 ## 特徴
 

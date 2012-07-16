@@ -17,6 +17,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	, m_type(UnkownType)
 	, m_nodeType(UnkownNodeType)
 	, m_assignDocument(NULL)
+	, m_buildConfigurations(theConf.buildConf())
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -51,6 +52,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 	, m_parentPos(0)
 	, m_type(type)
 	, m_assignDocument(NULL)
+	, m_buildConfigurations(theConf.buildConf())
 {
 	static const struct {
 		NodeType nodeType;

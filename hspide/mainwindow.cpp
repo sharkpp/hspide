@@ -28,7 +28,9 @@ QIcon QMultiIcon(const QString& first, const QString& second, const QString& thi
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
+	, buildTargetAct(NULL)
 	, m_lastActivatedDocument(NULL)
+	, m_buildTarget(NULL)
 {
 	setObjectName("MainWindow");
 	setWindowTitle(tr("HSP script editor"));
@@ -558,6 +560,7 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	theConf.applyShortcut(Configuration::ActionDebugStepOver,		debugStepOverAct);
 	theConf.applyShortcut(Configuration::ActionDebugStepOut,		debugStepOutAct);
 	theConf.applyShortcut(Configuration::ActionBreakpointSet,		breakpointSetAct);
+//	theConf.applyShortcut(Configuration::ActionBuildTarget,			);
 	theConf.applyShortcut(Configuration::ActionConfig,				settingAct);
 	theConf.applyShortcut(Configuration::ActionShowProject,			showProjectDockAct);
 	theConf.applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
@@ -606,6 +609,7 @@ void MainWindow::updateConfiguration(const Configuration& info)
 		{ &debugStepOverAct,      }, // ActionDebugStepOver
 		{ &debugStepOutAct,       }, // ActionDebugStepOut
 		{ &breakpointSetAct,      }, // ActionBreakpointSet
+		{ NULL,                   }, // ActionBuildTarget
 		{ &settingAct,            }, // ActionConfig
 		{ &showProjectDockAct,    }, // ActionShowProject
 		{ &showSymbolDockAct,     }, // ActionShowSymbol
@@ -623,15 +627,32 @@ void MainWindow::updateConfiguration(const Configuration& info)
 
 	m_generalToolbar->clear();
 
+	delete buildTargetAct;
+	delete m_buildTarget;
+	buildTargetAct = NULL;
+	m_buildTarget  = NULL;
+
 	for(int i = 0; i < actionTypes.size(); i++)
 	{
-		if( QAction** action = actionLookupTable[actionTypes[i]].action ) {
-			m_generalToolbar->addAction(*action);
-		} else {
+		switch( i )
+		{
+		case Configuration::ActionBuildTarget:
+			buildTargetAct = m_generalToolbar->addWidget(m_buildTarget = new QComboBox(this));
+			break;
+		case Configuration::ActionSeparator:
 			m_generalToolbar->addSeparator();
+			break;
+		default:
+			if( QAction** action = actionLookupTable[actionTypes[i]].action ) {
+				m_generalToolbar->addAction(*action);
+			}
 		}
 	}
-
+	
+	if( m_buildTarget )
+	{
+		connect(m_buildTarget, SIGNAL(currentIndexChanged(int)), this, SLOT(onBuildTargetChanged(int)));
+	}
 }
 
 void MainWindow::closeTab(CWorkSpaceItem* targetItem)
@@ -1733,6 +1754,9 @@ void MainWindow::currentTabChanged(int index)
 		symbolDock->setAssignDocument(document);
 
 		projectDock->selectItem(document->assignItem());
+
+//		int 
+//		QPair<QString, int> =  document->assignItem()->updateBuildTargets();
 	}
 
 	saveDocumentAct->   setEnabled( document ? document->isModified() : false );
@@ -1783,3 +1807,7 @@ void MainWindow::onShowDock()
 	dockWidget->raise();
 }
 
+void MainWindow::onBuildTargetChanged(int index)
+{
+	QComboBox* combobox = qobject_cast<QComboBox*>(sender());
+}

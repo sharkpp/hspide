@@ -84,6 +84,7 @@ Configuration::Configuration()
 //	m_keyAssignInfo.back().keyAssign[ActionDebugStepOver].keys      = 
 //	m_keyAssignInfo.back().keyAssign[ActionDebugStepOut].keys       = 
 	m_keyAssignInfo.back().keyAssign[ActionBreakpointSet].keys      = QKeySequence(Qt::Key_F9);
+//	m_keyAssignInfo.back().keyAssign[ActionBuildTarget].keys        = 
 	m_keyAssignInfo.back().keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
 	m_keyAssignInfo.back().keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
 	m_keyAssignInfo.back().keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
@@ -147,6 +148,28 @@ Configuration::Configuration()
 	m_toolbarInfo.back().toolbar.push_back(ActionDebugStepOver);
 	// HSED3ïóÇåªç›ÇÃê›íËÇ…
 	m_toolbarInfo[0] = m_toolbarInfo[1];
+
+	m_defaultBuildConf.push_back(BuildConfType());
+	m_defaultBuildConf.back().name				= tr("Debug");
+	m_defaultBuildConf.back().preprocessOnly	= false;
+	m_defaultBuildConf.back().compile			= true;
+	m_defaultBuildConf.back().make				= true;
+	m_defaultBuildConf.back().noExecute			= false;
+	m_defaultBuildConf.back().debug				= true;
+	m_defaultBuildConf.push_back(BuildConfType());
+	m_defaultBuildConf.back().name				= tr("Release");
+	m_defaultBuildConf.back().preprocessOnly	= false;
+	m_defaultBuildConf.back().compile			= true;
+	m_defaultBuildConf.back().make				= true;
+	m_defaultBuildConf.back().noExecute			= false;
+	m_defaultBuildConf.back().debug				= false;
+	m_defaultBuildConf.push_back(BuildConfType());
+	m_defaultBuildConf.back().name				= tr("Contest");
+	m_defaultBuildConf.back().preprocessOnly	= false;
+	m_defaultBuildConf.back().compile			= true;
+	m_defaultBuildConf.back().make				= false;
+	m_defaultBuildConf.back().noExecute			= false;
+	m_defaultBuildConf.back().debug				= false;
 }
 
 Configuration::Configuration(const Configuration& info)
@@ -238,6 +261,7 @@ QStringList Configuration::actionItemNames()
 				/* ActionDebugStepOver      */	<< "debug-step-over"
 				/* ActionDebugStepOut       */	<< "debug-step-out"
 				/* ActionBreakpointSet      */	<< "break-point-set"
+				/* ActionBuildTarget        */	<< "build-target"
 				/* ActionConfig             */	<< "config"
 				/* ActionShowProject        */	<< "show-project"
 				/* ActionShowSymbol         */	<< "show-symbols"

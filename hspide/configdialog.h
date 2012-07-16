@@ -11,6 +11,13 @@ class CConfigDialog
 	Q_OBJECT
 
 	typedef enum {
+		BuildTargetListName = 0,
+		BuildTargetListDebug,
+		BuildTargetListObjectOnly,
+		BuildTargetListColumnNum,
+	};
+
+	typedef enum {
 		ColorListCategoryColumn = 0,
 		ColorListEnableColumn,
 		ColorListFontBoldColumn,

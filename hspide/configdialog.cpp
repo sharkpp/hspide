@@ -48,6 +48,8 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	rootItem = model->invisibleRootItem();
 	rootItem->appendRow(item = new QStandardItem(tr("Directory")));
 		item->setData(ui.stackedWidget->indexOf(ui.directoryPage));
+	rootItem->appendRow(item = new QStandardItem(tr("Build configurations")));
+		item->setData(ui.stackedWidget->indexOf(ui.buildConfigurationsPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Editor")));
 		item->appendRow(item2 = new QStandardItem(tr("General")));
 			item2->setData(ui.stackedWidget->indexOf(ui.editorGeneralPage));
@@ -61,6 +63,9 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 		item->setData(ui.stackedWidget->indexOf(ui.toolbarPage));
 	ui.category->expandAll();
 
+	// ビルド構成一覧を初期化
+
+	// 色設定の一覧を初期化
 	QVector<QPair<Qt::GlobalColor, QString> > colorValues;
 	colorValues	<< qMakePair(Qt::white,       tr("White"))
 				<< qMakePair(Qt::black,       tr("Black"))
@@ -103,7 +108,6 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	ui.editorColorItemBgcolor->setMenu(menu1);
 	ui.editorColorItemFgcolor->setMenu(menu2);
 
-	// 色設定の一覧を初期化
 	ui.editorColorList->setColumnCount(ColorListColumnNum);
 	ui.editorColorList->header()->setResizeMode(ColorListCategoryColumn,        QHeaderView::Stretch);
 	ui.editorColorList->header()->setResizeMode(ColorListEnableColumn,          QHeaderView::ResizeToContents);
@@ -170,6 +174,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		/* ActionDebugStepOver       */{ ":/images/icons/small/step-over.png",             tr("Step over")             },
 		/* ActionDebugStepOut        */{ "",                                               tr("Step out")              },
 		/* ActionBreakpointSet       */{ ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint")  },
+		/* ActionBuildTarget         */{ "",                                               tr("Build target")          },
 		/* ActionConfig              */{ ":/images/tango/small/preferences-system.png",    tr("Configuration")         },
 		/* ActionShowProject         */{ "",                                               tr("Show project")          },
 		/* ActionShowSymbol          */{ "",                                               tr("Show symbols")          },

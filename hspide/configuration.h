@@ -65,6 +65,7 @@ public:
 		ActionDebugStepOver,		// ステップOver
 		ActionDebugStepOut,			// ステップOut
 		ActionBreakpointSet,		// ブレークポイントの設定/解除
+		ActionBuildTarget,			// ビルド対象
 		ActionConfig,				// 設定
 		ActionShowProject,			// プロジェクトを表示
 		ActionShowSymbol,			// シンボル一覧を表示
@@ -97,6 +98,19 @@ public:
 		QString arguments;
 		QString workDirectory;
 	} ToolInfoType;
+
+	typedef struct {
+		QString name;
+		// compile options
+		bool	preprocessOnly;
+		bool	compile;
+		bool	make;
+		// execute options
+		bool	noExecute;
+		bool	debug;
+	} BuildConfType;
+
+	typedef QList<BuildConfType> BuildConfList;
 
 private:
 
@@ -135,6 +149,8 @@ private:
 	QVector<ToolbarPresetInfoType> m_toolbarInfo;
 
 	friend bool operator == (const Configuration::ToolbarPresetInfoType& lhs, const Configuration::ToolbarPresetInfoType& rhs);
+
+	BuildConfList m_defaultBuildConf;
 
 public:
 
@@ -262,6 +278,13 @@ public:
 		{ return m_tools[index]; }
 	int toolCount() const
 		{ return m_tools.size(); }
+
+	void setBuildConf(const BuildConfList& info)
+		{ m_defaultBuildConf = info; }
+	const BuildConfList& buildConf() const
+		{ return m_defaultBuildConf; }
+	int buildConfCount() const
+		{ return m_defaultBuildConf.size(); }
 
 private:
 

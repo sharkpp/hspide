@@ -5,6 +5,7 @@
 #include <QString>
 #include <QIcon>
 #include <QUuid>
+#include "global.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -69,6 +70,9 @@ private:
 	QUuid					m_uuid;				// ファイルに対して一意に割り当てられているID
 
 	QStringList				m_suffixFilters;	// 拡張子のフィルタ
+
+	Configuration::BuildConfList	
+							m_buildConfigurations;		// 有効なビルドターゲット
 
 	CDocumentPane*			m_assignDocument;	// 関連付けられているドキュメント
 
