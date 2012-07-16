@@ -348,7 +348,7 @@ int main(int argc, char * argv[])
 
 	// à¯êîâêÕ
 	if( !read_args(argc, argv) ||
-		((!option.filename || option.help) && !option.version && !option.symbol_put && !option.thunk_call) )
+		((!option.filename || option.help) && !option.version && !option.symbol_put && -1 == option.thunk_call) )
 	{
 #ifdef _DEBUG
 		option.dump();
