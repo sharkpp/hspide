@@ -53,6 +53,41 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>BuildConfigurationsPage</name>
+    <message>
+        <source>Compiler options</source>
+        <translation>コンパイラオプション</translation>
+    </message>
+    <message>
+        <source>&amp;Preprocess only</source>
+        <translation>プリプロセスのみ(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Preprocess and &amp;compile</source>
+        <translation>プリプロセスとコンパイル(&amp;C)</translation>
+    </message>
+    <message>
+        <source>&amp;Make execute file</source>
+        <translation>実行ファイルの作成(&amp;M)</translation>
+    </message>
+    <message>
+        <source>C&amp;ustom:</source>
+        <translation>カスタム(&amp;U)</translation>
+    </message>
+    <message>
+        <source>Execute options</source>
+        <translation>実行オプション</translation>
+    </message>
+    <message>
+        <source>&amp;No execute</source>
+        <translation>実行しない(&amp;N)</translation>
+    </message>
+    <message>
+        <source>With &amp;debug</source>
+        <translation>デバッグ(&amp;D)</translation>
+    </message>
+</context>
+<context>
     <name>CBreakPointDock</name>
     <message>
         <source>Name</source>
@@ -545,8 +580,8 @@ p, li { white-space: pre-wrap; }
         <translation>変数を表示</translation>
     </message>
     <message>
-        <source>Current setting</source>
-        <translation>現在の設定</translation>
+        <source>(Current setting)</source>
+        <translation>(現在の設定)</translation>
     </message>
     <message>
         <source>About</source>
@@ -571,6 +606,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Set/reset breakpoint</source>
         <translation>ブレークポイントの指定/解除</translation>
+    </message>
+    <message>
+        <source>Build configurations</source>
+        <translation>ビルド構成</translation>
+    </message>
+    <message>
+        <source>(New setting)</source>
+        <translation>(新しい設定)</translation>
     </message>
 </context>
 <context>
@@ -914,6 +957,10 @@ p, li { white-space: pre-wrap; }
         <source>Go &amp;down</source>
         <translation>下に移動(&amp;D)</translation>
     </message>
+    <message>
+        <source>Build configurations</source>
+        <translation>ビルド構成</translation>
+    </message>
 </context>
 <context>
     <name>Configuration</name>
@@ -928,6 +975,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Visual Studio like</source>
         <translation>Visual Studio風</translation>
+    </message>
+    <message>
+        <source>Debug</source>
+        <translation>デバッグ</translation>
+    </message>
+    <message>
+        <source>Release</source>
+        <translation>リリース</translation>
+    </message>
+    <message>
+        <source>Contest</source>
+        <translation>コンテスト</translation>
     </message>
 </context>
 <context>

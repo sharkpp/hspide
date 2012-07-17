@@ -241,7 +241,7 @@ color: rgb(255, 255, 255);</string>
             <widget class="QComboBox" name="buildConfigurationsPresetList"/>
            </item>
            <item>
-            <widget class="QPushButton" name="buildConfigurationsPresetAppend">
+            <widget class="QPushButton" name="buildConfigurationsPresetSave">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -249,7 +249,7 @@ color: rgb(255, 255, 255);</string>
               </sizepolicy>
              </property>
              <property name="text">
-              <string>&amp;Append</string>
+              <string>&amp;Save</string>
              </property>
             </widget>
            </item>
@@ -1387,6 +1387,9 @@ color: rgb(255, 255, 255);</string>
    <extends>QWidget</extends>
    <header>buildconfigurationspage.h</header>
    <container>1</container>
+   <slots>
+    <signal>modified()</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -1553,8 +1556,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onCurrentMetricsChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>18</y>
+     <x>431</x>
+     <y>53</y>
     </hint>
     <hint type="destinationlabel">
      <x>496</x>
@@ -1569,8 +1572,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>18</y>
+     <x>431</x>
+     <y>53</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1585,8 +1588,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsEnable(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>209</x>
-     <y>23</y>
+     <x>223</x>
+     <y>248</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1601,8 +1604,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onChangedMetricsFontBold(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>258</x>
-     <y>23</y>
+     <x>275</x>
+     <y>248</y>
     </hint>
     <hint type="destinationlabel">
      <x>497</x>
@@ -1614,11 +1617,11 @@ color: rgb(255, 255, 255);</string>
    <sender>keyAssignPresetList</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>onKeyAsignPresetChanged(int)</slot>
+   <slot>onKeyAssignPresetChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>214</x>
-     <y>27</y>
+     <x>381</x>
+     <y>56</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1678,11 +1681,11 @@ color: rgb(255, 255, 255);</string>
    <sender>keyAssignPresetRemove</sender>
    <signal>clicked()</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>onKeyAsignPresetRemove()</slot>
+   <slot>onKeyAssignPresetRemove()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>264</x>
-     <y>27</y>
+     <x>537</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1694,11 +1697,11 @@ color: rgb(255, 255, 255);</string>
    <sender>keyAssignPresetSave</sender>
    <signal>clicked()</signal>
    <receiver>ConfigDialog</receiver>
-   <slot>onKeyAsignPresetSave()</slot>
+   <slot>onKeyAssignPresetSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>239</x>
-     <y>27</y>
+     <x>459</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
      <x>494</x>
@@ -1777,8 +1780,8 @@ color: rgb(255, 255, 255);</string>
    <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>262</x>
-     <y>39</y>
+     <x>428</x>
+     <y>102</y>
     </hint>
     <hint type="destinationlabel">
      <x>371</x>
@@ -1802,6 +1805,70 @@ color: rgb(255, 255, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>buildConfigurationsPresetList</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onBuildConfPresetChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>282</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>544</x>
+     <y>136</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsPresetSave</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onBuildConfPresetSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>431</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>546</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsPresetRemove</sender>
+   <signal>clicked()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onBuildConfPresetRemove()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>496</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>543</x>
+     <y>104</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsPageContents</sender>
+   <signal>modified()</signal>
+   <receiver>ConfigDialog</receiver>
+   <slot>onBuildConfModified()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>545</x>
+     <y>187</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onPageChanged(QModelIndex)</slot>
@@ -1812,10 +1879,10 @@ color: rgb(255, 255, 255);</string>
   <slot>onMetricsChanged(QTreeWidgetItem*)</slot>
   <slot>onChangedMetricsEnable(int)</slot>
   <slot>onChangedMetricsFontBold(int)</slot>
-  <slot>onKeyAsignPresetChanged(int)</slot>
+  <slot>onKeyAssignPresetChanged(int)</slot>
   <slot>onToolbarPresetChanged(int)</slot>
-  <slot>onKeyAsignPresetSave()</slot>
-  <slot>onKeyAsignPresetRemove()</slot>
+  <slot>onKeyAssignPresetSave()</slot>
+  <slot>onKeyAssignPresetRemove()</slot>
   <slot>onToolbarPresetSave()</slot>
   <slot>onToolbarPresetRemove()</slot>
   <slot>onToolbarAppendButton()</slot>
@@ -1825,5 +1892,9 @@ color: rgb(255, 255, 255);</string>
   <slot>onToolbarButtonGoDown()</slot>
   <slot>onKeyAssignChanged(QTreeWidgetItem*,int)</slot>
   <slot>onToolbarPartsListSelectChanged(int)</slot>
+  <slot>onBuildConfPresetChanged(int)</slot>
+  <slot>onBuildConfPresetSave()</slot>
+  <slot>onBuildConfPresetRemove()</slot>
+  <slot>onBuildConfModified()</slot>
  </slots>
 </ui>

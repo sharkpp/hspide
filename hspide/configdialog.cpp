@@ -174,7 +174,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		/* ActionDebugStepOver       */{ ":/images/icons/small/step-over.png",             tr("Step over")             },
 		/* ActionDebugStepOut        */{ "",                                               tr("Step out")              },
 		/* ActionBreakpointSet       */{ ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint")  },
-		/* ActionBuildTarget         */{ "",                                               tr("Build target")          },
+		/* ActionBuildTarget         */{ "",                                               tr("Build configurations")  },
 		/* ActionConfig              */{ ":/images/tango/small/preferences-system.png",    tr("Configuration")         },
 		/* ActionShowProject         */{ "",                                               tr("Show project")          },
 		/* ActionShowSymbol          */{ "",                                               tr("Show symbols")          },
@@ -195,6 +195,12 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 	ui.installDirectoryPath->setText(m_configuration.hspPath());
 	ui.commonDirectoryPath->setText(m_configuration.hspCommonPath());
+
+	// 「ビルド構成」ページ初期化
+	const Configuration::BuildConfList& buildConf = m_configuration.buildConf();
+	Configuration::BuildConfType tmp = { QString() };
+	updateBuildConf(!buildConf.isEmpty() ? buildConf.at(0) : tmp);
+	updateBuildConfPresetList();
 
 	// 「エディタ - 一般」ページ初期化
 
@@ -273,6 +279,61 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 }
 
+void CConfigDialog::updateBuildConf(const Configuration::BuildConfType& buildConf)
+{
+	ui.buildConfigurationsPageContents->setBuildConf(buildConf);
+}
+
+void CConfigDialog::applyBuildConf(Configuration::BuildConfType& buildConf)
+{
+	buildConf = ui.buildConfigurationsPageContents->buildConf();
+}
+
+void CConfigDialog::updateBuildConfPresetList()
+{
+	const Configuration::BuildConfList& buildConf = m_configuration.buildConf();
+	ui.buildConfigurationsPresetList->blockSignals(true);
+	for(int i = ui.buildConfigurationsPresetList->count();
+		i < 1 + buildConf.size(); i++)
+	{
+		ui.buildConfigurationsPresetList->addItem("");
+	}
+	for(int i = 1 + buildConf.size();
+		i < ui.buildConfigurationsPresetList->count(); i++)
+	{
+		ui.buildConfigurationsPresetList->removeItem(ui.buildConfigurationsPresetList->count() - 1);
+	}
+	ui.buildConfigurationsPresetList->blockSignals(false);
+
+	// 選択が無ければ「現在の設定」を選択
+	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	if( curPreset < 0 ) {
+		ui.buildConfigurationsPresetList->setCurrentIndex(0);
+		curPreset = 0;
+	}
+
+	// 変更をチェック
+	Configuration::BuildConfType buildConfCurrent;
+	applyBuildConf(buildConfCurrent);
+	bool presetModified = curPreset < buildConf.size() && buildConfCurrent != buildConf[curPreset];
+
+	ui.buildConfigurationsPresetRemove->setDisabled(buildConf.size() <= curPreset);
+
+	QString presetName;
+	for(int i = 0; i <= buildConf.size(); i++)
+	{
+		if( buildConf.size() <= i )
+		{
+			presetName = tr("(New setting)");
+		}
+		else
+		{
+			presetName = buildConf[i].name;
+		}
+		ui.buildConfigurationsPresetList->setItemText(i, presetName + (i == curPreset && presetModified ? "*" : ""));
+	}
+}
+
 void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
 	ui.keyAssignList->blockSignals(true);
@@ -327,7 +388,7 @@ void CConfigDialog::updateKeyAssignPresetList()
 
 	ui.keyAssignPresetRemove->setDisabled(curPreset < 0 && !presetModified);
 
-	QString presetName = tr("Current setting");
+	QString presetName = tr("(Current setting)");
 	for(int i = -1; i < m_configuration.keyAssignPresetNum(); i++)
 	{
 		if( 0 <= i )
@@ -396,7 +457,7 @@ void CConfigDialog::updateToolbarPresetList()
 
 	ui.toolbarPresetRemove->setDisabled(curPreset < 0 && !presetModified);
 
-	QString presetName = tr("Current setting");
+	QString presetName = tr("(Current setting)");
 	for(int i = -1; i < m_configuration.toolbarPresetNum(); i++)
 	{
 		if( 0 <= i )
@@ -444,6 +505,14 @@ void CConfigDialog::onOk()
 	m_configuration.setEditorFontName(ui.editorFont->currentFont().family());
 	m_configuration.setEditorFontSize(ui.editorFontSize->value());
 
+	Configuration::BuildConfList buildConf
+		= m_configuration.buildConf();
+	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	if( curPreset < buildConf.size() ) {
+		applyBuildConf(buildConf[curPreset]);
+		m_configuration.setBuildConf(buildConf);
+	}
+
 	QVector<Configuration::KeyAssignInfoType> keyAssign;
 	applyKeyAssign(keyAssign);
 	m_configuration.setKeyAssign(keyAssign);
@@ -478,6 +547,16 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 				int curPreset = ui.toolbarPresetList->currentIndex() - 1;
 				updateToolbar(m_configuration.toolbar(curPreset));
 				updateToolbarPresetList();
+			}
+			else if( ui.buildConfigurationsPage == currentPage )
+			{
+				int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+				Configuration::BuildConfType buildConf
+					= curPreset < m_configuration.buildConf().size() 
+						? m_configuration.buildConf()[curPreset]
+						: Configuration::BuildConfType();
+				updateBuildConf(buildConf);
+				updateBuildConfPresetList();
 			}
 		}
 		// ページ切り替え
@@ -628,13 +707,87 @@ void CConfigDialog::onChangedMetricsFgcolor()
 	onCurrentMetricsChanged();
 }
 
-void CConfigDialog::onKeyAsignPresetChanged(int index)
+void CConfigDialog::onBuildConfPresetChanged(int index)
+{
+	const Configuration::BuildConfList& buildConf = m_configuration.buildConf();
+	Configuration::BuildConfType tmp = { QString() };
+	updateBuildConf(0 <= index && index < buildConf.size() ? buildConf[index] : tmp);
+	updateBuildConfPresetList();
+}
+
+void CConfigDialog::onBuildConfPresetRemove()
+{
+	Configuration::BuildConfList buildConf = m_configuration.buildConf();
+	int index = ui.buildConfigurationsPresetList->currentIndex();
+
+	if( 0 <= index && index < buildConf.size() )
+	{
+		buildConf.removeAt(index);
+		m_configuration.setBuildConf(buildConf);
+		index--;
+		ui.buildConfigurationsPresetList->blockSignals(true);
+		ui.buildConfigurationsPresetList->setCurrentIndex(index);
+		ui.buildConfigurationsPresetList->blockSignals(false);
+	}
+	if( 0 <= index && index < buildConf.size() )
+	{
+		updateBuildConf(buildConf[index]);
+	}
+
+	updateBuildConfPresetList();
+}
+
+void CConfigDialog::onBuildConfPresetSave()
+{
+	CSavePresetDialog dlg(this);
+
+	Configuration::BuildConfList buildConf = m_configuration.buildConf();
+	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	bool presetAppend = buildConf.size() <= curPreset;
+	dlg.setNewTitlePresent(presetAppend);
+	dlg.setNewTitle(presetAppend ? "" : buildConf[curPreset].name);
+
+	if( QDialog::Accepted != dlg.exec() )
+	{
+		return;
+	}
+
+	int newSelectPreset = -1;
+
+	if( dlg.newTitlePresent() )
+	{
+		// 別名でプリセットを追加
+		buildConf.push_back(Configuration::BuildConfType());
+		applyBuildConf(buildConf.back());
+		buildConf.back().name = dlg.newTitle();
+		m_configuration.setBuildConf(buildConf);
+		newSelectPreset = buildConf.size() - 1;
+	}
+	else
+	{
+		// 上書き保存
+		applyBuildConf(buildConf[curPreset]);
+		m_configuration.setBuildConf(buildConf);
+		newSelectPreset = ui.buildConfigurationsPresetList->currentIndex();
+	}
+
+	updateBuildConfPresetList();
+	// 追加したプリセットに変更
+	ui.buildConfigurationsPresetList->setCurrentIndex(newSelectPreset);
+}
+
+void CConfigDialog::onBuildConfModified()
+{
+	updateBuildConfPresetList();
+}
+
+void CConfigDialog::onKeyAssignPresetChanged(int index)
 {
 	updateKeyAssign(m_configuration.keyAssign(index - 1));
 	updateKeyAssignPresetList();
 }
 
-void CConfigDialog::onKeyAsignPresetRemove()
+void CConfigDialog::onKeyAssignPresetRemove()
 {
 	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
 
@@ -671,7 +824,7 @@ void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 	updateKeyAssignPresetList();
 }
 
-void CConfigDialog::onKeyAsignPresetSave()
+void CConfigDialog::onKeyAssignPresetSave()
 {
 	CSavePresetDialog dlg(this);
 

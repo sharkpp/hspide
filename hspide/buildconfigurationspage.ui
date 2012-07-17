@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -127,5 +127,122 @@
   <tabstop>buildConfigurationsWithDebug</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buildConfigurationsPreprocessOnly</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>18</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>39</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsCompile</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>24</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>59</x>
+     <y>210</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsMakeExecuteFile</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>17</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>82</x>
+     <y>217</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsCustomCompilerOption</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>19</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>225</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsNoExecute</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>14</x>
+     <y>152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>122</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsWithDebug</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onStateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>16</x>
+     <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>145</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buildConfigurationsCompilerOption</sender>
+   <signal>editingFinished()</signal>
+   <receiver>BuildConfigurationsPage</receiver>
+   <slot>onTextChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onStateChanged(int)</slot>
+  <slot>onTextChanged()</slot>
+ </slots>
 </ui>

@@ -50,6 +50,10 @@ protected:
 
 	void setConfiguration(const Configuration& info);
 
+	void updateBuildConf(const Configuration::BuildConfType& buildConf);
+	void applyBuildConf(Configuration::BuildConfType& buildConf);
+	void updateBuildConfPresetList();
+
 	void updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign);
 	void applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign);
 	void updateKeyAssignPresetList();
@@ -71,10 +75,14 @@ public slots:
 	void onChangedMetricsFontBold(int);
 	void onChangedMetricsBgcolor();
 	void onChangedMetricsFgcolor();
+	void onBuildConfPresetChanged(int);
+	void onBuildConfPresetRemove();
+	void onBuildConfPresetSave();
+	void onBuildConfModified();
 	void onKeyAssignChanged(QTreeWidgetItem * item, int column);
-	void onKeyAsignPresetChanged(int);
-	void onKeyAsignPresetRemove();
-	void onKeyAsignPresetSave();
+	void onKeyAssignPresetChanged(int);
+	void onKeyAssignPresetRemove();
+	void onKeyAssignPresetSave();
 	void onToolbarPresetChanged(int);
 	void onToolbarPresetSave();
 	void onToolbarPresetRemove();

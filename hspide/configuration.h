@@ -298,3 +298,6 @@ signals:
 };
 
 bool operator == (const Configuration::KeyAssignInfoType& lhs, const Configuration::KeyAssignInfoType& rhs);
+
+bool operator == (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs);
+bool operator != (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs);

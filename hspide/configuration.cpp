@@ -16,6 +16,23 @@ bool operator == (const Configuration::ToolbarPresetInfoType& lhs, const Configu
 	return lhs.toolbar == rhs.toolbar;
 }
 
+bool operator == (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs)
+{
+	return
+		lhs.name			== rhs.name				&&
+		lhs.preprocessOnly	== rhs.preprocessOnly	&&
+		lhs.compile			== rhs.compile			&&
+		lhs.make			== rhs.make				&&
+		lhs.noExecute		== rhs.noExecute		&&
+		lhs.debug			== rhs.debug			
+		;
+}
+
+bool operator != (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs)
+{
+	return !(lhs == rhs);
+}
+
 Configuration::Configuration()
 	: m_hspPath("./")
 	, m_hspCommonPath("./common/")
