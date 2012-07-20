@@ -22,6 +22,15 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
 
+	// 新しいUUIDを割り当て
+	for(Configuration::BuildConfList::iterator
+			ite = m_buildConfigurations.begin(),
+			last= m_buildConfigurations.end();
+		ite != last; ++ite)
+	{
+		ite->uuid = QUuid::createUuid();
+	}
+
 	if( !model )
 	{
 		if( CWorkSpaceItem* parentItem = qobject_cast<CWorkSpaceItem*>(parent) )
@@ -70,6 +79,15 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Source"),     "*.hsp;*.as",                          }, // SourceFolder
 		{ FolderNode,     ":/images/tango/small/folder.png",         tr("Resource"),   "*.png;*.jpg;*.bmp;*.gif;*,wav;*.mid", }, // ResourceFolder
 	};
+
+	// 新しいUUIDを割り当て
+	for(Configuration::BuildConfList::iterator
+			ite = m_buildConfigurations.begin(),
+			last= m_buildConfigurations.end();
+		ite != last; ++ite)
+	{
+		ite->uuid = QUuid::createUuid();
+	}
 
 	// 種別に応じて属性をセット
 	setNodeType(    TypeDefaultAttributes[type].nodeType);
@@ -320,6 +338,26 @@ void CWorkSpaceItem::setUuid(const QUuid& uuid)
 	m_uuid = uuid;
 }
 
+const Configuration::BuildConfList& CWorkSpaceItem::buildConf() const
+{
+	return m_buildConfigurations;
+}
+
+void CWorkSpaceItem::setBuildConf(const Configuration::BuildConfList& conf)
+{
+	m_buildConfigurations = conf;
+}
+
+const QUuid& CWorkSpaceItem::buildTarget() const
+{
+	return m_buildTarget;
+}
+
+void CWorkSpaceItem::setBuildTarget(const QUuid& target)
+{
+	m_buildTarget = target;
+}
+
 bool CWorkSpaceItem::load(const QString& fileName)
 {
 	if( m_assignDocument )
@@ -504,6 +542,23 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 				newItem = new CWorkSpaceItem(parentItem, ResourceFolder);
 			} else if( !name.compare("hspide", Qt::CaseSensitive) ) {
 				continue;
+			} else if( !name.compare("build", Qt::CaseSensitive) ) {
+				continue;
+			} else if( !name.compare("configuration", Qt::CaseSensitive) ) {
+				Configuration::BuildConfList buildConf = parentItem->buildConf();
+				Configuration::BuildConfType conf;
+				conf.name           = xml.attributes().value("name").toString();
+				conf.uuid           = QUuid(xml.attributes().value("uuid").toString());
+				conf.preprocessOnly = 0 != xml.attributes().value("preprocess_only").toString().toInt();
+				conf.compile        = 0 != xml.attributes().value("compile").toString().toInt();
+				conf.make           = 0 != xml.attributes().value("make").toString().toInt();
+				conf.noExecute      = 0 != xml.attributes().value("no_execute").toString().toInt();
+				conf.debug          = 0 != xml.attributes().value("debug").toString().toInt();
+				if( !conf.uuid.isNull() ) {
+					buildConf.push_back(conf);
+					parentItem->setBuildConf(buildConf);
+				}
+				continue;
 			} else {
 				delete newItem;
 				xml.clear();
@@ -539,6 +594,12 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 				break; }
 			default:
 				;
+			}
+			{
+				QUuid uuid(xml.attributes().value("build").toString());
+				if( !uuid.isNull() ) {
+					newItem->setBuildTarget(uuid);
+				}
 			}
 			if( newItem != this )
 			{
@@ -604,6 +665,23 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 		xml->writeStartElement("project");
 		xml->writeAttribute("path", m_path);
 		uuidValid = true;
+		//
+		xml->writeStartElement("build");
+		foreach(Configuration::BuildConfType buildConf, m_buildConfigurations)
+		{
+			xml->writeStartElement("configuration");
+			xml->writeAttribute("name",				buildConf.name);
+			xml->writeAttribute("uuid",				buildConf.uuid.toString());
+			xml->writeAttribute("preprocess_only",	buildConf.preprocessOnly	? "true" : "false");
+			xml->writeAttribute("compile",			buildConf.compile			? "true" : "false");
+			xml->writeAttribute("make",				buildConf.make				? "true" : "false");
+			xml->writeAttribute("no_execute",		buildConf.noExecute			? "true" : "false");
+			xml->writeAttribute("debug",			buildConf.debug				? "true" : "false");
+			xml->writeEndElement();
+		}
+		xml->writeEndElement();
+		//
+		xml->writeAttribute("build", m_buildTarget.toString());
 		break;
 	case DependenceFolder:
 		xml->writeStartElement("dependence");

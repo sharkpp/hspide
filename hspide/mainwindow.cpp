@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags)
 	, buildTargetAct(NULL)
 	, m_lastActivatedDocument(NULL)
-	, m_buildTarget(NULL)
+	, m_buildConf(NULL)
 {
 	setObjectName("MainWindow");
 	setWindowTitle(tr("HSP script editor"));
@@ -628,16 +628,15 @@ void MainWindow::updateConfiguration(const Configuration& info)
 	m_generalToolbar->clear();
 
 	delete buildTargetAct;
-	delete m_buildTarget;
 	buildTargetAct = NULL;
-	m_buildTarget  = NULL;
+	m_buildConf    = NULL; // delete buildTargetAct で破棄される
 
 	for(int i = 0; i < actionTypes.size(); i++)
 	{
-		switch( i )
+		switch( actionTypes[i] )
 		{
 		case Configuration::ActionBuildTarget:
-			buildTargetAct = m_generalToolbar->addWidget(m_buildTarget = new QComboBox(this));
+			buildTargetAct = m_generalToolbar->addWidget(m_buildConf = new QComboBox(this));
 			break;
 		case Configuration::ActionSeparator:
 			m_generalToolbar->addSeparator();
@@ -649,9 +648,12 @@ void MainWindow::updateConfiguration(const Configuration& info)
 		}
 	}
 	
-	if( m_buildTarget )
+	if( m_buildConf )
 	{
-		connect(m_buildTarget, SIGNAL(currentIndexChanged(int)), this, SLOT(onBuildTargetChanged(int)));
+		connect(m_buildConf, SIGNAL(currentIndexChanged(int)), this, SLOT(onBuildTargetChanged(int)));
+
+		// 現在のタブからビルド構成を取得
+		currentTabChanged(tabWidget->currentIndex());
 	}
 }
 
@@ -1728,6 +1730,15 @@ void MainWindow::currentTabChanged(int index)
 		disconnect(selectAllAct,                       SIGNAL(triggered()));
 
 		symbolDock->setAssignDocument(NULL);
+
+		if( CWorkSpaceItem* item = lastDocument->assignItem() )
+		{
+			int index = m_buildConf->currentIndex();
+			if( 0 <= index )
+			{
+				item->setBuildTarget( QUuid(m_buildConf->itemData(index).toString()) );
+			}
+		}
 	}
 
 	if( document )
@@ -1755,6 +1766,20 @@ void MainWindow::currentTabChanged(int index)
 
 		projectDock->selectItem(document->assignItem());
 
+		if( m_buildConf )
+		{
+			CWorkSpaceItem* item = document->assignItem();
+			int targetIndex = 0;
+			m_buildConf->clear();
+			foreach(Configuration::BuildConfType buildConf, document->assignItem()->buildConf())
+			{
+				m_buildConf->insertItem(m_buildConf->count(), buildConf.name, buildConf.uuid.toString());
+				if( buildConf.uuid == item->buildTarget() ) {
+					targetIndex = m_buildConf->count() - 1;
+				}
+			}
+			m_buildConf->setCurrentIndex(targetIndex);
+		}
 //		int 
 //		QPair<QString, int> =  document->assignItem()->updateBuildTargets();
 	}

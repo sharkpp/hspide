@@ -73,6 +73,7 @@ private:
 
 	Configuration::BuildConfList	
 							m_buildConfigurations;		// 有効なビルドターゲット
+	QUuid					m_buildTarget;
 
 	CDocumentPane*			m_assignDocument;	// 関連付けられているドキュメント
 
@@ -111,6 +112,11 @@ public:
 
 	const QUuid& uuid() const;
 	void setUuid(const QUuid& uuid);
+
+	const Configuration::BuildConfList& buildConf() const;
+	void setBuildConf(const Configuration::BuildConfList& conf);
+	const QUuid& buildTarget() const;
+	void setBuildTarget(const QUuid& target);
 
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane* item);

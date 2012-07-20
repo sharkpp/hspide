@@ -87,7 +87,7 @@ class MainWindow : public QMainWindow
 
 	QMenu*		m_tabListMenu;
 
-	QComboBox*	m_buildTarget;
+	QComboBox*	m_buildConf;
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“
 	CWorkSpaceModel* m_workSpace;

@@ -5,6 +5,7 @@
 #include <QAction>
 #include <QKeySequence>
 #include <QSettings>
+#include <QUuid>
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -101,6 +102,7 @@ public:
 
 	typedef struct {
 		QString name;
+		QUuid	uuid;
 		// compile options
 		bool	preprocessOnly;
 		bool	compile;
