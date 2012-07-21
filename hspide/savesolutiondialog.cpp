@@ -166,6 +166,12 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 //	newItem->setDisabled(false);
 	newItem->setHidden(true);
 	newItem->setFlags(newItem->flags()|Qt::ItemIsEditable);
+	if( item->isUntitled() ) { // –³‘è‚Ìê‡ã‘‚«•Û‘¶‚ð–³Œø‚É‚·‚é
+		newItem->setData(SaveKindColumn, DisableIndexRole, qVariantFromValue<int>(OverwriteSave));
+		newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(SaveAs));
+	} else {
+		newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(OverwriteSave));
+	}
 
 	m_items.push_back(newItem);
 	stackItem.push_back(newItem);

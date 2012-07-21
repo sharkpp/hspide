@@ -197,7 +197,7 @@ bool CDocumentPane::save(const QString& filePath, bool saveAs)
 				= fileInfo.dir()
 					.absoluteFilePath(
 							isUntitled() || !saveAs
-								? tr("untitled") + fileInfo.suffix()
+								? tr("untitled") + (fileInfo.suffix().isEmpty() ? "" : "." + fileInfo.suffix())
 								: fileInfo.fileName()
 						);
 			fileName = QDir::toNativeSeparators(fileName);
@@ -233,6 +233,10 @@ bool CDocumentPane::save(const QString& filePath, bool saveAs)
 
 	QTextStream out(&file);
 	out << m_editorWidget->toPlainText();
+
+	m_editorWidget->document()->setModified(false);
+
+	theFile.rename(m_uuid, fileName);
 
 	return true;
 }

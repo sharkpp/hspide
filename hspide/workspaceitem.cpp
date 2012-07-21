@@ -29,6 +29,9 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 		ite != last; ++ite)
 	{
 		ite->uuid = QUuid::createUuid();
+		if( m_buildTarget.isNull() ) {
+			m_buildTarget = ite->uuid;
+		}
 	}
 
 	if( !model )
@@ -87,6 +90,9 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 		ite != last; ++ite)
 	{
 		ite->uuid = QUuid::createUuid();
+		if( m_buildTarget.isNull() ) {
+			m_buildTarget = ite->uuid;
+		}
 	}
 
 	// 種別に応じて属性をセット
@@ -543,6 +549,8 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			} else if( !name.compare("hspide", Qt::CaseSensitive) ) {
 				continue;
 			} else if( !name.compare("build", Qt::CaseSensitive) ) {
+				Configuration::BuildConfList buildConf;
+				parentItem->setBuildConf(buildConf); // ビルド構成を空っぽに
 				continue;
 			} else if( !name.compare("configuration", Qt::CaseSensitive) ) {
 				Configuration::BuildConfList buildConf = parentItem->buildConf();
@@ -621,7 +629,9 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 		case QXmlStreamReader::EndElement: {
 			QString name = xml.name().toString();
 			if( name.compare("solution", Qt::CaseSensitive) &&
-				name.compare("hspide", Qt::CaseSensitive) )
+				name.compare("hspide", Qt::CaseSensitive) &&
+				name.compare("build", Qt::CaseSensitive) &&
+				name.compare("configuration", Qt::CaseSensitive) )
 			{
 				vItems.pop_back();
 			}
@@ -644,6 +654,7 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 {
 	bool uuidValid = false;
+	bool buildConfValid = false;
 
 	switch( m_type )
 	{
@@ -665,23 +676,7 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 		xml->writeStartElement("project");
 		xml->writeAttribute("path", m_path);
 		uuidValid = true;
-		//
-		xml->writeStartElement("build");
-		foreach(Configuration::BuildConfType buildConf, m_buildConfigurations)
-		{
-			xml->writeStartElement("configuration");
-			xml->writeAttribute("name",				buildConf.name);
-			xml->writeAttribute("uuid",				buildConf.uuid.toString());
-			xml->writeAttribute("preprocess_only",	buildConf.preprocessOnly	? "true" : "false");
-			xml->writeAttribute("compile",			buildConf.compile			? "true" : "false");
-			xml->writeAttribute("make",				buildConf.make				? "true" : "false");
-			xml->writeAttribute("no_execute",		buildConf.noExecute			? "true" : "false");
-			xml->writeAttribute("debug",			buildConf.debug				? "true" : "false");
-			xml->writeEndElement();
-		}
-		xml->writeEndElement();
-		//
-		xml->writeAttribute("build", m_buildTarget.toString());
+		buildConfValid = true;
 		break;
 	case DependenceFolder:
 		xml->writeStartElement("dependence");
@@ -701,6 +696,27 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 
 	if( uuidValid ) {
 		xml->writeAttribute("uuid", m_uuid.toString());
+	}
+
+	if( buildConfValid )
+	{
+		//
+		xml->writeAttribute("build", m_buildTarget.toString());
+		//
+		xml->writeStartElement("build");
+		foreach(Configuration::BuildConfType buildConf, m_buildConfigurations)
+		{
+			xml->writeStartElement("configuration");
+			xml->writeAttribute("name",				buildConf.name);
+			xml->writeAttribute("uuid",				buildConf.uuid.toString());
+			xml->writeAttribute("preprocess_only",	buildConf.preprocessOnly	? "true" : "false");
+			xml->writeAttribute("compile",			buildConf.compile			? "true" : "false");
+			xml->writeAttribute("make",				buildConf.make				? "true" : "false");
+			xml->writeAttribute("no_execute",		buildConf.noExecute			? "true" : "false");
+			xml->writeAttribute("debug",			buildConf.debug				? "true" : "false");
+			xml->writeEndElement();
+		}
+		xml->writeEndElement();
 	}
 
 	// 子も全てシリアライズ
