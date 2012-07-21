@@ -98,7 +98,7 @@ protected:
 
 public slots:
 
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 
 	void compileStarted(const QUuid& uuid);
 	void compileSuccessful();

@@ -11,7 +11,7 @@ CWorkSpaceModel::CWorkSpaceModel(QObject* parent)
 	QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
 	CWorkSpaceItem* item  = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
 	if( insertRow(0, item, rootIndex) ) {
-		item->setUuid(theFile.assign(""));
+		item->setUuid(theFile->assign(""));
 	} else {
 	}
 }
@@ -103,7 +103,7 @@ CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 
 	items.clear();
 
-	projectItem->setUuid(theFile.assign(fileName));
+	projectItem->setUuid(theFile->assign(fileName));
 
 	return projectItem;
 }
@@ -186,8 +186,8 @@ CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString& fileName, CWorkSpaceI
 					return NULL;
 				}
 
-				fileItem->setUuid(theFile.assign(fileName));
-				fileItem->setText(theFile.fileName(fileItem->uuid()));
+				fileItem->setUuid(theFile->assign(fileName));
+				fileItem->setText(theFile->fileName(fileItem->uuid()));
 
 				return fileItem;
 			}
@@ -283,7 +283,7 @@ QVariant CWorkSpaceModel::data(const QModelIndex& index, int role) const
 	case Qt::DecorationRole:
 		return item->icon();
 	case Qt::ToolTipRole:
-		return theFile.path(item->uuid());
+		return theFile->path(item->uuid());
 	case CWorkSpaceItem::UuidRole:
 		return item->uuid();
 	case CWorkSpaceItem::TypeRole:

@@ -85,7 +85,7 @@ protected:
 
 public slots:
 
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 
 	void onModificationChanged(bool changed);
 	void onPressEditorIconArea(int lineNo);

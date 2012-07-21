@@ -295,7 +295,7 @@ private:
 
 signals:
 
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 
 };
 

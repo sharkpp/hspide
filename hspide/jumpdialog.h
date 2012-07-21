@@ -9,7 +9,7 @@ class CJumpDialog
 {
 	Q_OBJECT
 
-	Ui::JumpDialog ui;
+	Ui::JumpDialog* ui;
 
 	int m_lineNo;
 

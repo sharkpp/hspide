@@ -26,8 +26,8 @@ CCompilerSet::CCompilerSet(QObject *parent)
 	setCompilerSlotNum(1);
 
 	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—
-	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
+	connect(theConf, SIGNAL(updateConfiguration(const Configuration*)),
+	        this,  SLOT(updateConfiguration(const Configuration*)));
 	updateConfiguration(theConf);
 }
 
@@ -291,10 +291,10 @@ qDebug() << execInfo.first;
 	return true;
 }
 
-void CCompilerSet::updateConfiguration(const Configuration& info)
+void CCompilerSet::updateConfiguration(const Configuration* conf)
 {
-	m_hspPath     = QDir::toNativeSeparators(info.hspPath());
-	m_hspCompPath = QDir::toNativeSeparators(info.compilerPath());
+	m_hspPath     = QDir::toNativeSeparators(conf->hspPath());
+	m_hspCompPath = QDir::toNativeSeparators(conf->compilerPath());
 }
 
 void CCompilerSet::compileStarted(const QUuid& uuid)

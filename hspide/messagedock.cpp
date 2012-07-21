@@ -114,7 +114,7 @@ void CMessageDock::addMessage(const QUuid& uuid, int lineNo, CategoryType catego
 	}
 	model->setData(model->index(row, RefIndexColumn   ), m_messages.size(), Qt::UserRole + 1);
 	model->setData(model->index(row, DescriptionColumn), description);
-	model->setData(model->index(row, FileNameColumn   ), theFile.fileName(uuid));
+	model->setData(model->index(row, FileNameColumn   ), theFile->fileName(uuid));
 	model->setData(model->index(row, LineNoColumn     ), 0 < lineNo ? QString("%1").arg(lineNo) : "");
 	model->setData(model->index(row, LineNoColumn     ), Qt::AlignRight, Qt::TextAlignmentRole);
 

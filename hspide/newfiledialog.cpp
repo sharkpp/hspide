@@ -25,8 +25,9 @@ QVariant CNameOnlyFileSystemModel::data(const QModelIndex& index, int role) cons
 
 CNewFileDialog::CNewFileDialog(QWidget *parent)
 	: QDialog(parent)
+	, ui(new Ui::NewFileDialog)
 {
-	ui.setupUi(this);
+	ui->setupUi(this);
 
 	setupTemplateList();
 }
@@ -37,9 +38,9 @@ void CNewFileDialog::setupTemplateList()
 	QFileSystemModel* model = new CNameOnlyFileSystemModel(this);
 	QModelIndex parentIndex = model->setRootPath(path);
 
-	ui.templateList->setMovement(QListView::Static);
-	ui.templateList->setModel(model);
-	ui.templateList->setRootIndex(parentIndex);
+	ui->templateList->setMovement(QListView::Static);
+	ui->templateList->setModel(model);
+	ui->templateList->setRootIndex(parentIndex);
 }
 
 void CNewFileDialog::onSelectFileName()
@@ -50,7 +51,7 @@ void CNewFileDialog::onSelectFileName()
 
 	if( !fileName.isEmpty() )
 	{
-		ui.fileName->setText(QDir::toNativeSeparators(fileName));
+		ui->fileName->setText(QDir::toNativeSeparators(fileName));
 	}
 }
 
@@ -61,8 +62,8 @@ void CNewFileDialog::onFileNameChanged(const QString& text)
 
 void CNewFileDialog::onChangeTemplate(const QModelIndex& index)
 {
-	QFileSystemModel* model = dynamic_cast<QFileSystemModel*>(ui.templateList->model());
-	QFileInfo path(ui.fileName->text());
+	QFileSystemModel* model = dynamic_cast<QFileSystemModel*>(ui->templateList->model());
+	QFileInfo path(ui->fileName->text());
 	QString dirName = path.dir().path();
 	QString newPath
 		= QDir::toNativeSeparators(
@@ -70,7 +71,7 @@ void CNewFileDialog::onChangeTemplate(const QModelIndex& index)
 			path.baseName() + "." +
 			model->fileInfo(index).suffix());
 	// 拡張子のみ変更
-	ui.fileName->setText(newPath);
+	ui->fileName->setText(newPath);
 	// テンプレート名を保存
 	m_templateFilePath = model->filePath(index);
 }

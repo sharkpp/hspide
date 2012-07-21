@@ -14,12 +14,12 @@ CDebugger::CDebugger(QObject *parent, QLocalSocket* socket)
 	connect(m_clientConnection, SIGNAL(destroyed()),    this, SLOT(deleteLater()));
 
 	// İ’è‚Ì•ÏX’Êj‚Ì“o˜^‚Æİ’è‚©‚ç‚Ì‰Šú‰»ˆ—
-	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
+	connect(theConf, SIGNAL(updateConfiguration(const Configuration*)),
+	        this,  SLOT(updateConfiguration(const Configuration*)));
 	updateConfiguration(theConf);
 }
 
-void CDebugger::updateConfiguration(const Configuration& info)
+void CDebugger::updateConfiguration(const Configuration* conf)
 {
 }
 
@@ -164,7 +164,7 @@ void CDebugger::reqVariableInfo(const QString& varName, int info[])
 void CDebugger::updateBreakpoint()
 {
 	// ƒƒCƒ“‚Ìƒtƒ@ƒCƒ‹‚ª–³‘è‚Ìê‡‚Í ???? ‚©‚ç‚àUUID‚ğˆø‚¯‚é‚æ‚¤‚É‚·‚é
-	FileManager theFile_ = theFile;
+	FileManager theFile_ = *theFile;
 	if( m_targetItem->isUntitled() ) {
 		theFile_.assign("????", m_targetItem->uuid());
 	}

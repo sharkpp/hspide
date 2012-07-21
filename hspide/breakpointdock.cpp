@@ -38,7 +38,7 @@ CBreakPointDock::CBreakPointDock(QWidget *parent)
 	m_listWidget->setHeaderLabels(labels);
 	m_listWidget->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
 
-	connect(&theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
+	connect(theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
 	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
 
 	connect(m_listWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
@@ -81,8 +81,8 @@ void CBreakPointDock::onBreakPointChanged(const QUuid& uuid, const QList<QPair<i
 		fileItem->setCheckState(FileColumn, Qt::Checked);
 	}
 	fileItem->setText(FileColumn, QString(tr("%1 (%2 breakpoints)"))
-										.arg(theFile.fileName(uuid))
-										.arg(theBreakPoint.countOf(uuid))
+										.arg(theFile->fileName(uuid))
+										.arg(theBreakPoint->countOf(uuid))
 									);
 
 	// çsÇíTÇ∑

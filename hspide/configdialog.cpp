@@ -31,9 +31,10 @@ public:
 
 CConfigDialog::CConfigDialog(QWidget *parent)
 	: QDialog(parent)
+	, ui(new Ui::ConfigDialog)
 	, m_lastIndexOfColorMetrics(Configuration::ColorMetricsNum)
 {
-	ui.setupUi(this);
+	ui->setupUi(this);
 
 	QStandardItemModel* model;
 	QStandardItem* rootItem;
@@ -42,26 +43,26 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 	QItemDelegate* itemDelegate;
 
 	// 設定画面のページ一覧を登録
-	ui.category->setRootIsDecorated(false);
-	ui.category->setHeaderHidden(true);
-	ui.category->setModel(model = new QStandardItemModel());
+	ui->category->setRootIsDecorated(false);
+	ui->category->setHeaderHidden(true);
+	ui->category->setModel(model = new QStandardItemModel());
 	rootItem = model->invisibleRootItem();
 	rootItem->appendRow(item = new QStandardItem(tr("Directory")));
-		item->setData(ui.stackedWidget->indexOf(ui.directoryPage));
+		item->setData(ui->stackedWidget->indexOf(ui->directoryPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Build configurations")));
-		item->setData(ui.stackedWidget->indexOf(ui.buildConfigurationsPage));
+		item->setData(ui->stackedWidget->indexOf(ui->buildConfigurationsPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Editor")));
 		item->appendRow(item2 = new QStandardItem(tr("General")));
-			item2->setData(ui.stackedWidget->indexOf(ui.editorGeneralPage));
+			item2->setData(ui->stackedWidget->indexOf(ui->editorGeneralPage));
 		item->appendRow(item2 = new QStandardItem(tr("Color")));
-			item2->setData(ui.stackedWidget->indexOf(ui.editorColorPage));
+			item2->setData(ui->stackedWidget->indexOf(ui->editorColorPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Tools")));
-		item->setData(ui.stackedWidget->indexOf(ui.toolsPage));
+		item->setData(ui->stackedWidget->indexOf(ui->toolsPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Key assign")));
-		item->setData(ui.stackedWidget->indexOf(ui.keyAssignPage));
+		item->setData(ui->stackedWidget->indexOf(ui->keyAssignPage));
 	rootItem->appendRow(item = new QStandardItem(tr("Toolbar")));
-		item->setData(ui.stackedWidget->indexOf(ui.toolbarPage));
-	ui.category->expandAll();
+		item->setData(ui->stackedWidget->indexOf(ui->toolbarPage));
+	ui->category->expandAll();
 
 	// ビルド構成一覧を初期化
 
@@ -105,37 +106,37 @@ CConfigDialog::CConfigDialog(QWidget *parent)
 		action2->setData(-1);
 		connect(action1, SIGNAL(triggered()), this, SLOT(onChangedMetricsBgcolor()));
 		connect(action2, SIGNAL(triggered()), this, SLOT(onChangedMetricsFgcolor()));
-	ui.editorColorItemBgcolor->setMenu(menu1);
-	ui.editorColorItemFgcolor->setMenu(menu2);
+	ui->editorColorItemBgcolor->setMenu(menu1);
+	ui->editorColorItemFgcolor->setMenu(menu2);
 
-	ui.editorColorList->setColumnCount(ColorListColumnNum);
-	ui.editorColorList->header()->setResizeMode(ColorListCategoryColumn,        QHeaderView::Stretch);
-	ui.editorColorList->header()->setResizeMode(ColorListEnableColumn,          QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(ColorListFontBoldColumn,        QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(ColorListForegroundColorCount,  QHeaderView::ResizeToContents);
-	ui.editorColorList->header()->setResizeMode(ColorListBackgroundColorColumn, QHeaderView::ResizeToContents);
-	ui.editorColorList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
+	ui->editorColorList->setColumnCount(ColorListColumnNum);
+	ui->editorColorList->header()->setResizeMode(ColorListCategoryColumn,        QHeaderView::Stretch);
+	ui->editorColorList->header()->setResizeMode(ColorListEnableColumn,          QHeaderView::ResizeToContents);
+	ui->editorColorList->header()->setResizeMode(ColorListFontBoldColumn,        QHeaderView::ResizeToContents);
+	ui->editorColorList->header()->setResizeMode(ColorListForegroundColorCount,  QHeaderView::ResizeToContents);
+	ui->editorColorList->header()->setResizeMode(ColorListBackgroundColorColumn, QHeaderView::ResizeToContents);
+	ui->editorColorList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
 
 	// ショートカットの一覧を初期化
-	ui.keyAssignList->setColumnCount(KeyAssignListColumnNum);
-	ui.keyAssignList->header()->setResizeMode(KeyAssignListNameColumn,        QHeaderView::Stretch);
-	ui.keyAssignList->header()->setResizeMode(KeyAssignListKeyAssignKeyColumn, QHeaderView::ResizeToContents);
-	ui.keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
+	ui->keyAssignList->setColumnCount(KeyAssignListColumnNum);
+	ui->keyAssignList->header()->setResizeMode(KeyAssignListNameColumn,        QHeaderView::Stretch);
+	ui->keyAssignList->header()->setResizeMode(KeyAssignListKeyAssignKeyColumn, QHeaderView::ResizeToContents);
+	ui->keyAssignList->setItemDelegate(itemDelegate = new CKeyAssignListItemDelegate);
 		itemDelegate->setItemEditorFactory(factory = new QItemEditorFactory);
 			factory->registerEditor(QVariant::KeySequence, new QStandardItemEditorCreator<CHotkeyWidget>());
 
-	ui.category->selectionModel()->clear();
-	ui.category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
-	ui.stackedWidget->setCurrentIndex(0);
+	ui->category->selectionModel()->clear();
+	ui->category->selectionModel()->select(rootItem->child(0)->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
+	ui->stackedWidget->setCurrentIndex(0);
 
 	// ツールバー
-	ui.toolbarPartsList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
-	ui.toolbarCurrentList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
+	ui->toolbarPartsList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
+	ui->toolbarCurrentList->setItemDelegate(itemDelegate = new CExpandedItemHeightDelegate);
 
 	setConfiguration(theConf);
 }
 
-void CConfigDialog::setConfiguration(const Configuration& info)
+void CConfigDialog::setConfiguration(const Configuration* conf)
 {
 	struct {
 		QString   iconPath;
@@ -189,12 +190,12 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		/*                           */{ "",                                               tr("----")                  },
 	};
 
-	m_configuration = info;
+	m_configuration = *conf;
 
 	// 「ディレクトリ」ページ初期化
 
-	ui.installDirectoryPath->setText(m_configuration.hspPath());
-	ui.commonDirectoryPath->setText(m_configuration.hspCommonPath());
+	ui->installDirectoryPath->setText(m_configuration.hspPath());
+	ui->commonDirectoryPath->setText(m_configuration.hspCommonPath());
 
 	// 「ビルド構成」ページ初期化
 	const Configuration::BuildConfList& buildConf = m_configuration.buildConf();
@@ -204,12 +205,12 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 	// 「エディタ - 一般」ページ初期化
 
-	ui.editorTabWidth->setValue(m_configuration.editorTabWidth());
-	ui.editorEnableLineNumber->setCheckState(m_configuration.editorLineNumberVisibled() ? Qt::Checked : Qt::Unchecked);
-	ui.editorLineNumberFont->setCurrentFont(QFont(m_configuration.editorLineNumberFontName()));
-	ui.editorLineNumberFontSize->setValue(m_configuration.editorLineNumberFontSize());
-	ui.editorFont->setCurrentFont(QFont(m_configuration.editorFontName()));
-	ui.editorFontSize->setValue(m_configuration.editorFontSize());
+	ui->editorTabWidth->setValue(m_configuration.editorTabWidth());
+	ui->editorEnableLineNumber->setCheckState(m_configuration.editorLineNumberVisibled() ? Qt::Checked : Qt::Unchecked);
+	ui->editorLineNumberFont->setCurrentFont(QFont(m_configuration.editorLineNumberFontName()));
+	ui->editorLineNumberFontSize->setValue(m_configuration.editorLineNumberFontSize());
+	ui->editorFont->setCurrentFont(QFont(m_configuration.editorFontName()));
+	ui->editorFontSize->setValue(m_configuration.editorFontSize());
 
 	// 「エディタ - 色」ページ初期化
 
@@ -229,10 +230,10 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 				<< tr("Tab char")
 				<< tr("End of file")
 				;
-	ui.editorColorList->clear();
+	ui->editorColorList->clear();
 	for(int i = 0; i < categoryList.size(); i++)
 	{
-		QTreeWidgetItem *item = new QTreeWidgetItem(ui.editorColorList);
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui->editorColorList);
 		const Configuration::ColorMetricsInfoType& metricsInfo = m_configuration.colorMetrics(Configuration::ColorMetricsEnum(i));
 		item->setText(ColorListCategoryColumn,                   categoryList.at(i));
 		item->setCheckState(ColorListEnableColumn,               metricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
@@ -240,16 +241,16 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		item->setIcon(ColorListForegroundColorCount,  (bmp.fill(metricsInfo.foregroundColor), QIcon(bmp)));
 		item->setIcon(ColorListBackgroundColorColumn, (bmp.fill(metricsInfo.backgroundColor), QIcon(bmp)));
 	}
-	ui.editorColorList->resizeColumnToContents(ColorListEnableColumn);
-	ui.editorColorList->resizeColumnToContents(ColorListFontBoldColumn);
-	ui.editorColorList->setCurrentItem(ui.editorColorList->topLevelItem(0));
+	ui->editorColorList->resizeColumnToContents(ColorListEnableColumn);
+	ui->editorColorList->resizeColumnToContents(ColorListFontBoldColumn);
+	ui->editorColorList->setCurrentItem(ui->editorColorList->topLevelItem(0));
 
 	// 「キー割り当て」ページ初期化
 
-	ui.keyAssignList->clear();
+	ui->keyAssignList->clear();
 	for(size_t i = 0; i < _countof(actionInitTable) - 1; i++)
 	{
-		QTreeWidgetItem *item = new QTreeWidgetItem(ui.keyAssignList);
+		QTreeWidgetItem *item = new QTreeWidgetItem(ui->keyAssignList);
 		item->setText(KeyAssignListNameColumn, actionInitTable[i].text);
 		item->setFlags(item->flags()|Qt::ItemIsEditable);
 	}
@@ -259,10 +260,10 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 	// ツールバー初期化
 
-	ui.toolbarPartsList->clear();
+	ui->toolbarPartsList->clear();
 	for(size_t i = 0; i < _countof(actionInitTable); i++)
 	{
-		QListWidgetItem *item = new QListWidgetItem(ui.toolbarPartsList);
+		QListWidgetItem *item = new QListWidgetItem(ui->toolbarPartsList);
 		item->setText(actionInitTable[i].text);
 		if( !actionInitTable[i].iconPath.isEmpty() ) {
 			item->setIcon(QIcon(actionInitTable[i].iconPath));
@@ -272,7 +273,7 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 		item->setData(Qt::UserRole + 1, (int)Configuration::ActionEnum(i));
 	//	item->setHidden(Configuration::ActionNum <= i);
 	}
-	ui.toolbarPartsList->setCurrentRow(0);
+	ui->toolbarPartsList->setCurrentRow(0);
 
 	updateToolbar(m_configuration.toolbar());
 	updateToolbarPresetList();
@@ -281,34 +282,34 @@ void CConfigDialog::setConfiguration(const Configuration& info)
 
 void CConfigDialog::updateBuildConf(const Configuration::BuildConfType& buildConf)
 {
-	ui.buildConfigurationsPageContents->setBuildConf(buildConf);
+	ui->buildConfigurationsPageContents->setBuildConf(buildConf);
 }
 
 void CConfigDialog::applyBuildConf(Configuration::BuildConfType& buildConf)
 {
-	buildConf = ui.buildConfigurationsPageContents->buildConf();
+	buildConf = ui->buildConfigurationsPageContents->buildConf();
 }
 
 void CConfigDialog::updateBuildConfPresetList()
 {
 	const Configuration::BuildConfList& buildConf = m_configuration.buildConf();
-	ui.buildConfigurationsPresetList->blockSignals(true);
-	for(int i = ui.buildConfigurationsPresetList->count();
+	ui->buildConfigurationsPresetList->blockSignals(true);
+	for(int i = ui->buildConfigurationsPresetList->count();
 		i < 1 + buildConf.size(); i++)
 	{
-		ui.buildConfigurationsPresetList->addItem("");
+		ui->buildConfigurationsPresetList->addItem("");
 	}
 	for(int i = 1 + buildConf.size();
-		i < ui.buildConfigurationsPresetList->count(); i++)
+		i < ui->buildConfigurationsPresetList->count(); i++)
 	{
-		ui.buildConfigurationsPresetList->removeItem(ui.buildConfigurationsPresetList->count() - 1);
+		ui->buildConfigurationsPresetList->removeItem(ui->buildConfigurationsPresetList->count() - 1);
 	}
-	ui.buildConfigurationsPresetList->blockSignals(false);
+	ui->buildConfigurationsPresetList->blockSignals(false);
 
 	// 選択が無ければ「現在の設定」を選択
-	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	int curPreset = ui->buildConfigurationsPresetList->currentIndex();
 	if( curPreset < 0 ) {
-		ui.buildConfigurationsPresetList->setCurrentIndex(0);
+		ui->buildConfigurationsPresetList->setCurrentIndex(0);
 		curPreset = 0;
 	}
 
@@ -317,7 +318,7 @@ void CConfigDialog::updateBuildConfPresetList()
 	applyBuildConf(buildConfCurrent);
 	bool presetModified = curPreset < buildConf.size() && buildConfCurrent != buildConf[curPreset];
 
-	ui.buildConfigurationsPresetRemove->setDisabled(buildConf.size() <= curPreset);
+	ui->buildConfigurationsPresetRemove->setDisabled(buildConf.size() <= curPreset);
 
 	QString presetName;
 	for(int i = 0; i <= buildConf.size(); i++)
@@ -330,29 +331,29 @@ void CConfigDialog::updateBuildConfPresetList()
 		{
 			presetName = buildConf[i].name;
 		}
-		ui.buildConfigurationsPresetList->setItemText(i, presetName + (i == curPreset && presetModified ? "*" : ""));
+		ui->buildConfigurationsPresetList->setItemText(i, presetName + (i == curPreset && presetModified ? "*" : ""));
 	}
 }
 
 void CConfigDialog::updateKeyAssign(const QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
-	ui.keyAssignList->blockSignals(true);
-	for(int i = 0; i < ui.keyAssignList->topLevelItemCount(); i++)
+	ui->keyAssignList->blockSignals(true);
+	for(int i = 0; i < ui->keyAssignList->topLevelItemCount(); i++)
 	{
-		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
+		QTreeWidgetItem *item = ui->keyAssignList->topLevelItem(i);
 		const Configuration::KeyAssignInfoType& sc = keyAssign[i];
 		item->setData(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole, sc.keys);
 	}
-	ui.keyAssignList->blockSignals(false);
+	ui->keyAssignList->blockSignals(false);
 }
 
 void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& keyAssign)
 {
 	keyAssign.clear();
-	for(int i = 0, num = ui.keyAssignList->topLevelItemCount();
+	for(int i = 0, num = ui->keyAssignList->topLevelItemCount();
 		i < num; i++)
 	{
-		QTreeWidgetItem *item = ui.keyAssignList->topLevelItem(i);
+		QTreeWidgetItem *item = ui->keyAssignList->topLevelItem(i);
 		Configuration::KeyAssignInfoType sc;
 		sc.keys = QKeySequence(item->data(KeyAssignListKeyAssignKeyColumn, Qt::DisplayRole).toString());
 		keyAssign.push_back(sc);
@@ -361,23 +362,23 @@ void CConfigDialog::applyKeyAssign(QVector<Configuration::KeyAssignInfoType>& ke
 
 void CConfigDialog::updateKeyAssignPresetList()
 {
-	ui.keyAssignPresetList->blockSignals(true);
-	for(int i = ui.keyAssignPresetList->count();
+	ui->keyAssignPresetList->blockSignals(true);
+	for(int i = ui->keyAssignPresetList->count();
 		i < 1 + m_configuration.keyAssignPresetNum(); i++)
 	{
-		ui.keyAssignPresetList->addItem("");
+		ui->keyAssignPresetList->addItem("");
 	}
 	for(int i = 1 + m_configuration.keyAssignPresetNum();
-		i < ui.keyAssignPresetList->count(); i++)
+		i < ui->keyAssignPresetList->count(); i++)
 	{
-		ui.keyAssignPresetList->removeItem(ui.keyAssignPresetList->count() - 1);
+		ui->keyAssignPresetList->removeItem(ui->keyAssignPresetList->count() - 1);
 	}
-	ui.keyAssignPresetList->blockSignals(false);
+	ui->keyAssignPresetList->blockSignals(false);
 
 	// 選択が無ければ「現在の設定」を選択
-	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 	if( curPreset < 0 ) {
-		ui.keyAssignPresetList->setCurrentIndex(0);
+		ui->keyAssignPresetList->setCurrentIndex(0);
 		curPreset = -1;
 	}
 
@@ -386,7 +387,7 @@ void CConfigDialog::updateKeyAssignPresetList()
 	applyKeyAssign(keyAssign);
 	bool presetModified = keyAssign != m_configuration.keyAssign(curPreset);
 
-	ui.keyAssignPresetRemove->setDisabled(curPreset < 0 && !presetModified);
+	ui->keyAssignPresetRemove->setDisabled(curPreset < 0 && !presetModified);
 
 	QString presetName = tr("(Current setting)");
 	for(int i = -1; i < m_configuration.keyAssignPresetNum(); i++)
@@ -395,33 +396,33 @@ void CConfigDialog::updateKeyAssignPresetList()
 		{
 			presetName = m_configuration.keyAssignPresetName(i);
 		}
-		ui.keyAssignPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
+		ui->keyAssignPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
 	}
 }
 
 void CConfigDialog::updateToolbar(const QVector<Configuration::ActionEnum>& toolbar)
 {
-	ui.toolbarCurrentList->blockSignals(true);
-	ui.toolbarCurrentList->clear();
+	ui->toolbarCurrentList->blockSignals(true);
+	ui->toolbarCurrentList->clear();
 	for(int i = 0; i < toolbar.size(); i++)
 	{
-		QListWidgetItem* item = new QListWidgetItem(ui.toolbarCurrentList);
-		QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)toolbar[i]);
+		QListWidgetItem* item = new QListWidgetItem(ui->toolbarCurrentList);
+		QListWidgetItem* itemBase = ui->toolbarPartsList->item((int)toolbar[i]);
 		item->setText(itemBase->text());
 		item->setIcon(itemBase->icon());
 		item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
 	}
-	ui.toolbarCurrentList->setCurrentRow(0);
-	ui.toolbarCurrentList->blockSignals(false);
+	ui->toolbarCurrentList->setCurrentRow(0);
+	ui->toolbarCurrentList->blockSignals(false);
 }
 
 void CConfigDialog::applyToolbar(QVector<Configuration::ActionEnum>& toolbar)
 {
 	toolbar.clear();
-	for(int i = 0, num = ui.toolbarCurrentList->count();
+	for(int i = 0, num = ui->toolbarCurrentList->count();
 		i < num; i++)
 	{
-		QListWidgetItem *item = ui.toolbarCurrentList->item(i);
+		QListWidgetItem *item = ui->toolbarCurrentList->item(i);
 		Configuration::ActionEnum action;
 		action = Configuration::ActionEnum(item->data(Qt::UserRole + 1).toInt());
 		toolbar.push_back(action);
@@ -430,23 +431,23 @@ void CConfigDialog::applyToolbar(QVector<Configuration::ActionEnum>& toolbar)
 
 void CConfigDialog::updateToolbarPresetList()
 {
-	ui.toolbarPresetList->blockSignals(true);
-	for(int i = ui.toolbarPresetList->count();
+	ui->toolbarPresetList->blockSignals(true);
+	for(int i = ui->toolbarPresetList->count();
 		i < 1 + m_configuration.toolbarPresetNum(); i++)
 	{
-		ui.toolbarPresetList->addItem("");
+		ui->toolbarPresetList->addItem("");
 	}
 	for(int i = 1 + m_configuration.toolbarPresetNum();
-		i < ui.toolbarPresetList->count(); i++)
+		i < ui->toolbarPresetList->count(); i++)
 	{
-		ui.toolbarPresetList->removeItem(ui.toolbarPresetList->count() - 1);
+		ui->toolbarPresetList->removeItem(ui->toolbarPresetList->count() - 1);
 	}
-	ui.toolbarPresetList->blockSignals(false);
+	ui->toolbarPresetList->blockSignals(false);
 
 	// 選択が無ければ「現在の設定」を選択
-	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	int curPreset = ui->toolbarPresetList->currentIndex() - 1;
 	if( curPreset < 0 ) {
-		ui.toolbarPresetList->setCurrentIndex(0);
+		ui->toolbarPresetList->setCurrentIndex(0);
 		curPreset = -1;
 	}
 
@@ -455,7 +456,7 @@ void CConfigDialog::updateToolbarPresetList()
 	applyToolbar(toolbar);
 	bool presetModified = toolbar != m_configuration.toolbar(curPreset);
 
-	ui.toolbarPresetRemove->setDisabled(curPreset < 0 && !presetModified);
+	ui->toolbarPresetRemove->setDisabled(curPreset < 0 && !presetModified);
 
 	QString presetName = tr("(Current setting)");
 	for(int i = -1; i < m_configuration.toolbarPresetNum(); i++)
@@ -464,13 +465,13 @@ void CConfigDialog::updateToolbarPresetList()
 		{
 			presetName = m_configuration.toolbarPresetName(i);
 		}
-		ui.toolbarPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
+		ui->toolbarPresetList->setItemText(1 + i, presetName + (i == curPreset && presetModified ? "*" : ""));
 	}
 }
 
 void CConfigDialog::checkUpdateToolbarPresetList()
 {
-	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	int curPreset = ui->toolbarPresetList->currentIndex() - 1;
 
 	if( curPreset < -1 )
 	{
@@ -481,7 +482,7 @@ void CConfigDialog::checkUpdateToolbarPresetList()
 	applyToolbar(toolbar);
 
 	// プリセットに変更が加えられたら「現在の設定」と置き換える
-	ui.toolbarPresetList->setCurrentIndex(0);
+	ui->toolbarPresetList->setCurrentIndex(0);
 
 	updateToolbar(toolbar);
 
@@ -495,19 +496,19 @@ const Configuration& CConfigDialog::configuration() const
 
 void CConfigDialog::onOk()
 {
-	m_configuration.setHspPath(ui.installDirectoryPath->text());
-	m_configuration.setHspCommonPath(ui.commonDirectoryPath->text());
+	m_configuration.setHspPath(ui->installDirectoryPath->text());
+	m_configuration.setHspCommonPath(ui->commonDirectoryPath->text());
 
-	m_configuration.setEditorTabWidth(ui.editorTabWidth->value());
-	m_configuration.setEditorLineNumberVisible(ui.editorEnableLineNumber->checkState() == Qt::Checked);
-	m_configuration.setEditorLineNumberFontName(ui.editorLineNumberFont->currentFont().family());
-	m_configuration.setEditorLineNumberFontSize(ui.editorLineNumberFontSize->value());
-	m_configuration.setEditorFontName(ui.editorFont->currentFont().family());
-	m_configuration.setEditorFontSize(ui.editorFontSize->value());
+	m_configuration.setEditorTabWidth(ui->editorTabWidth->value());
+	m_configuration.setEditorLineNumberVisible(ui->editorEnableLineNumber->checkState() == Qt::Checked);
+	m_configuration.setEditorLineNumberFontName(ui->editorLineNumberFont->currentFont().family());
+	m_configuration.setEditorLineNumberFontSize(ui->editorLineNumberFontSize->value());
+	m_configuration.setEditorFontName(ui->editorFont->currentFont().family());
+	m_configuration.setEditorFontSize(ui->editorFontSize->value());
 
 	Configuration::BuildConfList buildConf
 		= m_configuration.buildConf();
-	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	int curPreset = ui->buildConfigurationsPresetList->currentIndex();
 	if( curPreset < buildConf.size() ) {
 		applyBuildConf(buildConf[curPreset]);
 		m_configuration.setBuildConf(buildConf);
@@ -530,27 +531,27 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 	               item = item->child(index.row(), 0);
 	if( item->data().isValid() )
 	{
-		int oldPageIndex = ui.stackedWidget->currentIndex();
+		int oldPageIndex = ui->stackedWidget->currentIndex();
 		int newPageIndex = item->data().toInt();
 		// 変更破棄
 		if( oldPageIndex != newPageIndex )
 		{
-			QWidget* currentPage = ui.stackedWidget->widget(oldPageIndex);
-			if( ui.keyAssignPage == currentPage )
+			QWidget* currentPage = ui->stackedWidget->widget(oldPageIndex);
+			if( ui->keyAssignPage == currentPage )
 			{
-				int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+				int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 				updateKeyAssign(m_configuration.keyAssign(curPreset));
 				updateKeyAssignPresetList();
 			}
-			else if( ui.toolbarPage == currentPage )
+			else if( ui->toolbarPage == currentPage )
 			{
-				int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+				int curPreset = ui->toolbarPresetList->currentIndex() - 1;
 				updateToolbar(m_configuration.toolbar(curPreset));
 				updateToolbarPresetList();
 			}
-			else if( ui.buildConfigurationsPage == currentPage )
+			else if( ui->buildConfigurationsPage == currentPage )
 			{
-				int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+				int curPreset = ui->buildConfigurationsPresetList->currentIndex();
 				Configuration::BuildConfType buildConf
 					= curPreset < m_configuration.buildConf().size() 
 						? m_configuration.buildConf()[curPreset]
@@ -560,12 +561,12 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 			}
 		}
 		// ページ切り替え
-		ui.stackedWidget->setCurrentIndex(newPageIndex);
+		ui->stackedWidget->setCurrentIndex(newPageIndex);
 	}
 	else
 	{
 		QModelIndex newIndex = item->child(0)->index();
-		ui.category->setCurrentIndex(newIndex);
+		ui->category->setCurrentIndex(newIndex);
 		onPageChanged(newIndex);
 	}
 }
@@ -573,31 +574,31 @@ void CConfigDialog::onPageChanged(const QModelIndex& index)
 void CConfigDialog::onClickedInstallDirectoryRef()
 {
 	QString path
-		= QFileDialog::getExistingDirectory(this, QString(), ui.installDirectoryPath->text());
+		= QFileDialog::getExistingDirectory(this, QString(), ui->installDirectoryPath->text());
 	if( !path.isEmpty() )
 	{
-		ui.installDirectoryPath->setText(QDir::toNativeSeparators(path));
+		ui->installDirectoryPath->setText(QDir::toNativeSeparators(path));
 	}
 }
 
 void CConfigDialog::onClickedCommonDirectoryRef()
 {
 	QString path
-		= QFileDialog::getExistingDirectory(this, QString(), ui.commonDirectoryPath->text());
+		= QFileDialog::getExistingDirectory(this, QString(), ui->commonDirectoryPath->text());
 	if( !path.isEmpty() )
 	{
-		ui.commonDirectoryPath->setText(QDir::toNativeSeparators(path));
+		ui->commonDirectoryPath->setText(QDir::toNativeSeparators(path));
 	}
 }
 
 void CConfigDialog::onCurrentMetricsChanged()
 {
-	QTreeWidgetItem* item = ui.editorColorList->currentItem();
+	QTreeWidgetItem* item = ui->editorColorList->currentItem();
 	if( !item ) {
 		return;
 	}
 
-	int index = ui.editorColorList->indexOfTopLevelItem(item);
+	int index = ui->editorColorList->indexOfTopLevelItem(item);
 	Configuration::ColorMetricsEnum metrics = Configuration::ColorMetricsEnum(index);
 
 	if( Configuration::ColorMetricsNum != m_lastIndexOfColorMetrics )
@@ -615,19 +616,19 @@ void CConfigDialog::onCurrentMetricsChanged()
 	item->setIcon(ColorListForegroundColorCount,  (bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
 	item->setIcon(ColorListBackgroundColorColumn, (bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
 
-	ui.editorColorItemEnable->setCheckState(m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
-	ui.editorColorItemBold->setCheckState(  m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
+	ui->editorColorItemEnable->setCheckState(m_currentColorMetricsInfo.enable      ? Qt::Checked : Qt::Unchecked);
+	ui->editorColorItemBold->setCheckState(  m_currentColorMetricsInfo.useBoldFont ? Qt::Checked : Qt::Unchecked);
 
 	bmp = QPixmap(16, 16);
 
-	ui.editorColorItemFgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
-	ui.editorColorItemBgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
+	ui->editorColorItemFgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.foregroundColor), QIcon(bmp)));
+	ui->editorColorItemBgcolor->setIcon((bmp.fill(m_currentColorMetricsInfo.backgroundColor), QIcon(bmp)));
 }
 
 void CConfigDialog::onMetricsChanged(QTreeWidgetItem* item)
 {
 	if( !item ) {
-		item = ui.editorColorList->currentItem();
+		item = ui->editorColorList->currentItem();
 		if( !item ) {
 			return;
 		}
@@ -718,16 +719,16 @@ void CConfigDialog::onBuildConfPresetChanged(int index)
 void CConfigDialog::onBuildConfPresetRemove()
 {
 	Configuration::BuildConfList buildConf = m_configuration.buildConf();
-	int index = ui.buildConfigurationsPresetList->currentIndex();
+	int index = ui->buildConfigurationsPresetList->currentIndex();
 
 	if( 0 <= index && index < buildConf.size() )
 	{
 		buildConf.removeAt(index);
 		m_configuration.setBuildConf(buildConf);
 		index--;
-		ui.buildConfigurationsPresetList->blockSignals(true);
-		ui.buildConfigurationsPresetList->setCurrentIndex(index);
-		ui.buildConfigurationsPresetList->blockSignals(false);
+		ui->buildConfigurationsPresetList->blockSignals(true);
+		ui->buildConfigurationsPresetList->setCurrentIndex(index);
+		ui->buildConfigurationsPresetList->blockSignals(false);
 	}
 	if( 0 <= index && index < buildConf.size() )
 	{
@@ -742,7 +743,7 @@ void CConfigDialog::onBuildConfPresetSave()
 	CSavePresetDialog dlg(this);
 
 	Configuration::BuildConfList buildConf = m_configuration.buildConf();
-	int curPreset = ui.buildConfigurationsPresetList->currentIndex();
+	int curPreset = ui->buildConfigurationsPresetList->currentIndex();
 	bool presetAppend = buildConf.size() <= curPreset;
 	dlg.setNewTitlePresent(presetAppend);
 	dlg.setNewTitle(presetAppend ? "" : buildConf[curPreset].name);
@@ -768,12 +769,12 @@ void CConfigDialog::onBuildConfPresetSave()
 		// 上書き保存
 		applyBuildConf(buildConf[curPreset]);
 		m_configuration.setBuildConf(buildConf);
-		newSelectPreset = ui.buildConfigurationsPresetList->currentIndex();
+		newSelectPreset = ui->buildConfigurationsPresetList->currentIndex();
 	}
 
 	updateBuildConfPresetList();
 	// 追加したプリセットに変更
-	ui.buildConfigurationsPresetList->setCurrentIndex(newSelectPreset);
+	ui->buildConfigurationsPresetList->setCurrentIndex(newSelectPreset);
 }
 
 void CConfigDialog::onBuildConfModified()
@@ -789,7 +790,7 @@ void CConfigDialog::onKeyAssignPresetChanged(int index)
 
 void CConfigDialog::onKeyAssignPresetRemove()
 {
-	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 
 	if( curPreset < 0 )
 	{
@@ -805,7 +806,7 @@ void CConfigDialog::onKeyAssignPresetRemove()
 
 void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 {
-	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 
 	if( KeyAssignListKeyAssignKeyColumn != column ||
 		curPreset < -1 )
@@ -817,7 +818,7 @@ void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
 	applyKeyAssign(keyAssign);
 
 	// プリセットに変更が加えられたら「現在の設定」と置き換える
-	ui.keyAssignPresetList->setCurrentIndex(0);
+	ui->keyAssignPresetList->setCurrentIndex(0);
 
 	updateKeyAssign(keyAssign);
 
@@ -828,7 +829,7 @@ void CConfigDialog::onKeyAssignPresetSave()
 {
 	CSavePresetDialog dlg(this);
 
-	int curPreset = ui.keyAssignPresetList->currentIndex() - 1;
+	int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 	bool presetCurrent = curPreset < 0;
 	dlg.setNewTitlePresent(presetCurrent);
 	dlg.setNewTitle(presetCurrent ? "" : m_configuration.keyAssignPresetName(curPreset));
@@ -854,14 +855,14 @@ void CConfigDialog::onKeyAssignPresetSave()
 		QVector<Configuration::KeyAssignInfoType> keyAssign;
 		applyKeyAssign(keyAssign);
 		m_configuration.setKeyAssign(
-			ui.keyAssignPresetList->currentIndex() - 1,
+			ui->keyAssignPresetList->currentIndex() - 1,
 			keyAssign);
-		newSelectPreset = ui.keyAssignPresetList->currentIndex();
+		newSelectPreset = ui->keyAssignPresetList->currentIndex();
 	}
 
 	updateKeyAssignPresetList();
 	// 追加したプリセットに変更
-	ui.keyAssignPresetList->setCurrentIndex(newSelectPreset);
+	ui->keyAssignPresetList->setCurrentIndex(newSelectPreset);
 }
 
 void CConfigDialog::onToolbarPresetChanged(int index)
@@ -874,7 +875,7 @@ void CConfigDialog::onToolbarPresetSave()
 {
 	CSavePresetDialog dlg(this);
 
-	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	int curPreset = ui->toolbarPresetList->currentIndex() - 1;
 	bool presetCurrent = curPreset < 0;
 	dlg.setNewTitlePresent(presetCurrent);
 	dlg.setNewTitle(presetCurrent ? "" : m_configuration.toolbarPresetName(curPreset));
@@ -900,19 +901,19 @@ void CConfigDialog::onToolbarPresetSave()
 		QVector<Configuration::ActionEnum> toolbar;
 		applyToolbar(toolbar);
 		m_configuration.setToolbar(
-			ui.toolbarPresetList->currentIndex() - 1,
+			ui->toolbarPresetList->currentIndex() - 1,
 			toolbar);
-		newSelectPreset = ui.toolbarPresetList->currentIndex();
+		newSelectPreset = ui->toolbarPresetList->currentIndex();
 	}
 
 	updateToolbarPresetList();
 	// 追加したプリセットに変更
-	ui.toolbarPresetList->setCurrentIndex(newSelectPreset);
+	ui->toolbarPresetList->setCurrentIndex(newSelectPreset);
 }
 
 void CConfigDialog::onToolbarPresetRemove()
 {
-	int curPreset = ui.toolbarPresetList->currentIndex() - 1;
+	int curPreset = ui->toolbarPresetList->currentIndex() - 1;
 
 	if( curPreset < 0 )
 	{
@@ -929,59 +930,59 @@ void CConfigDialog::onToolbarPresetRemove()
 void CConfigDialog::onToolbarAppendButton()
 {
 	Configuration::ActionEnum action
-		= Configuration::ActionEnum(ui.toolbarPartsList->currentRow());
-	int row = ui.toolbarCurrentList->currentRow();
+		= Configuration::ActionEnum(ui->toolbarPartsList->currentRow());
+	int row = ui->toolbarCurrentList->currentRow();
 	QListWidgetItem* item     = new QListWidgetItem();
-	QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)action);
+	QListWidgetItem* itemBase = ui->toolbarPartsList->item((int)action);
 	item->setText(itemBase->text());
 	item->setIcon(itemBase->icon());
 	item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
-	ui.toolbarCurrentList->insertItem(row, item);
-	row = ui.toolbarCurrentList->row(item);
+	ui->toolbarCurrentList->insertItem(row, item);
+	row = ui->toolbarCurrentList->row(item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(row);
+	ui->toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarAppendButtonLast()
 {
 	Configuration::ActionEnum action
-		= Configuration::ActionEnum(ui.toolbarPartsList->currentRow());
+		= Configuration::ActionEnum(ui->toolbarPartsList->currentRow());
 	QListWidgetItem* item     = new QListWidgetItem();
-	QListWidgetItem* itemBase = ui.toolbarPartsList->item((int)action);
+	QListWidgetItem* itemBase = ui->toolbarPartsList->item((int)action);
 	item->setText(itemBase->text());
 	item->setIcon(itemBase->icon());
 	item->setData(Qt::UserRole + 1, itemBase->data(Qt::UserRole + 1));
-	ui.toolbarCurrentList->addItem(item);
-	int row = ui.toolbarCurrentList->row(item);
+	ui->toolbarCurrentList->addItem(item);
+	int row = ui->toolbarCurrentList->row(item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(row);
+	ui->toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarRemoveButton()
 {
-	int row = ui.toolbarCurrentList->currentRow();
-	ui.toolbarCurrentList->takeItem(row);
-	row = ui.toolbarCurrentList->currentRow();
+	int row = ui->toolbarCurrentList->currentRow();
+	ui->toolbarCurrentList->takeItem(row);
+	row = ui->toolbarCurrentList->currentRow();
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(row);
+	ui->toolbarCurrentList->setCurrentRow(row);
 }
 
 void CConfigDialog::onToolbarButtonGoUp()
 {
-	int rowOld = ui.toolbarCurrentList->currentRow();
+	int rowOld = ui->toolbarCurrentList->currentRow();
 	int rowNew = (std::max)(0, rowOld - 1);
-	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(rowOld);
-	ui.toolbarCurrentList->insertItem(rowNew, item);
+	QListWidgetItem* item = ui->toolbarCurrentList->takeItem(rowOld);
+	ui->toolbarCurrentList->insertItem(rowNew, item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(rowNew);
+	ui->toolbarCurrentList->setCurrentRow(rowNew);
 }
 
 void CConfigDialog::onToolbarButtonGoDown()
 {
-	int rowOld = ui.toolbarCurrentList->currentRow();
-	int rowNew = (std::min)(ui.toolbarCurrentList->count() - 1, rowOld + 1);
-	QListWidgetItem* item = ui.toolbarCurrentList->takeItem(rowOld);
-	ui.toolbarCurrentList->insertItem(rowNew, item);
+	int rowOld = ui->toolbarCurrentList->currentRow();
+	int rowNew = (std::min)(ui->toolbarCurrentList->count() - 1, rowOld + 1);
+	QListWidgetItem* item = ui->toolbarCurrentList->takeItem(rowOld);
+	ui->toolbarCurrentList->insertItem(rowNew, item);
 	checkUpdateToolbarPresetList();
-	ui.toolbarCurrentList->setCurrentRow(rowNew);
+	ui->toolbarCurrentList->setCurrentRow(rowNew);
 }

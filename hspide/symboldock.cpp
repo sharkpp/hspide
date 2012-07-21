@@ -179,7 +179,7 @@ void CSymbolDock::append(const QUuid& uuid, int lineNo, const QString& name, con
 	model->setData(model->index(row, TypeColumn,     parent), typeName);
 	model->setData(model->index(row, LineNoColumn,   parent), QString("%1").arg(lineNo));
 	model->setData(model->index(row, LineNoColumn,   parent), Qt::AlignRight, Qt::TextAlignmentRole);
-	model->setData(model->index(row, FileNameColumn, parent), theFile.fileName(uuid));
+	model->setData(model->index(row, FileNameColumn, parent), theFile->fileName(uuid));
 
 	SymbolInfoType info;
 	info.uuid		= uuid;

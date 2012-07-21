@@ -114,7 +114,7 @@ protected:
 public slots:
 
 	void actionTriggered(QAction *action);
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 	void buildStarted();
 	void buildStarted(int buildOrder,const QUuid& uuid);
 	void buildSuccessful(int buildOrder);

@@ -79,7 +79,7 @@ protected:
 
 public slots:
 
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 
 	// ƒVƒ“ƒ{ƒ‹‚ÌŽæ“¾Š®—¹
 	void listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus);

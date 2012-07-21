@@ -218,7 +218,7 @@ Configuration& Configuration::operator = (const Configuration& info)
 
 	m_tools = info.m_tools;
 
-	emit updateConfiguration(*this);
+	emit updateConfiguration(this);
 
 	return *this;
 }
@@ -413,7 +413,7 @@ bool Configuration::load(const QSettings& settings)
 		}
 	}
 
-	emit updateConfiguration(*this);
+	emit updateConfiguration(this);
 
 	return true;
 }

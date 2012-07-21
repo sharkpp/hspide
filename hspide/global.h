@@ -6,6 +6,6 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
-extern Configuration     theConf;
-extern FileManager       theFile;
-extern BreakPointManager theBreakPoint;
+extern Configuration*     theConf;
+extern FileManager*       theFile;
+extern BreakPointManager* theBreakPoint;

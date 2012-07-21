@@ -92,8 +92,9 @@ public:
 
 CSaveSolutionDialog::CSaveSolutionDialog(QWidget *parent)
 	: QDialog(parent)
+	, ui(new Ui::SaveSolutionDialog)
 {
-	ui.setupUi(this);
+	ui->setupUi(this);
 
 	// 保存種別の選択項目を生成
 	QStringList itemList;
@@ -103,14 +104,14 @@ CSaveSolutionDialog::CSaveSolutionDialog(QWidget *parent)
 	// 保存種別をコンボボックスで選べるようにエディタを割り当て
 	QItemEditorFactory* factory;
 	QItemDelegate* itemDelegate;
-	ui.saveTargetList->setItemDelegate(itemDelegate = new CSaveKindItemDelegate(this, itemList));
+	ui->saveTargetList->setItemDelegate(itemDelegate = new CSaveKindItemDelegate(this, itemList));
 		itemDelegate->setItemEditorFactory(factory = new QItemEditorFactory);
 			factory->registerEditor(QVariant::Int, new CSaveKindItemEditorCreator(itemList));
 }
 
 void CSaveSolutionDialog::clicked(QAbstractButton* button)
 {
-	int buttonType = (int)ui.buttonBox->standardButton(button);
+	int buttonType = (int)ui->buttonBox->standardButton(button);
 
 	m_savingItems.clear();
 
@@ -152,11 +153,11 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 	QVector<QPair<CWorkSpaceItem*, int> > stack;
 	stack.push_back(qMakePair(item, 0));
 
-	ui.saveTargetList->setColumnCount(ColumnCount);
-	ui.saveTargetList->header()->setResizeMode(FileNameColumn,  QHeaderView::Stretch);
-	ui.saveTargetList->header()->setResizeMode(SaveKindColumn, QHeaderView::ResizeToContents);
+	ui->saveTargetList->setColumnCount(ColumnCount);
+	ui->saveTargetList->header()->setResizeMode(FileNameColumn,  QHeaderView::Stretch);
+	ui->saveTargetList->header()->setResizeMode(SaveKindColumn, QHeaderView::ResizeToContents);
 
-	QTreeWidgetItem *rootItem = ui.saveTargetList->invisibleRootItem();
+	QTreeWidgetItem *rootItem = ui->saveTargetList->invisibleRootItem();
 	stackItem.push_back(rootItem);
 
 	QTreeWidgetItem *newItem;
@@ -237,7 +238,7 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 		}
 	}
 
-	ui.saveTargetList->expandAll();
+	ui->saveTargetList->expandAll();
 
 	return !noSaveItem;
 }

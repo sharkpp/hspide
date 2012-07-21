@@ -17,11 +17,11 @@ CDocumentPane::CDocumentPane(QWidget *parent)
 	m_cursorIcon     = m_editorWidget->registLineIcon(QIcon(":/images/tango/small/go-next.png"));
 
 	// 設定の変更通史の登録と設定からの初期化処理
-	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
+	connect(theConf, SIGNAL(updateConfiguration(const Configuration*)),
+	        this,  SLOT(updateConfiguration(const Configuration*)));
 	updateConfiguration(theConf);
 
-	connect(&theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
+	connect(theBreakPoint, SIGNAL(breakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)),
 	        this,  SLOT(onBreakPointChanged(const QUuid&, const QList<QPair<int, bool> >&)));
 }
 
@@ -46,45 +46,45 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 		!m_uuid.isNull() )
 	{
 		// ブレークポイントをセット
-		theBreakPoint.append(m_uuid, lineNo + 1); // 1オリジン
+		theBreakPoint->append(m_uuid, lineNo + 1); // 1オリジン
 	}
 	else
 	{
 		// ブレークポイントをリセット
-		theBreakPoint.remove(m_uuid, lineNo + 1); // 1オリジン
+		theBreakPoint->remove(m_uuid, lineNo + 1); // 1オリジン
 	}
 
 	emit updateBreakpoint();
 }
 
-void CDocumentPane::updateConfiguration(const Configuration& info)
+void CDocumentPane::updateConfiguration(const Configuration* conf)
 {
 	QFont editorFont;
 	Configuration::ColorMetricsInfoType metrics;
 
 	// フォントを変更
-	editorFont.setFamily(info.editorFontName());
-	editorFont.setPixelSize(info.editorFontSize());
+	editorFont.setFamily(conf->editorFontName());
+	editorFont.setPixelSize(conf->editorFontSize());
 	editorFont.setFixedPitch(true);
 	m_editorWidget->setFont(editorFont);
 
 	// 行番号フォントを変更
-	editorFont.setFamily(info.editorLineNumberFontName());
-	editorFont.setPixelSize(info.editorLineNumberFontSize());
+	editorFont.setFamily(conf->editorLineNumberFontName());
+	editorFont.setPixelSize(conf->editorLineNumberFontSize());
 	editorFont.setFixedPitch(true);
 	m_editorWidget->setLineNumberFont(editorFont);
 
-	m_editorWidget->setLineNumberVisible(info.editorLineNumberVisibled());
-	m_editorWidget->setTabStopCharWidth(info.editorTabWidth());
+	m_editorWidget->setLineNumberVisible(conf->editorLineNumberVisibled());
+	m_editorWidget->setTabStopCharWidth(conf->editorTabWidth());
 
 	// 色を変更
-	metrics = info.colorMetrics(Configuration::LineNumberMetrics);
+	metrics = conf->colorMetrics(Configuration::LineNumberMetrics);
 	m_editorWidget->setLineNumberTextColor(metrics.foregroundColor);
 	m_editorWidget->setLineNumberBackgroundColor(metrics.backgroundColor);
 
 	QPalette palette = m_editorWidget->palette();
 	palette.setColor(QPalette::Window, metrics.backgroundColor);
-	metrics = info.colorMetrics(Configuration::TextMetrics);
+	metrics = conf->colorMetrics(Configuration::TextMetrics);
 	palette.setColor(QPalette::Text, metrics.foregroundColor);
 	palette.setColor(QPalette::Base, metrics.backgroundColor);
 	m_editorWidget->setPalette(palette);
@@ -103,7 +103,7 @@ void CDocumentPane::updateConfiguration(const Configuration& info)
 	{
 		QTextCharFormat format;
 		Hsp3Lexer::Type type = keywordFormat[i].second;
-		metrics = info.colorMetrics(keywordFormat[i].first);
+		metrics = conf->colorMetrics(keywordFormat[i].first);
 		format.setForeground(metrics.foregroundColor);
 		format.setBackground(metrics.backgroundColor);
 		format.setFontWeight(metrics.useBoldFont ? QFont::Bold : QFont::Normal);
@@ -152,11 +152,11 @@ bool CDocumentPane::load(const QString& filepath, const QString& tmplFilePath)
 
 	if( !m_uuid.isNull() )
 	{
-		theFile.rename(m_uuid, filepath);
+		theFile->rename(m_uuid, filepath);
 	}
 	else
 	{
-		m_uuid = theFile.assign(filepath);
+		m_uuid = theFile->assign(filepath);
 	}
 
 	m_editorWidget->setPlainText(file.readAll());
@@ -176,7 +176,7 @@ bool CDocumentPane::load(const QString& filepath, const QString& tmplFilePath)
 bool CDocumentPane::save(const QString& filePath, bool saveAs)
 {
 	QString fileName = filePath;
-	QString lastFilePath = theFile.path(m_uuid);
+	QString lastFilePath = theFile->path(m_uuid);
 
 	// 引数にファイル名が指定されていた場合はそのファイルに保存
 	// 指定されていなかった場合は、
@@ -236,7 +236,7 @@ bool CDocumentPane::save(const QString& filePath, bool saveAs)
 
 	m_editorWidget->document()->setModified(false);
 
-	theFile.rename(m_uuid, fileName);
+	theFile->rename(m_uuid, fileName);
 
 	return true;
 }
@@ -278,19 +278,19 @@ const QUuid& CDocumentPane::uuid() const
 // ファイルパスを取得
 QString CDocumentPane::path() const
 {
-	return theFile.path(m_uuid);
+	return theFile->path(m_uuid);
 }
 
 // タイトルを取得
 QString CDocumentPane::title() const
 {
-	return theFile.fileName(m_uuid) + (m_editorWidget->document()->isModified() ? "*" : "");
+	return theFile->fileName(m_uuid) + (m_editorWidget->document()->isModified() ? "*" : "");
 }
 
 // 無題ファイル(ディスクに保存していないファイル)か？
 bool CDocumentPane::isUntitled() const
 {
-	return theFile.isUntitled(m_uuid);
+	return theFile->isUntitled(m_uuid);
 }
 
 // 変更されているか

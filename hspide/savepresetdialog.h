@@ -9,7 +9,7 @@ class CSavePresetDialog
 {
 	Q_OBJECT
 
-	Ui::SavePresetDialog ui;
+	Ui::SavePresetDialog* ui;
 
 	QString m_newTitle;
 	bool m_newTitlePresent;

@@ -21,7 +21,7 @@ private:
 
 	Q_OBJECT
 
-	Ui::SaveSolutionDialog ui;
+	Ui::SaveSolutionDialog* ui;
 
 	QList<QTreeWidgetItem*> m_items;
 	QList<SavingItemInfo> m_savingItems;

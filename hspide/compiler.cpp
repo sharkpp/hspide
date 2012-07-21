@@ -20,8 +20,8 @@ CCompiler::CCompiler(QObject *parent)
 	updateCompilerPath();
 
 	// Ý’è‚Ì•ÏX’ÊŽj‚Ì“o˜^‚ÆÝ’è‚©‚ç‚Ì‰Šú‰»ˆ—
-	connect(&theConf, SIGNAL(updateConfiguration(const Configuration&)),
-	        this,  SLOT(updateConfiguration(const Configuration&)));
+	connect(theConf, SIGNAL(updateConfiguration(const Configuration*)),
+	        this,  SLOT(updateConfiguration(const Configuration*)));
 	updateConfiguration(theConf);
 
 	m_hspErrorText
@@ -236,12 +236,12 @@ void CCompiler::updateCompilerPath()
 {
 }
 
-void CCompiler::updateConfiguration(const Configuration& info)
+void CCompiler::updateConfiguration(const Configuration* conf)
 {
 	bool update = false;
-	QString hspPath       = QDir::toNativeSeparators(info.hspPath());
-	QString hspCompPath   = QDir::toNativeSeparators(info.compilerPath());
-	QString hspCommonPath = QDir::toNativeSeparators(info.hspCommonPath());
+	QString hspPath       = QDir::toNativeSeparators(conf->hspPath());
+	QString hspCompPath   = QDir::toNativeSeparators(conf->compilerPath());
+	QString hspCommonPath = QDir::toNativeSeparators(conf->hspCommonPath());
 	update |= m_hspPath       != hspPath;
 	update |= m_hspCompPath   != hspCompPath;
 	update |= m_hspCommonPath != hspCommonPath;

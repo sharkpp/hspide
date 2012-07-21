@@ -7,9 +7,9 @@
 #include "savesolutiondialog.h"
 #include "ui_aboutdialog.h"
 
-Configuration     theConf;
-FileManager       theFile;
-BreakPointManager theBreakPoint;
+Configuration*     theConf = NULL;
+FileManager*       theFile = NULL;
+BreakPointManager* theBreakPoint = NULL;
 
 QIcon QMultiIcon(const QString& first, const QString& second, const QString& third = QString())
 {
@@ -32,6 +32,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	, m_lastActivatedDocument(NULL)
 	, m_buildConf(NULL)
 {
+	theConf			= new Configuration;
+	theFile			= new FileManager;
+	theBreakPoint	= new BreakPointManager;
+
 	setObjectName("MainWindow");
 	setWindowTitle(tr("HSP script editor"));
 	setAcceptDrops(true);
@@ -81,7 +85,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(varInfoDock,   SIGNAL(requestVariableInfo(const QString& , int*)), this, SLOT(onReqVarInfo(const QString& , int*)));
 	connect(qobject_cast<QDockWidget*>(symbolDock->parentWidget()),
 	                       SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
-	connect(&theConf,      SIGNAL(updateConfiguration(const Configuration&)),  this, SLOT(updateConfiguration(const Configuration&)));
+	connect(theConf,       SIGNAL(updateConfiguration(const Configuration*)),  this, SLOT(updateConfiguration(const Configuration*)));
 
 	loadSettings();
 
@@ -93,6 +97,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 MainWindow::~MainWindow()
 {
+	delete theConf;
+	delete theFile;
+	delete theBreakPoint;
 }
 
 void MainWindow::setupDockWindows()
@@ -399,7 +406,7 @@ void MainWindow::loadSettings()
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
 	// 設定読み込み
-	theConf.load(settings);
+	theConf->load(settings);
 
 	// ウインドウ位置などを取得
 	m_stateDefault      = settings.value("window/state").toByteArray();
@@ -415,7 +422,7 @@ void MainWindow::saveSettings()
 	settings.setIniCodec("UTF-8"); // 文字コードを指定
 
 	// 設定保存
-	theConf.save(settings);
+	theConf->save(settings);
 
 	// ウインドウ位置などを保存
 	settings.setValue("window/geometry",        saveGeometry());
@@ -517,7 +524,7 @@ void MainWindow::actionTriggered(QAction *action)
 	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }
 
-void MainWindow::updateConfiguration(const Configuration& info)
+void MainWindow::updateConfiguration(const Configuration* conf)
 {
 	// シンタックスハイライトシンボル取得
 	CCompiler* compiler = new CCompiler(this);
@@ -527,49 +534,49 @@ void MainWindow::updateConfiguration(const Configuration& info)
 
 	// ショートカットキーの更新
 
-	theConf.applyShortcut(Configuration::ActionNew,					newDocumentAct);
-	theConf.applyShortcut(Configuration::ActionOpen,				openDocumentAct);
-	theConf.applyShortcut(Configuration::ActionSave,				saveDocumentAct);
-	theConf.applyShortcut(Configuration::ActionSaveAs,				saveAsDocumentAct);
-	theConf.applyShortcut(Configuration::ActionSaveAll,				saveAllDocumentAct);
-	theConf.applyShortcut(Configuration::ActionQuit,				quitApplicationAct);
-	theConf.applyShortcut(Configuration::ActionUndo,				editUndoAct);
-	theConf.applyShortcut(Configuration::ActionRedo,				editRedoAct);
-	theConf.applyShortcut(Configuration::ActionCut,					editCutAct);
-	theConf.applyShortcut(Configuration::ActionCopy,				editCopyAct);
-	theConf.applyShortcut(Configuration::ActionPaste,				editPasteAct);
-	theConf.applyShortcut(Configuration::ActionClear,				editClearAct);
-	theConf.applyShortcut(Configuration::ActionSelectAll,			selectAllAct);
-	theConf.applyShortcut(Configuration::ActionFind,				findTextAct);
-	theConf.applyShortcut(Configuration::ActionFindNext,			findPrevTextAct);
-	theConf.applyShortcut(Configuration::ActionFindPrev,			findNextTextAct);
-	theConf.applyShortcut(Configuration::ActionReplace,				replaceTextAct);
-	theConf.applyShortcut(Configuration::ActionJump,				gotoLineAct);
-	theConf.applyShortcut(Configuration::ActionBuildSolution,		buildSolutionAct);
-	theConf.applyShortcut(Configuration::ActionBuildProject,		buildProjectAct);
-	theConf.applyShortcut(Configuration::ActionCompileOnly,			compileOnlyAct);
-	theConf.applyShortcut(Configuration::ActionBatchBuild,			batchBuildAct);
-	theConf.applyShortcut(Configuration::ActionDebugRunSolution,	debugRunSolutionAct);
-	theConf.applyShortcut(Configuration::ActionNoDebugRunSolution,	noDebugRunSolutionAct);
-	theConf.applyShortcut(Configuration::ActionDebugRunProject,		debugRunProjectAct);
-	theConf.applyShortcut(Configuration::ActionNoDebugRunProject,	noDebugRunProjectAct);
-	theConf.applyShortcut(Configuration::ActionDebugSuspend,		debugSuspendAct);
-	theConf.applyShortcut(Configuration::ActionDebugResume,			debugResumeAct);
-	theConf.applyShortcut(Configuration::ActionDebugStop,			debugStopAct);
-	theConf.applyShortcut(Configuration::ActionDebugStepIn,			debugStepInAct);
-	theConf.applyShortcut(Configuration::ActionDebugStepOver,		debugStepOverAct);
-	theConf.applyShortcut(Configuration::ActionDebugStepOut,		debugStepOutAct);
-	theConf.applyShortcut(Configuration::ActionBreakpointSet,		breakpointSetAct);
-//	theConf.applyShortcut(Configuration::ActionBuildTarget,			);
-	theConf.applyShortcut(Configuration::ActionConfig,				settingAct);
-	theConf.applyShortcut(Configuration::ActionShowProject,			showProjectDockAct);
-	theConf.applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
-	theConf.applyShortcut(Configuration::ActionShowOutput,			showOutputDockAct);
-	theConf.applyShortcut(Configuration::ActionShowSearch,			showSearchDockAct);
-	theConf.applyShortcut(Configuration::ActionShowMessage,			showMessageDockAct);
-	theConf.applyShortcut(Configuration::ActionShowBreakPoint,		showBreakPointDockAct);
-//	theConf.applyShortcut(Configuration::ActionShowSysInfo,			showSysInfoDockAct);
-//	theConf.applyShortcut(Configuration::ActionShowVarInfo,			showVarInfoDockAct);
+	theConf->applyShortcut(Configuration::ActionNew,				newDocumentAct);
+	theConf->applyShortcut(Configuration::ActionOpen,				openDocumentAct);
+	theConf->applyShortcut(Configuration::ActionSave,				saveDocumentAct);
+	theConf->applyShortcut(Configuration::ActionSaveAs,				saveAsDocumentAct);
+	theConf->applyShortcut(Configuration::ActionSaveAll,			saveAllDocumentAct);
+	theConf->applyShortcut(Configuration::ActionQuit,				quitApplicationAct);
+	theConf->applyShortcut(Configuration::ActionUndo,				editUndoAct);
+	theConf->applyShortcut(Configuration::ActionRedo,				editRedoAct);
+	theConf->applyShortcut(Configuration::ActionCut,				editCutAct);
+	theConf->applyShortcut(Configuration::ActionCopy,				editCopyAct);
+	theConf->applyShortcut(Configuration::ActionPaste,				editPasteAct);
+	theConf->applyShortcut(Configuration::ActionClear,				editClearAct);
+	theConf->applyShortcut(Configuration::ActionSelectAll,			selectAllAct);
+	theConf->applyShortcut(Configuration::ActionFind,				findTextAct);
+	theConf->applyShortcut(Configuration::ActionFindNext,			findPrevTextAct);
+	theConf->applyShortcut(Configuration::ActionFindPrev,			findNextTextAct);
+	theConf->applyShortcut(Configuration::ActionReplace,			replaceTextAct);
+	theConf->applyShortcut(Configuration::ActionJump,				gotoLineAct);
+	theConf->applyShortcut(Configuration::ActionBuildSolution,		buildSolutionAct);
+	theConf->applyShortcut(Configuration::ActionBuildProject,		buildProjectAct);
+	theConf->applyShortcut(Configuration::ActionCompileOnly,		compileOnlyAct);
+	theConf->applyShortcut(Configuration::ActionBatchBuild,			batchBuildAct);
+	theConf->applyShortcut(Configuration::ActionDebugRunSolution,	debugRunSolutionAct);
+	theConf->applyShortcut(Configuration::ActionNoDebugRunSolution,	noDebugRunSolutionAct);
+	theConf->applyShortcut(Configuration::ActionDebugRunProject,	debugRunProjectAct);
+	theConf->applyShortcut(Configuration::ActionNoDebugRunProject,	noDebugRunProjectAct);
+	theConf->applyShortcut(Configuration::ActionDebugSuspend,		debugSuspendAct);
+	theConf->applyShortcut(Configuration::ActionDebugResume,		debugResumeAct);
+	theConf->applyShortcut(Configuration::ActionDebugStop,			debugStopAct);
+	theConf->applyShortcut(Configuration::ActionDebugStepIn,		debugStepInAct);
+	theConf->applyShortcut(Configuration::ActionDebugStepOver,		debugStepOverAct);
+	theConf->applyShortcut(Configuration::ActionDebugStepOut,		debugStepOutAct);
+	theConf->applyShortcut(Configuration::ActionBreakpointSet,		breakpointSetAct);
+//	theConf->applyShortcut(Configuration::ActionBuildTarget,		);
+	theConf->applyShortcut(Configuration::ActionConfig,				settingAct);
+	theConf->applyShortcut(Configuration::ActionShowProject,		showProjectDockAct);
+	theConf->applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
+	theConf->applyShortcut(Configuration::ActionShowOutput,			showOutputDockAct);
+	theConf->applyShortcut(Configuration::ActionShowSearch,			showSearchDockAct);
+	theConf->applyShortcut(Configuration::ActionShowMessage,		showMessageDockAct);
+	theConf->applyShortcut(Configuration::ActionShowBreakPoint,		showBreakPointDockAct);
+//	theConf->applyShortcut(Configuration::ActionShowSysInfo,		showSysInfoDockAct);
+//	theConf->applyShortcut(Configuration::ActionShowVarInfo,		showVarInfoDockAct);
 
 	// ツールバーの更新
 
@@ -623,7 +630,7 @@ void MainWindow::updateConfiguration(const Configuration& info)
 		{ NULL,                   },
 	};
 
-	QVector<Configuration::ActionEnum> actionTypes = theConf.toolbar();
+	QVector<Configuration::ActionEnum> actionTypes = theConf->toolbar();
 
 	m_generalToolbar->clear();
 
@@ -1169,7 +1176,7 @@ void MainWindow::onOpenSettingDialog()
 
 	if( QDialog::Accepted == dlg.exec() )
 	{
-		theConf = dlg.configuration();
+		*theConf = dlg.configuration();
 	}
 }
 
@@ -1446,7 +1453,7 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 			}
 			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
 			if( 0 <= reFileName.indexIn(fileName) ) {
-				uuid = theFile.uuidFromFilename(reFileName.cap(1));
+				uuid = theFile->uuidFromFilename(reFileName.cap(1));
 			} else {
 				if( CWorkSpaceItem* item
 						= solutionItem ? solutionItem->search(fileName)
@@ -1660,7 +1667,7 @@ void MainWindow::onPutDebugLog(const QString& text)
 
 		// UUIDをファイル名に変換 or ファイル名をUUIDに変換
 		if( 0 <= reFileName.indexIn(fileName) ) {
-			uuid = theFile.uuidFromFilename(reFileName.cap(1));
+			uuid = theFile->uuidFromFilename(reFileName.cap(1));
 		} else {
 			if( CWorkSpaceItem* item
 					= solutionItem ? solutionItem->search(fileName)

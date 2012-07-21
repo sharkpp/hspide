@@ -1,5 +1,5 @@
-#include "ui_configdialog.h"
 #include "configuration.h"
+#include "ui_configdialog.h"
 
 #if defined(_MSC_VER) && 1000 < _MSC_VER
 #pragma once
@@ -32,7 +32,7 @@ class CConfigDialog
 		KeyAssignListColumnNum,
 	};
 
-	Ui::ConfigDialog ui;
+	Ui::ConfigDialog* ui;
 
 	Configuration m_configuration;
 	QVector<Configuration::KeyAssignInfoType> m_currentKeyAssign;
@@ -48,7 +48,7 @@ public:
 
 protected:
 
-	void setConfiguration(const Configuration& info);
+	void setConfiguration(const Configuration* conf);
 
 	void updateBuildConf(const Configuration::BuildConfType& buildConf);
 	void applyBuildConf(Configuration::BuildConfType& buildConf);

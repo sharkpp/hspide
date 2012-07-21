@@ -60,7 +60,7 @@ protected:
 
 public slots:
 
-	void updateConfiguration(const Configuration& info);
+	void updateConfiguration(const Configuration* conf);
 	void recvCommand();
 
 signals:

@@ -17,7 +17,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	, m_type(UnkownType)
 	, m_nodeType(UnkownNodeType)
 	, m_assignDocument(NULL)
-	, m_buildConfigurations(theConf.buildConf())
+	, m_buildConfigurations(theConf->buildConf())
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
 	m_text = QString("this=%1").arg((int)this, 0, 16);
@@ -54,7 +54,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	}
 
 	// 通知を登録
-	connect(&theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
+	connect(theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
 }
 
 CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* model)
@@ -64,7 +64,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 	, m_parentPos(0)
 	, m_type(type)
 	, m_assignDocument(NULL)
-	, m_buildConfigurations(theConf.buildConf())
+	, m_buildConfigurations(theConf->buildConf())
 {
 	static const struct {
 		NodeType nodeType;
@@ -123,7 +123,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 	}
 
 	// 通知を登録
-	connect(&theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
+	connect(theFile, SIGNAL(filePathChanged(QUuid)), this, SLOT(onFileChanged(QUuid)));
 }
 
 CWorkSpaceItem::~CWorkSpaceItem()
@@ -174,7 +174,7 @@ void CWorkSpaceItem::setNodeType(NodeType type)
 // ファイルパスを取得
 QString CWorkSpaceItem::path() const
 {
-	return theFile.path(m_uuid);
+	return theFile->path(m_uuid);
 }
 
 const QString& CWorkSpaceItem::text() const
@@ -331,7 +331,7 @@ bool CWorkSpaceItem::remove(int position)
 // 無題ファイル(ディスクに保存していないファイル)か？
 bool CWorkSpaceItem::isUntitled() const
 {
-	return theFile.isUntitled(m_uuid);
+	return theFile->isUntitled(m_uuid);
 }
 
 const QUuid& CWorkSpaceItem::uuid() const
@@ -464,7 +464,7 @@ bool CWorkSpaceItem::saveSolution(const QString& fileName, bool saveAs)
 		return false;
 	}
 
-	theFile.rename(m_uuid, filePath);
+	theFile->rename(m_uuid, filePath);
 
 	// ファイルにXMLとして出力
 	xml.setDevice(&file);
@@ -576,9 +576,9 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			if( !path.isEmpty() ) {
 				QUuid uuid(xml.attributes().value("uuid").toString());
 				if( !uuid.isNull() ) {
-					theFile.assign(path, uuid);
+					theFile->assign(path, uuid);
 				} else {
-					uuid = theFile.assign(path);
+					uuid = theFile->assign(path);
 				}
 				newItem->m_uuid = uuid;
 			}
@@ -588,16 +588,16 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			case File:
 			case Folder:
 			case Project:
-				newItem->setText(theFile.fileName(newItem->m_uuid));
+				newItem->setText(theFile->fileName(newItem->m_uuid));
 				break;
 			case Solution: {
 				QString name = xml.attributes().value("name").toString();
 				if( !name.isEmpty() ) {
 					newItem->setText(name);
-				} else if( theFile.isUntitled(newItem->m_uuid) ) {
-					newItem->setText( theFile.fileName(newItem->m_uuid) );
+				} else if( theFile->isUntitled(newItem->m_uuid) ) {
+					newItem->setText( theFile->fileName(newItem->m_uuid) );
 				} else {
-					newItem->setText( theFile.fileInfo(newItem->m_uuid).baseName() );
+					newItem->setText( theFile->fileInfo(newItem->m_uuid).baseName() );
 				}
 				break; }
 			default:

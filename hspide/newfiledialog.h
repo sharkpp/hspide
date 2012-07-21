@@ -18,7 +18,7 @@ class CNewFileDialog
 {
 	Q_OBJECT
 
-	Ui::NewFileDialog ui;
+	Ui::NewFileDialog* ui;
 
 	QString m_filePath;
 	QString m_templateFilePath;
