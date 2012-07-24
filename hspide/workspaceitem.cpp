@@ -364,6 +364,18 @@ void CWorkSpaceItem::setBuildTarget(const QUuid& target)
 	m_buildTarget = target;
 }
 
+const Configuration::BuildConfType& CWorkSpaceItem::currentBuildConf() const
+{
+	static Configuration::BuildConfType tmp;
+	for(int i = 0; i < m_buildConfigurations.size(); i++)
+	{
+		if( m_buildConfigurations[i].uuid == m_buildTarget ) {
+			return m_buildConfigurations[i];
+		}
+	}
+	return m_buildConfigurations.isEmpty() ? tmp : m_buildConfigurations[0];
+}
+
 bool CWorkSpaceItem::load(const QString& fileName)
 {
 	if( m_assignDocument )

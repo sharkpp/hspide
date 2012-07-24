@@ -1841,5 +1841,15 @@ void MainWindow::onShowDock()
 
 void MainWindow::onBuildTargetChanged(int index)
 {
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->currentWidget());
 	QComboBox* combobox = qobject_cast<QComboBox*>(sender());
+
+	if( CWorkSpaceItem* item = document->assignItem() )
+	{
+		if( 0 <= index )
+		{
+			item->setBuildTarget( QUuid(combobox->itemData(index).toString()) );
+		}
+	}
 }

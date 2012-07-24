@@ -95,7 +95,7 @@ bool CCompilerSet::assignBuildItem(CCompiler* compiler)
 	{
 		BuildOptionType& opt = m_buildItems.front();
 		m_buildingItems.push_back(opt);
-		if( !(result = compiler->compile(opt.item, opt.debugMode)) ) {
+		if( !(result = compiler->compile(opt.item)) ) {
 			m_buildingItems.pop_back();
 		} else {
 			m_buildingItems.back().objTemp
@@ -238,12 +238,20 @@ bool CCompilerSet::execBuildDeliverables()
 		QString program;
 		QStringList arguments;
 
+		Configuration::BuildConfType
+				buildConf = opt.item->currentBuildConf();
+
+		if( buildConf.noExecute )
+		{
+			continue;
+		}
+
 		opt.process = new QProcess(this);
 
 		// 親を置き換えてプロセスが動作しているときのみ存在するようにする
 		opt.objTemp->setParent(opt.process);
 
-		if( opt.debugMode )
+		if( buildConf.debug )
 		{
 			// デバッガとの通信用の識別子を登録
 			QProcessEnvironment env
@@ -320,7 +328,6 @@ void CCompilerSet::compileSuccessful()
 			{
 				ExecOptionType optExec = {
 						opt->item,
-						opt->debugMode,
 						QUuid::createUuid(),
 						opt->runtime,
 						opt->objName,

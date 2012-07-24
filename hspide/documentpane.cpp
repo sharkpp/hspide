@@ -173,7 +173,7 @@ bool CDocumentPane::load(const QString& filepath, const QString& tmplFilePath)
 }
 
 // ƒtƒ@ƒCƒ‹‚É•Û‘¶
-bool CDocumentPane::save(const QString& filePath, bool saveAs)
+bool CDocumentPane::save(const QString& filePath, bool saveAs, bool temporary)
 {
 	QString fileName = filePath;
 	QString lastFilePath = theFile->path(m_uuid);
@@ -234,9 +234,11 @@ bool CDocumentPane::save(const QString& filePath, bool saveAs)
 	QTextStream out(&file);
 	out << m_editorWidget->toPlainText();
 
-	m_editorWidget->document()->setModified(false);
-
-	theFile->rename(m_uuid, fileName);
+	if( !temporary )
+	{
+		m_editorWidget->document()->setModified(false);
+		theFile->rename(m_uuid, fileName);
+	}
 
 	return true;
 }

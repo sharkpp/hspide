@@ -128,12 +128,15 @@ CWorkSpaceItem* CCompiler::compileItem()
 }
 
 // コンパイラ呼び出し
-bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
+bool CCompiler::compile(CWorkSpaceItem* targetItem)
 {
 	QString workDir = QDir::currentPath(); // いらないかも
 
 	QString filename = targetItem->path();
 	QUuid   uuid     = targetItem->uuid();
+
+	Configuration::BuildConfType
+			buildConf = targetItem->currentBuildConf();
 
 	m_targetItem = targetItem;
 	m_objTemp = NULL;
@@ -178,7 +181,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 			return false;
 		}
 		filename = tempFile->fileName();
-		document->save(filename);
+		document->save(filename, false, true);
 	}
 
 	QString program = QDir::toNativeSeparators(QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe"));
@@ -186,12 +189,15 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 	arguments << "-C" << m_hspCommonPath
 	          << "-H" << m_hspPath
 			  ;
-	if( debugMode ) { // デバッグモード
+	if( buildConf.debug ) { // デバッグモード
 		arguments << "-d"
 			      << "--hspide-fix" // HSPIDE用補正
 				  ;
-	} else {
+	} else if( buildConf.make ) {
 		arguments << "-m";
+	}
+	if( buildConf.preprocessOnly ) { // デバッグモード
+		arguments << "-P";
 	}
 	if( tempSave ) { // 一時的なファイルに保存
 		QString baseName = QDir::toNativeSeparators(QDir(workDir).absoluteFilePath("obj"));
@@ -204,7 +210,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem, bool debugMode)
 		arguments << "-r" << QString("?%1").arg(targetItem->uuid().toString());
 	}
 	arguments << filename;
-	if( !debugMode ) { 
+	if( !buildConf.debug ) { 
 		arguments << "start.ax";
 	}
 

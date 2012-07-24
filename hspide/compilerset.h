@@ -36,7 +36,6 @@ class CCompilerSet
 
 	typedef struct {
 		CWorkSpaceItem*	item;
-		bool			debugMode;
 		QUuid			uuid;
 		QString			runtime;
 		QString			objName;

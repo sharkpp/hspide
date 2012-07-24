@@ -114,9 +114,10 @@ public:
 	void setUuid(const QUuid& uuid);
 
 	const Configuration::BuildConfList& buildConf() const;
-	void setBuildConf(const Configuration::BuildConfList& conf);
+	void  setBuildConf(const Configuration::BuildConfList& conf);
 	const QUuid& buildTarget() const;
-	void setBuildTarget(const QUuid& target);
+	void  setBuildTarget(const QUuid& target);
+	const Configuration::BuildConfType& currentBuildConf() const;
 
 	// アイテムと関連付け
 	bool setAssignDocument(CDocumentPane* item);

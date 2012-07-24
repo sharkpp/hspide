@@ -60,7 +60,7 @@ public:
 
 
 	// コンパイル
-	bool compile(CWorkSpaceItem* targetItem, bool debugMode);
+	bool compile(CWorkSpaceItem* targetItem);
 
 	// コンパイル
 	bool compileCancel();
