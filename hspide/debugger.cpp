@@ -172,7 +172,7 @@ void CDebugger::updateBreakpoint()
 	QByteArray  data;
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
-	out << theFile_ << theBreakPoint;
-	qDebug() <<__FUNCTION__<< CMD_SET_BREAK_POINT << theFile << theBreakPoint;
+	out << theFile_ << *theBreakPoint;
+	qDebug() <<__FUNCTION__<< CMD_SET_BREAK_POINT << theFile_ << *theBreakPoint;
 	IpcSend(*m_clientConnection, CMD_SET_BREAK_POINT, data);
 }
