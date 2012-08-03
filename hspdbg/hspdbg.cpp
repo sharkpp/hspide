@@ -48,6 +48,10 @@ EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
 	{
 		g_app->putLog(hspctx->stmp, strlen(hspctx->stmp));
 	}
+	else
+	{
+		g_app->updateInfo();
+	}
 
 	return FALSE;
 }

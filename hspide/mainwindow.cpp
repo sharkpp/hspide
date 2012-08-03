@@ -1740,10 +1740,13 @@ void MainWindow::currentTabChanged(int index)
 
 		if( CWorkSpaceItem* item = lastDocument->assignItem() )
 		{
-			int index = m_buildConf->currentIndex();
-			if( 0 <= index )
+			if( m_buildConf )
 			{
-				item->setBuildTarget( QUuid(m_buildConf->itemData(index).toString()) );
+				int index = m_buildConf->currentIndex();
+				if( 0 <= index )
+				{
+					item->setBuildTarget( QUuid(m_buildConf->itemData(index).toString()) );
+				}
 			}
 		}
 	}
@@ -1787,8 +1790,6 @@ void MainWindow::currentTabChanged(int index)
 			}
 			m_buildConf->setCurrentIndex(targetIndex);
 		}
-//		int 
-//		QPair<QString, int> =  document->assignItem()->updateBuildTargets();
 	}
 
 	saveDocumentAct->   setEnabled( document ? document->isModified() : false );

@@ -237,7 +237,7 @@ OutputDebugStringA("CDbgMain::destroy #1\n");
 	g_app->disconnectFromDebugger();
 OutputDebugStringA("CDbgMain::destroy #2\n");
 	// 終了待機
-	DWORD dwResult = ::WaitForSingleObject(m_waitThread, 10000);
+	DWORD dwResult = ::WaitForSingleObject(m_waitThread, 1000);
 OutputDebugStringA("CDbgMain::destroy #3\n");
 	// リソース解放
 	::CloseHandle(m_waitDisconnect);

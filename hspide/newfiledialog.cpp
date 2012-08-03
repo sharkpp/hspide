@@ -34,13 +34,17 @@ CNewFileDialog::CNewFileDialog(QWidget *parent)
 
 void CNewFileDialog::setupTemplateList()
 {
-	QString path = qApp->applicationDirPath() + "/templates";
-	QFileSystemModel* model = new CNameOnlyFileSystemModel(this);
-	QModelIndex parentIndex = model->setRootPath(path);
+	QDir dir(qApp->applicationDirPath() + "/templates");
 
-	ui->templateList->setMovement(QListView::Static);
-	ui->templateList->setModel(model);
-	ui->templateList->setRootIndex(parentIndex);
+	if( dir.exists() )
+	{
+		QFileSystemModel* model = new CNameOnlyFileSystemModel(this);
+		QModelIndex parentIndex = model->setRootPath(dir.path());
+
+		ui->templateList->setMovement(QListView::Static);
+		ui->templateList->setModel(model);
+		ui->templateList->setRootIndex(parentIndex);
+	}
 }
 
 void CNewFileDialog::onSelectFileName()
