@@ -23,7 +23,7 @@ class CSystemInfoDock
 		QString typeName;
 	};
 
-	QTreeView* listWidget;
+	QTreeView* m_listWidget;
 
 	QMap<QVector<QString>, INFO_TYPE> m_varInfo;
 

@@ -29,9 +29,9 @@ EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
 
 	g_app->initialize(p1);
 
-	g_app->updateInfo();
-
 	g_hsp3dbg = p1;
+
+	g_app->updateInfo();
 
 	return FALSE;
 }

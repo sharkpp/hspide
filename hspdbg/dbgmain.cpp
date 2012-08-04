@@ -3,9 +3,20 @@
 #include <process.h>
 #include "dbgmain.h"
 #include <spplib/apihook.h>
+
+#if defined(_UNICODE) || defined(UNICODE)
+#undef LOGFONT
+#define LOGFONT LOGFONTA
+#endif
+
 #include "hspsdk/hsp3debug.h"
 #include "hspsdk/hsp3struct.h"
 #include "hspsdk/hspwnd.h"
+
+#if defined(_UNICODE) || defined(UNICODE)
+#undef LOGFONT
+#define LOGFONT LOGFONTW
+#endif
 
 extern CDbgMain* g_app;
 
@@ -325,6 +336,7 @@ int CDbgMain::MessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType
 	}
 	if( !uuid.isNull() )
 	{
+		updateInfo();
 		breakRunning(uuid, dbg->line);
 	}
 
@@ -425,6 +437,7 @@ bool CDbgMain::isDebugging()
 			if( !uuid.isNull() )
 			{
 				lck.unlock(); // デッドロックするのでここでロックを解除
+				updateInfo();
 				breakRunning(uuid, dbg->line);
 				return true;
 			}
@@ -639,9 +652,11 @@ void CDbgMain::updateDebugInfo()
 		return;
 	}
 
-	char* ptr = m_dbg->get_value(DEBUGINFO_GENERAL);
-
 	QVector<QPair<QString,QString> > debugInfo;
+
+	int bmscr_max = -1; // ウインドウIdの最大個数
+
+	char* ptr = m_dbg->get_value(DEBUGINFO_GENERAL);
 
 	for(const char* p = ptr; *p;)
 	{
@@ -658,16 +673,183 @@ void CDbgMain::updateDebugInfo()
 		QString key_str   = codec->toUnicode(key,   int(value - 2 - key));
 		QString value_str = codec->toUnicode(value, int(p - 2 - value));
 
-		debugInfo.append(qMakePair(key_str, value_str));
+		// ウインドウIdの最大個数を取得
+		if( !key_str.compare(codec->toUnicode("ウインドゥ最大")) ) {
+			bmscr_max = value_str.toInt();
+		}
+	//	debugInfo.append(qMakePair(key_str, value_str));
 	}
 
+	m_dbg->dbg_close(ptr);
+
+	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
+
+	// 現在のウインドウIdを取得
+	int actscr = hspctx->exinfo.actscr
+					? *hspctx->exinfo.actscr
+					: hspctx->exinfo2 && hspctx->exinfo2->actscr
+						? *hspctx->exinfo2->actscr
+						: -1;
+
+	// バージョン番号
+	int hspver = hspctx->exinfo.ver | hspctx->exinfo.min;
+
+	// 現在のウインドウIdを取得
+	actscr = hspctx->exinfo.actscr
+				? *hspctx->exinfo.actscr
+				: hspctx->exinfo2 && hspctx->exinfo2->actscr
+					? *hspctx->exinfo2->actscr
+					: -1;
+
+	// 現在のディレクトリを取得
+	char currentPath[MAX_PATH*2+1];
+	::GetCurrentDirectoryA(MAX_PATH*2, currentPath);
+
+	// 実行状態
+	static const char* RUNMODE[] = {
+		"0:RUN",	"1:WAIT",	"2:AWAIT",	"3:STOP",
+		"4:END",	"5:ERROR",	"6:RETURN",	"7:INTJUMP",
+		"8:ASSERT",	"9:LOGMES",	"10:EXITRUN",
+	};
+
+	BMSCR*  bmscr  = (BMSCR*)(*hspctx->exinfo2->HspFunc_getbmscr)(0);
+
+	// デバッグ情報を取得
+
+	debugInfo
+		<< qMakePair(codec->toUnicode("システム情報/ディレクトリ"),   QString("\"%1\"").arg(codec->toUnicode(currentPath)))
+		<< qMakePair(codec->toUnicode("システム情報/コマンドライン"), hspctx->cmdline ? QString("\"%1\"").arg(codec->toUnicode(hspctx->cmdline)) : QString(""))
+		;
+
+	if( bmscr )
+	{
+		debugInfo
+			<< qMakePair(codec->toUnicode("システム情報/ウィンドウ最大"),     QString("%1").arg(bmscr_max))
+			<< qMakePair(codec->toUnicode("システム情報/カレントウィンドウ"), QString("%1").arg(actscr))
+			;
+	}
+
+	debugInfo
+		<< qMakePair(codec->toUnicode("システム情報/axサイズ"),     QString("%1").arg(hspctx->hsphed->allsize))
+		<< qMakePair(codec->toUnicode("システム情報/コードサイズ"), QString("%1").arg(hspctx->hsphed->max_cs))
+		<< qMakePair(codec->toUnicode("システム情報/データサイズ"), QString("%1").arg(hspctx->hsphed->max_ds))
+		<< qMakePair(codec->toUnicode("システム情報/変数予約"),     QString("%1").arg(hspctx->hsphed->max_val))
+		<< qMakePair(codec->toUnicode("システム情報/実行モード"),   hspctx->runmode < 0 || RUNMODE_MAX <= hspctx->runmode ? QString("%1:不明").arg(hspctx->runmode) : QString(RUNMODE[hspctx->runmode]))
+		;
+
+	if( bmscr )
+	{
+		debugInfo
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/flag"),               QString("%1").arg(bmscr->flag))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/sx"),                 QString("%1").arg(bmscr->sx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/sy"),                 QString("%1").arg(bmscr->sy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/palmode"),            QString("%1").arg(bmscr->palmode))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hdc"),                QString("0x%1").arg((uint)bmscr->hdc,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/pBit"),               QString("0x%1").arg((uint)bmscr->pBit,    8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/pbi"),                QString("0x%1").arg((uint)bmscr->pbi,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/dib"),                QString("0x%1").arg((uint)bmscr->dib,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/old"),                QString("0x%1").arg((uint)bmscr->old,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/pal"),                QString("0x%1").arg((uint)bmscr->pal,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hpal"),               QString("0x%1").arg((uint)bmscr->hpal,    8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/holdpal"),            QString("0x%1").arg((uint)bmscr->holdpal, 8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/pals"),               QString("%1").arg(bmscr->pals))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hwnd"),               QString("0x%1").arg((uint)bmscr->hwnd,    8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hInst"),              QString("0x%1").arg((uint)bmscr->hInst,   8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/infsize"),            QString("%1").arg(bmscr->infsize))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/bmpsize"),            QString("%1").arg(bmscr->bmpsize))
+		// Window object setting
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/type"),               QString("%1").arg(bmscr->type))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/wid"),                QString("%1").arg(bmscr->wid))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/fl_dispw"),           QString("%1").arg(bmscr->fl_dispw))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/fl_udraw"),           QString("%1").arg(bmscr->fl_udraw))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/wx"),                 QString("%1").arg(bmscr->wx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/wy"),                 QString("%1").arg(bmscr->wy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/wchg"),               QString("%1").arg(bmscr->wchg))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/viewx"),              QString("%1").arg(bmscr->viewx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/viewy"),              QString("%1").arg(bmscr->viewy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/lx"),                 QString("%1").arg(bmscr->lx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/ly"),                 QString("%1").arg(bmscr->ly))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/cx"),                 QString("%1").arg(bmscr->cx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/cy"),                 QString("%1").arg(bmscr->cy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/ox"),                 QString("%1").arg(bmscr->ox))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/oy"),                 QString("%1").arg(bmscr->oy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/py"),                 QString("%1").arg(bmscr->py))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/texty"),              QString("%1").arg(bmscr->texty))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/gx"),                 QString("%1").arg(bmscr->gx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/gy"),                 QString("%1").arg(bmscr->gy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/gmode"),              QString("%1").arg(bmscr->gmode))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hbr"),                QString("0x%1").arg((uint)bmscr->hbr,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hpn"),                QString("0x%1").arg((uint)bmscr->hpn,     8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/hfont"),              QString("0x%1").arg((uint)bmscr->hfont,   8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/holdfon"),            QString("0x%1").arg((uint)bmscr->holdfon, 8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/color"),              QString("(%1,%2,%3)").arg(GetRValue(bmscr->color)).arg(GetGValue(bmscr->color)).arg(GetBValue(bmscr->color)))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/textspeed"),          QString("%1").arg(bmscr->textspeed))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/cx2"),                QString("%1").arg(bmscr->cx2))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/cy2"),                QString("%1").arg(bmscr->cy2))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/tex"),                QString("%1").arg(bmscr->tex))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/tey"),                QString("%1").arg(bmscr->tey))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/prtmes"),             QString("0x%1").arg((uint)bmscr->prtmes, 8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/focflg"),             QString("%1").arg(bmscr->focflg))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/objmode"),            QString("%1").arg(bmscr->objmode))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/logfont"),            QString("{ .lfHeight=%1, .lfFaceName=\"%2\" }").arg(bmscr->logfont.lfHeight).arg(codec->toUnicode(bmscr->logfont.lfFaceName)))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/logfont/lfHeight"),   QString("%1").arg(bmscr->logfont.lfHeight))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/logfont/lfFaceName"), QString("\"%1\"").arg(codec->toUnicode(bmscr->logfont.lfFaceName)))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/style"),              QString("%1").arg(bmscr->style))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/gfrate"),             QString("%1").arg(bmscr->gfrate))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/tabmove"),            QString("%1").arg(bmscr->tabmove))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/sx2"),                QString("%1").arg(bmscr->sx2))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/printsize"),          QString("{ .cx=%1, .cy=%2 }").arg(bmscr->printsize.cx).arg(bmscr->printsize.cy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/printsize/cx"),       QString("%1").arg(bmscr->printsize.cx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/printsize/cy"),       QString("%1").arg(bmscr->printsize.cy))
+			// Class depend data
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/objstyle"),           QString("%1").arg(bmscr->objstyle))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/mem_obj"),            QString("0x%1").arg((uint)bmscr->mem_obj, 8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/objmax"),             QString("%1").arg(bmscr->objmax))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/objlimit"),           QString("%1").arg(bmscr->objlimit))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/savepos"),            QString(""))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/master_hspwnd"),      QString("0x%1").arg((uint)bmscr->master_hspwnd, 8, 16, QLatin1Char('0')))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/palcolor"),           QString("%1").arg(bmscr->palcolor))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/textstyle"),          QString("%1").arg(bmscr->textstyle))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/framesx"),            QString("%1").arg(bmscr->framesx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/framesy"),            QString("%1").arg(bmscr->framesy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/imgbtn"),             QString("%1").arg(bmscr->imgbtn))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_x1"),             QString("%1").arg(bmscr->btn_x1))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_y1"),             QString("%1").arg(bmscr->btn_y1))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_x2"),             QString("%1").arg(bmscr->btn_x2))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_y2"),             QString("%1").arg(bmscr->btn_y2))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_x3"),             QString("%1").arg(bmscr->btn_x3))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/btn_y3"),             QString("%1").arg(bmscr->btn_y3))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/divx"),               QString("%1").arg(bmscr->divx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/divy"),               QString("%1").arg(bmscr->divy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/divsx"),              QString("%1").arg(bmscr->divsx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/divsy"),              QString("%1").arg(bmscr->divsy))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/celofsx"),            QString("%1").arg(bmscr->celofsx))
+			<< qMakePair(codec->toUnicode("システム情報/bmscr/celofsy"),            QString("%1").arg(bmscr->celofsy))
+			;
+	}
+
+	debugInfo
+		<< qMakePair(codec->toUnicode("システム変数/hspstat"), QString("%1").arg(hspctx->hspstat))
+		<< qMakePair(codec->toUnicode("システム変数/hspver"),  QString("%1").arg(hspver))
+		<< qMakePair(codec->toUnicode("システム変数/stat"),    QString("%1").arg(hspctx->stat))
+		<< qMakePair(codec->toUnicode("システム変数/cnt"),     QString("%1").arg(hspctx->mem_loop[hspctx->looplev].cnt))
+		<< qMakePair(codec->toUnicode("システム変数/err"),     QString("%1").arg(hspctx->err))
+		<< qMakePair(codec->toUnicode("システム変数/strsize"), QString("%1").arg(hspctx->strsize))
+		<< qMakePair(codec->toUnicode("システム変数/looplev"), QString("%1").arg(hspctx->looplev))
+		<< qMakePair(codec->toUnicode("システム変数/sublev"),  QString("%1").arg(hspctx->sublev))
+		<< qMakePair(codec->toUnicode("システム変数/iparam"),  QString("%1").arg(hspctx->iparam))
+		<< qMakePair(codec->toUnicode("システム変数/wparam"),  QString("%1").arg(hspctx->wparam))
+		<< qMakePair(codec->toUnicode("システム変数/lparam"),  QString("%1").arg(hspctx->lparam))
+		<< qMakePair(codec->toUnicode("システム変数/refstr"),  hspctx->refstr ? QString("\"%1\"").arg(codec->toUnicode(hspctx->refstr)) : QString(""))
+		<< qMakePair(codec->toUnicode("システム変数/refdval"), QString("%1").arg(hspctx->refdval, 0, 'g'))
+		;
+	
+	// IDE側に転送
 	QByteArray  data;
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << debugInfo;
 	IpcSend(*m_socket, CMD_UPDATE_DEBUG_INFO, data);
-
-	m_dbg->dbg_close(ptr);
 }
 
 void CDbgMain::updateVarInfo()
