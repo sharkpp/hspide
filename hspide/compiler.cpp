@@ -84,7 +84,7 @@ QTemporaryFile*	CCompiler::objTemp()
 // ƒVƒ“ƒ{ƒ‹ˆê——‚ÌŽæ“¾
 bool CCompiler::collectSymbols()
 {
-	QString program = m_hspCompPath + "hspcmp.exe";
+	QString program = QDir(m_hspCompPath).absoluteFilePath("hspcmp.exe");
 
 	if( !QFileInfo(program).exists() )
 	{
