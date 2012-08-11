@@ -105,6 +105,10 @@ CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 
 	projectItem->setUuid(theFile->assign(fileName));
 
+	if( !fileName.isEmpty() ) {
+		projectItem->setText(theFile->fileInfo(projectItem->uuid()).baseName());
+	}
+
 	return projectItem;
 }
 

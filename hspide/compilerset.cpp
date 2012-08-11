@@ -249,7 +249,10 @@ bool CCompilerSet::execBuildDeliverables()
 		opt.process = new QProcess(this);
 
 		// 親を置き換えてプロセスが動作しているときのみ存在するようにする
-		opt.objTemp->setParent(opt.process);
+		if( opt.objTemp )
+		{
+			opt.objTemp->setParent(opt.process);
+		}
 
 		if( buildConf.debug )
 		{

@@ -58,7 +58,7 @@ void CProjectDock::selectItem(CWorkSpaceItem* item)
 	treeWidget->selectionModel()->clear();
 	treeWidget->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
 	// 選択したアイテムを見えるようにする
-//	treeWidget->scrollTo(item->index());
+	treeWidget->scrollTo(item->index());
 }
 
 // 現在のアイテムを取得

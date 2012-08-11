@@ -802,8 +802,11 @@ void MainWindow::onOpenFile(const QString& filePath)
 				}
 			}
 		} else {
-			CWorkSpaceItem* parentItem = projectDock->currentProject();
-			CWorkSpaceItem* fileItem   = m_workSpace->appendFile(fileName, parentItem);
+		//	projectDock->parentWidget()->isVisibl();
+			CWorkSpaceItem* parentItem = projectDock->currentSolution();
+			CWorkSpaceItem* fileItem   = m_workSpace->appendProject(fileName);
+		//	CWorkSpaceItem* parentItem = projectDock->currentProject();
+		//	CWorkSpaceItem* fileItem   = m_workSpace->appendFile(fileName, parentItem);
 			onOpenFile(fileItem);
 		}
 	}
