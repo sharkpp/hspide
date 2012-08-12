@@ -199,7 +199,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem)
 	if( buildConf.preprocessOnly ) { // デバッグモード
 		arguments << "-P";
 	}
-	if( tempSave ) { // 一時的なファイルに保存
+	if( /*tempSave*/buildConf.debug ) { // 一時的なファイルに保存
 		QString baseName = QDir::toNativeSeparators(QDir(workDir).absoluteFilePath("obj"));
 		m_objTemp = new QTemporaryFile(baseName, parent());
 		m_objTemp->setAutoRemove(true);

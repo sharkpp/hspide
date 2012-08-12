@@ -1251,7 +1251,34 @@ void MainWindow::onTabList()
 void MainWindow::onTabClose()
 {
 	// 何はともあれ保存
-	onSaveFile();
+	CWorkSpaceItem* item = projectDock->currentItem();
+	if( item->isUntitled() )
+	{
+		// ファイルを保存
+		onSaveFile();
+	}
+	else
+	{
+		// 名前が付いている場合は処理を問い合わせる
+		QMessageBox dlg(this);
+		dlg.setText(tr("The document has been modified."));
+		dlg.setInformativeText(tr("Do you want to save your changes?"));
+		dlg.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+		dlg.setDefaultButton(QMessageBox::Save);
+		switch( dlg.exec() )
+		{
+		case QMessageBox::Save:
+			// ファイルを保存
+			onSaveFile();
+			break;
+		case QMessageBox::Discard:
+			// 保存しない
+			break;
+		case QMessageBox::Cancel:
+			// タブを閉じない
+			return;
+		}
+	}
 
 	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
 

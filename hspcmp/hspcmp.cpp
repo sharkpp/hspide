@@ -267,7 +267,7 @@ void basename(const char * path, std::string & filename, bool with_extension)
 {
 	const char * filename_pos = path;
 	for(; *path; path = (const char*)CharNext(path)) {
-		if( '\\' == *path ) {
+		if( '\\' == *path || '/' == *path ) {
 			filename_pos = (const char*)CharNext(path);
 		}
 	}
@@ -294,7 +294,7 @@ void dirname(const char * path, std::string & filename)
 {
 	const char * last_sep = path;
 	for(const char * p = path; *p; p = (const char*)CharNext(p)) {
-		if( '\\' == *p ) {
+		if( '\\' == *p || '/' == *p ) {
 			last_sep = p;
 		}
 	}
@@ -311,7 +311,7 @@ void normalize_directory(std::string & path)
 	for(const char * p = path.c_str();
 		*p; p = (const char*)CharNext(p))
 	{
-		separator = '\\' == *p;
+		separator = '\\' == *p || '/' == *p;
 	}
 	if( !separator ) {
 		path += "\\";
