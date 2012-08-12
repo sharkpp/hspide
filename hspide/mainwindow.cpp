@@ -1250,14 +1250,18 @@ void MainWindow::onTabList()
 // タブを閉じる
 void MainWindow::onTabClose()
 {
+	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+
+	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* currentItem  = document->assignItem();
+
 	// 何はともあれ保存
-	CWorkSpaceItem* item = projectDock->currentItem();
-	if( item->isUntitled() )
+	if( currentItem->isUntitled() )
 	{
 		// ファイルを保存
 		onSaveFile();
 	}
-	else
+	else if( document->isModified() )
 	{
 		// 名前が付いている場合は処理を問い合わせる
 		QMessageBox dlg(this);
@@ -1279,11 +1283,6 @@ void MainWindow::onTabClose()
 			return;
 		}
 	}
-
-	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
-
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
-	CWorkSpaceItem* currentItem  = document->assignItem();
 
 	// タブを閉じる
 	closeTab(currentItem);

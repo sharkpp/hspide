@@ -130,8 +130,6 @@ CWorkSpaceItem* CCompiler::compileItem()
 // コンパイラ呼び出し
 bool CCompiler::compile(CWorkSpaceItem* targetItem)
 {
-	QString workDir = QDir::currentPath(); // いらないかも
-
 	QString filename = targetItem->path();
 	QUuid   uuid     = targetItem->uuid();
 
@@ -156,6 +154,13 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem)
 	bool tempSave = false;
 
 	QProcess* hspcmp = new QProcess(this);
+
+	// 作業ディレクトリを指定
+	QString workDir = QDir::currentPath(); // いらないかも
+	if( !targetItem->isUntitled() )
+	{
+		workDir = QFileInfo(filename).dir().path();
+	}
 
 	// 無題の場合は一時的なファイルに保存
 	if( targetItem->isUntitled() )
