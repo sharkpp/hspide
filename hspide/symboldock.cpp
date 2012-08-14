@@ -53,7 +53,7 @@ void CSymbolDock::setAssignDocument(CDocumentPane* document)
 	// 以前のドキュメントの内容変更通知を解除
 	if( m_document )
 	{
-		disconnect(m_document->editor()->document(), SIGNAL(contentsChanged()));
+		disconnect(m_document->editor()->document(), SIGNAL(contentsChanged()), m_lazyUpdateTimer, SLOT(start()));
 		// 念のため
 		m_lazyUpdateTimer->stop();
 	}

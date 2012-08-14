@@ -1743,27 +1743,27 @@ void MainWindow::onUpdateBreakpoint()
 // タブが変更された
 void MainWindow::currentTabChanged(int index)
 {
-	CDocumentPane* document
-		= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
-
 	if( m_lastActivatedDocument )
 	{
 		CDocumentPane* lastDocument
 			= dynamic_cast<CDocumentPane*>(m_lastActivatedDocument);
 
 		// シグナルとの関連付けを切断
-		disconnect(lastDocument,                       SIGNAL(modificationChanged(bool)));
-		disconnect(lastDocument,                       SIGNAL(updateBreakpoint()));
-		disconnect(lastDocument->editor()->document(), SIGNAL(undoAvailable(bool)));
-		disconnect(lastDocument->editor()->document(), SIGNAL(redoAvailable(bool)));
-		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)));
-		disconnect(editUndoAct,                        SIGNAL(triggered()));
-		disconnect(editRedoAct,                        SIGNAL(triggered()));
-		disconnect(editCopyAct,                        SIGNAL(triggered()));
-		disconnect(editPasteAct,                       SIGNAL(triggered()));
-		disconnect(editCutAct,                         SIGNAL(triggered()));
-		disconnect(editClearAct,                       SIGNAL(triggered()));
-		disconnect(selectAllAct,                       SIGNAL(triggered()));
+		disconnect(lastDocument,                       SIGNAL(modificationChanged(bool)), this,                   SLOT(onDocumentChanged(bool)));
+		disconnect(lastDocument,                       SIGNAL(modificationChanged(bool)), saveDocumentAct,        SLOT(setEnabled(bool)));
+		disconnect(lastDocument,                       SIGNAL(updateBreakpoint()),        this,                   SLOT(onUpdateBreakpoint()));
+		disconnect(lastDocument->editor()->document(), SIGNAL(undoAvailable(bool)),       editUndoAct,            SLOT(setEnabled(bool)));
+		disconnect(lastDocument->editor()->document(), SIGNAL(redoAvailable(bool)),       editRedoAct,            SLOT(setEnabled(bool)));
+		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)),       editCutAct,             SLOT(setEnabled(bool)));
+		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)),       editCopyAct,            SLOT(setEnabled(bool)));
+		disconnect(lastDocument->editor(),             SIGNAL(copyAvailable(bool)),       editClearAct,           SLOT(setEnabled(bool)));
+		disconnect(editUndoAct,                        SIGNAL(triggered()),               lastDocument->editor(), SLOT(undo()));
+		disconnect(editRedoAct,                        SIGNAL(triggered()),               lastDocument->editor(), SLOT(redo()));
+		disconnect(editCopyAct,                        SIGNAL(triggered()),               lastDocument->editor(), SLOT(copy()));
+		disconnect(editPasteAct,                       SIGNAL(triggered()),               lastDocument->editor(), SLOT(paste()));
+		disconnect(editCutAct,                         SIGNAL(triggered()),               lastDocument->editor(), SLOT(cut()));
+		disconnect(editClearAct,                       SIGNAL(triggered()),               lastDocument->editor(), SLOT(del()));
+		disconnect(selectAllAct,                       SIGNAL(triggered()),               lastDocument->editor(), SLOT(selectAll()));
 
 		symbolDock->setAssignDocument(NULL);
 
@@ -1779,6 +1779,9 @@ void MainWindow::currentTabChanged(int index)
 			}
 		}
 	}
+
+	CDocumentPane* document
+		= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 
 	if( document )
 	{
