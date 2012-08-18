@@ -342,6 +342,8 @@ const QUuid& CWorkSpaceItem::uuid() const
 void CWorkSpaceItem::setUuid(const QUuid& uuid)
 {
 	m_uuid = uuid;
+
+	updatePath();
 }
 
 const Configuration::BuildConfList& CWorkSpaceItem::buildConf() const
@@ -402,6 +404,27 @@ bool CWorkSpaceItem::load(const QString& fileName)
 	}
 
 	return true;
+}
+
+void CWorkSpaceItem::updatePath()
+{
+	switch( m_type )
+	{
+	case File:
+	case Folder:
+		setText( theFile->fileName(m_uuid) );
+		break;
+	case Project:
+	case Solution: {
+		if( theFile->isUntitled(m_uuid) ) {
+			setText( theFile->fileName(m_uuid) );
+		} else {
+			setText( theFile->fileInfo(m_uuid).baseName() );
+		}
+		break; }
+	default:
+		;
+	}
 }
 
 bool CWorkSpaceItem::save(SaveType saveType, bool noReclusive)
@@ -593,6 +616,7 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 					uuid = theFile->assign(path);
 				}
 				newItem->m_uuid = uuid;
+				newItem->updatePath();
 			}
 			// テキストを指定
 			switch( newItem->m_type )
@@ -600,16 +624,16 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			case File:
 			case Folder:
 			case Project:
-				newItem->setText(theFile->fileName(newItem->m_uuid));
+			//	newItem->setText(theFile->fileName(newItem->m_uuid));
 				break;
 			case Solution: {
 				QString name = xml.attributes().value("name").toString();
 				if( !name.isEmpty() ) {
 					newItem->setText(name);
-				} else if( theFile->isUntitled(newItem->m_uuid) ) {
-					newItem->setText( theFile->fileName(newItem->m_uuid) );
-				} else {
-					newItem->setText( theFile->fileInfo(newItem->m_uuid).baseName() );
+			//	} else if( theFile->isUntitled(newItem->m_uuid) ) {
+			//		newItem->setText( theFile->fileName(newItem->m_uuid) );
+			//	} else {
+			//		newItem->setText( theFile->fileInfo(newItem->m_uuid).baseName() );
 				}
 				break; }
 			default:
@@ -765,6 +789,7 @@ void CWorkSpaceItem::onFileChanged(const QUuid& uuid)
 	if( uuid == m_uuid &&
 		m_model )
 	{
+		updatePath();
 		m_model->dataChanged(index(), index());
 	}
 }

@@ -86,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	connect(qobject_cast<QDockWidget*>(symbolDock->parentWidget()),
 	                       SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
 	connect(theConf,       SIGNAL(updateConfiguration(const Configuration*)),  this, SLOT(updateConfiguration(const Configuration*)));
+	connect(theFile,       SIGNAL(filePathChanged(QUuid)),                     this, SLOT(onFileChanged(QUuid)));
 
 	loadSettings();
 
@@ -868,14 +869,74 @@ void MainWindow::onSaveFile()
 
 void MainWindow::onSaveAsFile()
 {
-	QString fileName
-		= QFileDialog::getSaveFileName(this,
-			tr("Save File"), "", tr("Hot Soup Processor Files (*.hsp *.as)"));
+	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
+
+	document->save(QString(), true);
 }
 
 void MainWindow::onSaveAllFile()
 {
-//	m_workSpace->save();
+	bool untitledAndModifyed = false;
+
+	// 上書き保存だけですむか調べる？
+	for(int index = 0, num = tabWidget->count() && !untitledAndModifyed;
+		index < num; index++)
+	{
+		CDocumentPane*  document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+
+		untitledAndModifyed
+			|= document->isUntitled() &&
+			   document->isModified() ;
+	}
+
+	if( !untitledAndModifyed )
+	{
+		// ファイルを上書き保存
+		for(int index = 0, num = tabWidget->count(); index < num; index++)
+		{
+			CDocumentPane*  document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+
+			if( document->isModified() )
+			{
+				document->save();
+			}
+		}
+	}
+	else
+	{
+		CSaveSolutionDialog dlg(this);
+
+		CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+		
+		if( dlg.setSolution(solutionItem) )
+		{
+			switch( dlg.exec() ) 
+			{
+			default:
+			case QDialogButtonBox::No:
+				// 保存しない
+				break;
+			case QDialogButtonBox::Yes: {
+				QList<CSaveSolutionDialog::SavingItemInfo> list = dlg.list();
+				foreach(CSaveSolutionDialog::SavingItemInfo listItem, list) {
+					if( listItem.first->save(listItem.second) )
+					{
+					}
+				}
+				break; }
+			case QDialogButtonBox::Cancel: 
+				// キャンセル
+				break;
+			}
+		}
+	}
+
+	// 全タブの状態を更新
+	for(int index = 0, num = tabWidget->count(); index < num; index++)
+	{
+		CDocumentPane*  document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		tabWidget->setTabText(index, document->title());
+	}
 }
 
 void MainWindow::onQuit()
@@ -1883,6 +1944,20 @@ void MainWindow::onBuildTargetChanged(int index)
 		if( 0 <= index )
 		{
 			item->setBuildTarget( QUuid(combobox->itemData(index).toString()) );
+		}
+	}
+}
+
+void MainWindow::onFileChanged(const QUuid& uuid)
+{
+	for(int index = 0; index < tabWidget->count(); index++)
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
+		if( document &&
+			uuid == document->uuid() )
+		{
+			tabWidget->setTabText(index, document->title());
 		}
 	}
 }

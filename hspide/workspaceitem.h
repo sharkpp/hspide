@@ -142,6 +142,8 @@ private:
 	bool serialize(QXmlStreamWriter* xml);
 	bool deserialize(QXmlStreamReader* xml);
 
+	void updatePath();
+
 public slots:
 
 	void onFileChanged(const QUuid& uuid);

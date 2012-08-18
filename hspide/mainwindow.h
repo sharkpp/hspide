@@ -167,6 +167,7 @@ public slots:
 	void onSymbolDockVisibilityChanged(bool visible);
 	void onShowDock();
 	void onBuildTargetChanged(int index);
+	void onFileChanged(const QUuid& uuid);
 
 private:
 

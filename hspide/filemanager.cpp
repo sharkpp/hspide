@@ -117,6 +117,9 @@ bool FileManager::rename(const QUuid& uuid, const QString& fileName)
 		QMultiMap<QString, QUuid>::iterator
 			ite2 = m_infoLookup.find(ite.value());
 		if( m_infoLookup.end() != ite2 ) {
+#if defined(_DEBUG)
+			qDebug() << __FUNCTION__ << uuid << ite.value() << "->" << fileName;
+#endif
 			m_infoLookup.erase(ite2);
 			m_infoLookup.insert(fileName, uuid);
 			ite.value() = fileName;
