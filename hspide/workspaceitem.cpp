@@ -13,7 +13,6 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	: QObject(parent)
 	, m_model(model)
 	, m_parent(NULL)
-	, m_parentPos(0)
 	, m_type(UnkownType)
 	, m_nodeType(UnkownNodeType)
 	, m_assignDocument(NULL)
@@ -61,7 +60,6 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, Type type, CWorkSpaceModel* mode
 	: QObject(parent)
 	, m_model(NULL)
 	, m_parent(NULL)
-	, m_parentPos(0)
 	, m_type(type)
 	, m_assignDocument(NULL)
 	, m_buildConfigurations(theConf->buildConf())
@@ -291,13 +289,16 @@ CWorkSpaceItem* CWorkSpaceItem::search(const QUuid& uuid)
 
 int CWorkSpaceItem::parentPosition() const
 {
-	return m_parentPos;
+    if( m_parent ) {
+        return m_parent->m_children.indexOf(const_cast<CWorkSpaceItem*>(this));
+    }
+	return 0;
 }
 
 QModelIndex CWorkSpaceItem::index() const
 {
 	if( m_model ) {
-		return m_model->createIndex(m_parentPos, 0, (void*)this);
+		return m_model->createIndex(parentPosition(), 0, (void*)this);
 	}
 	return QModelIndex();
 }
@@ -308,7 +309,6 @@ bool CWorkSpaceItem::insert(int position, CWorkSpaceItem* item)
 		return false;
 	}
 
-	item->m_parentPos = position;
 	item->m_parent    = this;
 	item->m_model     = m_model;
 
@@ -624,16 +624,11 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			case File:
 			case Folder:
 			case Project:
-			//	newItem->setText(theFile->fileName(newItem->m_uuid));
 				break;
 			case Solution: {
 				QString name = xml.attributes().value("name").toString();
 				if( !name.isEmpty() ) {
 					newItem->setText(name);
-			//	} else if( theFile->isUntitled(newItem->m_uuid) ) {
-			//		newItem->setText( theFile->fileName(newItem->m_uuid) );
-			//	} else {
-			//		newItem->setText( theFile->fileInfo(newItem->m_uuid).baseName() );
 				}
 				break; }
 			default:

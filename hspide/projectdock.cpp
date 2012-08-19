@@ -24,7 +24,7 @@ CProjectDock::CProjectDock(QWidget *parent)
 {
 	treeWidget = new QTreeView_(this);
 	treeWidget->header()->hide();
-	treeWidget->setRootIsDecorated(false);
+	treeWidget->setRootIsDecorated(true);
 //	treeWidget->setIndentation(12);
 //	treeWidget->setUniformRowHeights(true);
 	treeWidget->setEditTriggers(QTreeView::EditKeyPressed);
@@ -48,7 +48,6 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel* workspace)
 {
 	treeWidget->setModel(workspace);
 	treeWidget->expandAll();
-	workspace->setAssignWidget(treeWidget);
 	return true;
 }
 

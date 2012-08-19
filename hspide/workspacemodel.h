@@ -15,8 +15,6 @@ class CWorkSpaceModel
 
 	Q_OBJECT
 
-	QWidget* m_assignWidget;
-
 	CWorkSpaceItem*	rootItem;
 
 public:
@@ -41,14 +39,8 @@ public:
 	// 削除
 	bool remove(CWorkSpaceItem* item);
 
-	//
-	bool setAssignWidget(QWidget* widget);
-	QWidget* assignWidget();
-
 	// ソリューションを取得
 	CWorkSpaceItem* solution();
-
-	bool dataChanged(const QModelIndex& from, const QModelIndex& to);
 
   // QAbstractItemModel オーバーライド
 

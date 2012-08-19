@@ -4,16 +4,15 @@
 
 CWorkSpaceModel::CWorkSpaceModel(QObject* parent)
 	: QAbstractItemModel(parent)
-	, m_assignWidget(NULL)
 	, rootItem(new CWorkSpaceItem(this, this))
 {
-	// 空のプロジェクトを追加
-	QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
-	CWorkSpaceItem* item  = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
-	if( insertRow(0, item, rootIndex) ) {
-		item->setUuid(theFile->assign(""));
-	} else {
-	}
+	//// 空のプロジェクトを追加
+	//QModelIndex rootIndex = createIndex(rootItem->parentPosition(), 0, rootItem);
+	//CWorkSpaceItem* item  = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
+	//if( insertRow(0, item, rootIndex) ) {
+	//	item->setUuid(theFile->assign(""));
+	//} else {
+	//}
 }
 
 CWorkSpaceItem* CWorkSpaceModel::getItem(const QModelIndex& index) const
@@ -28,29 +27,31 @@ CWorkSpaceItem* CWorkSpaceModel::getItem(const QModelIndex& index) const
 // ソリューションを取得
 CWorkSpaceItem* CWorkSpaceModel::solution()
 {
-	return rootItem->at(0);
+	return
+		rootItem->count() && CWorkSpaceItem::Solution == rootItem->at(0)->type()
+			? rootItem->at(0)
+			: rootItem;
 }
 
 bool CWorkSpaceModel::insertRow(int row, CWorkSpaceItem* item, const QModelIndex& parent)
 {
-	QVector<CWorkSpaceItem*> items;
-	items.push_back(item);
-	return insertRows(row, items, parent);
+	return insertRows(row, QVector<CWorkSpaceItem*>() << item, parent);
 }
 
 bool CWorkSpaceModel::insertRows(int row, const QVector<CWorkSpaceItem*>& items, const QModelIndex& parent)
 {
+	bool result = false;
 	CWorkSpaceItem* parentItem = getItem(parent);
 
 	beginInsertRows(parent, row, row + items.count() - 1);
 
 	foreach(CWorkSpaceItem* item, items) {
-		parentItem->insert(row++, item);
+		result |= parentItem->insert(row++, item);
 	}
 
 	endInsertRows();
 
-	return true;
+	return result;
 }
 
 bool CWorkSpaceModel::appendRow(CWorkSpaceItem* item, const QModelIndex& parent)
@@ -81,8 +82,7 @@ bool CWorkSpaceModel::save(const QString& fileName)
 // プロジェクトの追加
 CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 {
-	QModelIndex rootIndex     = createIndex(rootItem->parentPosition(), 0, rootItem);
-	QModelIndex solutionIndex = index(0, 0, rootIndex);
+	QModelIndex solutionIndex = rootItem == solution() ? QModelIndex() : solution()->index();
 	CWorkSpaceItem*projectItem= new CWorkSpaceItem(this, CWorkSpaceItem::Project, this);
 
 	int row = rowCount(solutionIndex);
@@ -104,10 +104,6 @@ CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 	items.clear();
 
 	projectItem->setUuid(theFile->assign(fileName));
-
-	//if( !fileName.isEmpty() ) {
-	//	projectItem->setText(theFile->fileInfo(projectItem->uuid()).baseName());
-	//}
 
 	return projectItem;
 }
@@ -210,25 +206,6 @@ bool CWorkSpaceModel::remove(CWorkSpaceItem* item)
 	return removeRow(item->parentPosition(), item->parent()->index());
 }
 
-bool CWorkSpaceModel::setAssignWidget(QWidget* widget)
-{
-	m_assignWidget = widget;
-	return true;
-}
-
-QWidget* CWorkSpaceModel::assignWidget()
-{
-	return m_assignWidget;
-}
-
-bool CWorkSpaceModel::dataChanged(const QModelIndex& from, const QModelIndex& to)
-{
-	if( QTreeView *widget = dynamic_cast<QTreeView*>(m_assignWidget) ) {
-		widget->dataChanged(from, to);
-	}
-	return true;
-}
-
 //////////////////////////////////////////////////////////////////////
 // QAbstractItemModel オーバーライド
 
@@ -269,6 +246,8 @@ bool CWorkSpaceModel::setData(const QModelIndex& index, const QVariant& value, i
 		return true;
 	}
 
+	emit dataChanged(index, index);
+
 	return false;
 }
 
@@ -303,6 +282,10 @@ QVariant CWorkSpaceModel::data(const QModelIndex& index, int role) const
 
 QMap<int, QVariant> CWorkSpaceModel::itemData(const QModelIndex &index) const
 {
+	if( !index.isValid() ) {
+		return QMap<int, QVariant>();
+	}
+
 	QMap<int, QVariant> roles = QAbstractItemModel::itemData(index);
 
 	CWorkSpaceItem* item = getItem(index);
@@ -349,7 +332,7 @@ QModelIndex CWorkSpaceModel::parent(const QModelIndex& index) const
 int CWorkSpaceModel::rowCount(const QModelIndex& parent) const
 {
 	CWorkSpaceItem* item = getItem(parent);
-	return item ? item->count() : -1;
+	return item->count();
 }
 
 Qt::ItemFlags CWorkSpaceModel::flags(const QModelIndex& index) const
@@ -429,16 +412,17 @@ Qt::DropActions CWorkSpaceModel::supportedDropActions() const
 bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex& parent)
 {
 	CWorkSpaceItem* parentItem = getItem(parent);
+	bool result = false;
 
 	beginInsertRows(parent, row, row + count - 1);
 
 	for(; count; --count, ++row) {
-		parentItem->insert(row, new CWorkSpaceItem(this));
+		result |= parentItem->insert(row, new CWorkSpaceItem(this));
 	}
 
 	endInsertRows();
 
-	return true;
+	return result;
 }
 
 bool CWorkSpaceModel::removeRows(int row, int count, const QModelIndex& parent)

@@ -161,17 +161,21 @@ bool CSaveSolutionDialog::setSolution(CWorkSpaceItem* item)
 	stackItem.push_back(rootItem);
 
 	QTreeWidgetItem *newItem;
-	rootItem->addChild(newItem = new QTreeWidgetItem());
-	newItem->setText(FileNameColumn, item->text());
-	newItem->setData(FileNameColumn, WorkSpaceItemRole, qVariantFromValue((void*)item) );
-//	newItem->setDisabled(false);
-	newItem->setHidden(true);
-	newItem->setFlags(newItem->flags()|Qt::ItemIsEditable);
-	if( item->isUntitled() ) { // –³‘è‚Ìê‡ã‘‚«•Û‘¶‚ð–³Œø‚É‚·‚é
-		newItem->setData(SaveKindColumn, DisableIndexRole, qVariantFromValue<int>(OverwriteSave));
-		newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(SaveAs));
+	if( CWorkSpaceItem::Solution != item->type() ) {
+		newItem = rootItem;
 	} else {
-		newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(OverwriteSave));
+		rootItem->addChild(newItem = new QTreeWidgetItem());
+		newItem->setText(FileNameColumn, item->text());
+		newItem->setData(FileNameColumn, WorkSpaceItemRole, qVariantFromValue((void*)item) );
+//	newItem->setDisabled(false);
+		newItem->setHidden(true);
+		newItem->setFlags(newItem->flags()|Qt::ItemIsEditable);
+		if( item->isUntitled() ) { // –³‘è‚Ìê‡ã‘‚«•Û‘¶‚ð–³Œø‚É‚·‚é
+			newItem->setData(SaveKindColumn, DisableIndexRole, qVariantFromValue<int>(OverwriteSave));
+			newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(SaveAs));
+		} else {
+			newItem->setData(SaveKindColumn, Qt::DisplayRole,  qVariantFromValue<int>(OverwriteSave));
+		}
 	}
 
 	m_items.push_back(newItem);

@@ -61,7 +61,6 @@ private:
 	CWorkSpaceModel*		m_model;			// モデル
 	CWorkSpaceItem*			m_parent;			// 親アイテム
 	QList<CWorkSpaceItem*>	m_children;			// 子アイテム
-	int						m_parentPos;		// 親アイテムでの位置
 	QIcon					m_icon;				// 表示アイコン
 	QString					m_text;				// 表示テキスト
 	QString					m_path;				// ファイルパス
