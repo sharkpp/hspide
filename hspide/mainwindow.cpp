@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	setupMenus();
 
 	connect(tabWidget,     SIGNAL(currentChanged(int)),                        this, SLOT(currentTabChanged(int)));
-	connect(projectDock,   SIGNAL(oepnItem(CWorkSpaceItem*)),                  this, SLOT(onOpenFile(CWorkSpaceItem *)));
+	connect(workSpaceDock, SIGNAL(oepnItem(CWorkSpaceItem*)),                  this, SLOT(onOpenFile(CWorkSpaceItem *)));
 	connect(tabListAct,    SIGNAL(triggered()),                                this, SLOT(onTabList()));
 	connect(tabCloseAct,   SIGNAL(triggered()),                                this, SLOT(onTabClose()));
 	connect(messageDock,   SIGNAL(gotoLine(const QUuid &, int)),               this, SLOT(onGoToLine(const QUuid &, int)));
@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 
 	loadSettings();
 
-	projectDock->setWorkSpace(m_workSpace);
+	workSpaceDock->setWorkSpace(m_workSpace);
 
 	// とりあえず空のファイルを追加
 	onOpenFile(m_workSpace->appendProject());
@@ -105,11 +105,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupDockWindows()
 {
-	QDockWidget* projectDockWidget = new QDockWidget(tr("Project"), this);
-	projectDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
-	projectDockWidget->setWidget(projectDock = new CProjectDock(projectDockWidget));
-	projectDockWidget->setObjectName("Project"); // saveState()で警告がトレースで出るため
-	addDockWidget(Qt::LeftDockWidgetArea, projectDockWidget);
+	QDockWidget* workSpaceDockWidget = new QDockWidget(tr("WorkSpace"), this);
+	workSpaceDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	workSpaceDockWidget->setWidget(workSpaceDock = new CWorkSpaceDock(workSpaceDockWidget));
+	workSpaceDockWidget->setObjectName("WorkSpace"); // saveState()で警告がトレースで出るため
+	addDockWidget(Qt::LeftDockWidgetArea, workSpaceDockWidget);
 
 	QDockWidget* symbolDockWidget = new QDockWidget(tr("Symbols"), this);
 	symbolDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
@@ -142,13 +142,13 @@ void MainWindow::setupDockWindows()
 	breakPointDockWidget->setVisible(false);
 
 	// ドックタブに結合
-	tabifyDockWidget(projectDockWidget, symbolDockWidget);
+	tabifyDockWidget(workSpaceDockWidget, symbolDockWidget);
 	tabifyDockWidget(outputDockWidget, searchDockWidget);
 	tabifyDockWidget(outputDockWidget, messageDockWidget);
 	tabifyDockWidget(outputDockWidget, breakPointDockWidget);
 
-//	projectDockWidget->setFocus();
-	projectDockWidget->raise();
+//	workSpaceDockWidget->setFocus();
+	workSpaceDockWidget->raise();
 
 //	outputDockWidget->setFocus();
 	outputDockWidget->raise();
@@ -224,7 +224,7 @@ void MainWindow::setupMenus()
 		editMenu->addAction(selectAllAct);
 
 	QMenu* viewMenu = menuBar()->addMenu(tr("&View"));
-		viewMenu->addAction(showProjectDockAct);
+		viewMenu->addAction(showWorkSpaceDockAct);
 		viewMenu->addAction(showSymbolDockAct);
 		viewMenu->addAction(showOutputDockAct);
 		viewMenu->addAction(showSearchDockAct);
@@ -313,7 +313,7 @@ void MainWindow::setupActions()
 		{ &debugStepOutAct,       "",                                               "",                                               tr("Step out"),              tr("Step out"),             tr("Step out next code")        },
 		{ &breakpointSetAct,      ":/images/icons/middle/breakpoint.png",           ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint"),  tr("Set/reset breakpoint"), tr("Set/reset breakpoint")      },
 		{ &settingAct,            ":/images/tango/middle/preferences-system.png",   ":/images/tango/small/preferences-system.png",    tr("&Setting"),              tr("Setting"),              tr("Application settings")      },
-		{ &showProjectDockAct,    "",                                               "",                                               tr("&Project"),              tr("Show project"),         tr("Show project")              },
+		{ &showWorkSpaceDockAct,  "",                                               "",                                               tr("&Workspace"),            tr("Show workspace"),       tr("Show workspace")            },
 		{ &showSymbolDockAct,     "",                                               "",                                               tr("S&ymbols"),              tr("Show symbols"),         tr("Show symbols")              },
 		{ &showOutputDockAct,     "",                                               "",                                               tr("&Output"),               tr("Show output"),          tr("Show output")               },
 		{ &showSearchDockAct,     "",                                               "",                                               tr("&Search"),               tr("Show search"),          tr("Show search")               },
@@ -361,7 +361,7 @@ void MainWindow::setupActions()
 	connect(breakpointSetAct,          SIGNAL(triggered()), this, SLOT(onBreakpointSet()));
 	connect(settingAct,                SIGNAL(triggered()), this, SLOT(onOpenSettingDialog()));
 	connect(aboutAct,                  SIGNAL(triggered()), this, SLOT(onAboutApp()));
-	connect(showProjectDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
+	connect(showWorkSpaceDockAct,      SIGNAL(triggered()), this, SLOT(onShowDock()));
 	connect(showSymbolDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
 	connect(showOutputDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
 	connect(showSearchDockAct,         SIGNAL(triggered()), this, SLOT(onShowDock()));
@@ -370,7 +370,7 @@ void MainWindow::setupActions()
 //	connect(showSysInfoDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
 //	connect(showVarInfoDockAct,        SIGNAL(triggered()), this, SLOT(onShowDock()));
 
-	showProjectDockAct   ->setData( qVariantFromValue((void*)projectDock) );
+	showWorkSpaceDockAct ->setData( qVariantFromValue((void*)workSpaceDock) );
 	showSymbolDockAct    ->setData( qVariantFromValue((void*)symbolDock) );
 	showOutputDockAct    ->setData( qVariantFromValue((void*)outputDock) );
 	showSearchDockAct    ->setData( qVariantFromValue((void*)searchDock) );
@@ -570,7 +570,7 @@ void MainWindow::updateConfiguration(const Configuration* conf)
 	theConf->applyShortcut(Configuration::ActionBreakpointSet,		breakpointSetAct);
 //	theConf->applyShortcut(Configuration::ActionBuildTarget,		);
 	theConf->applyShortcut(Configuration::ActionConfig,				settingAct);
-	theConf->applyShortcut(Configuration::ActionShowProject,		showProjectDockAct);
+	theConf->applyShortcut(Configuration::ActionShowWorkSpace,		showWorkSpaceDockAct);
 	theConf->applyShortcut(Configuration::ActionShowSymbol,			showSymbolDockAct);
 	theConf->applyShortcut(Configuration::ActionShowOutput,			showOutputDockAct);
 	theConf->applyShortcut(Configuration::ActionShowSearch,			showSearchDockAct);
@@ -619,7 +619,7 @@ void MainWindow::updateConfiguration(const Configuration* conf)
 		{ &breakpointSetAct,      }, // ActionBreakpointSet
 		{ NULL,                   }, // ActionBuildTarget
 		{ &settingAct,            }, // ActionConfig
-		{ &showProjectDockAct,    }, // ActionShowProject
+		{ &showWorkSpaceDockAct,  }, // ActionShowWorkSpace
 		{ &showSymbolDockAct,     }, // ActionShowSymbol
 		{ &showOutputDockAct,     }, // ActionShowOutput
 		{ &showSearchDockAct,     }, // ActionShowSearch
@@ -686,7 +686,7 @@ bool MainWindow::closeSolution()
 {
 	CSaveSolutionDialog dlg(this);
 
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 	
 	if( dlg.setSolution(solutionItem) )
 	{
@@ -726,7 +726,7 @@ CWorkSpaceItem* MainWindow::currentItem()
 	else
 	{
 		// なければ、プロジェクトツリーから選択しているファイルを取得
-		item = projectDock->currentItem();
+		item = workSpaceDock->currentItem();
 	}
 
 	return item;
@@ -787,7 +787,7 @@ void MainWindow::onOpenFile(const QString& filePath)
 		QString ext = QFileInfo(fileName).suffix();
 		if( !ext.compare("hspsln", Qt::CaseSensitive) ) {
 			// ソリューションファイルの場合はすでに開いているソリューションを閉じて開く
-			CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+			CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 			// ソリューションを閉じる
 			if( closeSolution() )
 			{
@@ -796,17 +796,17 @@ void MainWindow::onOpenFile(const QString& filePath)
 				// プロジェクトを開く
 				if( solutionItem->load(fileName) )
 				{
-					QList<CWorkSpaceItem*> r(projectDock->projects());
+					QList<CWorkSpaceItem*> r(workSpaceDock->projects());
 					for(int i = 0, num = r.count(); i < num; i++) {
 						onOpenFile(r[i]);
 					}
 				}
 			}
 		} else {
-		//	projectDock->parentWidget()->isVisibl();
-			CWorkSpaceItem* parentItem = projectDock->currentSolution();
+		//	workSpaceDock->parentWidget()->isVisibl();
+			CWorkSpaceItem* parentItem = workSpaceDock->currentSolution();
 			CWorkSpaceItem* fileItem   = m_workSpace->appendProject(fileName);
-		//	CWorkSpaceItem* parentItem = projectDock->currentProject();
+		//	CWorkSpaceItem* parentItem = workSpaceDock->currentProject();
 		//	CWorkSpaceItem* fileItem   = m_workSpace->appendFile(fileName, parentItem);
 			onOpenFile(fileItem);
 		}
@@ -850,7 +850,7 @@ void MainWindow::onOpenFile(CWorkSpaceItem* item)
 
 void MainWindow::onSaveFile()
 {
-	CWorkSpaceItem* item = projectDock->currentItem();
+	CWorkSpaceItem* item = workSpaceDock->currentItem();
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -906,7 +906,7 @@ void MainWindow::onSaveAllFile()
 	{
 		CSaveSolutionDialog dlg(this);
 
-		CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+		CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 		
 		if( dlg.setSolution(solutionItem) )
 		{
@@ -963,7 +963,7 @@ void MainWindow::onGoToLine()
 void MainWindow::onGoToLine(const QUuid& uuid, int lineNo)
 {
 	CWorkSpaceItem* targetProjectItem
-		= projectDock->currentSolution()->search(uuid);
+		= workSpaceDock->currentSolution()->search(uuid);
 
 	if( targetProjectItem )
 	{
@@ -1313,7 +1313,7 @@ void MainWindow::onTabClose()
 {
 	CDocumentPane* document = static_cast<CDocumentPane*>(tabWidget->currentWidget());
 
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 	CWorkSpaceItem* currentItem  = document->assignItem();
 
 	// 何はともあれ保存
@@ -1365,7 +1365,7 @@ void MainWindow::buildStarted()
 	// ビルド処理開始
 
 	//CWorkSpaceItem* targetProjectItem
-	//	= projectDock->currentSolution()->search(filePath);
+	//	= workSpaceDock->currentSolution()->search(filePath);
 
 	//// ビルドを開始したプロジェクトに関連するファイルを全て保存
 	//if( targetProjectItem )
@@ -1436,7 +1436,7 @@ void MainWindow::buildFailure(int buildOrder)
 // ビルド中の出力を取得
 void MainWindow::buildOutput(int buildOrder, const QString& output)
 {
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 
 	QString tmp = QString(output).replace("\r\n", "\n");
 
@@ -1707,7 +1707,7 @@ void MainWindow::onPutDebugLog(const QString& text)
 		return;
 	}
 
-	CWorkSpaceItem* solutionItem = projectDock->currentSolution();
+	CWorkSpaceItem* solutionItem = workSpaceDock->currentSolution();
 
 	QString tmp = text;
 
@@ -1867,7 +1867,7 @@ void MainWindow::currentTabChanged(int index)
 
 		symbolDock->setAssignDocument(document);
 
-		projectDock->selectItem(document->assignItem());
+		workSpaceDock->selectItem(document->assignItem());
 
 		if( m_buildConf )
 		{

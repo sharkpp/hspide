@@ -476,10 +476,6 @@
         <translation>デバッグの中止</translation>
     </message>
     <message>
-        <source>Show project</source>
-        <translation>プロジェクトを表示</translation>
-    </message>
-    <message>
         <source>Show symbols</source>
         <translation>シンボルを表示</translation>
     </message>
@@ -570,6 +566,10 @@
     <message>
         <source>(New setting)</source>
         <translation>(新しい設定)</translation>
+    </message>
+    <message>
+        <source>Show workspace</source>
+        <translation>ワークスペースを表示</translation>
     </message>
 </context>
 <context>
@@ -1142,10 +1142,6 @@
         <translation>コンパイルのみ</translation>
     </message>
     <message>
-        <source>Project</source>
-        <translation>プロジェクト</translation>
-    </message>
-    <message>
         <source>Symbols</source>
         <translation>シンボル</translation>
     </message>
@@ -1176,10 +1172,6 @@
     <message>
         <source>Hot Soup Processor Files (*.hsp *.as)</source>
         <translation>Hot Soup Processor ファイル (*.hsp *.as)</translation>
-    </message>
-    <message>
-        <source>Save File</source>
-        <translation>ファイルの保存</translation>
     </message>
     <message>
         <source>Tab list</source>
@@ -1358,14 +1350,6 @@
         <translation>置換</translation>
     </message>
     <message>
-        <source>&amp;Project</source>
-        <translation>プロジェクト(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Show project</source>
-        <translation>プロジェクトを表示</translation>
-    </message>
-    <message>
         <source>S&amp;ymbols</source>
         <translation>シンボル(&amp;Y)</translation>
     </message>
@@ -1532,6 +1516,18 @@
     <message>
         <source>Do you want to save your changes?</source>
         <translation>変更を保存しますか？</translation>
+    </message>
+    <message>
+        <source>WorkSpace</source>
+        <translation>ワークスペース</translation>
+    </message>
+    <message>
+        <source>&amp;Workspace</source>
+        <translation>ワークスペース(&amp;W)</translation>
+    </message>
+    <message>
+        <source>Show workspace</source>
+        <translation>ワークスペースを表示</translation>
     </message>
 </context>
 <context>

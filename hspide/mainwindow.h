@@ -9,7 +9,7 @@
 #include "outputdock.h"
 #include "sysinfodock.h"
 #include "varinfodock.h"
-#include "projectdock.h"
+#include "workspacedock.h"
 #include "searchdock.h"
 #include "symboldock.h"
 #include "messagedock.h"
@@ -63,7 +63,7 @@ class MainWindow : public QMainWindow
 	QAction* buildTargetAct;
 	QAction* settingAct;
 	QAction* aboutAct;
-	QAction* showProjectDockAct;
+	QAction* showWorkSpaceDockAct;
 	QAction* showSymbolDockAct;
 	QAction* showOutputDockAct;
 	QAction* showSearchDockAct;
@@ -72,7 +72,7 @@ class MainWindow : public QMainWindow
 	QAction* showSysInfoDockAct;
 	QAction* showVarInfoDockAct;
 
-	CProjectDock*      projectDock;
+	CWorkSpaceDock*    workSpaceDock;
 	CSymbolDock*       symbolDock;
 	COutputDock*       outputDock;
 	CSystemInfoDock*   sysInfoDock;

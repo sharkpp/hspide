@@ -177,7 +177,7 @@ void CConfigDialog::setConfiguration(const Configuration* conf)
 		/* ActionBreakpointSet       */{ ":/images/icons/small/breakpoint.png",            tr("Set/reset breakpoint")  },
 		/* ActionBuildTarget         */{ "",                                               tr("Build configurations")  },
 		/* ActionConfig              */{ ":/images/tango/small/preferences-system.png",    tr("Configuration")         },
-		/* ActionShowProject         */{ "",                                               tr("Show project")          },
+		/* ActionShowWorkSpace       */{ "",                                               tr("Show workspace")        },
 		/* ActionShowSymbol          */{ "",                                               tr("Show symbols")          },
 		/* ActionShowOutput          */{ "",                                               tr("Show output")           },
 		/* ActionShowSearch          */{ "",                                               tr("Show search")           },

@@ -2,7 +2,7 @@
 #include <QResizeEvent>
 #include <QHeaderView>
 #include <QStandardItem>
-#include "projectdock.h"
+#include "workspacedock.h"
 #include "workspacemodel.h"
 
 class QTreeView_ : public QTreeView
@@ -19,7 +19,7 @@ public:
 	}
 };
 
-CProjectDock::CProjectDock(QWidget *parent)
+CWorkSpaceDock::CWorkSpaceDock(QWidget *parent)
 	: QWidget(parent)
 {
 	treeWidget = new QTreeView_(this);
@@ -38,13 +38,13 @@ CProjectDock::CProjectDock(QWidget *parent)
 	connect(treeWidget, SIGNAL(expanded(const QModelIndex &)),      this, SLOT(expandedTree(const QModelIndex &)));
 }
 
-void CProjectDock::resizeEvent(QResizeEvent* event)
+void CWorkSpaceDock::resizeEvent(QResizeEvent* event)
 {
 	treeWidget->resize(event->size());
 }
 
 // ソリューションを結合
-bool CProjectDock::setWorkSpace(CWorkSpaceModel* workspace)
+bool CWorkSpaceDock::setWorkSpace(CWorkSpaceModel* workspace)
 {
 	treeWidget->setModel(workspace);
 	treeWidget->expandAll();
@@ -52,7 +52,7 @@ bool CProjectDock::setWorkSpace(CWorkSpaceModel* workspace)
 }
 
 // アイテムを選択
-void CProjectDock::selectItem(CWorkSpaceItem* item)
+void CWorkSpaceDock::selectItem(CWorkSpaceItem* item)
 {
 	treeWidget->selectionModel()->clear();
 	treeWidget->selectionModel()->select(item->index(), QItemSelectionModel::Select|QItemSelectionModel::Current);
@@ -61,7 +61,7 @@ void CProjectDock::selectItem(CWorkSpaceItem* item)
 }
 
 // 現在のアイテムを取得
-CWorkSpaceItem* CProjectDock::currentItem()
+CWorkSpaceItem* CWorkSpaceDock::currentItem()
 {
 	QItemSelectionModel* model = treeWidget->selectionModel();
 
@@ -76,7 +76,7 @@ CWorkSpaceItem* CProjectDock::currentItem()
 }
 
 // 現在のソリューションを取得
-CWorkSpaceItem* CProjectDock::currentSolution()
+CWorkSpaceItem* CWorkSpaceDock::currentSolution()
 {
 	CWorkSpaceModel* model = dynamic_cast<CWorkSpaceModel*>(treeWidget->model());
 
@@ -88,7 +88,7 @@ CWorkSpaceItem* CProjectDock::currentSolution()
 }
 
 // 現在のプロジェクトを取得
-CWorkSpaceItem* CProjectDock::currentProject()
+CWorkSpaceItem* CWorkSpaceDock::currentProject()
 {
 	CWorkSpaceItem* item = currentItem();
 
@@ -99,7 +99,7 @@ CWorkSpaceItem* CProjectDock::currentProject()
 }
 
 // プロジェクトを取得
-QList<CWorkSpaceItem*> CProjectDock::projects()
+QList<CWorkSpaceItem*> CWorkSpaceDock::projects()
 {
 	QList<CWorkSpaceItem*> result;
 
@@ -119,14 +119,14 @@ QList<CWorkSpaceItem*> CProjectDock::projects()
 }
 
 // 現在のファイルを取得
-CWorkSpaceItem* CProjectDock::currentFile()
+CWorkSpaceItem* CWorkSpaceDock::currentFile()
 {
 	CWorkSpaceItem* item = currentItem();
 	return CWorkSpaceItem::File != item->type()
 	           ? item : NULL;;
 }
 
-void CProjectDock::doubleClickedTree(const QModelIndex& index)
+void CWorkSpaceDock::doubleClickedTree(const QModelIndex& index)
 {
 	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 
@@ -143,7 +143,7 @@ void CProjectDock::doubleClickedTree(const QModelIndex& index)
 	}
 }
 
-void CProjectDock::expandedTree(const QModelIndex& index)
+void CWorkSpaceDock::expandedTree(const QModelIndex& index)
 {
 	//CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(index.internalPointer());
 

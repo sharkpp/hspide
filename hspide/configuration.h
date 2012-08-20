@@ -68,7 +68,7 @@ public:
 		ActionBreakpointSet,		// ブレークポイントの設定/解除
 		ActionBuildTarget,			// ビルド対象
 		ActionConfig,				// 設定
-		ActionShowProject,			// プロジェクトを表示
+		ActionShowWorkSpace,		// プロジェクトを表示
 		ActionShowSymbol,			// シンボル一覧を表示
 		ActionShowOutput,			// 出力を表示
 		ActionShowSearch,			// 検索結果を表示

@@ -103,7 +103,7 @@ Configuration::Configuration()
 	m_keyAssignInfo.back().keyAssign[ActionBreakpointSet].keys      = QKeySequence(Qt::Key_F9);
 //	m_keyAssignInfo.back().keyAssign[ActionBuildTarget].keys        = 
 	m_keyAssignInfo.back().keyAssign[ActionConfig].keys             = QKeySequence::Preferences;
-	m_keyAssignInfo.back().keyAssign[ActionShowProject].keys        = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_P);
+	m_keyAssignInfo.back().keyAssign[ActionShowWorkSpace].keys      = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_W);
 	m_keyAssignInfo.back().keyAssign[ActionShowSymbol].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_Y);
 	m_keyAssignInfo.back().keyAssign[ActionShowOutput].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_O);
 	m_keyAssignInfo.back().keyAssign[ActionShowSearch].keys         = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S);
@@ -280,7 +280,7 @@ QStringList Configuration::actionItemNames()
 				/* ActionBreakpointSet      */	<< "break-point-set"
 				/* ActionBuildTarget        */	<< "build-target"
 				/* ActionConfig             */	<< "config"
-				/* ActionShowProject        */	<< "show-project"
+				/* ActionShowWorkSpace      */	<< "show-workspace"
 				/* ActionShowSymbol         */	<< "show-symbols"
 				/* ActionShowOutput         */	<< "show-output"
 				/* ActionShowSearch         */	<< "show-search"

@@ -8,7 +8,7 @@
 class CWorkSpaceModel;
 class CWorkSpaceItem;
 
-class CProjectDock
+class CWorkSpaceDock
 	: public QWidget
 {
 	Q_OBJECT
@@ -17,7 +17,7 @@ class CProjectDock
 
 public:
 
-	CProjectDock(QWidget* parent = 0);
+	CWorkSpaceDock(QWidget* parent = 0);
 
 	// ƒ\ƒŠƒ…[ƒVƒ‡ƒ“‚ğŒ‹‡
 	bool setWorkSpace(CWorkSpaceModel* workspace);
@@ -60,7 +60,7 @@ private:
 };
 
 inline
-QTreeView* CProjectDock::tree()
+QTreeView* CWorkSpaceDock::tree()
 {
 	return treeWidget;
 }
