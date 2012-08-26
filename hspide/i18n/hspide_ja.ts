@@ -670,6 +670,10 @@
         <source>Save as</source>
         <translation>名前を付けて保存</translation>
     </message>
+    <message>
+        <source>(untitled)</source>
+        <translation>(無題)</translation>
+    </message>
 </context>
 <context>
     <name>CSymbolDock</name>

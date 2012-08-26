@@ -127,7 +127,7 @@ bool FileManager::rename(const QUuid& uuid, const QString& fileName)
 			return true;
 		}
 	}
-	return false;
+	return !assign(fileName).isNull();
 }
 
 // UUID‚ğw’è‚µ‚Ä“o˜^íœ

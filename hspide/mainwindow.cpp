@@ -937,6 +937,8 @@ void MainWindow::onSaveAllFile()
 		CDocumentPane*  document = dynamic_cast<CDocumentPane*>(tabWidget->widget(index));
 		tabWidget->setTabText(index, document->title());
 	}
+
+	currentTabChanged(tabWidget->currentIndex());
 }
 
 void MainWindow::onQuit()

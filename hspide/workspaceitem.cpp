@@ -458,6 +458,30 @@ bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType, bool noRec
 		case Solution:
 			saveSolution(fileName, SaveAs == saveType);
 			break;
+		default: {
+			CWorkSpaceItem* tempSplution = new CWorkSpaceItem(m_model, Solution, m_model);
+			// 親子関係を挿げ替える
+			tempSplution->m_children = m_children;
+			for(int i = 0; i < tempSplution->m_children.size(); i++) {
+				tempSplution->m_children[i]->m_parent = tempSplution;
+				m_children[i] = new CWorkSpaceItem(m_model, Project, m_model);
+				m_children[i]->m_parent = this;
+			}
+			if( m_model ) {
+				m_model->removeRows(0, m_children.size(), index());
+				m_model->insertRow(0, tempSplution, index());
+			} else {
+				m_children.clear();
+				insert(0, tempSplution);
+			}
+			// 保存
+			tempSplution->saveSolution(fileName, SaveAs == saveType);
+			// モデルに更新を通知しビューを再描画
+			if( m_model ) {
+				m_model->dataChanged(index(), index());
+				m_model->dataChanged(tempSplution->index(), tempSplution->index());
+			}
+		  }
 		}
 	}
 
@@ -500,6 +524,12 @@ bool CWorkSpaceItem::saveSolution(const QString& fileName, bool saveAs)
 	}
 
 	theFile->rename(m_uuid, filePath);
+	if( m_uuid.isNull() )
+	{
+		m_uuid = theFile->uuid(filePath);
+	}
+
+	updatePath();
 
 	// ファイルにXMLとして出力
 	xml.setDevice(&file);

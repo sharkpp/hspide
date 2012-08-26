@@ -248,7 +248,7 @@ bool CWorkSpaceModel::setData(const QModelIndex& index, const QVariant& value, i
 
 	emit dataChanged(index, index);
 
-	return false;
+	return true;
 }
 
 QVariant CWorkSpaceModel::data(const QModelIndex& index, int role) const
@@ -322,7 +322,7 @@ QModelIndex CWorkSpaceModel::parent(const QModelIndex& index) const
 	CWorkSpaceItem* item   = getItem(index);
 	CWorkSpaceItem* parent = item->parent();
 
-	if( rootItem == parent ) {
+	if( !parent || rootItem == parent ) {
 		return QModelIndex();
 	}
 
@@ -428,6 +428,11 @@ bool CWorkSpaceModel::insertRows(int row, int count, const QModelIndex& parent)
 bool CWorkSpaceModel::removeRows(int row, int count, const QModelIndex& parent)
 {
 	CWorkSpaceItem* parentItem = getItem(parent);
+
+	if( !count )
+	{
+		return false;
+	}
 
 	beginRemoveRows(parent, row, row + count - 1);
 
