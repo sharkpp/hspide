@@ -26,6 +26,9 @@ public:
 	bool load(const QString& fileName);
 	bool save(const QString& fileName);
 
+	// ソリューションが存在するか
+	bool isSolutionExist() const;
+
 	// プロジェクトの追加
 	CWorkSpaceItem* appendProject(const QString& fileName = QString());
 
@@ -69,4 +72,13 @@ private:
 
 	CWorkSpaceItem* getItem(const QModelIndex& index) const;
 
+public slots:
+
+	void onLoadComplete();
+	void onSaveComplete();
+
+signals:
+
+	void loadComplete(CWorkSpaceItem* item);
+	void saveComplete(CWorkSpaceItem* item);
 };

@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
 	                       SIGNAL(visibilityChanged(bool)),                    this, SLOT(onSymbolDockVisibilityChanged(bool)));
 	connect(theConf,       SIGNAL(updateConfiguration(const Configuration*)),  this, SLOT(updateConfiguration(const Configuration*)));
 	connect(theFile,       SIGNAL(filePathChanged(QUuid)),                     this, SLOT(onFileChanged(QUuid)));
+	connect(m_workSpace,   SIGNAL(loadComplete(CWorkSpaceItem*)),              this, SLOT(onUpdateSolution(CWorkSpaceItem*)));
+	connect(m_workSpace,   SIGNAL(saveComplete(CWorkSpaceItem*)),              this, SLOT(onUpdateSolution(CWorkSpaceItem*)));
 
 	loadSettings();
 
@@ -803,12 +805,13 @@ void MainWindow::onOpenFile(const QString& filePath)
 				}
 			}
 		} else {
-		//	workSpaceDock->parentWidget()->isVisibl();
-			CWorkSpaceItem* parentItem = workSpaceDock->currentSolution();
-			CWorkSpaceItem* fileItem   = m_workSpace->appendProject(fileName);
-		//	CWorkSpaceItem* parentItem = workSpaceDock->currentProject();
-		//	CWorkSpaceItem* fileItem   = m_workSpace->appendFile(fileName, parentItem);
-			onOpenFile(fileItem);
+			CWorkSpaceItem* item = NULL;
+			if( m_workSpace->isSolutionExist() ) {
+				item = m_workSpace->appendFile(fileName, workSpaceDock->currentProject());
+			} else {
+				item = m_workSpace->appendProject(fileName);
+			}
+			onOpenFile(item);
 		}
 	}
 }
@@ -1451,9 +1454,9 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 	// uuidをファイル名に置換
 	if( 0 <= reFileName.indexIn(tmp2) ) {
 		QString uuid = reFileName.cap(1);
-		CWorkSpaceItem* item = solutionItem ? solutionItem->search(QUuid(uuid)) : NULL;
-		if( item ) {
-			tmp2.replace(reFileName, item->text());
+		QString fileName = theFile->fileName(QUuid(uuid));
+		if( !fileName.isEmpty() ) {
+			tmp2.replace(reFileName, fileName);
 		}
 	}
 
@@ -1537,7 +1540,8 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 					"#" != line.left(1) ) {
 					continue;
 				}
-				fileName = "";
+				CWorkSpaceItem* targetItem = m_compilers->getTargetItemByBuildOrder(buildOrder);
+				fileName = targetItem ? "?" + targetItem->uuid().toString() : "";
 				lineNo   = "-1";
 				desc     = line;
 				type     = CMessageDock::InfomationCategory;
@@ -1545,7 +1549,7 @@ void MainWindow::buildOutput(int buildOrder, const QString& output)
 			}
 			// UUIDをファイル名に変換 or ファイル名をUUIDに変換
 			if( 0 <= reFileName.indexIn(fileName) ) {
-				uuid = theFile->uuidFromFilename(reFileName.cap(1));
+				uuid = QUuid(reFileName.cap(1));
 			} else {
 				if( CWorkSpaceItem* item
 						= solutionItem ? solutionItem->search(fileName)
@@ -1962,4 +1966,11 @@ void MainWindow::onFileChanged(const QUuid& uuid)
 			tabWidget->setTabText(index, document->title());
 		}
 	}
+}
+
+void MainWindow::onUpdateSolution(CWorkSpaceItem* /*item*/)
+{
+	buildSolutionAct     ->setVisible(m_workSpace->isSolutionExist());
+	debugRunSolutionAct  ->setVisible(m_workSpace->isSolutionExist());
+	noDebugRunSolutionAct->setVisible(m_workSpace->isSolutionExist());
 }

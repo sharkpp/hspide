@@ -77,6 +77,8 @@ public:
 
 	CWorkSpaceItem* getTargetItem(const QString& id) const;
 
+	CWorkSpaceItem* getTargetItemByBuildOrder(int buildOrder) const;
+
 	// ƒGƒ‰[•¶š—ñ‚ğæ“¾
 	QString hspErrorText(int errorNo);
 

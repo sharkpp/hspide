@@ -168,6 +168,7 @@ public slots:
 	void onShowDock();
 	void onBuildTargetChanged(int index);
 	void onFileChanged(const QUuid& uuid);
+	void onUpdateSolution(CWorkSpaceItem* item);
 
 private:
 

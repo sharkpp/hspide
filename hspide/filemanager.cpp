@@ -76,6 +76,9 @@ QString FileManager::path(const QUuid& uuid) const
 	if( m_manageInfo.end() != ite ) {
 		return ite.value();
 	}
+#if defined(_DEBUG)
+	qDebug() << __FUNCTION__ << uuid << "not found";
+#endif
 	return QString();
 }
 
@@ -99,6 +102,9 @@ QUuid FileManager::uuid(const QString& filePath) const
 	if( !values.empty() ) {
 		return values.front();
 	}
+#if defined(_DEBUG)
+	qDebug() << __FUNCTION__ << filePath << "not found";
+#endif
 	return QUuid();
 }
 

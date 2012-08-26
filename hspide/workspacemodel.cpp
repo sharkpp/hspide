@@ -47,6 +47,8 @@ bool CWorkSpaceModel::insertRows(int row, const QVector<CWorkSpaceItem*>& items,
 
 	foreach(CWorkSpaceItem* item, items) {
 		result |= parentItem->insert(row++, item);
+		connect(item, SIGNAL(loadComplete()), this, SLOT(onLoadComplete()));
+		connect(item, SIGNAL(saveComplete()), this, SLOT(onSaveComplete()));
 	}
 
 	endInsertRows();
@@ -79,6 +81,12 @@ bool CWorkSpaceModel::save(const QString& fileName)
 
 //////////////////////////////////////////////////////////////////////
 
+// ソリューションが存在するか
+bool CWorkSpaceModel::isSolutionExist() const
+{
+	return rootItem->count() && CWorkSpaceItem::Solution == rootItem->at(0)->type();
+}
+
 // プロジェクトの追加
 CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 {
@@ -104,6 +112,9 @@ CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 	items.clear();
 
 	projectItem->setUuid(theFile->assign(fileName));
+
+	// 通知
+	emit loadComplete(projectItem);
 
 	return projectItem;
 }
@@ -204,6 +215,22 @@ CWorkSpaceItem* CWorkSpaceModel::appendFile(const QString& fileName, CWorkSpaceI
 bool CWorkSpaceModel::remove(CWorkSpaceItem* item)
 {
 	return removeRow(item->parentPosition(), item->parent()->index());
+}
+
+//////////////////////////////////////////////////////////////////////
+
+// 
+void CWorkSpaceModel::onLoadComplete()
+{
+	CWorkSpaceItem* item = qobject_cast<CWorkSpaceItem*>(sender());
+	emit loadComplete(item);
+}
+
+// 
+void CWorkSpaceModel::onSaveComplete()
+{
+	CWorkSpaceItem* item = qobject_cast<CWorkSpaceItem*>(sender());
+	emit saveComplete(item);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -368,7 +395,6 @@ bool CWorkSpaceModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
 	}
 
 qDebug()<< __FUNCTION__<<data->formats();
-
 
 	if( data->hasUrls() )
 	{

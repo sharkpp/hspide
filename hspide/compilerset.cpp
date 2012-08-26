@@ -72,6 +72,25 @@ CWorkSpaceItem* CCompilerSet::getTargetItem(const QString& id) const
 	return NULL;
 }
 
+CWorkSpaceItem* CCompilerSet::getTargetItemByBuildOrder(int buildOrder) const
+{
+	foreach(const BuildOptionType& opt, m_buildingItems)
+	{
+		if( opt.buildOrder == buildOrder )
+		{
+			return opt.item;
+		}
+	}
+	foreach(const BuildOptionType& opt, m_buildItems)
+	{
+		if( opt.buildOrder == buildOrder )
+		{
+			return opt.item;
+		}
+	}
+	return NULL;
+}
+
 // ƒGƒ‰[•¶š—ñ‚ğæ“¾
 QString CCompilerSet::hspErrorText(int errorNo)
 {

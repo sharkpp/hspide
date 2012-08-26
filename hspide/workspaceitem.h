@@ -146,5 +146,10 @@ private:
 public slots:
 
 	void onFileChanged(const QUuid& uuid);
+
+signals:
+
+	void loadComplete();
+	void saveComplete();
 };
 

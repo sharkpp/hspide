@@ -399,6 +399,8 @@ bool CWorkSpaceItem::load(const QString& fileName)
 				qDeleteAll(m_children);
 			}
 			loadSolution(fileName);
+			// ’Ê’m
+			emit loadComplete();
 			break;
 		}
 	}
@@ -543,6 +545,9 @@ bool CWorkSpaceItem::saveSolution(const QString& fileName, bool saveAs)
 	serialize(&xml);
 
 	xml.writeEndDocument();
+
+	// ’Ê’m
+	emit saveComplete();
 
 	return true;
 }
