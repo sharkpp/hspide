@@ -238,6 +238,15 @@ CWorkSpaceItem* CWorkSpaceItem::parent() const
 	return m_parent;
 }
 
+CWorkSpaceItem* CWorkSpaceItem::root() const
+{
+	CWorkSpaceItem* parent = m_parent;
+	for(; parent->parent(); ) {
+		parent = parent->parent();
+	}
+	return parent;
+}
+
 CWorkSpaceItem* CWorkSpaceItem::ancestor(Type type)
 {
 	return m_parent ? type == m_type ? this
@@ -247,8 +256,8 @@ CWorkSpaceItem* CWorkSpaceItem::ancestor(Type type)
 
 CWorkSpaceItem* CWorkSpaceItem::search(const QString& path, bool basename)
 {
-	QString comp = basename ? QFileInfo(m_path).baseName()
-							: m_path;
+	QString comp = basename ? QFileInfo(this->path()).baseName()
+							: this->path();
 
 	if( (FileNode == m_nodeType || !path.isEmpty()) &&
 		!comp.compare(path, Qt::CaseSensitive) )
@@ -328,6 +337,13 @@ bool CWorkSpaceItem::remove(int position)
 	return true;
 }
 
+QList<CWorkSpaceItem*> CWorkSpaceItem::take()
+{
+	QList<CWorkSpaceItem*> children = m_children;
+	m_children.clear();
+	return children;
+}
+
 // 無題ファイル(ディスクに保存していないファイル)か？
 bool CWorkSpaceItem::isUntitled() const
 {
@@ -402,6 +418,16 @@ bool CWorkSpaceItem::load(const QString& fileName)
 			// 通知
 			emit loadComplete();
 			break;
+		default: {
+			CWorkSpaceItem* tempSplution = m_model->insertSolution();
+			// 保存
+			tempSplution->load(fileName);
+			// モデルに更新を通知しビューを再描画
+			if( m_model ) {
+				m_model->dataChanged(index(), index());
+				m_model->dataChanged(tempSplution->index(), tempSplution->index());
+			}
+		  }
 		}
 	}
 
@@ -436,19 +462,6 @@ bool CWorkSpaceItem::save(SaveType saveType, bool noReclusive)
 
 bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType, bool noReclusive)
 {
-	if( !noReclusive )
-	{
-		// 子も全て保存
-		foreach(CWorkSpaceItem* item, m_children)
-		{
-			if( item->assignDocument() &&
-				item->assignDocument()->isModified() )
-			{
-				item->save(saveType);
-			}
-		}
-	}
-
 	if( m_assignDocument )
 	{
 		m_assignDocument->save(fileName, SaveAs == saveType);
@@ -461,21 +474,7 @@ bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType, bool noRec
 			saveSolution(fileName, SaveAs == saveType);
 			break;
 		default: {
-			CWorkSpaceItem* tempSplution = new CWorkSpaceItem(m_model, Solution, m_model);
-			// 親子関係を挿げ替える
-			tempSplution->m_children = m_children;
-			for(int i = 0; i < tempSplution->m_children.size(); i++) {
-				tempSplution->m_children[i]->m_parent = tempSplution;
-				m_children[i] = new CWorkSpaceItem(m_model, Project, m_model);
-				m_children[i]->m_parent = this;
-			}
-			if( m_model ) {
-				m_model->removeRows(0, m_children.size(), index());
-				m_model->insertRow(0, tempSplution, index());
-			} else {
-				m_children.clear();
-				insert(0, tempSplution);
-			}
+			CWorkSpaceItem* tempSplution = m_model->insertSolution();
 			// 保存
 			tempSplution->saveSolution(fileName, SaveAs == saveType);
 			// モデルに更新を通知しビューを再描画
@@ -627,11 +626,11 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 				Configuration::BuildConfType conf;
 				conf.name           = xml.attributes().value("name").toString();
 				conf.uuid           = QUuid(xml.attributes().value("uuid").toString());
-				conf.preprocessOnly = 0 != xml.attributes().value("preprocess_only").toString().toInt();
-				conf.compile        = 0 != xml.attributes().value("compile").toString().toInt();
-				conf.make           = 0 != xml.attributes().value("make").toString().toInt();
-				conf.noExecute      = 0 != xml.attributes().value("no_execute").toString().toInt();
-				conf.debug          = 0 != xml.attributes().value("debug").toString().toInt();
+				conf.preprocessOnly = xml.attributes().value("preprocess_only").toString().compare("false");
+				conf.compile        = xml.attributes().value("compile").toString().compare("false");
+				conf.make           = xml.attributes().value("make").toString().compare("false");
+				conf.noExecute      = xml.attributes().value("no_execute").toString().compare("false");
+				conf.debug          = xml.attributes().value("debug").toString().compare("false");
 				if( !conf.uuid.isNull() ) {
 					buildConf.push_back(conf);
 					parentItem->setBuildConf(buildConf);
@@ -644,6 +643,7 @@ bool CWorkSpaceItem::loadSolution(const QString& fileName)
 			}
 			// UUIDが存在する時のみUUIDセット
 			if( !path.isEmpty() ) {
+				path = QDir::cleanPath(QFileInfo(QFileInfo(this->path()).dir(), path).filePath());
 				QUuid uuid(xml.attributes().value("uuid").toString());
 				if( !uuid.isNull() ) {
 					theFile->assign(path, uuid);
@@ -724,11 +724,14 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 
 	switch( m_type )
 	{
-	case File:
+	case File: {
+		if( uuid().isNull() ) {
+			return false;
+		}
 		xml->writeStartElement("file");
-		xml->writeAttribute("path", m_path);
+		xml->writeAttribute("path", QFileInfo(root()->path()).dir().relativeFilePath(path()));
 		uuidValid = true;
-		break;
+		break; }
 	case Folder:
 		xml->writeStartElement("folder");
 		xml->writeAttribute("name", m_text);
@@ -739,8 +742,11 @@ bool CWorkSpaceItem::serialize(QXmlStreamWriter* xml)
 		uuidValid = true;
 		break;
 	case Project:
+		if( uuid().isNull() ) {
+			return false;
+		}
 		xml->writeStartElement("project");
-		xml->writeAttribute("path", m_path);
+		xml->writeAttribute("path", QFileInfo(root()->path()).dir().relativeFilePath(path()));
 		uuidValid = true;
 		buildConfValid = true;
 		break;

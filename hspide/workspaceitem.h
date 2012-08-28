@@ -63,7 +63,6 @@ private:
 	QList<CWorkSpaceItem*>	m_children;			// 子アイテム
 	QIcon					m_icon;				// 表示アイコン
 	QString					m_text;				// 表示テキスト
-	QString					m_path;				// ファイルパス
 	Type					m_type;				// 種別
 	NodeType				m_nodeType;			// ノード種別
 	QUuid					m_uuid;				// ファイルに対して一意に割り当てられているID
@@ -125,6 +124,7 @@ public:
 	int count() const;
 	CWorkSpaceItem* at(int index) const;
 	CWorkSpaceItem* parent() const;
+	CWorkSpaceItem* root() const;
 	CWorkSpaceItem* ancestor(Type type);
 	CWorkSpaceItem* search(const QString& path, bool basename = false);
 	CWorkSpaceItem* search(const QUuid& path);
@@ -132,6 +132,7 @@ public:
 	QModelIndex index() const;
 	bool insert(int position, CWorkSpaceItem* item);
 	bool remove(int position);
+	QList<CWorkSpaceItem*> take();
 
 private:
 

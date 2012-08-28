@@ -87,6 +87,26 @@ bool CWorkSpaceModel::isSolutionExist() const
 	return rootItem->count() && CWorkSpaceItem::Solution == rootItem->at(0)->type();
 }
 
+// ソリューションを追加
+CWorkSpaceItem* CWorkSpaceModel::insertSolution()
+{
+	if( isSolutionExist() )
+	{
+		return rootItem->at(0);
+	}
+
+	CWorkSpaceItem* tempSplution = new CWorkSpaceItem(this, CWorkSpaceItem::Solution, this);
+	// 親子関係を挿げ替える
+	QList<CWorkSpaceItem*> children = rootItem->take();
+	for(int i = 0; i < children.size(); i++) {
+		tempSplution->insert(i, children.at(i));
+		rootItem    ->insert(i, new CWorkSpaceItem(this, CWorkSpaceItem::Project, this));
+	}
+	removeRows(0, children.size(), rootItem->index());
+	insertRow(0, tempSplution, rootItem->index());
+	return tempSplution;
+}
+
 // プロジェクトの追加
 CWorkSpaceItem* CWorkSpaceModel::appendProject(const QString& fileName)
 {

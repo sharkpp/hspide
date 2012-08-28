@@ -29,6 +29,9 @@ public:
 	// ソリューションが存在するか
 	bool isSolutionExist() const;
 
+	// ソリューションを追加
+	CWorkSpaceItem* insertSolution();
+
 	// プロジェクトの追加
 	CWorkSpaceItem* appendProject(const QString& fileName = QString());
 
