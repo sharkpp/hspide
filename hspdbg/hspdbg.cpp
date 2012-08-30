@@ -8,8 +8,10 @@
 #include "dbgmain.h"
 #include "hspdbg.h"
 #include "hspsdk/hsp3struct.h"
+#include "hsp3debug.h"
 
 extern CDbgMain* g_app;
+extern hsp3debug* g_hsp3debug_dll;
 
 HSP3DEBUG *g_hsp3dbg = NULL;
 
@@ -17,9 +19,15 @@ HSP3DEBUG *g_hsp3dbg = NULL;
 // デバッグ処理デバッグウインドウ側関数
 //--------------------------------------------------------------------
 
-EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
+EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int /*p2*/, int /*p3*/, int /*p4*/)
 {
 	//		debugini ptr  (type1)
+
+	// オリジナルを呼び出し
+	if( g_hsp3debug_dll )
+	{
+		return g_hsp3debug_dll->debugini(p1);
+	}
 
 	if( !g_app )
 	{
@@ -36,11 +44,17 @@ EXPORT BOOL WINAPI debugini(HSP3DEBUG *p1, int p2, int p3, int p4)
 	return FALSE;
 }
 
-EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int p3, int p4)
+EXPORT BOOL WINAPI debug_notice(HSP3DEBUG *p1, int p2, int /*p3*/, int /*p4*/)
 {
 	//		debug_notice ptr  (type1)
 	//			p2: 0=stop event
 	//			    1=send message
+
+	// オリジナルを呼び出し
+	if( g_hsp3debug_dll )
+	{
+		return g_hsp3debug_dll->debug_notice(p1, p2);
+	}
 
 	HSPCTX* hspctx = (HSPCTX*)p1->hspctx;
 

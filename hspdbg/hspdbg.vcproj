@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath="hsp3debug.h"
+				>
+			</File>
+			<File
 				RelativePath="hspsdk\hsp3struct.h"
 				>
 			</File>

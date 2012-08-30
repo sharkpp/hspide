@@ -242,6 +242,10 @@ void CDbgMain::create()
 
 void CDbgMain::destroy()
 {
+	if( !g_app )
+	{
+		return;
+	}
 OutputDebugStringA("CDbgMain::destroy #1\n");
 	// I—¹—v‹
 	//QMetaObject::invokeMethod(g_app, "quit");

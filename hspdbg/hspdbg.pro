@@ -35,6 +35,7 @@ HEADERS += hspdbg.h \
            dbgmain.h \
            thunk.hpp \
            apihook.h \
+           hsp3debug.h \
            hspsdk/hsp3debug.h \
            hspsdk/hsp3struct.h \
            hspsdk/hspvar_core.h \

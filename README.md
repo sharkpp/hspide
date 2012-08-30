@@ -18,7 +18,7 @@ Copyright© 2011-2012 by [sharkpp](http://www.sharkpp.net/).
 ## インストール
 
 1. パッケージの展開を行います。
-2. HSPインストールフォルダの hsp3debug.dll の名前を変更します。
+2. HSPインストールフォルダの hsp3debug.dll の名前を hsp3debug.old.dll などに変更します。
 3. HSPインストールフォルダへ hspide.exe、hsp3debug.dll、hspcmp.exe を移動させます。
 
 **これは暫定的な処理です、インストーラなど簡単にインストールできる仕組みを実装する予定です**
