@@ -455,12 +455,12 @@ void CWorkSpaceItem::updatePath()
 	}
 }
 
-bool CWorkSpaceItem::save(SaveType saveType, bool noReclusive)
+bool CWorkSpaceItem::save(SaveType saveType)
 {
-	return save(QString(), saveType, noReclusive);
+	return save(QString(), saveType);
 }
 
-bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType, bool noReclusive)
+bool CWorkSpaceItem::save(const QString& fileName, SaveType saveType)
 {
 	if( m_assignDocument )
 	{

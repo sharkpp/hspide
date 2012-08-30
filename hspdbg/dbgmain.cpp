@@ -1,6 +1,7 @@
 #include <QTextCodec>
 #include <QStringList>
 #include <process.h>
+#include <tchar.h>
 #include "dbgmain.h"
 #include <spplib/apihook.h>
 
@@ -121,8 +122,8 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 
 void* CDbgMain::typeinfo_hook::reffunc(int *type_res, int arg)
 {
-	HSP3DEBUG* dbg = g_app->debugInfo();
 #ifdef _DEBUG
+	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%p,%d)/%2d>>%s(%2d)",this,__FUNCTION__,type_res,arg,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
@@ -136,8 +137,8 @@ int CDbgMain::typeinfo_hook::termfunc(int option)
 {
 OutputDebugStringA("typeinfo_hook::termfunc #1\n");
 	if( g_app ) {
-		HSP3DEBUG* dbg = g_app->debugInfo();
 #ifdef _DEBUG
+		HSP3DEBUG* dbg = g_app->debugInfo();
 		dbg->dbg_curinf();
 		char tmp[256];
 		sprintf(tmp,"%p %s(%d)/%2d>>%s(%2d)",this,__FUNCTION__,option,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
@@ -152,8 +153,8 @@ OutputDebugStringA("typeinfo_hook::termfunc #2\n");
 
 int CDbgMain::typeinfo_hook::msgfunc(int prm1,int prm2,int prm3)
 {
-	HSP3DEBUG* dbg = g_app->debugInfo();
 #ifdef _DEBUG
+	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
 	sprintf(tmp,"%p %s(%d,%d,%d)/%2d>>%s(%2d)",this,__FUNCTION__,prm1,prm2,prm3,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
@@ -202,7 +203,17 @@ CDbgMain::CDbgMain()
 	//        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	//        サーバーGUID                           アイテムGUID
 
+#if __STDC_WANT_SECURE_LIB__
+	TCHAR* envVar;
+	size_t envSize;
+	_tgetenv_s(&envSize, NULL, 0, "hspide");
+	envVar = new TCHAR[envSize];
+	_tgetenv_s(&envSize, envVar, envSize, "hspide" );
+	QStringList ideInfo = QString(envVar).split(".");
+	delete [] envVar;
+#else
 	QStringList ideInfo = QString(getenv("hspide")).split(".");
+#endif
 
 	m_id = (3 == ideInfo.size() ? ideInfo[2] : "");
 
@@ -522,7 +533,6 @@ QString CDbgMain::loadString(HSPCTX* hspctx, int offset, bool allow_minus_idx)
 
 	size_t         ds_len = hspctx->hsphed->max_ds;
 	unsigned char* ds_ptr = (unsigned char*)hspctx->mem_mds;
-	unsigned char* ds_last= ds_ptr + ds_len;
 
 // 制御文字を\つき文字に置換する処理を入れる
 	if( allow_minus_idx && -1 == offset ) {
@@ -579,8 +589,6 @@ void CDbgMain::initializeVariableNames()
 	unsigned char* di_last= di_ptr + di_len;
 
 	size_t         ds_len = hspctx->hsphed->max_ds;
-	unsigned char* ds_ptr = (unsigned char*)hspctx->mem_mds;
-	unsigned char* ds_last= ds_ptr + ds_len;
 
 	for(;di_ptr < di_last ; ) {
 		switch( *di_ptr ) {
@@ -591,7 +599,7 @@ void CDbgMain::initializeVariableNames()
 			di_ptr += 4 + 2; // ファイル名 + 行番号
 			break;
 		case DINFO_TYPE_VARIABLE: {
-			int offset = (int)((di_ptr[3] << 16) | (di_ptr[2] << 8) | di_ptr[1]);
+			size_t offset = (size_t)((di_ptr[3] << 16) | (di_ptr[2] << 8) | di_ptr[1]);
 			if( offset < ds_len ) {
 				m_varNames.push_back(loadString(hspctx, offset, false));
 			}
@@ -630,8 +638,6 @@ HSP3DEBUG* CDbgMain::debugInfo()
 
 void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 {
-	HSPCTX* hspctx = (HSPCTX*)top->hspctx;
-
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
 	{
 		// 書き換え
@@ -858,24 +864,18 @@ void CDbgMain::updateDebugInfo()
 
 void CDbgMain::updateVarInfo()
 {
-	QTextCodec* codec = QTextCodec::codecForLocale();
-
 	//		変数情報取得
 	//		option
 	//			bit0 : sort ( 受け側で処理 )
 	//			bit1 : module
 	//			bit2 : array
 	//			bit3 : dump
-//	char* ptr = m_dbg->get_varinf(NULL, 2|4);
-
-	HSPCTX* hspctx = (HSPCTX*)m_dbg->hspctx;
 
 	QVector<VARIABLE_INFO_TYPE> varInfo;
 
 	for(int i = 0, num = m_varNames.size();
 		i < num; i++)
 	{
-		PVal* pval = &hspctx->mem_var[i];
 		varInfo.push_back(VARIABLE_INFO_TYPE());
 		VARIABLE_INFO_TYPE & info = varInfo.back();
 		// 変数情報取得
@@ -883,15 +883,11 @@ void CDbgMain::updateVarInfo()
 		GetVariableInfo(i, indexOf, info);
 	}
 
-//	varInfo = m_varNames;
-
 	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_4_4);
 	out << varInfo;
 	IpcSend(*m_socket, CMD_PUT_VAR_DIGEST, data);
-
-//	m_dbg->dbg_close(ptr);
 }
 
 bool CDbgMain::GetVariableInfo(const QString& varName, int indexOf[], VARIABLE_INFO_TYPE& varInfo)
@@ -1099,6 +1095,8 @@ void CDbgMain::recvCommand()
 			qDebug() <<__FUNCTION__<< (void*)m_socket<< cmd_id;
 			}
 		}
-char tmp[256];sprintf(tmp,"%s %d\n",__FUNCTION__,cmd_id);OutputDebugStringA(tmp);
+#ifdef _DEBUG
+	char tmp[256];sprintf(tmp,"%s %d\n",__FUNCTION__,cmd_id);OutputDebugStringA(tmp);
+#endif
 	}
 }

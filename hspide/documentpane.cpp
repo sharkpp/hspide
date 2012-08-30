@@ -30,7 +30,7 @@ void CDocumentPane::resizeEvent(QResizeEvent* event)
 	m_editorWidget->resize(event->size());
 }
 
-void CDocumentPane::focusInEvent(QFocusEvent* event)
+void CDocumentPane::focusInEvent(QFocusEvent* /*event*/)
 {
 	m_editorWidget->setFocus();
 }

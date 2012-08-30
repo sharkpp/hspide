@@ -103,8 +103,8 @@ public:
 	void setSuffixFilter(const QStringList& filter);
 
 	bool load(const QString& fileName);
-	bool save(const QString& fileName = QString(), SaveType saveType = OverwriteSave, bool noReclusive = false);
-	bool save(SaveType saveType, bool noReclusive = false);
+	bool save(const QString& fileName = QString(), SaveType saveType = OverwriteSave);
+	bool save(SaveType saveType);
 
 	bool isUntitled() const;
 

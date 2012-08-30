@@ -259,7 +259,7 @@ void CCodeEdit::updateLineNumberWidth(int /*newBlockCount*/)
 	setViewportMargins(lineNumberWidth(), 0, 0, 0);
 }
 
-void CCodeEdit::updateLineNumber(const QRect& rect ,int dy)
+void CCodeEdit::updateLineNumber(const QRect& rect ,int /*dy*/)
 {
 	m_lineNumberWidget->update(0, rect.y(), m_lineNumberWidget->width(), rect.height());
 }

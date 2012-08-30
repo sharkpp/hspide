@@ -268,7 +268,7 @@ void CCompiler::hspcmpError(QProcess::ProcessError)
 {
 }
 
-void CCompiler::hspcmpFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void CCompiler::hspcmpFinished(int /*exitCode*/, QProcess::ExitStatus exitStatus)
 {
 	QProcess* hspcmp = qobject_cast<QProcess*>(sender());
 
@@ -293,7 +293,7 @@ void CCompiler::hspcmpReadOutput()
 }
 
 // ƒVƒ“ƒ{ƒ‹‚ÌŽæ“¾Š®—¹
-void CCompiler::listedSymbolsFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void CCompiler::listedSymbolsFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
 	QProcess* hspcmp = qobject_cast<QProcess*>(sender());
 	QString tmp(hspcmp->readAllStandardOutput());

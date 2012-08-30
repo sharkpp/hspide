@@ -256,7 +256,7 @@ void CWorkSpaceModel::onSaveComplete()
 //////////////////////////////////////////////////////////////////////
 // QAbstractItemModel オーバーライド
 
-int CWorkSpaceModel::columnCount(const QModelIndex& parent) const
+int CWorkSpaceModel::columnCount(const QModelIndex& /*parent*/) const
 {
 	return 1;
 }

@@ -23,7 +23,6 @@ public:
 CBreakPointDock::CBreakPointDock(QWidget *parent)
 	: QWidget(parent)
 {
-	QItemEditorFactory* factory;
 	QItemDelegate* itemDelegate;
 
 	QStringList labels;
@@ -142,7 +141,7 @@ void CBreakPointDock::onBreakPointStateChanged(QTreeWidgetItem* item, int column
 	int lineNo = item->data(FileColumn, LineNumberRole).toInt();
 }
 
-void CBreakPointDock::onBreakPointDoubleClicked(QTreeWidgetItem* item, int column)
+void CBreakPointDock::onBreakPointDoubleClicked(QTreeWidgetItem* item, int /*column*/)
 {
 	QUuid uuid(item->data(FileColumn, UuidRole).toString());
 	int lineNo = item->data(FileColumn, LineNumberRole).toInt();

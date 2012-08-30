@@ -804,7 +804,7 @@ void CConfigDialog::onKeyAssignPresetRemove()
 	updateKeyAssignPresetList();
 }
 
-void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* item, int column)
+void CConfigDialog::onKeyAssignChanged(QTreeWidgetItem* /*item*/, int column)
 {
 	int curPreset = ui->keyAssignPresetList->currentIndex() - 1;
 

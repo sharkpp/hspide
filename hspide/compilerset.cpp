@@ -434,7 +434,7 @@ void CCompilerSet::execError(QProcess::ProcessError)
 	}
 }
 
-void CCompilerSet::execFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void CCompilerSet::execFinished(int /*exitCode*/, QProcess::ExitStatus /*exitStatus*/)
 {
 	if( QProcess* process = qobject_cast<QProcess*>(sender()) )
 	{

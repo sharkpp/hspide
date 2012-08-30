@@ -15,7 +15,6 @@ COutputDock::COutputDock(QWidget *parent)
 
 	m_debugLog->setReadOnly(true);
 
-	QComboBox* combobox;
 	m_toolBar->setStyleSheet("QToolBar{border:none}");
 	m_toolBar->setIconSize(QSize(16, 16));
 	                                    m_toolBar->addWidget(m_typeSelect = new QComboBox(this));

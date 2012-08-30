@@ -150,7 +150,6 @@ QString CVariableInfoDock::toPath(const VARIABLE_INFO_TYPE& varInfo)
 
 	if( 0 <= re.indexIn(varInfo.name) )
 	{
-		int index[4];
 		QString varName = re.cap(1); // •Ï”–¼
 		QString modName = re.cap(3); // ƒ‚ƒWƒ…[ƒ‹–¼
 		path = QString("%1/%2").arg(modName.isEmpty()?"@":modName).arg(varName);

@@ -527,7 +527,7 @@ void MainWindow::actionTriggered(QAction *action)
 	qDebug("action '%s' triggered", action->text().toLocal8Bit().data());
 }
 
-void MainWindow::updateConfiguration(const Configuration* conf)
+void MainWindow::updateConfiguration(const Configuration* /*conf*/)
 {
 	// シンタックスハイライトシンボル取得
 	CCompiler* compiler = new CCompiler(this);
@@ -987,7 +987,7 @@ void MainWindow::onGoToLine(const QUuid& uuid, int lineNo)
 	}
 }
 
-void MainWindow::onStopAtBreakPoint(const QUuid& uuid, int lineNo)
+void MainWindow::onStopAtBreakPoint(const QUuid& /*uuid*/, int /*lineNo*/)
 {
 	// メニューを変更
 	debugResumeAct  ->setEnabled(true);
@@ -1400,7 +1400,7 @@ void MainWindow::buildStarted()
 	messageDock->clear();
 }
 
-void MainWindow::buildStarted(int buildOrder, const QUuid& uuid)
+void MainWindow::buildStarted(int buildOrder, const QUuid& /*uuid*/)
 {
 	// ビルド処理開始
 	outputDock->select(COutputDock::BuildOutput);
