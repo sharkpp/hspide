@@ -233,6 +233,71 @@ BOOL WINAPI HookReadFile(
 	// オリジナルのAPIを呼び出し
 	BOOL r = ReadFile_(hFile,lpBuffer,nNumberOfBytesToRead,lpNumberOfBytesRead,lpOverlapped);
 
+	// 管理されている対象か？
+	if( FALSE != r && g_bHSPideFix )
+	{
+		static const char   SEARCH_STR_REGCMD[] = "#regcmd ";
+		static const size_t SEARCH_LEN_REGCMD = sizeof(SEARCH_STR_REGCMD) - 1; // '\0'の分だけ減らす
+		char*  pszBuffer = reinterpret_cast<char*>(lpBuffer);
+		size_t lenBuffer = lpNumberOfBytesRead ? *lpNumberOfBytesRead : 0;
+		for(char* p = pszBuffer, *last = pszBuffer + lenBuffer;
+			p + SEARCH_LEN_REGCMD < last; )
+		{
+			char* next = (char*)::memchr(p, SEARCH_STR_REGCMD[0], size_t(last - p));
+			if( !next || last <= next + SEARCH_LEN_REGCMD ) {
+				break;
+			}
+			if( !::memcmp(next, SEARCH_STR_REGCMD, SEARCH_LEN_REGCMD) )
+			{
+				char* prev = pszBuffer == next ? next : next - 1;
+				for(; pszBuffer < prev && ' ' == *prev || '\t' == *prev; prev--);
+				if( pszBuffer == prev ||
+					'\r' == *prev ||
+					'\n' == *prev )
+				{
+					char* param_start = next + SEARCH_LEN_REGCMD;
+					char* param_end = last;
+					if( char* nextSP = (char*)::memchr(param_start, ' ',  size_t(last - param_start)) ) {
+						param_end = param_end < nextSP ? param_end : nextSP;
+					}
+					if( char* nextTAB = (char*)::memchr(param_start, '\t',  size_t(last - param_start)) ) {
+						param_end = param_end < nextTAB ? param_end : nextTAB;
+					}
+					if( char* nextComment = (char*)::memchr(param_start, ';',  size_t(last - param_start)) ) {
+						param_end = param_end < nextComment ? param_end : nextComment;
+					}
+					if( char* nextCr = (char*)::memchr(param_start, '\r', size_t(last - param_start)) ) {
+						param_end = param_end < nextCr ? param_end : nextCr;
+					}
+					if( char* nextLf = (char*)::memchr(param_start, '\n', size_t(last - param_start)) ) {
+						param_end = param_end < nextLf ? param_end : nextLf;
+					}
+					if( 2 == size_t(param_end - param_start) &&
+						'1' == param_start[0] &&
+						'8' == param_start[1] )
+					{
+						param_start[0] = '1';
+						param_start[1] = '9';
+					}
+//char* tmp = new char[size_t(param_end - param_start) + 1];
+//memcpy(tmp, param_start, size_t(param_end - param_start));
+//tmp[size_t(param_end - param_start)] = 0;
+//OutputDebugString("-----------------------------------------------------------------------------\n");
+//OutputDebugString(tmp);
+//OutputDebugString("\n");
+//delete [] tmp;
+				}
+			}
+			p = next + SEARCH_LEN_REGCMD;
+		}
+//char* tmp = new char[*lpNumberOfBytesRead + 1];
+//memcpy(tmp, lpBuffer, *lpNumberOfBytesRead);
+//tmp[*lpNumberOfBytesRead] = 0;
+//OutputDebugString("==============================================================================\n");
+//OutputDebugString(tmp);
+//delete [] tmp;
+	}
+
 	return r;
 }
 
