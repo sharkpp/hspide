@@ -236,6 +236,7 @@ BOOL WINAPI HookReadFile(
 	// ŠÇ—‚³‚ê‚Ä‚¢‚é‘ÎÛ‚©H
 	if( FALSE != r && g_bHSPideFix )
 	{
+		// #regcmd 18 ‚ğ’T‚µ‚Ä‘‚«Š·‚¦
 		static const char   SEARCH_STR_REGCMD[] = "#regcmd ";
 		static const size_t SEARCH_LEN_REGCMD = sizeof(SEARCH_STR_REGCMD) - 1; // '\0'‚Ì•ª‚¾‚¯Œ¸‚ç‚·
 		char*  pszBuffer = reinterpret_cast<char*>(lpBuffer);
@@ -279,23 +280,12 @@ BOOL WINAPI HookReadFile(
 						param_start[0] = '1';
 						param_start[1] = '9';
 					}
-//char* tmp = new char[size_t(param_end - param_start) + 1];
-//memcpy(tmp, param_start, size_t(param_end - param_start));
-//tmp[size_t(param_end - param_start)] = 0;
-//OutputDebugString("-----------------------------------------------------------------------------\n");
-//OutputDebugString(tmp);
-//OutputDebugString("\n");
-//delete [] tmp;
+					p = param_end;
+					continue;
 				}
 			}
 			p = next + SEARCH_LEN_REGCMD;
 		}
-//char* tmp = new char[*lpNumberOfBytesRead + 1];
-//memcpy(tmp, lpBuffer, *lpNumberOfBytesRead);
-//tmp[*lpNumberOfBytesRead] = 0;
-//OutputDebugString("==============================================================================\n");
-//OutputDebugString(tmp);
-//delete [] tmp;
 	}
 
 	return r;
