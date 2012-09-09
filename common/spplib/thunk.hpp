@@ -257,6 +257,17 @@ public:
 
 		// 待避
 		::memcpy(m_code, code, copy_len);
+
+		// 退避した中に call があった場合、アドレスを書き換える
+		for(size_t pos = 0; pos < copy_len; ) {
+			size_t len = instructionLength_x86(m_code + pos);
+			if( 0xE8 == m_code[pos] ) { // call XXXX
+				u8* addr = m_code + pos + 1;
+				*((u32*)addr) = (u32)((u32)code + *((u32*)addr) - (u32)m_code);
+			}
+			pos += len;
+		}
+
 		m_code += copy_len;
 
 		// 飛び先を計算
@@ -317,6 +328,16 @@ public:
 		::VirtualProtect(code, copy_len, PAGE_EXECUTE_READWRITE, &op);
 
 		::memcpy(code, hook_code, copy_len);
+
+		// 復帰した中に call があった場合、アドレスを書き換える
+		for(size_t pos = 0; pos < copy_len; ) {
+			size_t len = instructionLength_x86(code + pos);
+			if( 0xE8 == code[pos] ) { // call XXXX
+				u8* addr = code + pos + 1;
+				*((u32*)addr) = (u32)((u32)hook_code + *((u32*)addr) - (u32)code);
+			}
+			pos += len;
+		}
 
 		::VirtualProtect(code, copy_len, op, &op);
 
