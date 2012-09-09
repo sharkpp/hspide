@@ -92,7 +92,9 @@ int cmdfunc(int cmd)
 	case 0:
 		if( top ) {
 			HSP3TYPEINFO* last = top + TYPE_USERDEF + top->hspctx->hsphed->max_hpi / sizeof(HPIDAT) + top->hspctx->hsphed->max_varhpi;
-			g_app->hook(top, last);
+			if( g_app ) {
+				g_app->hook(top, last);
+			}
 			top = NULL;
 			break;
 		}
@@ -106,6 +108,7 @@ int termfunc(int /*option*/)
 {
 OutputDebugStringA("CDbgMain::termfunc #1\n");
 	g_app->disconnectFromDebugger();
+	g_app->unhook();
 OutputDebugStringA("CDbgMain::termfunc #2\n");
 	return 0;
 }

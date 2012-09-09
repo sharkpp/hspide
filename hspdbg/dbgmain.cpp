@@ -64,19 +64,20 @@ void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 		m_typeinfo_old= *typeinfo;
 		// cmdfunc‚È‚Ç‚ÌƒtƒbƒN
 		if( typeinfo->cmdfunc ) {
-			typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
+			m_typeinfo_old.cmdfunc = (int(*)(int))m_cmdfunc_thunk.injection_code(typeinfo->cmdfunc);
+		//	typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
 		}
 		if( typeinfo->reffunc ) {
-			typeinfo->reffunc = (void*(*)(int*,int))m_reffunc_thunk.get_code();
+			m_typeinfo_old.reffunc = (void*(*)(int*,int))m_reffunc_thunk.injection_code(typeinfo->reffunc);
 		}
 		if( typeinfo->termfunc ) {
-			typeinfo->termfunc = (int(*)(int))m_termfunc_thunk.get_code();
+			m_typeinfo_old.termfunc = (int(*)(int))m_termfunc_thunk.injection_code(typeinfo->termfunc);
 		}
-		if( typeinfo->msgfunc ) {
-			typeinfo->msgfunc = (int(*)(int,int,int))m_msgfunc_thunk.get_code();
-		}
+		//if( typeinfo->msgfunc ) {
+		//	m_typeinfo_old.msgfunc = (int(*)(int,int,int))m_msgfunc_thunk.injection_code(typeinfo->msgfunc);
+		//}
 		if( typeinfo->eventfunc ) {
-			typeinfo->eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.get_code();
+			m_typeinfo_old.eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.injection_code(typeinfo->eventfunc);
 		}
 	}
 }
@@ -85,20 +86,21 @@ void CDbgMain::typeinfo_hook::uninstall_hook()
 {
 	if( m_typeinfo ) {
 		if( m_typeinfo->cmdfunc ) {
-			m_typeinfo->cmdfunc = m_typeinfo_old.cmdfunc;
+			m_cmdfunc_thunk.uninjection_code(m_typeinfo->cmdfunc, m_typeinfo_old.cmdfunc);
 		}
 		if( m_typeinfo->reffunc ) {
-			m_typeinfo->reffunc = m_typeinfo_old.reffunc;
+			m_reffunc_thunk.uninjection_code(m_typeinfo->reffunc, m_typeinfo_old.reffunc);
 		}
 		if( m_typeinfo->termfunc ) {
-			m_typeinfo->termfunc = m_typeinfo_old.termfunc;
+			m_termfunc_thunk.uninjection_code(m_typeinfo->termfunc, m_typeinfo_old.termfunc);
 		}
 		if( m_typeinfo->msgfunc ) {
-			m_typeinfo->msgfunc = m_typeinfo_old.msgfunc;
+		//	m_msgfunc_thunk.uninjection_code(m_typeinfo->msgfunc, m_typeinfo_old.msgfunc);
 		}
 		if( m_typeinfo->eventfunc ) {
-			m_typeinfo->eventfunc = m_typeinfo_old.eventfunc;
+			m_eventfunc_thunk.uninjection_code(m_typeinfo->eventfunc, m_typeinfo_old.eventfunc);
 		}
+		m_typeinfo = NULL;
 	}
 }
 
@@ -113,7 +115,7 @@ int CDbgMain::typeinfo_hook::cmdfunc(int cmd)
 	HSP3DEBUG* dbg = g_app->debugInfo();
 	dbg->dbg_curinf();
 	char tmp[256];
-	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo->type,dbg->fname?dbg->fname:"???",dbg->line);
+	sprintf(tmp,"%p %s(%2d)/%2d>>%s(%2d)",this,__FUNCTION__,cmd,m_typeinfo_old.type,dbg->fname?dbg->fname:"???",dbg->line);
 	g_app->putLog(tmp, strlen(tmp));
 #endif
 
@@ -231,11 +233,11 @@ CDbgMain::CDbgMain()
 
 CDbgMain::~CDbgMain()
 {
+	delete [] m_typeinfo_hook;
+
 	if( m_socket->isOpen() ) {
 		m_socket->disconnectFromServer();
 	}
-
-	delete [] m_typeinfo_hook;
 }
 
 void CDbgMain::create()
@@ -641,7 +643,17 @@ void CDbgMain::hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last)
 	for(HSP3TYPEINFO* ite = top; ite < last; ++ite)
 	{
 		// ‘‚«Š·‚¦
-		m_typeinfo_hook[ite - top].install_hook(ite);
+		if( ite->type == short(ite - top) ) {
+			m_typeinfo_hook[ite - top].install_hook(ite);
+		}
+	}
+}
+
+void CDbgMain::unhook()
+{
+	for(int i = 0; i < 1024; i++)
+	{
+		m_typeinfo_hook[i].uninstall_hook();
 	}
 }
 

@@ -79,6 +79,7 @@ public:
 	HSP3DEBUG* debugInfo();
 
 	void hook(HSP3TYPEINFO* top, HSP3TYPEINFO* last);
+	void unhook();
 
 	void connectToDebugger();
 	void disconnectFromDebugger();
