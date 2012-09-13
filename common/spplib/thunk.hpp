@@ -88,6 +88,54 @@ private:
 			static R __fastcall invokeFASTCALL(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5) { return invokeCDECL(a1,a2,a3,a4,a5); }
 			static R __cdecl    invokeCDECL(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5)    { R (T::*p)(A1,A2,A3,A4,A5) = self_::func_ptr; return ((reinterpret_cast<T*>(self_::this_ptr))->*p)(a1,a2,a3,a4,a5); }
 		};
+		template<typename R>
+		struct static_invoker<R(*)()> {
+			typedef static_invoker<R(*)()> self_;
+			static R (*func_ptr)();
+			static R __stdcall  invokeSTDCALL()  { return invokeCDECL(); }
+			static R __fastcall invokeFASTCALL() { return invokeCDECL(); }
+			static R __cdecl    invokeCDECL()    { R (*p)() = self_::func_ptr; return (*p)(); }
+		};
+		template<typename R, typename A1>
+		struct static_invoker<R(*)(A1)> {
+			typedef static_invoker<R(*)(A1)> self_;
+			static R (*func_ptr)(A1);
+			static R __stdcall  invokeSTDCALL(A1 a1)  { return invokeCDECL(a1); }
+			static R __fastcall invokeFASTCALL(A1 a1) { return invokeCDECL(a1); }
+			static R __cdecl    invokeCDECL(A1 a1)    { R (*p)(A1) = self_::func_ptr; return (*p)(a1); }
+		};
+		template<typename R, typename A1, typename A2>
+		struct static_invoker<R(*)(A1,A2)> {
+			typedef static_invoker<R(*)(A1,A2)> self_;
+			static R (*func_ptr)(A1,A2);
+			static R __stdcall  invokeSTDCALL(A1 a1,A2 a2)  { return invokeCDECL(a1,a2); }
+			static R __fastcall invokeFASTCALL(A1 a1,A2 a2) { return invokeCDECL(a1,a2); }
+			static R __cdecl    invokeCDECL(A1 a1,A2 a2)    { R (*p)(A1,A2) = self_::func_ptr; return (*p)(a1,a2); }
+		};
+		template<typename R, typename A1, typename A2, typename A3>
+		struct static_invoker<R(*)(A1,A2,A3)> {
+			typedef static_invoker<R(*)(A1,A2,A3)> self_;
+			static R (*func_ptr)(A1,A2,A3);
+			static R __stdcall  invokeSTDCALL(A1 a1,A2 a2,A3 a3)  { return invokeCDECL(a1,a2,a3); }
+			static R __fastcall invokeFASTCALL(A1 a1,A2 a2,A3 a3) { return invokeCDECL(a1,a2,a3); }
+			static R __cdecl    invokeCDECL(A1 a1,A2 a2,A3 a3)    { R (*p)(A1,A2,A3) = self_::func_ptr; return (*p)(a1,a2,a3); }
+		};
+		template<typename R, typename A1, typename A2, typename A3, typename A4>
+		struct static_invoker<R(*)(A1,A2,A3,A4)> {
+			typedef static_invoker<R(*)(A1,A2,A3,A4)> self_;
+			static R (*func_ptr)(A1,A2,A3,A4);
+			static R __stdcall  invokeSTDCALL(A1 a1,A2 a2,A3 a3,A4 a4)  { return invokeCDECL(a1,a2,a3,a4); }
+			static R __fastcall invokeFASTCALL(A1 a1,A2 a2,A3 a3,A4 a4) { return invokeCDECL(a1,a2,a3,a4); }
+			static R __cdecl    invokeCDECL(A1 a1,A2 a2,A3 a3,A4 a4)    { R (*p)(A1,A2,A3,A4) = self_::func_ptr; return (*p)(a1,a2,a3,a4); }
+		};
+		template<typename R, typename A1, typename A2, typename A3, typename A4, typename A5>
+		struct static_invoker<R(*)(A1,A2,A3,A4,A5)> {
+			typedef static_invoker<R(*)(A1,A2,A3,A4,A5)> self_;
+			static R (*func_ptr)(A1,A2,A3,A4,A5);
+			static R __stdcall  invokeSTDCALL(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5)  { return invokeCDECL(a1,a2,a3,a4,a5); }
+			static R __fastcall invokeFASTCALL(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5) { return invokeCDECL(a1,a2,a3,a4,a5); }
+			static R __cdecl    invokeCDECL(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5)    { R (*p)(A1,A2,A3,A4,A5) = self_::func_ptr; return (*p)(a1,a2,a3,a4,a5); }
+		};
 	public:
 		void* thunk_cdecl_ptr;
 		void* thunk_stdcall_ptr;
@@ -156,6 +204,66 @@ private:
 			, this_holder_ptr   (&static_invoker<R(T::*)(A1,A2,A3,A4,A5)>::this_ptr)
 		{
 		}
+		template<typename R>
+		func_holder(R(*func)())
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)()>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)()>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)()>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)()>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
+		template<typename R, typename A1>
+		func_holder(R(*func)(A1))
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1)>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)(A1)>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)(A1)>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1)>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
+		template<typename R, typename A1, typename A2>
+		func_holder(R(*func)(A1,A2))
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2)>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2)>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2)>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2)>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
+		template<typename R, typename A1, typename A2, typename A3>
+		func_holder(R(*func)(A1,A2,A3))
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3)>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3)>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3)>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3)>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
+		template<typename R, typename A1, typename A2, typename A3, typename A4>
+		func_holder(R(*func)(A1,A2,A3,A4))
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4)>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4)>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4)>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4)>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
+		template<typename R, typename A1, typename A2, typename A3, typename A4, typename A5>
+		func_holder(R(*func)(A1,A2,A3,A4,A5))
+			: thunk_cdecl_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4,A5)>::invokeCDECL))
+			, thunk_stdcall_ptr (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4,A5)>::invokeSTDCALL))
+			, thunk_fastcall_ptr(reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4,A5)>::invokeFASTCALL))
+			, func_ptr          (*reinterpret_cast<void **>(&func))
+			, func_holder_ptr   (reinterpret_cast<void *>(&static_invoker<R(*)(A1,A2,A3,A4,A5)>::func_ptr))
+			, this_holder_ptr   (NULL)
+		{
+		}
 	};
 
 	static const size_t CALLING_CONVENTIONS_NUM = CALL_FASTCALL + 1;
@@ -196,6 +304,39 @@ public:
 			*m_code++       = 0x05;
 			*((u32*)m_code) = (u32)f.this_holder_ptr; m_code += sizeof(u32);
 			*((u32*)m_code) = (u32)this_;             m_code += sizeof(u32);
+			// mov dword ptr [f.func_holder_ptr], f.func_ptr
+			*m_code++       = 0xC7;
+			*m_code++       = 0x05;
+			*((u32*)m_code) = (u32)f.func_holder_ptr; m_code += sizeof(u32);
+			*((u32*)m_code) = (u32)f.func_ptr;        m_code += sizeof(u32);
+			// jmp func
+			*m_code++       = 0xE9;
+			*((u32*)m_code) = (u32)thunk - (u32)m_code - 4; m_code += sizeof(u32);
+		}
+		// ページ属性を実行のみに変更
+		DWORD op;
+		::VirtualProtect(m_code_top, DWORD(m_code - m_code_top), PAGE_EXECUTE, &op);
+#else
+#error "not impliment!"
+#endif
+	}
+
+	thunk(const func_holder& f, size_t code_max = 256)
+	{
+		m_code_max = code_max;
+#if (defined(WIN32) || defined(_WIN32)) && (!defined(WIN64) || !defined(_WIN64))
+		m_code_top  = m_code = (u8*)VirtualAlloc(NULL, m_code_max, MEM_COMMIT, PAGE_READWRITE);
+		m_code_last = m_code_top + m_code_max;
+		// 呼び出しタイプごとにコードを生成
+		for(size_t call_type = 0; call_type < CALLING_CONVENTIONS_NUM; call_type++)
+		{
+			m_thunk[call_type] = m_code;
+			void* thunk = NULL;
+			switch(call_type) {
+			case CALL_CDECL:    thunk = f.thunk_cdecl_ptr;    break;
+			case CALL_STDCALL:  thunk = f.thunk_stdcall_ptr;  break;
+			case CALL_FASTCALL: thunk = f.thunk_fastcall_ptr; break;
+			}
 			// mov dword ptr [f.func_holder_ptr], f.func_ptr
 			*m_code++       = 0xC7;
 			*m_code++       = 0x05;
@@ -362,6 +503,18 @@ template<typename T, typename R, typename A1, typename A2, typename A3, typename
 
 template<typename T, typename R, typename A1, typename A2, typename A3, typename A4, typename A5> void*   thunk::func_holder::static_invoker<R(T::*)(A1,A2,A3,A4,A5)>::this_ptr                  = NULL;
 template<typename T, typename R, typename A1, typename A2, typename A3, typename A4, typename A5> R (T::* thunk::func_holder::static_invoker<R(T::*)(A1,A2,A3,A4,A5)>::func_ptr)(A1,A2,A3,A4,A5) = NULL;
+
+template<typename R> R (* thunk::func_holder::static_invoker<R(*)()>::func_ptr)() = NULL;
+
+template<typename R, typename A1> R (* thunk::func_holder::static_invoker<R(*)(A1)>::func_ptr)(A1) = NULL;
+
+template<typename R, typename A1, typename A2> R (* thunk::func_holder::static_invoker<R(*)(A1,A2)>::func_ptr)(A1,A2) = NULL;
+
+template<typename R, typename A1, typename A2, typename A3> R (* thunk::func_holder::static_invoker<R(*)(A1,A2,A3)>::func_ptr)(A1,A2,A3) = NULL;
+
+template<typename R, typename A1, typename A2, typename A3, typename A4> R (* thunk::func_holder::static_invoker<R(*)(A1,A2,A3,A4)>::func_ptr)(A1,A2,A3,A4) = NULL;
+
+template<typename R, typename A1, typename A2, typename A3, typename A4, typename A5> R (* thunk::func_holder::static_invoker<R(*)(A1,A2,A3,A4,A5)>::func_ptr)(A1,A2,A3,A4,A5) = NULL;
 
 // from instructionLength.hpp
 inline
