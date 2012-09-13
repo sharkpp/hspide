@@ -64,20 +64,19 @@ void CDbgMain::typeinfo_hook::install_hook(HSP3TYPEINFO* typeinfo)
 		m_typeinfo_old= *typeinfo;
 		// cmdfunc‚È‚Ç‚ÌƒtƒbƒN
 		if( typeinfo->cmdfunc ) {
-			m_typeinfo_old.cmdfunc = (int(*)(int))m_cmdfunc_thunk.injection_code(typeinfo->cmdfunc);
-		//	typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
+			typeinfo->cmdfunc = (int(*)(int))m_cmdfunc_thunk.get_code();
 		}
 		if( typeinfo->reffunc ) {
-			m_typeinfo_old.reffunc = (void*(*)(int*,int))m_reffunc_thunk.injection_code(typeinfo->reffunc);
+			typeinfo->reffunc = (void*(*)(int*,int))m_reffunc_thunk.get_code();
 		}
 		if( typeinfo->termfunc ) {
-			m_typeinfo_old.termfunc = (int(*)(int))m_termfunc_thunk.injection_code(typeinfo->termfunc);
+			typeinfo->termfunc = (int(*)(int))m_termfunc_thunk.get_code();
 		}
 		//if( typeinfo->msgfunc ) {
 		//	m_typeinfo_old.msgfunc = (int(*)(int,int,int))m_msgfunc_thunk.injection_code(typeinfo->msgfunc);
 		//}
 		if( typeinfo->eventfunc ) {
-			m_typeinfo_old.eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.injection_code(typeinfo->eventfunc);
+			typeinfo->eventfunc = (int(*)(int,int,int,void*))m_eventfunc_thunk.get_code();
 		}
 	}
 }
@@ -86,19 +85,19 @@ void CDbgMain::typeinfo_hook::uninstall_hook()
 {
 	if( m_typeinfo ) {
 		if( m_typeinfo->cmdfunc ) {
-			m_cmdfunc_thunk.uninjection_code(m_typeinfo->cmdfunc, m_typeinfo_old.cmdfunc);
+			m_typeinfo->cmdfunc = m_typeinfo_old.cmdfunc;
 		}
 		if( m_typeinfo->reffunc ) {
-			m_reffunc_thunk.uninjection_code(m_typeinfo->reffunc, m_typeinfo_old.reffunc);
+			m_typeinfo->reffunc = m_typeinfo_old.reffunc;
 		}
 		if( m_typeinfo->termfunc ) {
-			m_termfunc_thunk.uninjection_code(m_typeinfo->termfunc, m_typeinfo_old.termfunc);
+			m_typeinfo->termfunc = m_typeinfo_old.termfunc;
 		}
 		if( m_typeinfo->msgfunc ) {
 		//	m_msgfunc_thunk.uninjection_code(m_typeinfo->msgfunc, m_typeinfo_old.msgfunc);
 		}
 		if( m_typeinfo->eventfunc ) {
-			m_eventfunc_thunk.uninjection_code(m_typeinfo->eventfunc, m_typeinfo_old.eventfunc);
+			m_typeinfo->eventfunc = m_typeinfo_old.eventfunc;
 		}
 		m_typeinfo = NULL;
 	}
