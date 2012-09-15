@@ -100,6 +100,7 @@ bool CCompiler::collectSymbols()
 	connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
 			this, SLOT(listedSymbolsFinished(int,QProcess::ExitStatus)));
 
+qDebug() << program << arguments;
 	process->start(program, arguments);
 
 	if( !process->waitForStarted() )

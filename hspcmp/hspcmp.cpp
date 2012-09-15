@@ -406,7 +406,16 @@ int main(int argc, char * argv[])
 	std::string runtime;
 	std::string exename;
 	std::string tmp2;
-	
+
+	if( !cmp.loaded() )
+	{
+#ifdef _DEBUG
+		option.dump();
+#endif
+		usage();
+		return -1;
+	}
+
 	if( option.attach ) {
 		// デバッガとの関連付け用の情報を渡す
 		static const char KEY[] = "hspide#attach=";

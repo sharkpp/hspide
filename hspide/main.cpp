@@ -7,7 +7,7 @@
 
 void myMessageHandler(QtMsgType type, const char *msg)
  {
-	 FILE* fp = fopen("C:\\hsp33\\hspide.log", "ab");
+	 FILE* fp = fopen("hspide.log", "ab");
      switch (type) {
      case QtDebugMsg:
          fprintf(fp, "Debug: %s\r\n", msg);
