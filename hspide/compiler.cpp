@@ -156,7 +156,15 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem)
 	QProcess* hspcmp = new QProcess(this);
 
 	// 作業ディレクトリを指定
-	QString workDir = QDir::currentPath(); // いらないかも
+#ifdef _WIN32
+	// My Documents の場所を取得
+    QSettings settings(QSettings::UserScope, "Microsoft", "Windows");
+    settings.beginGroup("CurrentVersion/Explorer/Shell Folders");
+    QString workDir = settings.value("Personal").toString();
+#else
+	QString workDir = QDir::homePath();
+#endif
+
 	if( !targetItem->isUntitled() )
 	{
 		workDir = QFileInfo(filename).dir().path();

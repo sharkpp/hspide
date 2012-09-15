@@ -5,8 +5,32 @@
 #include <QString>
 #include <QTextCodec>
 
+void myMessageHandler(QtMsgType type, const char *msg)
+ {
+	 FILE* fp = fopen("C:\\hsp33\\hspide.log", "ab");
+     switch (type) {
+     case QtDebugMsg:
+         fprintf(fp, "Debug: %s\r\n", msg);
+         break;
+     case QtWarningMsg:
+         fprintf(fp, "Warning: %s\r\n", msg);
+         break;
+     case QtCriticalMsg:
+         fprintf(fp, "Critical: %s\r\n", msg);
+         break;
+     case QtFatalMsg:
+         fprintf(fp, "Fatal: %s\r\n", msg);
+         abort();
+     }
+	 fclose(fp);
+ }
+
 int main(int argc, char **argv)
 {
+#if 0 && !defined(_DEBUG)
+	qInstallMsgHandler(myMessageHandler);
+#endif
+
 	QApplication app(argc, argv);
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 	QTranslator trans;

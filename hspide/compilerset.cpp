@@ -112,15 +112,13 @@ bool CCompilerSet::assignBuildItem(CCompiler* compiler)
 	bool result = false;
 	if( !m_buildItems.isEmpty() )
 	{
-		BuildOptionType& opt = m_buildItems.front();
+		BuildOptionType opt = m_buildItems.front();
+		m_buildItems.pop_front();
 		m_buildingItems.push_back(opt);
-		if( !(result = compiler->compile(opt.item)) ) {
-			m_buildingItems.pop_back();
-		} else {
+		if( false != (result = compiler->compile(opt.item)) ) {
 			m_buildingItems.back().objTemp
 				 = compiler->objTemp();
 		}
-		m_buildItems.pop_front();
 	}
 	return result;
 }
