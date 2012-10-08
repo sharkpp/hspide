@@ -171,8 +171,7 @@ bool CCompiler::compile(CWorkSpaceItem* targetItem)
 		workDir = QFileInfo(filename).dir().path();
 	}
 
-	// 無題の場合は一時的なファイルに保存
-	if( targetItem->isUntitled() )
+	// 一時的なファイルに保存
 	{
 		CDocumentPane* document = targetItem->assignDocument();
 
