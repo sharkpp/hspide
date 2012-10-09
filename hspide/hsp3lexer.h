@@ -9,6 +9,7 @@ public:
 	typedef enum {
 		TypeNormal = 0,
 		TypeString,
+		TypeNumber,
 		TypeLabel,
 		TypeComment,
 		TypeFunction,
@@ -60,6 +61,9 @@ QDebug& operator<<(QDebug& debug, const Hsp3Lexer::Type& type)
 	switch(type) {
 	case Hsp3Lexer::TypeString:
 		debug << "string ";
+		break;
+	case Hsp3Lexer::TypeNumber:
+		debug << "number ";
 		break;
 	case Hsp3Lexer::TypeLabel:
 		debug << "label  ";
@@ -161,11 +165,18 @@ bool Hsp3Lexer::scan()
 			m_start  = tokenStart; \
 			m_length = pos - tokenStart; \
 			m_token  = m_text.mid(m_start, m_length); \
-			     if( inComment               ) { m_type = TypeComment; } \
-			else if( inLabel && 1 < m_length ) { m_type = TypeLabel;   } \
-			else if( inString                ) { m_type = TypeString;  } \
-			else                               { m_type = TypeNormal;  } \
-			     if( inPreProcess )            { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
+			bool ok = false; \
+			     if( inComment               )    { m_type = TypeComment; } \
+			else if( inLabel && 1 < m_length )    { m_type = TypeLabel;   } \
+			else if( inString                )    { m_type = TypeString;  } \
+			else if( m_token.toInt(&ok, 10), ok ) { m_type = TypeNumber;  } \
+			else if( m_token.toDouble(&ok), ok )  { m_type = TypeNumber;  } \
+			else if( m_token.mid(2).toInt(&ok, 16), ( "0x" == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(3).toInt(&ok, 16), ("-0x" == m_token.left(3) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(1).toInt(&ok, 16), ( "$"  == m_token.left(1) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(2).toInt(&ok, 16), ("-$"  == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
+			else                                  { m_type = TypeNormal; } \
+			     if( inPreProcess )               { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
 			code; \
 			m_lineNo         = lineNo; \
 			m_pos            = pos; \
@@ -364,6 +375,9 @@ bool Hsp3Lexer::scan()
 					READ_TOKEN((inLabel = false, pos++, m_line += QChar::LineSeparator == c));
 					inLabel = false;
 				}
+			} else if( inLabel && 1 == (pos - tokenStart) && (c.isNumber() || c.isSymbol() || '.' == c.unicode()) ) {
+				READ_TOKEN((inLabel = false));
+				inLabel = false;
 			} else {
 				skipPreProcessSpace = false;
 			}

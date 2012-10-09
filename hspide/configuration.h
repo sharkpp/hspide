@@ -26,6 +26,7 @@ public:
 		LabelMetrics,			// ラベル
 		CommentMetrics,			// コメント
 		StringMetrics,			// 文字列
+		NumberMetrics,			// 数字
 		LineFeedCharMetrics,	// 改行文字
 		TabCharMetrics,			// TAB文字
 		EofMetrics,				// EOF

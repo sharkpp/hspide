@@ -54,6 +54,7 @@ Configuration::Configuration()
 	m_colorMetrics[LabelMetrics].foregroundColor        = Qt::darkYellow;
 	m_colorMetrics[CommentMetrics].foregroundColor      = Qt::darkGreen;
 	m_colorMetrics[StringMetrics].foregroundColor       = Qt::darkRed;
+	m_colorMetrics[NumberMetrics].foregroundColor       = Qt::red;
 	m_colorMetrics[FunctionMetrics].foregroundColor     = Qt::blue;
 	m_colorMetrics[SubroutineMetrics].foregroundColor   = Qt::blue;
 	m_colorMetrics[PreprocessorMetrics].foregroundColor = Qt::blue;
