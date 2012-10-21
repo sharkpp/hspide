@@ -71,7 +71,7 @@ QUuid FileManager::assign(const QString& filePath, const QUuid& uuid)
 // ƒpƒX‚ğæ“¾
 QString FileManager::path(const QUuid& uuid) const
 {
-	QMap<QUuid, QString>::iterator
+    QMap<QUuid, QString>::const_iterator
 		ite = m_manageInfo.find(uuid);
 	if( m_manageInfo.end() != ite ) {
 		return ite.value();

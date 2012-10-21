@@ -2,6 +2,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_7819799D_3393_4CF7_8DA3_2046BDCD2E71
+#define INCLUDE_GUARD_7819799D_3393_4CF7_8DA3_2046BDCD2E71
+
 class Hsp3Lexer
 {
 public:
@@ -152,7 +155,11 @@ void Hsp3Lexer::reset(const QString& text, int state)
 inline
 bool Hsp3Lexer::scan()
 {
+#ifdef _MSC_VER
 #define NOOP __noop
+#else
+#define NOOP ((void)0)
+#endif
 #define LABEL_RESET() \
 	if( inLabel ) { \
 		inLabel = false; \
@@ -394,3 +401,5 @@ bool Hsp3Lexer::scan()
 
 	return false;
 }
+
+#endif // !defined(7819799D_3393_4CF7_8DA3_2046BDCD2E71)

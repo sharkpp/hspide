@@ -112,7 +112,7 @@ bool BreakPointManager::removeAll()
 // ブレークポイントが存在しているか
 bool BreakPointManager::isSet(const QUuid& uuid, int lineNumber) const
 {
-	ListType::iterator
+    ListType::const_iterator
 		ite = m_breakPointList.find(uuid);
 	if( m_breakPointList.end() != ite &&
 		ite->end() != ite->find(lineNumber) )
@@ -125,7 +125,7 @@ bool BreakPointManager::isSet(const QUuid& uuid, int lineNumber) const
 // ブレークポイントの個数
 int BreakPointManager::countOf(const QUuid& uuid) const
 {
-	ListType::iterator
+    ListType::const_iterator
 		ite = m_breakPointList.find(uuid);
 	if( m_breakPointList.end() != ite )
 	{

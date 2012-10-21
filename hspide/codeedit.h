@@ -33,7 +33,7 @@ class CCodeEdit
 
 	QSize               m_lineIconSize;
 	QMap<int, QSet<int> >m_lineIconMap;
-	QMap<int, QIcon>    m_iconMap;
+    QMap<int, QIcon*>   m_iconMap;
 
 	int                 m_tabStopCharWidth;
 

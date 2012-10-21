@@ -19,7 +19,7 @@ CWorkSpaceItem::CWorkSpaceItem(QObject* parent, CWorkSpaceModel* model)
 	, m_buildConfigurations(theConf->buildConf())
 {
 	m_icon = QIcon(":/images/tango/small/text-x-generic.png");
-	m_text = QString("this=%1").arg((int)this, 0, 16);
+    m_text = QString("this=%1").arg((long long)this, 0, 16);
 
 	// V‚µ‚¢UUID‚ğŠ„‚è“–‚Ä
 	for(Configuration::BuildConfList::iterator

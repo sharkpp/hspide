@@ -171,7 +171,7 @@ void CCodeEdit::setLineNumberVisible(bool visible)
 int CCodeEdit::registLineIcon(const QIcon& icon)
 {
 	int no = !m_iconMap.isEmpty() ? m_iconMap.keys().back() + 1 : 0;
-	m_iconMap[no] = icon;
+    m_iconMap[no] = new QIcon(icon);
 	return no;
 }
 
@@ -182,11 +182,11 @@ void CCodeEdit::unregistLineIcon(int iconNo)
 
 bool CCodeEdit::lineIcon(int lineNo, int iconNo) const
 {
-	QMap<int, QSet<int> >::iterator
+    QMap<int, QSet<int> >::const_iterator
 		ite = m_lineIconMap.find(lineNo);
 	if( m_lineIconMap.end() != ite )
 	{
-		QSet<int>::iterator
+        QSet<int>::const_iterator
 			ite2 = ite.value().find(iconNo);
 		if( ite.value().end() != ite2 )
 		{
@@ -525,8 +525,8 @@ void CCodeEdit::paintLineNumEvent(QPaintEvent* event)
 					last2= ite.value().end();
 				ite2 != last2; ++ite2)
 			{
-				QIcon& icon = m_iconMap[*ite2];
-				QPixmap pixmap = icon.pixmap(QSize(m_lineIconSize.width() - 2, m_lineIconSize.height() - 2), QIcon::Normal);
+                QIcon* icon = m_iconMap[*ite2];
+                QPixmap pixmap = icon->pixmap(QSize(m_lineIconSize.width() - 2, m_lineIconSize.height() - 2), QIcon::Normal);
 				painter.drawPixmap(QPoint(1, y + int(rect.height() - m_lineIconSize.height()) + 1), pixmap);
 			}
 		}

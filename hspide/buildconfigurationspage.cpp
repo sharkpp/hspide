@@ -1,6 +1,7 @@
-#include "buildconfigurationspage.h"
 #include <QString>
 #include <QPushButton>
+#include "buildconfigurationspage.h"
+#include "global.h"
 
 BuildConfigurationsPage::BuildConfigurationsPage(QWidget *parent)
 	: QWidget(parent)

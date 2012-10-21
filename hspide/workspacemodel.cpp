@@ -315,7 +315,7 @@ QVariant CWorkSpaceModel::data(const QModelIndex& index, int role) const
 	case Qt::ToolTipRole:
 		return theFile->path(item->uuid());
 	case CWorkSpaceItem::UuidRole:
-		return item->uuid();
+        return item->uuid().toString();
 	case CWorkSpaceItem::TypeRole:
 		return item->type();
 	case CWorkSpaceItem::NodeTypeRole:

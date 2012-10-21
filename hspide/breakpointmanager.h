@@ -8,6 +8,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_5C4A653F_1C27_4DBB_A7E2_601FB7A6FA8D
+#define INCLUDE_GUARD_5C4A653F_1C27_4DBB_A7E2_601FB7A6FA8D
+
 class BreakPointManager
 	: public QObject
 {
@@ -63,3 +66,5 @@ signals:
 QDebug&      operator<<(QDebug& debug,       const BreakPointManager& v);
 QDataStream& operator<<(QDataStream& stream, const BreakPointManager& v);
 QDataStream& operator>>(QDataStream& stream,       BreakPointManager& v);
+
+#endif // !defined(INCLUDE_GUARD_5C4A653F_1C27_4DBB_A7E2_601FB7A6FA8D)

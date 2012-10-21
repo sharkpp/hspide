@@ -11,6 +11,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_E410F2E3_943F_47FD_B724_CC41608E4E48
+#define INCLUDE_GUARD_E410F2E3_943F_47FD_B724_CC41608E4E48
+
 class Configuration
 	: public QObject
 {
@@ -304,3 +307,5 @@ bool operator == (const Configuration::KeyAssignInfoType& lhs, const Configurati
 
 bool operator == (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs);
 bool operator != (const Configuration::BuildConfType& lhs, const Configuration::BuildConfType& rhs);
+
+#endif // !defined(INCLUDE_GUARD_E410F2E3_943F_47FD_B724_CC41608E4E48)

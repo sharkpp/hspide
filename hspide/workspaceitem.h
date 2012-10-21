@@ -11,6 +11,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_369061CA_A371_4275_AE77_FDDCF2232849
+#define INCLUDE_GUARD_369061CA_A371_4275_AE77_FDDCF2232849
+
 class CWorkSpaceModel;
 class CDocumentPane;
 class QXmlStreamWriter;
@@ -154,3 +157,4 @@ signals:
 	void saveComplete();
 };
 
+#endif // !defined(INCLUDE_GUARD_369061CA_A371_4275_AE77_FDDCF2232849)

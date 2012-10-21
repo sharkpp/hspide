@@ -6,6 +6,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_B2184834_3FFB_4DE2_91B7_4DC346EC0EF1
+#define INCLUDE_GUARD_B2184834_3FFB_4DE2_91B7_4DC346EC0EF1
+
 class QMimeData;
 
 class CWorkSpaceModel
@@ -85,3 +88,5 @@ signals:
 	void loadComplete(CWorkSpaceItem* item);
 	void saveComplete(CWorkSpaceItem* item);
 };
+
+#endif // !defined(INCLUDE_GUARD_B2184834_3FFB_4DE2_91B7_4DC346EC0EF1)

@@ -9,6 +9,9 @@
 #pragma once
 #endif // defined(_MSC_VER) && 1000 < _MSC_VER
 
+#ifndef INCLUDE_GUARD_1012AEB6_8EA6_4573_BACC_AE07F22F6131
+#define INCLUDE_GUARD_1012AEB6_8EA6_4573_BACC_AE07F22F6131
+
 class FileManager
 	: public QObject
 {
@@ -72,3 +75,5 @@ signals:
 QDebug&      operator<<(QDebug& debug,       const FileManager& v);
 QDataStream& operator<<(QDataStream& stream, const FileManager& v);
 QDataStream& operator>>(QDataStream& stream,       FileManager& v);
+
+#endif // !defined(INCLUDE_GUARD_1012AEB6_8EA6_4573_BACC_AE07F22F6131)
