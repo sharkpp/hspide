@@ -842,6 +842,19 @@ void MainWindow::onOpenFile(CWorkSpaceItem* item)
 		return;
 	}
 
+	// すでに開いているタブが変更されていない「無題」のみの場合タブを閉じる
+	if( 1 == tabWidget->count() )
+	{
+		CDocumentPane* document
+			= dynamic_cast<CDocumentPane*>(tabWidget->widget(0));
+		if( document &&
+			document->isUntitled() && 
+			!document->isModified() )
+		{
+			onTabClose();
+		}
+	}
+
 	// 新たに開く
 	CDocumentPane* document = new CDocumentPane(tabWidget);
 	document->setSymbols(m_symbols);
@@ -1322,7 +1335,8 @@ void MainWindow::onTabClose()
 	CWorkSpaceItem* currentItem  = document->assignItem();
 
 	// 何はともあれ保存
-	if( currentItem->isUntitled() )
+	if( currentItem->isUntitled() &&
+		document->isModified() )
 	{
 		// ファイルを保存
 		onSaveFile();

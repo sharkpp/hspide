@@ -358,7 +358,7 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 		{
 			// ポップアップを表示
 			QRect rc = cursorRect();
-			rc.moveLeft(lineNumberWidth());
+			rc.translate(lineNumberWidth(), 0);
 			rc.setWidth(m_completer->popup()->sizeHintForColumn(0)
 						+ m_completer->popup()->verticalScrollBar()->sizeHint().width());
 			m_completer->complete(rc);

@@ -70,6 +70,10 @@ CWorkSpaceItem* CWorkSpaceDock::currentItem()
 	}
 
 	QModelIndexList indexes = model->selectedIndexes();
+	if( indexes.isEmpty() ) {
+		return NULL;
+	}
+
 	CWorkSpaceItem *item = static_cast<CWorkSpaceItem*>(indexes.front().internalPointer());
 
 	return item;
