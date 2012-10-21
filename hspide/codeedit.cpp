@@ -323,6 +323,15 @@ void CCodeEdit::keyPressEvent(QKeyEvent* event)
 		}
 	}
 
+	// SHIFT+ENTERをキャンセルして普通の入力にする
+	if( shiftModifier && Qt::Key_Return == event->key() )
+	{
+		QTextCursor cursor = textCursor();
+		cursor.insertText("\n");
+		event->ignore();
+		return;
+	}
+
 	// CTRL+SPACE → 入力補間開始 or 入力補間中
 	if( complitePopup ||
 		(!text.isEmpty() && ctrlModifier && !shiftModifier && pressSpace) )
