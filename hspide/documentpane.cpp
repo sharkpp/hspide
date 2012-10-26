@@ -98,6 +98,7 @@ void CDocumentPane::updateConfiguration(const Configuration* conf)
 					<< qMakePair(Configuration::LabelMetrics,        Hsp3Lexer::TypeLabel)
 					<< qMakePair(Configuration::CommentMetrics,      Hsp3Lexer::TypeComment)
 					<< qMakePair(Configuration::StringMetrics,       Hsp3Lexer::TypeString)
+					<< qMakePair(Configuration::CharMetrics,         Hsp3Lexer::TypeChar)
 					<< qMakePair(Configuration::NumberMetrics,       Hsp3Lexer::TypeNumber)
 					;
 	for(int i = 0; i < keywordFormat.size(); i++)

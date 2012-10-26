@@ -11,7 +11,8 @@ public:
 
 	typedef enum {
 		TypeNormal = 0,
-		TypeString,
+		TypeString, // "abc"
+		TypeChar,   // '*'
 		TypeNumber,
 		TypeLabel,
 		TypeComment,
@@ -27,6 +28,7 @@ private:
 	bool m_inComment;
 	bool m_isBlockComment;
 	bool m_inString;
+	bool m_inChar;
 	bool m_inLabel;
 	bool m_prevEscape;
 
@@ -64,6 +66,9 @@ QDebug& operator<<(QDebug& debug, const Hsp3Lexer::Type& type)
 	switch(type) {
 	case Hsp3Lexer::TypeString:
 		debug << "string ";
+		break;
+	case Hsp3Lexer::TypeChar:
+		debug << "char   ";
 		break;
 	case Hsp3Lexer::TypeNumber:
 		debug << "number ";
@@ -134,7 +139,8 @@ int Hsp3Lexer::state() const
 		( m_inComment      ?  2 : 0) |
 		( m_isBlockComment ?  4 : 0) |
 		( m_inString       ?  8 : 0) |
-		( m_inLabel        ? 16 : 0)
+		( m_inChar         ? 16 : 0) |
+		( m_inLabel        ? 32 : 0)
 		;
 }
 
@@ -149,7 +155,8 @@ void Hsp3Lexer::reset(const QString& text, int state)
 	m_inComment      = 0 <= state ? (0 != (state &  2)) : false;
 	m_isBlockComment = 0 <= state ? (0 != (state &  4)) : false;
 	m_inString       = 0 <= state ? (0 != (state &  8)) : false;
-	m_inLabel        = 0 <= state ? (0 != (state & 16)) : false;
+	m_inChar         = 0 <= state ? (0 != (state & 16)) : false;
+	m_inLabel        = 0 <= state ? (0 != (state & 32)) : false;
 }
 
 inline
@@ -171,25 +178,33 @@ bool Hsp3Lexer::scan()
 		if( 0 < (pos - tokenStart) ) { \
 			m_start  = tokenStart; \
 			m_length = pos - tokenStart; \
+/*QString token_ = QString(m_token).replace(QRegExp("\\[.*\\]"), ""); */ \
 			m_token  = m_text.mid(m_start, m_length); \
 			bool ok = false; \
 			     if( inComment               )    { m_type = TypeComment; } \
 			else if( inLabel && 1 < m_length )    { m_type = TypeLabel;   } \
 			else if( inString                )    { m_type = TypeString;  } \
+			else if( inChar                  )    { m_type = TypeChar;    } \
 			else if( m_token.toInt(&ok, 10), ok ) { m_type = TypeNumber;  } \
 			else if( m_token.toDouble(&ok), ok )  { m_type = TypeNumber;  } \
 			else if( m_token.mid(2).toInt(&ok, 16), ( "0x" == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
 			else if( m_token.mid(3).toInt(&ok, 16), ("-0x" == m_token.left(3) && ok) ) { m_type = TypeNumber; } \
 			else if( m_token.mid(1).toInt(&ok, 16), ( "$"  == m_token.left(1) && ok) ) { m_type = TypeNumber; } \
 			else if( m_token.mid(2).toInt(&ok, 16), ("-$"  == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(1).toInt(&ok,  2), ( "%"  == m_token.left(1) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(2).toInt(&ok,  2), ("-%"  == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(2).toInt(&ok,  2), ( "0b" == m_token.left(2) && ok) ) { m_type = TypeNumber; } \
+			else if( m_token.mid(3).toInt(&ok,  2), ("-0b" == m_token.left(3) && ok) ) { m_type = TypeNumber; } \
 			else                                  { m_type = TypeNormal; } \
 			     if( inPreProcess )               { m_token = m_token.remove(QChar(' ')).remove(QChar('\t')); } \
 			code; \
+/*m_token = "[" + token_ + "]" + m_token;*/ \
 			m_lineNo         = lineNo; \
 			m_pos            = pos; \
 			m_inComment      = inComment; \
 			m_isBlockComment = isBlockComment; \
 			m_inString       = inString; \
+			m_inChar         = inChar; \
 			m_inLabel        = inLabel; \
 			m_prevEscape     = prevEscape; \
 			return true; \
@@ -200,6 +215,7 @@ bool Hsp3Lexer::scan()
 	bool inComment      = m_inComment;
 	bool isBlockComment = m_isBlockComment;
 	bool inString       = m_inString;
+	bool inChar         = m_inChar;
 	bool inLabel        = m_inLabel;
 	bool inPreProcess   = false;
 	bool skipPreProcessSpace = false; // プリプロセッサの場合に初回のみスペースを無視するため
@@ -222,6 +238,7 @@ bool Hsp3Lexer::scan()
 		case '+':
 		case '-':
 		case '*':
+		case '\\': // escape or mod
 		case '/':
 		case '|':
 		case '&':
@@ -241,7 +258,12 @@ bool Hsp3Lexer::scan()
 				}
 				break;
 			}
-			if( inString ) {
+			if( inString || inChar ) {
+				if( '\\' == c.unicode() ) {
+					prevEscape = !prevEscape;
+					pos++;
+					continue;
+				}
 				break;
 			}
 			READ_TOKEN(NOOP);
@@ -270,6 +292,7 @@ bool Hsp3Lexer::scan()
 					case '-':
 						// ↑こいつは厄介
 						// a=b--1 だと a = b - (-1) になる
+						// a=b-1 だと a = b - 1 になる
 					case '+':
 					case '|':
 					case '&':
@@ -298,7 +321,7 @@ bool Hsp3Lexer::scan()
 				} else if( '*' == c ) {
 					inLabel = true;
 				} else {
-					if( '-' == c && (cc.isNumber() || '$' == cc) ) { // -0 or -0x1 or -$1
+					if( '-' == c && (cc.isNumber() || '$' == cc || '%' == cc || '0' == cc) ) { // -0 or -0x1 or -$1
 						tokenStart = pos;
 						lineNo     = m_line;
 						break;
@@ -317,8 +340,17 @@ bool Hsp3Lexer::scan()
 		case ',':
 		case ':':
 			LABEL_RESET();
-			if( inComment || inString ) {
+			if( inComment || inString || inChar ) {
 				break;
+			}
+			if( '{' == c.unicode() &&
+				pos + 1 < len ) {
+				const QChar cc = m_text.at(pos + 1);
+				if( '\"' == cc.unicode() ) {
+					inString = !inString;
+					pos++;
+					break;
+				}
 			}
 			READ_TOKEN(NOOP);
 			tokenStart = pos;
@@ -327,14 +359,6 @@ bool Hsp3Lexer::scan()
 			READ_TOKEN(NOOP);
 			pos--;
 			break;
-		case '\\':
-			LABEL_RESET();
-			if( inComment || inString ) {
-				break;
-			}
-			prevEscape = !prevEscape;
-			pos++;
-			continue;
 		case '"':
 			LABEL_RESET();
 			if( inComment ) {
@@ -342,6 +366,12 @@ bool Hsp3Lexer::scan()
 			}
 			if( !prevEscape ) {
 				if( inString ) { // 文字列から復帰
+					if( pos + 1 < len ) {
+						const QChar cc = m_text.at(pos + 1);
+						if( '}' == cc.unicode() ) {
+							pos++;
+						}
+					}
 					pos++;
 					READ_TOKEN(inString = false);
 					pos--;
@@ -349,9 +379,23 @@ bool Hsp3Lexer::scan()
 				inString = !inString;
 			}
 			break;
+		case '\'':
+			LABEL_RESET();
+			if( inComment ) {
+				break;
+			}
+			if( !prevEscape ) {
+				if( inChar ) { // 文字から復帰
+					pos++;
+					READ_TOKEN(inChar = false);
+					pos--;
+				}
+				inChar = !inChar;
+			}
+			break;
 		case ';':
 			LABEL_RESET();
-			if( inComment || inString ) {
+			if( inComment || inString || inChar ) {
 				break;
 			}
 			READ_TOKEN(NOOP);
@@ -362,7 +406,7 @@ bool Hsp3Lexer::scan()
 			break;
 		case '#':
 			LABEL_RESET();
-			if( inComment || inString ) {
+			if( inComment || inString || inChar ) {
 				break;
 			}
 			READ_TOKEN(NOOP);
@@ -375,9 +419,11 @@ bool Hsp3Lexer::scan()
 			if( QChar::LineSeparator == c && inComment ) {
 				READ_TOKEN((inComment = isBlockComment, pos++, m_line++));
 				inComment = isBlockComment;
+			} else if( QChar::LineSeparator == c && inString ) {
+				READ_TOKEN((pos++, m_line++));
 			} else if( c.isSpace() ) {
 				if( !skipPreProcessSpace &&
-					!inString && !inComment )
+					!inString && !inChar && !inComment )
 				{
 					READ_TOKEN((inLabel = false, pos++, m_line += QChar::LineSeparator == c));
 					inLabel = false;

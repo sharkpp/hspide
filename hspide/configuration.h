@@ -28,7 +28,8 @@ public:
 		MacroMetrics,			// マクロ
 		LabelMetrics,			// ラベル
 		CommentMetrics,			// コメント
-		StringMetrics,			// 文字列
+		CharMetrics,			// シングルクォーテーション文字列
+		StringMetrics,			// ダブルクォーテーション文字列
 		NumberMetrics,			// 数字
 		LineFeedCharMetrics,	// 改行文字
 		TabCharMetrics,			// TAB文字

@@ -360,10 +360,6 @@
         <translation>コメント</translation>
     </message>
     <message>
-        <source>String</source>
-        <translation>文字列</translation>
-    </message>
-    <message>
         <source>Line feed char</source>
         <translation>改行文字</translation>
     </message>
@@ -570,6 +566,18 @@
     <message>
         <source>Show workspace</source>
         <translation>ワークスペースを表示</translation>
+    </message>
+    <message>
+        <source>Single quoted strings</source>
+        <translation>シングルクォーテーション文字列</translation>
+    </message>
+    <message>
+        <source>Double quoted strings</source>
+        <translation>ダブルクォーテーション文字列</translation>
+    </message>
+    <message>
+        <source>Number</source>
+        <translation>数値</translation>
     </message>
 </context>
 <context>

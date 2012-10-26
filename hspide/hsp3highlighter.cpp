@@ -17,6 +17,10 @@ CHsp3Highlighter::CHsp3Highlighter(QTextDocument *parent)
 	QTextCharFormat& stringFormat = m_format[Hsp3Lexer::TypeString];
 	stringFormat.setForeground(Qt::darkRed);
 
+	// ï∂éö
+	QTextCharFormat& charFormat = m_format[Hsp3Lexer::TypeChar];
+	charFormat.setForeground(Qt::darkCyan);
+
 	// êîéö
 	QTextCharFormat& stringNumber = m_format[Hsp3Lexer::TypeNumber];
 	stringNumber.setForeground(Qt::red);

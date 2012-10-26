@@ -54,6 +54,7 @@ Configuration::Configuration()
 	m_colorMetrics[LabelMetrics].foregroundColor        = Qt::darkYellow;
 	m_colorMetrics[CommentMetrics].foregroundColor      = Qt::darkGreen;
 	m_colorMetrics[StringMetrics].foregroundColor       = Qt::darkRed;
+	m_colorMetrics[CharMetrics].foregroundColor         = Qt::darkCyan;
 	m_colorMetrics[NumberMetrics].foregroundColor       = Qt::red;
 	m_colorMetrics[FunctionMetrics].foregroundColor     = Qt::blue;
 	m_colorMetrics[SubroutineMetrics].foregroundColor   = Qt::blue;
@@ -235,7 +236,9 @@ QStringList Configuration::colorMetricsItemNames()
 				<< "macro"
 				<< "label"
 				<< "comment"
+				<< "char"
 				<< "string"
+				<< "number"
 				<< "line-feed-char"
 				<< "tab-char"
 				<< "eof"
