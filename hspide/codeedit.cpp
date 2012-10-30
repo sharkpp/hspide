@@ -41,6 +41,11 @@ public:
 		static_cast<CCodeEdit*>(parentWidget())->mouseMoveLineNumEvent(event);
 	}
 
+	virtual void wheelEvent(QWheelEvent* event)
+	{
+		static_cast<CCodeEdit*>(parentWidget())->wheelLineNumEvent(event);
+	}
+
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -592,4 +597,9 @@ void CCodeEdit::mouseMoveLineNumEvent(QMouseEvent* event)
 		}
 		setTextCursor(cursor);
 	}
+}
+
+void CCodeEdit::wheelLineNumEvent(QWheelEvent* event)
+{
+	wheelEvent(event);
 }

@@ -89,6 +89,7 @@ protected:
 	void mousePressLineNumEvent(QMouseEvent* event);
 	void mouseReleaseLineNumEvent(QMouseEvent* event);
 	void mouseMoveLineNumEvent(QMouseEvent* event);
+	void wheelLineNumEvent(QWheelEvent* event);
 
 signals:
 
