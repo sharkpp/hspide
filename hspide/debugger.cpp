@@ -68,10 +68,13 @@ void CDebugger::onRecvPutLog(const QByteArray& param)
 	QTextCodec* codec = QTextCodec::codecForLocale();
 	QString s = codec->toUnicode(param);
 #ifdef _DEBUG
-	if( !s.contains("typeinfo_hook::") ) // とりあえず内部用のログはフィルタ
+	if( !s.contains("typeinfo_hook::") ) { // とりあえず内部用のログはフィルタ
 #endif
 	emit putLog(s);
 	qDebug() <<__FUNCTION__<< (void*)m_clientConnection << CMD_PUT_LOG << s;
+#ifdef _DEBUG
+	}
+#endif
 }
 
 void CDebugger::onRecvStopRunning(const QByteArray& param)
