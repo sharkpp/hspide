@@ -10,6 +10,7 @@ INCLUDEPATH += .
 QT += xml network
 
 win32:RC_FILE  = hspide.rc
+macx:ICON = hspide.icns
 
 # ランタイムライブラリを静的リンク 
 # Qtライブラリ側も同じオプションでビルドされていること！
@@ -44,4 +45,6 @@ RESOURCES += hspide.qrc
 TRANSLATIONS += i18n/hspide_ja.ts
 FORMS    = newfiledialog.ui jumpdialog.ui configdialog.ui aboutdialog.ui savesolutiondialog.ui \
            savepresetdialog.ui buildconfigurationspage.ui
+
+OTHER_FILES +=
 
