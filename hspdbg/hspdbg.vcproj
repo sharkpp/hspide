@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="."
+			OutputDirectory="debug\"
 			IntermediateDirectory="debug\"
 			ConfigurationType="2"
 			UseOfMFC="0"
@@ -45,8 +45,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				Optimization="4"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;..\common&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;debug&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NODLL,QT_THREAD_SUPPORT,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
+				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.4\include\QtCore&quot;,&quot;c:\Qt\4.8.4\include\QtNetwork&quot;,&quot;c:\Qt\4.8.4\include&quot;,&quot;.&quot;,&quot;..\common&quot;,&quot;c:\Qt\4.8.4\include\ActiveQt&quot;,&quot;debug&quot;,c:\Qt\4.8.4\mkspecs\win32-msvc2008"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="1"
@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NODLL,QT_THREAD_SUPPORT,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,_DEBUG"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,_DEBUG"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -73,11 +73,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="c:\Qt\4.7.3\lib\QtNetworkd.lib c:\Qt\4.7.3\lib\QtCored.lib ws2_32.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib"
-				OutputFile="debug\hspdbg.dll"
+				AdditionalDependencies="c:\Qt\4.8.4\lib\QtNetworkd4.lib c:\Qt\4.8.4\lib\QtCored4.lib"
+				OutputFile="$(OutDir)\hspdbg.dll"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
-				IgnoreDefaultLibraryNames="msvcrtd.lib,msvcrtd.lib"
+				AdditionalLibraryDirectories="c:\Qt\4.8.4\lib"
+				IgnoreDefaultLibraryNames="msvcrtd.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=""
 				SubSystem="0"
@@ -105,11 +105,12 @@
 				Name="VCPostBuildEventTool"
 				Description="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
 				CommandLine="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="."
+			OutputDirectory="release\"
 			IntermediateDirectory="release\"
 			ConfigurationType="2"
 			UseOfMFC="0"
@@ -137,8 +138,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
 				Optimization="2"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;..\common&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;release&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NODLL,QT_THREAD_SUPPORT,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,NDEBUG"
+				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.4\include\QtCore&quot;,&quot;c:\Qt\4.8.4\include\QtNetwork&quot;,&quot;c:\Qt\4.8.4\include&quot;,&quot;.&quot;,&quot;..\common&quot;,&quot;c:\Qt\4.8.4\include\ActiveQt&quot;,&quot;release&quot;,c:\Qt\4.8.4\mkspecs\win32-msvc2008"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,NDEBUG"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -157,7 +158,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_NODLL,QT_THREAD_SUPPORT,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,HSPDBG_EXPORTS,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -165,12 +166,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="c:\Qt\4.7.3\lib\QtNetwork.lib c:\Qt\4.7.3\lib\QtCore.lib ws2_32.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib"
-				OutputFile="release\hspdbg.dll"
+				AdditionalDependencies="c:\Qt\4.8.4\lib\QtNetwork4.lib c:\Qt\4.8.4\lib\QtCore4.lib"
+				OutputFile="$(OutDir)\hspdbg.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
-				IgnoreDefaultLibraryNames="msvcrt.lib,msvcrt.lib"
+				AdditionalLibraryDirectories="c:\Qt\4.8.4\lib"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="0"
@@ -198,6 +199,7 @@
 				Name="VCPostBuildEventTool"
 				Description="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
 				CommandLine="copy $(TargetPath) $(ProjectDir)\..\$(ConfigurationName)\hsp3debug.dll"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 	</Configurations>
@@ -260,8 +262,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC ..\hspide\breakpointmanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o debug\moc_breakpointmanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o debug\moc_breakpointmanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.8.4\bin\moc.exe"
 						Outputs="debug\moc_breakpointmanager.cpp"
 					/>
 				</FileConfiguration>
@@ -271,8 +273,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC ..\hspide\breakpointmanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o release\moc_breakpointmanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\breakpointmanager.h -o release\moc_breakpointmanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\breakpointmanager.h;C:\Qt\4.8.4\bin\moc.exe"
 						Outputs="release\moc_breakpointmanager.cpp"
 					/>
 				</FileConfiguration>
@@ -286,8 +288,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC dbgmain.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 dbgmain.h -o debug\moc_dbgmain.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;dbgmain.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 dbgmain.h -o debug\moc_dbgmain.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;dbgmain.h"
 						Outputs="debug\moc_dbgmain.cpp"
 					/>
 				</FileConfiguration>
@@ -297,8 +299,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC dbgmain.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 dbgmain.h -o release\moc_dbgmain.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;dbgmain.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 dbgmain.h -o release\moc_dbgmain.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;dbgmain.h"
 						Outputs="release\moc_dbgmain.cpp"
 					/>
 				</FileConfiguration>
@@ -312,8 +314,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC ..\hspide\filemanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o debug\moc_filemanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o debug\moc_filemanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.8.4\bin\moc.exe"
 						Outputs="debug\moc_filemanager.cpp"
 					/>
 				</FileConfiguration>
@@ -323,8 +325,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="MOC ..\hspide\filemanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_NODLL -DQT_THREAD_SUPPORT -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o release\moc_filemanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.7.3\bin\moc.exe"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DHSPDBG_EXPORTS -DQT_THREAD_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;..\common&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 ..\hspide\filemanager.h -o release\moc_filemanager.cpp&#x0D;&#x0A;"
+						AdditionalDependencies="..\hspide\filemanager.h;C:\Qt\4.8.4\bin\moc.exe"
 						Outputs="release\moc_filemanager.cpp"
 					/>
 				</FileConfiguration>

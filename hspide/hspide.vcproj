@@ -1,1930 +1,1329 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="hspide"
 	ProjectGUID="{56D696A1-E870-3F2B-B635-7E96C154EAE4}"
-	Keyword="Qt4VSv1.0"
-	TargetFrameworkVersion="0"
-	>
+	Keyword="Qt4VSv1.0">
 	<Platforms>
 		<Platform
-			Name="Win32"
-		/>
+			Name="Win32" />
 	</Platforms>
-	<ToolFiles>
-	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="."
-			IntermediateDirectory="debug\"
-			ConfigurationType="1"
-			UseOfMFC="0"
+			OutputDirectory="debug\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				WarningLevel="0"
-				DefaultCharType="0"
-				EnableErrorChecks="1"
-			/>
+			ConfigurationType="1"
+			IntermediateDirectory="debug\"
+			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.4\include\QtCore&quot;,&quot;c:\Qt\4.8.4\include\QtNetwork&quot;,&quot;c:\Qt\4.8.4\include\QtGui&quot;,&quot;c:\Qt\4.8.4\include\QtXml&quot;,&quot;c:\Qt\4.8.4\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.8.4\include\ActiveQt&quot;,&quot;debug&quot;,&quot;.&quot;,c:\Qt\4.8.4\mkspecs\win32-msvc2008"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
-				Optimization="4"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include\QtGui&quot;,&quot;c:\Qt\4.7.3\include\QtXml&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;debug&quot;,&quot;.&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
-				GeneratePreprocessedFile="0"
-				ExceptionHandling="1"
-				RuntimeLibrary="1"
-				BufferSecurityCheck="false"
-				TreatWChar_tAsBuiltInType="false"
-				RuntimeTypeInfo="true"
 				AssemblerListingLocation="debug\"
-				ObjectFile="debug\"
-				ProgramDataBaseFileName=".\"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
+				BufferSecurityCheck="false"
 				DebugInformationFormat="3"
-			/>
+				ExceptionHandling="1"
+				GeneratePreprocessedFile="0"
+				ObjectFile="debug\"
+				Optimization ="4"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
+				ProgramDataBaseFileName=".\"
+				RuntimeLibrary="1"
+				RuntimeTypeInfo="true"
+				SuppressStartupBanner="true"
+				TreatWChar_tAsBuiltInType="false"
+				WarningLevel="3" />
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,_DEBUG"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				AdditionalDependencies="c:\Qt\4.8.4\lib\qtmaind.lib c:\Qt\4.8.4\lib\QtXmld4.lib c:\Qt\4.8.4\lib\QtGuid4.lib c:\Qt\4.8.4\lib\QtNetworkd4.lib c:\Qt\4.8.4\lib\QtCored4.lib"
+				AdditionalLibraryDirectories="c:\Qt\4.8.4\lib"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="c:\Qt\4.7.3\lib\qtmaind.lib c:\Qt\4.7.3\lib\QtXmld.lib c:\Qt\4.7.3\lib\QtGuid.lib c:\Qt\4.7.3\lib\QtNetworkd.lib c:\Qt\4.7.3\lib\QtCored.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib msimg32.lib"
-				OutputFile="debug\hspide.exe"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
-				IgnoreDefaultLibraryNames="msvcrtd.lib,msvcrtd.lib"
 				GenerateDebugInformation="true"
+				IgnoreDefaultLibraryNames="msvcrtd.lib"
+				IgnoreImportLibrary="true"
+				LinkTimeCodeGeneration="0"
+				OutputFile="$(OutDir)\hspide.exe"
 				ProgramDatabaseFile=""
 				SubSystem="2"
-				LinkTimeCodeGeneration="0"
-			/>
+				SuppressStartupBanner="true" />
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"
+				DefaultCharType="0"
+				EnableErrorChecks="1"
+				WarningLevel="0" />
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool" />
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool" />
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool" />
 			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,_DEBUG" />
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="."
-			IntermediateDirectory="release\"
-			ConfigurationType="1"
-			UseOfMFC="0"
+			OutputDirectory="release\"
 			ATLMinimizesCRunTimeLibraryUsage="false"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				WarningLevel="0"
-				DefaultCharType="0"
-				EnableErrorChecks="1"
-			/>
+			ConfigurationType="1"
+			IntermediateDirectory="release\"
+			UseOfMfc="0">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;c:\Qt\4.8.4\include\QtCore&quot;,&quot;c:\Qt\4.8.4\include\QtNetwork&quot;,&quot;c:\Qt\4.8.4\include\QtGui&quot;,&quot;c:\Qt\4.8.4\include\QtXml&quot;,&quot;c:\Qt\4.8.4\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.8.4\include\ActiveQt&quot;,&quot;release&quot;,&quot;.&quot;,c:\Qt\4.8.4\mkspecs\win32-msvc2008"
 				AdditionalOptions="-Zm200 -w34100 -w34189"
-				Optimization="2"
-				AdditionalIncludeDirectories="&quot;c:\Qt\4.7.3\include\QtCore&quot;,&quot;c:\Qt\4.7.3\include\QtNetwork&quot;,&quot;c:\Qt\4.7.3\include\QtGui&quot;,&quot;c:\Qt\4.7.3\include\QtXml&quot;,&quot;c:\Qt\4.7.3\include&quot;,&quot;.&quot;,&quot;c:\Qt\4.7.3\include\ActiveQt&quot;,&quot;release&quot;,&quot;.&quot;,c:\Qt\4.7.3\mkspecs\win32-msvc2008"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_NO_DEBUG,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,NDEBUG"
-				GeneratePreprocessedFile="0"
-				ExceptionHandling="1"
-				RuntimeLibrary="0"
-				BufferSecurityCheck="false"
-				TreatWChar_tAsBuiltInType="false"
-				RuntimeTypeInfo="true"
 				AssemblerListingLocation="release\"
-				ObjectFile="release\"
-				ProgramDataBaseFileName=".\"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
+				BufferSecurityCheck="false"
 				DebugInformationFormat="0"
-			/>
+				ExceptionHandling="1"
+				GeneratePreprocessedFile="0"
+				ObjectFile="release\"
+				Optimization ="2"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT,NDEBUG"
+				ProgramDataBaseFileName=".\"
+				RuntimeLibrary="0"
+				RuntimeTypeInfo="true"
+				SuppressStartupBanner="true"
+				TreatWChar_tAsBuiltInType="false"
+				WarningLevel="3" />
 			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_NO_DEBUG,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
+				Name="VCCustomBuildTool" />
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
+				AdditionalDependencies="c:\Qt\4.8.4\lib\qtmain.lib c:\Qt\4.8.4\lib\QtXml4.lib c:\Qt\4.8.4\lib\QtGui4.lib c:\Qt\4.8.4\lib\QtNetwork4.lib c:\Qt\4.8.4\lib\QtCore4.lib"
+				AdditionalLibraryDirectories="c:\Qt\4.8.4\lib"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="c:\Qt\4.7.3\lib\qtmain.lib c:\Qt\4.7.3\lib\QtXml.lib c:\Qt\4.7.3\lib\QtGui.lib c:\Qt\4.7.3\lib\QtNetwork.lib c:\Qt\4.7.3\lib\QtCore.lib kernel32.lib user32.lib shell32.lib uuid.lib ole32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib oleaut32.lib imm32.lib winmm.lib winspool.lib msimg32.lib"
-				OutputFile="release\hspide.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="c:\Qt\4.7.3\lib"
-				IgnoreDefaultLibraryNames="msvcrt.lib,msvcrt.lib"
 				GenerateDebugInformation="false"
+				IgnoreDefaultLibraryNames="msvcrt.lib"
+				IgnoreImportLibrary="true"
+				LinkIncremental="1"
+				LinkTimeCodeGeneration="0"
+				OutputFile="$(OutDir)\hspide.exe"
 				ProgramDatabaseFile=""
 				SubSystem="2"
-				LinkTimeCodeGeneration="0"
-			/>
+				SuppressStartupBanner="true" />
 			<Tool
-				Name="VCALinkTool"
-			/>
+				Name="VCMIDLTool"
+				DefaultCharType="0"
+				EnableErrorChecks="1"
+				WarningLevel="0" />
 			<Tool
-				Name="VCManifestTool"
-			/>
+				Name="VCPostBuildEventTool" />
 			<Tool
-				Name="VCXDCMakeTool"
-			/>
+				Name="VCPreBuildEventTool" />
 			<Tool
-				Name="VCBscMakeTool"
-			/>
+				Name="VCPreLinkEventTool" />
 			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_XML_LIB,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_HAVE_MMX,QT_HAVE_3DNOW,QT_HAVE_SSE,QT_HAVE_MMXEXT,QT_HAVE_SSE2,QT_THREAD_SUPPORT" />
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="breakpointdock.cpp"
-				>
-			</File>
+				RelativePath="breakpointdock.cpp" />
 			<File
-				RelativePath="breakpointmanager.cpp"
-				>
-			</File>
+				RelativePath="breakpointmanager.cpp" />
 			<File
-				RelativePath="buildconfigurationspage.cpp"
-				>
-			</File>
+				RelativePath="buildconfigurationspage.cpp" />
 			<File
-				RelativePath="codeedit.cpp"
-				>
-			</File>
+				RelativePath="codeedit.cpp" />
 			<File
-				RelativePath="compiler.cpp"
-				>
-			</File>
+				RelativePath="compiler.cpp" />
 			<File
-				RelativePath="compilerset.cpp"
-				>
-			</File>
+				RelativePath="compilerset.cpp" />
 			<File
-				RelativePath="configdialog.cpp"
-				>
-			</File>
+				RelativePath="configdialog.cpp" />
 			<File
-				RelativePath="configuration.cpp"
-				>
-			</File>
+				RelativePath="configuration.cpp" />
 			<File
-				RelativePath="debugger.cpp"
-				>
-			</File>
+				RelativePath="debugger.cpp" />
 			<File
-				RelativePath="documentpane.cpp"
-				>
-			</File>
+				RelativePath="documentpane.cpp" />
 			<File
-				RelativePath="filemanager.cpp"
-				>
-			</File>
+				RelativePath="filemanager.cpp" />
 			<File
-				RelativePath="hotkeywidget.cpp"
-				>
-			</File>
+				RelativePath="hotkeywidget.cpp" />
 			<File
-				RelativePath="hsp3highlighter.cpp"
-				>
-			</File>
+				RelativePath="hsp3highlighter.cpp" />
 			<File
-				RelativePath="ipc_common.cpp"
-				>
-			</File>
+				RelativePath="ipc_common.cpp" />
 			<File
-				RelativePath="jumpdialog.cpp"
-				>
-			</File>
+				RelativePath="jumpdialog.cpp" />
 			<File
-				RelativePath="main.cpp"
-				>
-			</File>
+				RelativePath="main.cpp" />
 			<File
-				RelativePath="mainwindow.cpp"
-				>
-			</File>
+				RelativePath="mainwindow.cpp" />
 			<File
-				RelativePath="messagedock.cpp"
-				>
-			</File>
+				RelativePath="messagedock.cpp" />
 			<File
-				RelativePath="newfiledialog.cpp"
-				>
-			</File>
+				RelativePath="newfiledialog.cpp" />
 			<File
-				RelativePath="outputdock.cpp"
-				>
-			</File>
+				RelativePath="outputdock.cpp" />
 			<File
-				RelativePath="savepresetdialog.cpp"
-				>
-			</File>
+				RelativePath="savepresetdialog.cpp" />
 			<File
-				RelativePath="savesolutiondialog.cpp"
-				>
-			</File>
+				RelativePath="savesolutiondialog.cpp" />
 			<File
-				RelativePath="searchdock.cpp"
-				>
-			</File>
+				RelativePath="searchdock.cpp" />
 			<File
-				RelativePath="symboldock.cpp"
-				>
-			</File>
+				RelativePath="symboldock.cpp" />
 			<File
-				RelativePath="sysinfodock.cpp"
-				>
-			</File>
+				RelativePath="sysinfodock.cpp" />
 			<File
-				RelativePath="varinfodock.cpp"
-				>
-			</File>
+				RelativePath="varinfodock.cpp" />
 			<File
-				RelativePath="workspacedock.cpp"
-				>
-			</File>
+				RelativePath="workspacedock.cpp" />
 			<File
-				RelativePath="workspaceitem.cpp"
-				>
-			</File>
+				RelativePath="workspaceitem.cpp" />
 			<File
-				RelativePath="workspacemodel.cpp"
-				>
-			</File>
+				RelativePath="workspacemodel.cpp" />
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="breakpointdock.h"
-				>
+				RelativePath="breakpointdock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;breakpointdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointdock.h -o debug\moc_breakpointdock.cpp"
 						Description="MOC breakpointdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointdock.h -o debug\moc_breakpointdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;breakpointdock.h"
 						Outputs="debug\moc_breakpointdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;breakpointdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointdock.h -o release\moc_breakpointdock.cpp"
 						Description="MOC breakpointdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointdock.h -o release\moc_breakpointdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;breakpointdock.h"
 						Outputs="release\moc_breakpointdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="breakpointmanager.h"
-				>
+				RelativePath="breakpointmanager.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;breakpointmanager.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointmanager.h -o debug\moc_breakpointmanager.cpp"
 						Description="MOC breakpointmanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointmanager.h -o debug\moc_breakpointmanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;breakpointmanager.h"
 						Outputs="debug\moc_breakpointmanager.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;breakpointmanager.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointmanager.h -o release\moc_breakpointmanager.cpp"
 						Description="MOC breakpointmanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 breakpointmanager.h -o release\moc_breakpointmanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;breakpointmanager.h"
 						Outputs="release\moc_breakpointmanager.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="buildconfigurationspage.h"
-				>
+				RelativePath="buildconfigurationspage.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;buildconfigurationspage.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 buildconfigurationspage.h -o debug\moc_buildconfigurationspage.cpp"
 						Description="MOC buildconfigurationspage.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 buildconfigurationspage.h -o debug\moc_buildconfigurationspage.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;buildconfigurationspage.h"
 						Outputs="debug\moc_buildconfigurationspage.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;buildconfigurationspage.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 buildconfigurationspage.h -o release\moc_buildconfigurationspage.cpp"
 						Description="MOC buildconfigurationspage.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 buildconfigurationspage.h -o release\moc_buildconfigurationspage.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;buildconfigurationspage.h"
 						Outputs="release\moc_buildconfigurationspage.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="codeedit.h"
-				>
+				RelativePath="codeedit.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;codeedit.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 codeedit.h -o debug\moc_codeedit.cpp"
 						Description="MOC codeedit.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 codeedit.h -o debug\moc_codeedit.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;codeedit.h"
 						Outputs="debug\moc_codeedit.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;codeedit.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 codeedit.h -o release\moc_codeedit.cpp"
 						Description="MOC codeedit.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 codeedit.h -o release\moc_codeedit.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;codeedit.h"
 						Outputs="release\moc_codeedit.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="compiler.h"
-				>
+				RelativePath="compiler.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;compiler.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o debug\moc_compiler.cpp"
 						Description="MOC compiler.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o debug\moc_compiler.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compiler.h"
 						Outputs="debug\moc_compiler.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;compiler.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o release\moc_compiler.cpp"
 						Description="MOC compiler.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compiler.h -o release\moc_compiler.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compiler.h"
 						Outputs="release\moc_compiler.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="compilerset.h"
-				>
+				RelativePath="compilerset.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;compilerset.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compilerset.h -o debug\moc_compilerset.cpp"
 						Description="MOC compilerset.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compilerset.h -o debug\moc_compilerset.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compilerset.h"
 						Outputs="debug\moc_compilerset.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;compilerset.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compilerset.h -o release\moc_compilerset.cpp"
 						Description="MOC compilerset.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 compilerset.h -o release\moc_compilerset.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;compilerset.h"
 						Outputs="release\moc_compilerset.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="configdialog.h"
-				>
+				RelativePath="configdialog.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;configdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o debug\moc_configdialog.cpp"
 						Description="MOC configdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o debug\moc_configdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configdialog.h"
 						Outputs="debug\moc_configdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;configdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o release\moc_configdialog.cpp"
 						Description="MOC configdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configdialog.h -o release\moc_configdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configdialog.h"
 						Outputs="release\moc_configdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="configuration.h"
-				>
+				RelativePath="configuration.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;configuration.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configuration.h -o debug\moc_configuration.cpp"
 						Description="MOC configuration.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configuration.h -o debug\moc_configuration.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configuration.h"
 						Outputs="debug\moc_configuration.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;configuration.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configuration.h -o release\moc_configuration.cpp"
 						Description="MOC configuration.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 configuration.h -o release\moc_configuration.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;configuration.h"
 						Outputs="release\moc_configuration.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="debugger.h"
-				>
+				RelativePath="debugger.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;debugger.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debugger.h -o debug\moc_debugger.cpp"
 						Description="MOC debugger.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debugger.h -o debug\moc_debugger.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;debugger.h"
 						Outputs="debug\moc_debugger.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;debugger.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debugger.h -o release\moc_debugger.cpp"
 						Description="MOC debugger.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 debugger.h -o release\moc_debugger.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;debugger.h"
 						Outputs="release\moc_debugger.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="documentpane.h"
-				>
+				RelativePath="documentpane.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;documentpane.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 documentpane.h -o debug\moc_documentpane.cpp"
 						Description="MOC documentpane.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 documentpane.h -o debug\moc_documentpane.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;documentpane.h"
 						Outputs="debug\moc_documentpane.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;documentpane.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 documentpane.h -o release\moc_documentpane.cpp"
 						Description="MOC documentpane.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 documentpane.h -o release\moc_documentpane.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;documentpane.h"
 						Outputs="release\moc_documentpane.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="filemanager.h"
-				>
+				RelativePath="filemanager.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;filemanager.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 filemanager.h -o debug\moc_filemanager.cpp"
 						Description="MOC filemanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 filemanager.h -o debug\moc_filemanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;filemanager.h"
 						Outputs="debug\moc_filemanager.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;filemanager.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 filemanager.h -o release\moc_filemanager.cpp"
 						Description="MOC filemanager.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 filemanager.h -o release\moc_filemanager.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;filemanager.h"
 						Outputs="release\moc_filemanager.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="global.h"
-				>
-			</File>
+				RelativePath="global.h" />
 			<File
-				RelativePath="hotkeywidget.h"
-				>
+				RelativePath="hotkeywidget.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;hotkeywidget.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 hotkeywidget.h -o debug\moc_hotkeywidget.cpp"
 						Description="MOC hotkeywidget.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 hotkeywidget.h -o debug\moc_hotkeywidget.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;hotkeywidget.h"
 						Outputs="debug\moc_hotkeywidget.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;hotkeywidget.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 hotkeywidget.h -o release\moc_hotkeywidget.cpp"
 						Description="MOC hotkeywidget.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 hotkeywidget.h -o release\moc_hotkeywidget.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;hotkeywidget.h"
 						Outputs="release\moc_hotkeywidget.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="hsp3highlighter.h"
-				>
-			</File>
+				RelativePath="hsp3highlighter.h" />
 			<File
-				RelativePath="hsp3lexer.h"
-				>
-			</File>
+				RelativePath="hsp3lexer.h" />
 			<File
-				RelativePath="ipc_common.h"
-				>
-			</File>
+				RelativePath="ipc_common.h" />
 			<File
-				RelativePath="jumpdialog.h"
-				>
+				RelativePath="jumpdialog.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;jumpdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 jumpdialog.h -o debug\moc_jumpdialog.cpp"
 						Description="MOC jumpdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 jumpdialog.h -o debug\moc_jumpdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;jumpdialog.h"
 						Outputs="debug\moc_jumpdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;jumpdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 jumpdialog.h -o release\moc_jumpdialog.cpp"
 						Description="MOC jumpdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 jumpdialog.h -o release\moc_jumpdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;jumpdialog.h"
 						Outputs="release\moc_jumpdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="mainwindow.h"
-				>
+				RelativePath="mainwindow.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;mainwindow.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o debug\moc_mainwindow.cpp"
 						Description="MOC mainwindow.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o debug\moc_mainwindow.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;mainwindow.h"
 						Outputs="debug\moc_mainwindow.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;mainwindow.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o release\moc_mainwindow.cpp"
 						Description="MOC mainwindow.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o release\moc_mainwindow.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;mainwindow.h"
 						Outputs="release\moc_mainwindow.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="messagedock.h"
-				>
+				RelativePath="messagedock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;messagedock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 messagedock.h -o debug\moc_messagedock.cpp"
 						Description="MOC messagedock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 messagedock.h -o debug\moc_messagedock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;messagedock.h"
 						Outputs="debug\moc_messagedock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;messagedock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 messagedock.h -o release\moc_messagedock.cpp"
 						Description="MOC messagedock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 messagedock.h -o release\moc_messagedock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;messagedock.h"
 						Outputs="release\moc_messagedock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="newfiledialog.h"
-				>
+				RelativePath="newfiledialog.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;newfiledialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 newfiledialog.h -o debug\moc_newfiledialog.cpp"
 						Description="MOC newfiledialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 newfiledialog.h -o debug\moc_newfiledialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;newfiledialog.h"
 						Outputs="debug\moc_newfiledialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;newfiledialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 newfiledialog.h -o release\moc_newfiledialog.cpp"
 						Description="MOC newfiledialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 newfiledialog.h -o release\moc_newfiledialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;newfiledialog.h"
 						Outputs="release\moc_newfiledialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="outputdock.h"
-				>
+				RelativePath="outputdock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;outputdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 outputdock.h -o debug\moc_outputdock.cpp"
 						Description="MOC outputdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 outputdock.h -o debug\moc_outputdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;outputdock.h"
 						Outputs="debug\moc_outputdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;outputdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 outputdock.h -o release\moc_outputdock.cpp"
 						Description="MOC outputdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 outputdock.h -o release\moc_outputdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;outputdock.h"
 						Outputs="release\moc_outputdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="savepresetdialog.h"
-				>
+				RelativePath="savepresetdialog.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;savepresetdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savepresetdialog.h -o debug\moc_savepresetdialog.cpp"
 						Description="MOC savepresetdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savepresetdialog.h -o debug\moc_savepresetdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;savepresetdialog.h"
 						Outputs="debug\moc_savepresetdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;savepresetdialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savepresetdialog.h -o release\moc_savepresetdialog.cpp"
 						Description="MOC savepresetdialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savepresetdialog.h -o release\moc_savepresetdialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;savepresetdialog.h"
 						Outputs="release\moc_savepresetdialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="savesolutiondialog.h"
-				>
+				RelativePath="savesolutiondialog.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;savesolutiondialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savesolutiondialog.h -o debug\moc_savesolutiondialog.cpp"
 						Description="MOC savesolutiondialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savesolutiondialog.h -o debug\moc_savesolutiondialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;savesolutiondialog.h"
 						Outputs="debug\moc_savesolutiondialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;savesolutiondialog.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savesolutiondialog.h -o release\moc_savesolutiondialog.cpp"
 						Description="MOC savesolutiondialog.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 savesolutiondialog.h -o release\moc_savesolutiondialog.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;savesolutiondialog.h"
 						Outputs="release\moc_savesolutiondialog.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="searchdock.h"
-				>
+				RelativePath="searchdock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;searchdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 searchdock.h -o debug\moc_searchdock.cpp"
 						Description="MOC searchdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 searchdock.h -o debug\moc_searchdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;searchdock.h"
 						Outputs="debug\moc_searchdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;searchdock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 searchdock.h -o release\moc_searchdock.cpp"
 						Description="MOC searchdock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 searchdock.h -o release\moc_searchdock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;searchdock.h"
 						Outputs="release\moc_searchdock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="symboldock.h"
-				>
+				RelativePath="symboldock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;symboldock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 symboldock.h -o debug\moc_symboldock.cpp"
 						Description="MOC symboldock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 symboldock.h -o debug\moc_symboldock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;symboldock.h"
 						Outputs="debug\moc_symboldock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;symboldock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 symboldock.h -o release\moc_symboldock.cpp"
 						Description="MOC symboldock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 symboldock.h -o release\moc_symboldock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;symboldock.h"
 						Outputs="release\moc_symboldock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="sysinfodock.h"
-				>
+				RelativePath="sysinfodock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;sysinfodock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o debug\moc_sysinfodock.cpp"
 						Description="MOC sysinfodock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o debug\moc_sysinfodock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;sysinfodock.h"
 						Outputs="debug\moc_sysinfodock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;sysinfodock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o release\moc_sysinfodock.cpp"
 						Description="MOC sysinfodock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 sysinfodock.h -o release\moc_sysinfodock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;sysinfodock.h"
 						Outputs="release\moc_sysinfodock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="varinfodock.h"
-				>
+				RelativePath="varinfodock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;varinfodock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o debug\moc_varinfodock.cpp"
 						Description="MOC varinfodock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o debug\moc_varinfodock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;varinfodock.h"
 						Outputs="debug\moc_varinfodock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;varinfodock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o release\moc_varinfodock.cpp"
 						Description="MOC varinfodock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 varinfodock.h -o release\moc_varinfodock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;varinfodock.h"
 						Outputs="release\moc_varinfodock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="workspacedock.h"
-				>
+				RelativePath="workspacedock.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspacedock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacedock.h -o debug\moc_workspacedock.cpp"
 						Description="MOC workspacedock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacedock.h -o debug\moc_workspacedock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacedock.h"
 						Outputs="debug\moc_workspacedock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspacedock.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacedock.h -o release\moc_workspacedock.cpp"
 						Description="MOC workspacedock.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacedock.h -o release\moc_workspacedock.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacedock.h"
 						Outputs="release\moc_workspacedock.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="workspaceitem.h"
-				>
+				RelativePath="workspaceitem.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspaceitem.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o debug\moc_workspaceitem.cpp"
 						Description="MOC workspaceitem.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o debug\moc_workspaceitem.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspaceitem.h"
 						Outputs="debug\moc_workspaceitem.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspaceitem.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o release\moc_workspaceitem.cpp"
 						Description="MOC workspaceitem.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspaceitem.h -o release\moc_workspaceitem.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspaceitem.h"
 						Outputs="release\moc_workspaceitem.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="workspacemodel.h"
-				>
+				RelativePath="workspacemodel.h">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspacemodel.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o debug\moc_workspacemodel.cpp"
 						Description="MOC workspacemodel.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;debug&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o debug\moc_workspacemodel.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacemodel.h"
 						Outputs="debug\moc_workspacemodel.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\moc.exe;workspacemodel.h"
+						CommandLine="C:\Qt\4.8.4\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.8.4\include\QtCore&quot; -I&quot;c:\Qt\4.8.4\include\QtNetwork&quot; -I&quot;c:\Qt\4.8.4\include\QtGui&quot; -I&quot;c:\Qt\4.8.4\include\QtXml&quot; -I&quot;c:\Qt\4.8.4\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.8.4\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.8.4\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o release\moc_workspacemodel.cpp"
 						Description="MOC workspacemodel.h"
-						CommandLine="C:\Qt\4.7.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_XML_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I&quot;c:\Qt\4.7.3\include\QtCore&quot; -I&quot;c:\Qt\4.7.3\include\QtNetwork&quot; -I&quot;c:\Qt\4.7.3\include\QtGui&quot; -I&quot;c:\Qt\4.7.3\include\QtXml&quot; -I&quot;c:\Qt\4.7.3\include&quot; -I&quot;.&quot; -I&quot;c:\Qt\4.7.3\include\ActiveQt&quot; -I&quot;release&quot; -I&quot;.&quot; -Ic:\Qt\4.7.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 workspacemodel.h -o release\moc_workspacemodel.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\moc.exe;workspacemodel.h"
 						Outputs="release\moc_workspacemodel.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
 			Name="Generated Files"
 			Filter="cpp;c;cxx;moc;h;def;odl;idl;res;"
-			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}"
-			>
+			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}">
 			<File
-				RelativePath="release\hspide.res"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\hspide.res"
-				>
+				RelativePath="debug\hspide.res">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_breakpointdock.cpp"
-				>
+				RelativePath="release\hspide.res">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_breakpointdock.cpp"
-				>
+				RelativePath="debug\moc_breakpointdock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_breakpointmanager.cpp"
-				>
+				RelativePath="release\moc_breakpointdock.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_breakpointmanager.cpp"
-				>
+				RelativePath="debug\moc_breakpointmanager.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_buildconfigurationspage.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_buildconfigurationspage.cpp"
-				>
+				RelativePath="release\moc_breakpointmanager.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_codeedit.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_codeedit.cpp"
-				>
+				RelativePath="debug\moc_buildconfigurationspage.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_compiler.cpp"
-				>
+				RelativePath="release\moc_buildconfigurationspage.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_compiler.cpp"
-				>
+				RelativePath="debug\moc_codeedit.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_compilerset.cpp"
-				>
+				RelativePath="release\moc_codeedit.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_compilerset.cpp"
-				>
+				RelativePath="debug\moc_compiler.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_configdialog.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_configdialog.cpp"
-				>
+				RelativePath="release\moc_compiler.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_configuration.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_configuration.cpp"
-				>
+				RelativePath="debug\moc_compilerset.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_debugger.cpp"
-				>
+				RelativePath="release\moc_compilerset.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_debugger.cpp"
-				>
+				RelativePath="debug\moc_configdialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_documentpane.cpp"
-				>
+				RelativePath="release\moc_configdialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_documentpane.cpp"
-				>
+				RelativePath="debug\moc_configuration.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_filemanager.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_filemanager.cpp"
-				>
+				RelativePath="release\moc_configuration.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_hotkeywidget.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_hotkeywidget.cpp"
-				>
+				RelativePath="debug\moc_debugger.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_jumpdialog.cpp"
-				>
+				RelativePath="release\moc_debugger.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_jumpdialog.cpp"
-				>
+				RelativePath="debug\moc_documentpane.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_mainwindow.cpp"
-				>
+				RelativePath="release\moc_documentpane.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_mainwindow.cpp"
-				>
+				RelativePath="debug\moc_filemanager.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_messagedock.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_messagedock.cpp"
-				>
+				RelativePath="release\moc_filemanager.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_newfiledialog.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_newfiledialog.cpp"
-				>
+				RelativePath="debug\moc_hotkeywidget.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_outputdock.cpp"
-				>
+				RelativePath="release\moc_hotkeywidget.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_outputdock.cpp"
-				>
+				RelativePath="debug\moc_jumpdialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_savepresetdialog.cpp"
-				>
+				RelativePath="release\moc_jumpdialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_savepresetdialog.cpp"
-				>
+				RelativePath="debug\moc_mainwindow.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_savesolutiondialog.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_savesolutiondialog.cpp"
-				>
+				RelativePath="release\moc_mainwindow.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_searchdock.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_searchdock.cpp"
-				>
+				RelativePath="debug\moc_messagedock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_symboldock.cpp"
-				>
+				RelativePath="release\moc_messagedock.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_symboldock.cpp"
-				>
+				RelativePath="debug\moc_newfiledialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_sysinfodock.cpp"
-				>
+				RelativePath="release\moc_newfiledialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_sysinfodock.cpp"
-				>
+				RelativePath="debug\moc_outputdock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_varinfodock.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\moc_varinfodock.cpp"
-				>
+				RelativePath="release\moc_outputdock.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_workspacedock.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="debug\moc_workspacedock.cpp"
-				>
+				RelativePath="debug\moc_savepresetdialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_workspaceitem.cpp"
-				>
+				RelativePath="release\moc_savepresetdialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_workspaceitem.cpp"
-				>
+				RelativePath="debug\moc_savesolutiondialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="release\moc_workspacemodel.cpp"
-				>
+				RelativePath="release\moc_savesolutiondialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\moc_workspacemodel.cpp"
-				>
+				RelativePath="debug\moc_searchdock.cpp">
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="debug\qrc_hspide.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="release\qrc_hspide.cpp"
-				>
+				RelativePath="release\moc_searchdock.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_aboutdialog.h"
-				>
+				RelativePath="debug\moc_symboldock.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_buildconfigurationspage.h"
-				>
+				RelativePath="release\moc_symboldock.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_configdialog.h"
-				>
+				RelativePath="debug\moc_sysinfodock.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_jumpdialog.h"
-				>
+				RelativePath="release\moc_sysinfodock.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_newfiledialog.h"
-				>
+				RelativePath="debug\moc_varinfodock.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_savepresetdialog.h"
-				>
+				RelativePath="release\moc_varinfodock.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
 			</File>
 			<File
-				RelativePath="ui_savesolutiondialog.h"
-				>
+				RelativePath="debug\moc_workspacedock.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
 			</File>
+			<File
+				RelativePath="release\moc_workspacedock.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\moc_workspaceitem.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_workspaceitem.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\moc_workspacemodel.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\moc_workspacemodel.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="debug\qrc_hspide.cpp">
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="release\qrc_hspide.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true" />
+			</File>
+			<File
+				RelativePath="ui_aboutdialog.h" />
+			<File
+				RelativePath="ui_buildconfigurationspage.h" />
+			<File
+				RelativePath="ui_configdialog.h" />
+			<File
+				RelativePath="ui_jumpdialog.h" />
+			<File
+				RelativePath="ui_newfiledialog.h" />
+			<File
+				RelativePath="ui_savepresetdialog.h" />
+			<File
+				RelativePath="ui_savesolutiondialog.h" />
 		</Filter>
 		<Filter
 			Name="Translation Files"
 			Filter="ts;xlf"
 			UniqueIdentifier="{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}"
-			ParseFiles="false"
-			>
+			ParseFiles="false">
 			<File
-				RelativePath="i18n\hspide_ja.ts"
-				>
-			</File>
+				RelativePath="i18n\hspide_ja.ts" />
 		</Filter>
 		<Filter
 			Name="Form Files"
 			Filter="ui"
 			UniqueIdentifier="{99349809-55BA-4b9d-BF79-8FDBB0286EB3}"
-			ParseFiles="false"
-			>
+			ParseFiles="false">
 			<File
-				RelativePath="aboutdialog.ui"
-				>
+				RelativePath="aboutdialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;aboutdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe aboutdialog.ui -o ui_aboutdialog.h"
 						Description="UIC aboutdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe aboutdialog.ui -o ui_aboutdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;aboutdialog.ui"
 						Outputs="ui_aboutdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;aboutdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe aboutdialog.ui -o ui_aboutdialog.h"
 						Description="UIC aboutdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe aboutdialog.ui -o ui_aboutdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;aboutdialog.ui"
 						Outputs="ui_aboutdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="buildconfigurationspage.ui"
-				>
+				RelativePath="buildconfigurationspage.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;buildconfigurationspage.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe buildconfigurationspage.ui -o ui_buildconfigurationspage.h"
 						Description="UIC buildconfigurationspage.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe buildconfigurationspage.ui -o ui_buildconfigurationspage.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;buildconfigurationspage.ui"
 						Outputs="ui_buildconfigurationspage.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;buildconfigurationspage.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe buildconfigurationspage.ui -o ui_buildconfigurationspage.h"
 						Description="UIC buildconfigurationspage.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe buildconfigurationspage.ui -o ui_buildconfigurationspage.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;buildconfigurationspage.ui"
 						Outputs="ui_buildconfigurationspage.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="configdialog.ui"
-				>
+				RelativePath="configdialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;buildconfigurationspage.h;configdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe configdialog.ui -o ui_configdialog.h"
 						Description="UIC configdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe configdialog.ui -o ui_configdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;buildconfigurationspage.h;configdialog.ui"
 						Outputs="ui_configdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;buildconfigurationspage.h;configdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe configdialog.ui -o ui_configdialog.h"
 						Description="UIC configdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe configdialog.ui -o ui_configdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;buildconfigurationspage.h;configdialog.ui"
 						Outputs="ui_configdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="jumpdialog.ui"
-				>
+				RelativePath="jumpdialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;jumpdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe jumpdialog.ui -o ui_jumpdialog.h"
 						Description="UIC jumpdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe jumpdialog.ui -o ui_jumpdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;jumpdialog.ui"
 						Outputs="ui_jumpdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;jumpdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe jumpdialog.ui -o ui_jumpdialog.h"
 						Description="UIC jumpdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe jumpdialog.ui -o ui_jumpdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;jumpdialog.ui"
 						Outputs="ui_jumpdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="newfiledialog.ui"
-				>
+				RelativePath="newfiledialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;newfiledialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe newfiledialog.ui -o ui_newfiledialog.h"
 						Description="UIC newfiledialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe newfiledialog.ui -o ui_newfiledialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;newfiledialog.ui"
 						Outputs="ui_newfiledialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;newfiledialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe newfiledialog.ui -o ui_newfiledialog.h"
 						Description="UIC newfiledialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe newfiledialog.ui -o ui_newfiledialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;newfiledialog.ui"
 						Outputs="ui_newfiledialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="savepresetdialog.ui"
-				>
+				RelativePath="savepresetdialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;savepresetdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe savepresetdialog.ui -o ui_savepresetdialog.h"
 						Description="UIC savepresetdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe savepresetdialog.ui -o ui_savepresetdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;savepresetdialog.ui"
 						Outputs="ui_savepresetdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;savepresetdialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe savepresetdialog.ui -o ui_savepresetdialog.h"
 						Description="UIC savepresetdialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe savepresetdialog.ui -o ui_savepresetdialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;savepresetdialog.ui"
 						Outputs="ui_savepresetdialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="savesolutiondialog.ui"
-				>
+				RelativePath="savesolutiondialog.ui">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;savesolutiondialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe savesolutiondialog.ui -o ui_savesolutiondialog.h"
 						Description="UIC savesolutiondialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe savesolutiondialog.ui -o ui_savesolutiondialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;savesolutiondialog.ui"
 						Outputs="ui_savesolutiondialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\uic.exe;savesolutiondialog.ui"
+						CommandLine="C:\Qt\4.8.4\bin\uic.exe savesolutiondialog.ui -o ui_savesolutiondialog.h"
 						Description="UIC savesolutiondialog.ui"
-						CommandLine="C:\Qt\4.7.3\bin\uic.exe savesolutiondialog.ui -o ui_savesolutiondialog.h&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\uic.exe;savesolutiondialog.ui"
 						Outputs="ui_savesolutiondialog.h"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 		</Filter>
@@ -1932,403 +1331,215 @@
 			Name="Resource Files"
 			Filter="qrc;*"
 			UniqueIdentifier="{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}"
-			ParseFiles="false"
-			>
-			<File
-				RelativePath="images\tango\small\accessories-text-editor.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\accessories-text-editor.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\small\blank.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\middle\blank.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\middle\breakpoint.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\small\breakpoint.png"
-				>
-			</File>
-			<File
-				RelativePath="images\button-tab-close.png"
-				>
-			</File>
-			<File
-				RelativePath="images\button-tab-list.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\dialog-error.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\dialog-information.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\dialog-information.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\dialog-warning.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-new.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-new.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-open.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-open.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-print-preview.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-print-preview.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-print.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-print.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\small\document-save-all.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\middle\document-save-all.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-save-as.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-save-as.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\document-save.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\document-save.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-clear.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-clear.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-copy.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-copy.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-cut.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-cut.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-delete.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-delete.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-find-replace.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-find-replace.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-find.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-find.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-paste.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-paste.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-redo.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-redo.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-select-all.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-select-all.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\edit-undo.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\edit-undo.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\folder.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-bottom.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-bottom.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-down.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-down.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-first.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-first.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-jump.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-jump.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-last.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-last.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-next.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-next.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-previous.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-previous.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-top.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-top.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\go-up.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\go-up.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\small\help-browser.png"
-				>
-			</File>
-			<File
-				RelativePath="images\tango\middle\help-browser.png"
-				>
-			</File>
-			<File
-				RelativePath="images\icons\hspide.png"
-				>
-			</File>
-			<File
-				RelativePath="hspide.qrc"
-				>
+			ParseFiles="false">
+			<File
+				RelativePath="images\tango\middle\accessories-text-editor.png" />
+			<File
+				RelativePath="images\tango\small\accessories-text-editor.png" />
+			<File
+				RelativePath="images\icons\middle\blank.png" />
+			<File
+				RelativePath="images\icons\small\blank.png" />
+			<File
+				RelativePath="images\icons\middle\breakpoint.png" />
+			<File
+				RelativePath="images\icons\small\breakpoint.png" />
+			<File
+				RelativePath="images\button-tab-close.png" />
+			<File
+				RelativePath="images\button-tab-list.png" />
+			<File
+				RelativePath="images\tango\small\dialog-error.png" />
+			<File
+				RelativePath="images\tango\middle\dialog-information.png" />
+			<File
+				RelativePath="images\tango\small\dialog-information.png" />
+			<File
+				RelativePath="images\tango\small\dialog-warning.png" />
+			<File
+				RelativePath="images\tango\middle\document-new.png" />
+			<File
+				RelativePath="images\tango\small\document-new.png" />
+			<File
+				RelativePath="images\tango\middle\document-open.png" />
+			<File
+				RelativePath="images\tango\small\document-open.png" />
+			<File
+				RelativePath="images\tango\middle\document-print-preview.png" />
+			<File
+				RelativePath="images\tango\small\document-print-preview.png" />
+			<File
+				RelativePath="images\tango\middle\document-print.png" />
+			<File
+				RelativePath="images\tango\small\document-print.png" />
+			<File
+				RelativePath="images\icons\middle\document-save-all.png" />
+			<File
+				RelativePath="images\icons\small\document-save-all.png" />
+			<File
+				RelativePath="images\tango\middle\document-save-as.png" />
+			<File
+				RelativePath="images\tango\small\document-save-as.png" />
+			<File
+				RelativePath="images\tango\middle\document-save.png" />
+			<File
+				RelativePath="images\tango\small\document-save.png" />
+			<File
+				RelativePath="images\tango\middle\edit-clear.png" />
+			<File
+				RelativePath="images\tango\small\edit-clear.png" />
+			<File
+				RelativePath="images\tango\middle\edit-copy.png" />
+			<File
+				RelativePath="images\tango\small\edit-copy.png" />
+			<File
+				RelativePath="images\tango\middle\edit-cut.png" />
+			<File
+				RelativePath="images\tango\small\edit-cut.png" />
+			<File
+				RelativePath="images\tango\middle\edit-delete.png" />
+			<File
+				RelativePath="images\tango\small\edit-delete.png" />
+			<File
+				RelativePath="images\tango\middle\edit-find-replace.png" />
+			<File
+				RelativePath="images\tango\small\edit-find-replace.png" />
+			<File
+				RelativePath="images\tango\middle\edit-find.png" />
+			<File
+				RelativePath="images\tango\small\edit-find.png" />
+			<File
+				RelativePath="images\tango\middle\edit-paste.png" />
+			<File
+				RelativePath="images\tango\small\edit-paste.png" />
+			<File
+				RelativePath="images\tango\middle\edit-redo.png" />
+			<File
+				RelativePath="images\tango\small\edit-redo.png" />
+			<File
+				RelativePath="images\tango\middle\edit-select-all.png" />
+			<File
+				RelativePath="images\tango\small\edit-select-all.png" />
+			<File
+				RelativePath="images\tango\middle\edit-undo.png" />
+			<File
+				RelativePath="images\tango\small\edit-undo.png" />
+			<File
+				RelativePath="images\tango\small\folder.png" />
+			<File
+				RelativePath="images\tango\middle\go-bottom.png" />
+			<File
+				RelativePath="images\tango\small\go-bottom.png" />
+			<File
+				RelativePath="images\tango\middle\go-down.png" />
+			<File
+				RelativePath="images\tango\small\go-down.png" />
+			<File
+				RelativePath="images\tango\middle\go-first.png" />
+			<File
+				RelativePath="images\tango\small\go-first.png" />
+			<File
+				RelativePath="images\tango\middle\go-jump.png" />
+			<File
+				RelativePath="images\tango\small\go-jump.png" />
+			<File
+				RelativePath="images\tango\middle\go-last.png" />
+			<File
+				RelativePath="images\tango\small\go-last.png" />
+			<File
+				RelativePath="images\tango\middle\go-next.png" />
+			<File
+				RelativePath="images\tango\small\go-next.png" />
+			<File
+				RelativePath="images\tango\middle\go-previous.png" />
+			<File
+				RelativePath="images\tango\small\go-previous.png" />
+			<File
+				RelativePath="images\tango\middle\go-top.png" />
+			<File
+				RelativePath="images\tango\small\go-top.png" />
+			<File
+				RelativePath="images\tango\middle\go-up.png" />
+			<File
+				RelativePath="images\tango\small\go-up.png" />
+			<File
+				RelativePath="images\tango\middle\help-browser.png" />
+			<File
+				RelativePath="images\tango\small\help-browser.png" />
+			<File
+				RelativePath="images\icons\hspide.png" />
+			<File
+				RelativePath="hspide.qrc">
 				<FileConfiguration
-					Name="Debug|Win32"
-					>
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\breakpoint.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\breakpoint.png;images\icons\small\document-save-all.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
+						CommandLine="C:\Qt\4.8.4\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
-						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o debug\qrc_hspide.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\breakpoint.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\breakpoint.png;images\icons\small\document-save-all.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
 						Outputs="debug\qrc_hspide.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
-					>
+					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						AdditionalDependencies="C:\Qt\4.8.4\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\breakpoint.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\breakpoint.png;images\icons\small\document-save-all.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
+						CommandLine="C:\Qt\4.8.4\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp"
 						Description="RCC hspide.qrc"
-						CommandLine="C:\Qt\4.7.3\bin\rcc.exe -name hspide hspide.qrc -o release\qrc_hspide.cpp&#x0D;&#x0A;"
-						AdditionalDependencies="C:\Qt\4.7.3\bin\rcc.exe;hspide.qrc;i18n\hspide_ja.qm;images\button-tab-close.png;images\button-tab-list.png;images\icons\hspide.png;images\icons\middle\blank.png;images\icons\middle\breakpoint.png;images\icons\middle\document-save-all.png;images\icons\middle\run-project.png;images\icons\middle\step-in.png;images\icons\middle\step-over.png;images\icons\small\blank.png;images\icons\small\breakpoint.png;images\icons\small\document-save-all.png;images\icons\small\run-project.png;images\icons\small\software-update-urgent-yellow.png;images\icons\small\step-in.png;images\icons\small\step-over.png;images\tango\middle\accessories-text-editor.png;images\tango\middle\dialog-information.png;images\tango\middle\document-new.png;images\tango\middle\document-open.png;images\tango\middle\document-print-preview.png;images\tango\middle\document-print.png;images\tango\middle\document-save-as.png;images\tango\middle\document-save.png;images\tango\middle\edit-clear.png;images\tango\middle\edit-copy.png;images\tango\middle\edit-cut.png;images\tango\middle\edit-delete.png;images\tango\middle\edit-find-replace.png;images\tango\middle\edit-find.png;images\tango\middle\edit-paste.png;images\tango\middle\edit-redo.png;images\tango\middle\edit-select-all.png;images\tango\middle\edit-undo.png;images\tango\middle\go-bottom.png;images\tango\middle\go-down.png;images\tango\middle\go-first.png;images\tango\middle\go-jump.png;images\tango\middle\go-last.png;images\tango\middle\go-next.png;images\tango\middle\go-previous.png;images\tango\middle\go-top.png;images\tango\middle\go-up.png;images\tango\middle\help-browser.png;images\tango\middle\list-add.png;images\tango\middle\list-remove.png;images\tango\middle\media-playback-pause.png;images\tango\middle\media-playback-start.png;images\tango\middle\media-playback-stop.png;images\tango\middle\preferences-system.png;images\tango\middle\system-log-out.png;images\tango\small\accessories-text-editor.png;images\tango\small\dialog-error.png;images\tango\small\dialog-information.png;images\tango\small\dialog-warning.png;images\tango\small\document-new.png;images\tango\small\document-open.png;images\tango\small\document-print-preview.png;images\tango\small\document-print.png;images\tango\small\document-save-as.png;images\tango\small\document-save.png;images\tango\small\edit-clear.png;images\tango\small\edit-copy.png;images\tango\small\edit-cut.png;images\tango\small\edit-delete.png;images\tango\small\edit-find-replace.png;images\tango\small\edit-find.png;images\tango\small\edit-paste.png;images\tango\small\edit-redo.png;images\tango\small\edit-select-all.png;images\tango\small\edit-undo.png;images\tango\small\folder.png;images\tango\small\go-bottom.png;images\tango\small\go-down.png;images\tango\small\go-first.png;images\tango\small\go-jump.png;images\tango\small\go-last.png;images\tango\small\go-next.png;images\tango\small\go-previous.png;images\tango\small\go-top.png;images\tango\small\go-up.png;images\tango\small\help-browser.png;images\tango\small\list-add.png;images\tango\small\list-remove.png;images\tango\small\media-playback-pause.png;images\tango\small\media-playback-start.png;images\tango\small\media-playback-stop.png;images\tango\small\preferences-system.png;images\tango\small\system-log-out.png;images\tango\small\text-x-generic.png"
 						Outputs="release\qrc_hspide.cpp"
-					/>
+						Path="c:\Qt\4.8.4\bin" />
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="i18n\hspide_ja.qm"
-				>
-			</File>
+				RelativePath="i18n\hspide_ja.qm" />
 			<File
-				RelativePath="images\tango\small\list-add.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\list-add.png" />
 			<File
-				RelativePath="images\tango\middle\list-add.png"
-				>
-			</File>
+				RelativePath="images\tango\small\list-add.png" />
 			<File
-				RelativePath="images\tango\small\list-remove.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\list-remove.png" />
 			<File
-				RelativePath="images\tango\middle\list-remove.png"
-				>
-			</File>
+				RelativePath="images\tango\small\list-remove.png" />
 			<File
-				RelativePath="images\tango\middle\media-playback-pause.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\media-playback-pause.png" />
 			<File
-				RelativePath="images\tango\small\media-playback-pause.png"
-				>
-			</File>
+				RelativePath="images\tango\small\media-playback-pause.png" />
 			<File
-				RelativePath="images\tango\small\media-playback-start.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\media-playback-start.png" />
 			<File
-				RelativePath="images\tango\middle\media-playback-start.png"
-				>
-			</File>
+				RelativePath="images\tango\small\media-playback-start.png" />
 			<File
-				RelativePath="images\tango\small\media-playback-stop.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\media-playback-stop.png" />
 			<File
-				RelativePath="images\tango\middle\media-playback-stop.png"
-				>
-			</File>
+				RelativePath="images\tango\small\media-playback-stop.png" />
 			<File
-				RelativePath="images\tango\middle\preferences-system.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\preferences-system.png" />
 			<File
-				RelativePath="images\tango\small\preferences-system.png"
-				>
-			</File>
+				RelativePath="images\tango\small\preferences-system.png" />
 			<File
-				RelativePath="images\icons\small\run-project.png"
-				>
-			</File>
+				RelativePath="images\icons\middle\run-project.png" />
 			<File
-				RelativePath="images\icons\middle\run-project.png"
-				>
-			</File>
+				RelativePath="images\icons\small\run-project.png" />
 			<File
-				RelativePath="images\icons\small\software-update-urgent-yellow.png"
-				>
-			</File>
+				RelativePath="images\icons\small\software-update-urgent-yellow.png" />
 			<File
-				RelativePath="images\icons\small\step-in.png"
-				>
-			</File>
+				RelativePath="images\icons\middle\step-in.png" />
 			<File
-				RelativePath="images\icons\middle\step-in.png"
-				>
-			</File>
+				RelativePath="images\icons\small\step-in.png" />
 			<File
-				RelativePath="images\icons\middle\step-over.png"
-				>
-			</File>
+				RelativePath="images\icons\middle\step-over.png" />
 			<File
-				RelativePath="images\icons\small\step-over.png"
-				>
-			</File>
+				RelativePath="images\icons\small\step-over.png" />
 			<File
-				RelativePath="images\tango\small\system-log-out.png"
-				>
-			</File>
+				RelativePath="images\tango\middle\system-log-out.png" />
 			<File
-				RelativePath="images\tango\middle\system-log-out.png"
-				>
-			</File>
+				RelativePath="images\tango\small\system-log-out.png" />
 			<File
-				RelativePath="images\tango\small\text-x-generic.png"
-				>
-			</File>
+				RelativePath="images\tango\small\text-x-generic.png" />
 		</Filter>
 		<File
-			RelativePath="hspide.rc"
-			>
-		</File>
+			RelativePath="hspide.rc" />
 	</Files>
 	<Globals>
 	</Globals>
