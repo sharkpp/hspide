@@ -45,7 +45,7 @@ Configuration::Configuration()
 	, m_editorFontSize(16)
 {
 	for(int i = 0; i < ColorMetricsNum; i++) {
-		m_colorMetrics[i].enable = false;
+        m_colorMetrics[i].enable = true;
 		m_colorMetrics[i].useBoldFont = false;
 		m_colorMetrics[i].foregroundColor = Qt::black;
 		m_colorMetrics[i].backgroundColor = QColor(255,250,240);
@@ -446,7 +446,7 @@ bool Configuration::save(QSettings& settings) const
 	for(int i = 0; i < listItems.size(); i++)
 	{
 		const Configuration::ColorMetricsInfoType& metrics = colorMetrics(Configuration::ColorMetricsEnum(i));
-		settings.setValue(QString("editor-color/%1-enable"          ).arg(listItems.at(i)), metrics.enable);
+        settings.setValue(QString("editor-color/%1-enable"          ).arg(listItems.at(i)), metrics.enable);
 		settings.setValue(QString("editor-color/%1-use-bold-font"   ).arg(listItems.at(i)), metrics.useBoldFont);
 		settings.setValue(QString("editor-color/%1-foreground-color").arg(listItems.at(i)), metrics.backgroundColor);
 		settings.setValue(QString("editor-color/%1-background-color").arg(listItems.at(i)), metrics.foregroundColor);

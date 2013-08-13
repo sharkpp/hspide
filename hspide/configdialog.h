@@ -21,7 +21,7 @@ class CConfigDialog
 		ColorListCategoryColumn = 0,
 		ColorListEnableColumn,
 		ColorListFontBoldColumn,
-		ColorListForegroundColorCount,
+        ColorListForegroundColorColumn,
 		ColorListBackgroundColorColumn,
 		ColorListColumnNum,
 	};
@@ -37,8 +37,8 @@ class CConfigDialog
 	Configuration m_configuration;
 	QVector<Configuration::KeyAssignInfoType> m_currentKeyAssign;
 
-	Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
-	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
+    Configuration::ColorMetricsEnum     m_lastIndexOfColorMetrics;
+//	Configuration::ColorMetricsInfoType m_currentColorMetricsInfo;
 
 public:
 
@@ -62,6 +62,8 @@ protected:
 	void applyToolbar(QVector<Configuration::ActionEnum>& toolbar);
 	void updateToolbarPresetList();
 	void checkUpdateToolbarPresetList();
+
+    void updateMetrics(int index);
 
 public slots:
 

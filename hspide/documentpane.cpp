@@ -60,7 +60,11 @@ void CDocumentPane::onPressEditorIconArea(int lineNo)
 void CDocumentPane::updateConfiguration(const Configuration* conf)
 {
 	QFont editorFont;
-	Configuration::ColorMetricsInfoType metrics;
+    Configuration::ColorMetricsInfoType metrics;
+
+    Configuration::ColorMetricsInfoType metricsDefault;
+    metricsDefault.foregroundColor = Qt::black;
+    metricsDefault.backgroundColor = Qt::white;
 
 	// フォントを変更
 	editorFont.setFamily(conf->editorFontName());
@@ -79,13 +83,15 @@ void CDocumentPane::updateConfiguration(const Configuration* conf)
 
 	// 色を変更
 	metrics = conf->colorMetrics(Configuration::LineNumberMetrics);
+    if( !metrics.enable ) { metrics = metricsDefault; }
 	m_editorWidget->setLineNumberTextColor(metrics.foregroundColor);
 	m_editorWidget->setLineNumberBackgroundColor(metrics.backgroundColor);
 
 	QPalette palette = m_editorWidget->palette();
 	palette.setColor(QPalette::Window, metrics.backgroundColor);
 	metrics = conf->colorMetrics(Configuration::TextMetrics);
-	palette.setColor(QPalette::Text, metrics.foregroundColor);
+    if( !metrics.enable ) { metrics = metricsDefault; }
+    palette.setColor(QPalette::Text, metrics.foregroundColor);
 	palette.setColor(QPalette::Base, metrics.backgroundColor);
 	m_editorWidget->setPalette(palette);
 
@@ -106,7 +112,8 @@ void CDocumentPane::updateConfiguration(const Configuration* conf)
 		QTextCharFormat format;
 		Hsp3Lexer::Type type = keywordFormat[i].second;
 		metrics = conf->colorMetrics(keywordFormat[i].first);
-		format.setForeground(metrics.foregroundColor);
+        if( !metrics.enable ) { metrics = metricsDefault; }
+        format.setForeground(metrics.foregroundColor);
 		format.setBackground(metrics.backgroundColor);
 		format.setFontWeight(metrics.useBoldFont ? QFont::Bold : QFont::Normal);
 		m_highlighter->setFormat(type, format);
